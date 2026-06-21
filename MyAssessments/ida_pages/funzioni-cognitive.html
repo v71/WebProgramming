@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon.png?v=2">
+  <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  .pt-container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Inter', sans-serif;
+    color: #2a2a2a;
+    line-height: 1.8;
+  }
+
+  .pt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.7rem;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #0f0f0f;
+  }
+
+  .pt-meta {
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+
+  .pt-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    color: #1e1e1e;
+    border-left: 4px solid #005bbb;
+    padding-left: 12px;
+  }
+
+  .pt-subtitle {
+    font-size: 1.15rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 35px;
+  }
+
+  .pt-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    background: #f4f7ff;
+    padding: 25px 30px;
+    border-left: 5px solid #005bbb;
+    margin: 40px 0;
+    color: #233;
+  }
+
+  .pt-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .pt-list li {
+    margin-bottom: .5rem;
+  }
+
+  .pt-highlight-box {
+    background: #fafafa;
+    border: 1px solid #e6e6e6;
+    padding: 20px 25px;
+    border-radius: 6px;
+    margin: 35px 0;
+  }
+
+  .pt-highlight-box strong {
+    color: #005bbb;
+  }
+  
+#funzioni-esecutive {
+  padding-bottom: 60px;
+}
+
+.pt-section-title {
+  margin-bottom: 30px;
+}
+
+.ef-item p {
+  text-align: center;
+}
+</style>
+
+<style>
+
+.section-title {
+  font-weight: 700;
+  color: #2c3e50;
+}
+</style>
+
+<style>
+
+/* TESTO GENERICO */
+.ef-item p {
+  text-align: center;
+}
+
+/* IMMAGINE */
+.ef-image {
+  border-radius: 12px;
+}
+
+/* GRID */
+.ef-grid {
+  display: grid;
+  /*grid-template-columns: repeat(2, 1fr);*/
+  gap: 20px;
+}
+
+/* CARD */
+.ef-card {
+  background: #bdbdfa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* TITOLO */
+.ef-card h5 {
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* TESTO */
+.ef-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ICONA */
+.ef-icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .ef-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<style>
+
+/* Centrare l'immagine sotto il titolo */
+.title-image-container {
+    text-align: center; /* centra l'immagine orizzontalmente */
+    margin: 3rem 0;     /* spazio sopra e sotto */
+}
+
+.title-image {
+    max-width: 100%;   /* non supera la larghezza del container */
+    height: auto;      /* mantiene proporzioni */
+    border-radius: 10px; /* opzionale: bordi arrotondati come le card */
+    display: inline-block;
+}
+
+</style>
+
+<link href="../assets/mycss/style-shared.css" rel="stylesheet">
+
+<style>
+
+  /* --- Centering the Nav Menu --- */
+@media (min-width: 1200px) {
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Keeps logo left, menu center, CTA right */
+    }
+
+    .navmenu {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center; /* This is the "magic" centering line */
+    }
+
+    .navmenu ul {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+/* Ensure mobile toggle doesn't break the layout */
+@media (max-width: 1199px) {
+    .navmenu {
+        /* On mobile, we usually want it to stay functional as a sidebar or dropdown */
+        display: block; 
+    }
+}
+</style>
+</head>
+
+<body class="services-details-page">
+
+  <!--inizio header-->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      
+      <!-- Logo -->
+      <a href="../index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <img src="../assets/img/logo_new_light_1.png" alt="logo">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+      <ul>
+          <li><a href="../index.html#hero" class="active">Home</a></li>
+          <li><a href="../index.html#about">Mission</a></li>
+          <li><a href="../index.html#faq">FAQ</a></li>
+          <li><a href="../index.html#team">Team</a></li>
+          <li><a href="../index.html#contact">Contatti</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Apri menu"></i>
+      </nav>
+
+    </div>
+  </header>
+  <!--fine header-->
+
+  <!--inizio main-->
+  <main id="main" class="main">
+  
+    <!-- About Section -->
+    <section id="funzioni-esecutive" class="pricing section light-background">
+      <div class="container" data-aos="fade-up">
+
+        <!-- Featured post -->
+        <div class="card shadow-sm card-equal">
+      
+        <img 
+            src="../assets/img/blog_2/funzioni_esecutive.jpg"
+            class="card-img-top post-card-img img-fluid"
+            alt="Screening DSA e ADHD"
+            loading="lazy">
+
+            <div class="card-body">
+             
+              <article class="pt-container">
+
+                <h1 class="pt-title">Funzioni Cognitive</h1>
+                <p>Le funzioni cerebrali superiori come il ragionamento, la memoria o l’attenzione sono essenziali per una vita piena e indipendente</p>
+                    <div class="pt-meta text-start py-3" style="color: #888; font-size: 14px;">
+                      <div class="meta-top mb-3 d-flex gap-3 flex-wrap align-items-center">
+                        <!-- Autore con avatar -->
+                        <div class="d-flex align-items-center gap-2">
+                          <img src="../assets/img/blog_1/blog-author-1.jpg" alt="Avatar John Doe" class="rounded-circle" width="32" height="32">
+                        <span class="author-name">Dott.ssa Annalisa Panella</span>
+                        </div>
+                       <!-- Data con icona -->
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock me-1"></i>
+                            <time datetime="2022-01-01">21 Dicembre 2025</time>
+                        </div>
+                      </div>
+                   </div>
+
+                   <h2 class="pt-section-title">Comprendere il nostro cervello</h2>
+                    <P>
+                      Il cervello umano rappresenta l’organo più complesso del corpo, con un peso medio
+                      di circa 1,4 kg e una popolazione stimata di circa 86 miliardi di neuroni, interconnessi
+                      in reti altamente specializzate. Attraverso l’attività sincrona di queste reti, 
+                      il cervello sostiene l’insieme delle funzioni che definiscono l’esperienza umana,
+                      inclusi i processi cognitivi, emotivi, motori e relazionali.
+                      Le funzioni cognitive possono essere definite come l’insieme dei processi mentali 
+                      deputati alla ricezione, selezione, codifica, immagazzinamento, elaborazione e 
+                      recupero delle informazioni provenienti dall’ambiente. Tali processi costituiscono
+                      la base operativa delle attività quotidiane, consentendo sia l’esecuzione di compiti
+                      semplici, sia la gestione di attività complesse che richiedono pianificazione, flessibilità
+                      e integrazione di informazioni.
+                      Nell’ambito della cognizione si distinguono diverse componenti funzionali, tra cui:
+                      l’attenzione, intesa come capacità di selezionare e mantenere il focus su stimoli
+                      rilevanti; la memoria, relativa ai processi di acquisizione, conservazione e recupero
+                      delle informazioni; il linguaggio, che consente la comunicazione e la comprensione
+                      simbolica; le funzioni esecutive, coinvolte nella pianificazione, nell’organizzazione
+                      e nel controllo del comportamento; la percezione, che permette l’interpretazione
+                      degli stimoli sensoriali; e le prassie, responsabili della programmazione e 
+                      dell’esecuzione dei movimenti volontari finalizzati.
+                      Queste funzioni operano in modo integrato e dinamico, attraverso circuiti neurali 
+                      distribuiti, spesso al di sotto della soglia della consapevolezza. La comprensione 
+                      dei principali domini cognitivi consente non solo di apprezzare la complessità 
+                      dell’organizzazione cerebrale, ma anche di riconoscere eventuali alterazioni 
+                      clinicamente rilevanti, favorendo un accesso tempestivo alla valutazione specialistica
+                      e agli interventi appropriati. La conoscenza rappresenta pertanto un elemento 
+                      fondamentale nella promozione della salute cognitiva e nella prevenzione.
+                  </P>
+                    <h2 class="pt-section-title">Le Funzioni Cognitive e le aree del cervello</h2>
+                      <!-- Immagine centrata sotto il titolo -->
+                      <div class="title-image-container">
+                          <img src="../assets/img/blog_2/parti-del-cervello-2.jpg" alt="Funzioni esecutive" class="title-image">
+                      </div>
+                    <p>
+                      Le funzioni cognitive sono strettamente legate alle diverse aree del cervello, 
+                      ciascuna specializzata in compiti specifici ma interconnessa con le altre. 
+                      Il lobo frontale è coinvolto nelle funzioni esecutive, come pianificazione, 
+                      decisione e controllo degli impulsi. Il lobo parietale contribuisce 
+                      all’elaborazione delle informazioni sensoriali e all’orientamento 
+                      nello spazio. Il lobo temporale è fondamentale per la memoria e il 
+                      linguaggio, mentre il lobo occipitale è specializzato nella visione. 
+                      Infine, strutture come il cervelletto e il sistema limbico regolano 
+                      rispettivamente coordinazione motoria ed emozioni, dimostrando come 
+                      il funzionamento cognitivo sia il risultato di una collaborazione 
+                      complessa tra diverse aree cerebrali.
+                    </p>
+
+                    <h2 class="pt-section-title">Quali sono le funzioni cognitive più importanti?</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <!-- Colonna destra: card -->
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Attenzione</h5>
+                              <p>L’attenzione è il processo tramite il quale possiamo focalizzare le nostre
+                                 risorse mentali su determinati aspetti dell’ambiente, quelli più rilevanti, 
+                                 o sull’esecuzione di determinate azioni che consideriamo le più idonee 
+                                 tra quelle possibili. </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Abilità Visuo-Spaziali</h5>
+                              <p>Sono la capacità di rappresentare, 
+                                 analizzare e manipolare mentalmente gli oggetti.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Cognizione Sociale</h5>
+                              <p>È l’insieme dei processi cognitivi ed emotivi con cui interpretiamo, 
+                                 analizziamo, ricordiamo e utilizziamo le informazioni 
+                                 sul mondo sociale. </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Funzioni Esecutive</h5>
+                              <p>Le funzioni esecutive sono attività mentali complesse necessarie
+                                per pianificare, organizzare, guidare, riesaminare, 
+                                regolarizzare e valutare il comportamento necessario per 
+                                adattarsi efficacemente all’ambiente e raggiungere 
+                                gli obiettivi.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Gnosie</h5>
+                              <p>Le gnosie sono la capacità del cervello di riconoscere 
+                                 informazioni apprese in precedenza, come oggetti, 
+                                 persone o luoghi, attraverso i sensi. </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Linguaggio</h5>
+                              <p>Il linguaggio è una funzione superiore che 
+                                svolge i processi di simbolizzazione legati 
+                                alla codifica e alla decodifica.</p>
+                            </div>
+
+                              <div class="ef-card">
+                              <h5>Memoria</h5>
+                              <p>La memoria è la capacità di codificare, immagazzinare 
+                                e recuperare efficacemente le informazioni apprese 
+                                o un evento vissuto. </p>
+                            </div>
+
+                               <div class="ef-card">
+                              <h5>Orientamento</h5>
+                              <p>L’orientamento è la capacità di essere consapevoli
+                                 di sé stessi e del contesto in cui ci si trova 
+                                 in un determinato momento.</p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                     <h2 class="pt-section-title">Interconnessione delle Funzioni Cognitive</h2>
+                      <p>
+                        Le funzioni cognitive, pur essendo studiate separatamente, nella vita quotidiana 
+                        lavorano in modo integrato. La maggior parte delle attività richiede infatti la 
+                        collaborazione simultanea di attenzione, memoria, linguaggio, percezione e 
+                        funzioni esecutive.
+                        Ad esempio, durante una riunione utilizziamo l’attenzione per concentrarci, 
+                        la memoria per ricordare informazioni, il linguaggio per comprendere e comunicare,
+                        e le funzioni esecutive per organizzare i pensieri e controllare le risposte.
+                        Questa interconnessione implica che un deficit in una funzione possa 
+                        influenzarne altre: difficoltà attentive possono compromettere la memoria, 
+                        mentre problemi nelle funzioni esecutive possono rendere meno efficace 
+                        l’organizzazione e il recupero delle informazioni.
+                        Comprendere queste relazioni è fondamentale per una valutazione accurata e
+                        per interventi di riabilitazione efficaci.
+                      </p>
+
+                     <h2 class="pt-section-title">Quando cominciano a deteriorarsi le funzioni cognitive?</h2>
+                      <P>
+                          Le funzioni cognitive non iniziano a deteriorarsi tutte nello stesso momento: il cambiamento 
+                          è graduale e varia molto da persona a persona.
+                          In generale, si possono distinguere alcune fasi:
+                          In Giovane età adulta (20–30 anni),alcune capacità raggiungono il loro picco, soprattutto la velocità 
+                          di elaborazione e la memoria di lavoro. Già dopo i 25–30 
+                          anni può iniziare un leggerissimo calo, ma è spesso impercettibile nella vita quotidiana.
+                          Durante la mezza età (40–60 anni), possono comparire piccoli cambiamenti più evidenti, come:
+                          maggiore lentezza nel recuperare informazioni,lieve riduzione della rapidità mentale
+                          Tuttavia, altre abilità come il linguaggio, l’esperienza e il ragionamento basato sulla conoscenza tendono a
+                          rimanere stabili o addirittura migliorare.
+                          Età avanzata (dai 65 anni in poi), alcune funzioni, come memoria episodica e attenzione divisa, possono 
+                          diventare più fragili. Però è importante distinguere tra:
+                          invecchiamento normale che comporta un declino lieve e non invalidante
+                          condizioni patologiche, come la Malattia di Alzheimer, che comportano un declino più marcato e progressivo.
+                          Il cervello mantiene una certa plasticità per tutta la vita, quindi il declino 
+                          non è inevitabile né uniforme. Molte persone mantengono buone capacità cognitive 
+                          anche in età avanzata, soprattutto se adottano uno stile di vita sano.
+                      </P>
+
+                      <h2 class="pt-section-title">Identificazione dei Cambiamenti Cognitivi</h2>
+
+                      <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <!-- Colonna destra: card -->
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Attenzione</h5>
+                              <p>Distrazione costante nelle attività abituali,
+                                 difficoltà a completare i compiti iniziati,
+                                 incapacità di seguire le conversazioni.
+                              </p>
+                            </div>
+
+                             <div class="ef-card">
+                              <h5>Memoria</h5>
+                              <p>Dimenticare ripetutamente informazioni recenti,
+                                 ripetere domande o storie, perdersi in luoghi conosciuti.
+                                </p>
+                             </div>
+
+                            <div class="ef-card">
+                              <h5>Linguaggio</h5>
+                              <p>Difficoltà frequente nel trovare le parole,
+                                 problemi nel seguire le istruzioni,
+                                 cambiamenti nella fluidità o coerenza.</p>
+                            </div>
+
+                             <div class="ef-card">
+                              <h5>Funzioni Esecutive</h5>
+                              <p>Disorganizzazione persistente,
+                                 difficoltà a pianificare le attività,
+                                 impulsività o rigidità mentale.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Percezione</h5>
+                              <p>Non riconoscere oggetti o persone familiari,
+                                 difficoltà a giudicare le distanze, problemi
+                                 di orientamento spaziale. 
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Prassie</h5>
+                              <p>Difficoltà con compiti motori conosciuti,
+                                 problemi nell'usare oggetti quotidiani,
+                                 confusione nel vestirsi. 
+                                </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                     <h2 class="pt-section-title">Come si possono preservare le funzioni cognitive?</h2>
+                  <P>
+                    Preservare le funzioni cognitive significa mantenere efficienti capacità come 
+                    memoria, attenzione, linguaggio e funzioni esecutive nel corso della vita. Non esiste 
+                    una singola soluzione, ma una combinazione di abitudini che agiscono in sinergia.
+                    Uno dei fattori più importanti è lo stile di vita attivo. L’esercizio fisico regolare 
+                    migliora la circolazione sanguigna cerebrale e favorisce la neuroplasticità, cioè la 
+                    capacità del cervello di adattarsi e creare nuove connessioni. Anche attività moderate,
+                     come camminare ogni giorno, possono fare una grande differenza.
+                    Fondamentale è poi la stimolazione mentale. Imparare cose nuove, leggere, risolvere 
+                    problemi o svolgere attività creative (come suonare uno strumento o imparare una lingua) 
+                    aiuta a mantenere il cervello “allenato”. Questo riduce il rischio di declino cognitivo.
+                    Un altro pilastro è l’alimentazione equilibrata. Diete ricche di frutta, verdura, pesce, 
+                    noci e grassi sani (come la dieta mediterranea) supportano la salute del cervello. 
+                    Alcuni nutrienti, come gli omega-3 e gli antiossidanti, sono particolarmente utili p
+                    er proteggere i neuroni.
+                    Il sonno di qualità è altrettanto cruciale. Durante il sonno, il cervello consolida 
+                    i ricordi e elimina sostanze di scarto. Dormire poco o male può compromettere attenzione
+                    e memoria nel lungo periodo.
+                    Non va trascurato il ruolo delle relazioni sociali. Interagire con gli altri stimola 
+                    diverse aree cognitive e aiuta a prevenire isolamento e depressione, che possono 
+                    influire negativamente sulle capacità mentali.
+                    Infine, è importante gestire lo stress. Livelli elevati e prolungati di stress
+                    possono danneggiare strutture cerebrali coinvolte nella memoria, come l’ippocampo. 
+                    Tecniche come meditazione, respirazione o semplicemente momenti di pausa aiutano 
+                    a proteggere le funzioni cognitive.
+                    In sintesi, mantenere il cervello in salute richiede un approccio globale: corpo 
+                    attivo, mente stimolata e uno stile di vita equilibrato.
+                  </P>
+
+                  <h2 class="pt-section-title">Attività di Stimolazione Cognitiva</h2>
+
+                  <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <!-- Colonna destra: card -->
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Puzzle ed Enigmi</h5>
+                              <p>Cruciverba, sudoku e puzzle stimolano le funzioni
+                                 esecutive, l'attenzione e la percezione spaziale in
+                                 modo divertente e stimolante.
+                              </p>
+                            </div>
+
+                             <div class="ef-card">
+                              <h5>Lettura e Scrittura</h5>
+                              <p>Leggere libri, articoli o scrivere diari esercita il
+                                 linguaggio, la memoria e l'attenzione sostenuta
+                                 fornendo al contempo piacere intellettuale.
+                                </p>
+                             </div>
+
+                            <div class="ef-card">
+                              <h5>Musica</h5>
+                              <p>Suonare strumenti, cantare o persino ascoltare
+                                 musica attivamente coinvolge molteplici funzioni
+                                 cognitive e offre benefici emotivi.
+                              </p>
+                            </div>
+
+                             <div class="ef-card">
+                              <h5>Giochi da Tavolo</h5>
+                              <p>Scacchi, carte e giochi di strategia esercitano
+                                 pianificazione, memoria di lavoro e flessibilità
+                                 mentale in contesti sociali.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Imparare Lingue</h5>
+                              <p>Studiare una nuova lingua sfida memoria,
+                                 linguaggio e funzioni esecutive, con benefici
+                                 comprovati per la riserva cognitiva.
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Interazione Sociale</h5>
+                              <p>Conversazioni, club e attività di gruppo
+                                 mantengono linguaggio, memoria e funzioni
+                                 esecutive combattendo l'isolamento.
+                                </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h2 class="pt-section-title">Conclusioni</h2>
+                    <p>
+                        Le funzioni cognitive rappresentano il cuore delle nostre
+                        capacità mentali: ci permettono di pensare, ricordare, apprendere e
+                        prendere decisioni nella vita quotidiana. La loro importanza è 
+                        fondamentale in ogni fase della vita, poiché influenzano autonomia, 
+                        relazioni e qualità dell’esistenza. Per questo motivo, preservarle non 
+                        è solo una questione legata all’età, ma un obiettivo continuo: attraverso 
+                        uno stile di vita sano, stimoli mentali costanti e una buona gestione di 
+                        stress e riposo, è possibile mantenerle attive ed efficienti più a lungo,
+                        favorendo un benessere mentale duraturo.
+                    </p>
+
+                  <!-- Author box -->
+                  <footer class="pt-author mt-4 pt-4 border-top">
+                    <div class="d-flex align-items-start gap-3">
+                      <img src="../assets/img/blog_1/blog-author-1.jpg"
+                          alt="Dott.ssa Annalisa Panella"
+                          class="rounded-circle"
+                          width="56" height="56">
+
+                      <div>
+                        <h6 class="mb-1">Dott.ssa Annalisa Panella</h6>
+                        <p class="text-muted mb-1 small">
+                          Psicologa – Neuropsicologa dell’età evolutiva
+                        </p>
+                        <p class="mb-0 small">
+                          Si occupa di valutazione e potenziamento delle funzioni cognitive,
+                          DSA e ADHD, attraverso percorsi basati su evidenze scientifiche.
+                        </p>
+                      </div>
+                    
+                    </div>
+
+                  </footer>
+
+              </article>
+            </div>
+          </div>
+        </div>
+    </section><!-- /About Section -->
+
+  </main>
+  <!--fine main-->
+
+      <!--inizio footer-->
+    <footer id="footer" class="footer position-relative light-background">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="../index.html" class="logo d-flex align-items-center">
+                  <img src="../assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                  <li><a href="../index.html#hero">Home</a></li>
+                  <li><a href="../index.html#about">Mission</a></li>
+                  <li><a href="../index.html#faq">FAQ</a></li>
+                  <li><a href="../index.html#team">Team</a></li>
+                  <li><a href="../index.html#testimonials">Testimonianze</a></li>
+                  <li><a href="../index.html#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <!--<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+  <!--<script src="assets/vendor/php-email-form/validate.js"></script>-->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>

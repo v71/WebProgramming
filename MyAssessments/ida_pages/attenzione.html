@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon.png?v=2">
+  <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  .pt-container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Inter', sans-serif;
+    color: #2a2a2a;
+    line-height: 1.8;
+  }
+
+  .pt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.7rem;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #0f0f0f;
+  }
+
+  .pt-meta {
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+
+  .pt-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    color: #1e1e1e;
+    border-left: 4px solid #005bbb;
+    padding-left: 12px;
+  }
+
+  .pt-subtitle {
+    font-size: 1.15rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 35px;
+  }
+
+  .pt-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    background: #f4f7ff;
+    padding: 25px 30px;
+    border-left: 5px solid #005bbb;
+    margin: 40px 0;
+    color: #233;
+  }
+
+  .pt-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .pt-list li {
+    margin-bottom: .5rem;
+  }
+
+  .pt-highlight-box {
+    background: #fafafa;
+    border: 1px solid #e6e6e6;
+    padding: 20px 25px;
+    border-radius: 6px;
+    margin: 35px 0;
+  }
+
+  .pt-highlight-box strong {
+    color: #005bbb;
+  }
+  
+#funzioni-esecutive {
+  padding-bottom: 60px;
+}
+
+.pt-section-title {
+  margin-bottom: 30px;
+}
+
+.ef-item p {
+  text-align: center;
+}
+</style>
+
+<style>
+
+.section-title {
+  font-weight: 700;
+  color: #2c3e50;
+}
+</style>
+
+<style>
+
+/* TESTO GENERICO */
+.ef-item p {
+  text-align: center;
+}
+
+/* IMMAGINE */
+.ef-image {
+  border-radius: 12px;
+}
+
+/* GRID */
+.ef-grid {
+  display: grid;
+  /*grid-template-columns: repeat(2, 1fr);*/
+  gap: 20px;
+}
+
+/* CARD */
+.ef-card {
+  background: #bdbdfa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* TITOLO */
+.ef-card h5 {
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* TESTO */
+.ef-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ICONA */
+.ef-icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .ef-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+
+<style>
+
+/* Centrare l'immagine sotto il titolo */
+.title-image-container {
+    text-align: center; /* centra l'immagine orizzontalmente */
+    margin: 3rem 0;     /* spazio sopra e sotto */
+}
+
+.title-image {
+    max-width: 100%;   /* non supera la larghezza del container */
+    height: auto;      /* mantiene proporzioni */
+    border-radius: 10px; /* opzionale: bordi arrotondati come le card */
+    display: inline-block;
+}
+
+</style>
+
+<link href="../assets/mycss/style-shared.css" rel="stylesheet">
+
+<style>
+
+  /* --- Centering the Nav Menu --- */
+@media (min-width: 1200px) {
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Keeps logo left, menu center, CTA right */
+    }
+
+    .navmenu {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center; /* This is the "magic" centering line */
+    }
+
+    .navmenu ul {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+/* Ensure mobile toggle doesn't break the layout */
+@media (max-width: 1199px) {
+    .navmenu {
+        /* On mobile, we usually want it to stay functional as a sidebar or dropdown */
+        display: block; 
+    }
+}
+</style>
+</head>
+
+<body class="services-details-page">
+
+  <!--inizio header-->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      
+      <!-- Logo -->
+      <a href="../index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <img src="../assets/img/logo_new_light_1.png" alt="logo">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+      <ul>
+          <li><a href="../index.html#hero" class="active">Home</a></li>
+          <li><a href="../index.html#about">Mission</a></li>
+          <li><a href="../index.html#faq">FAQ</a></li>
+          <li><a href="../index.html#team">Team</a></li>
+          <li><a href="../index.html#contact">Contatti</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Apri menu"></i>
+      </nav>
+
+    </div>
+  </header>
+  <!--fine header-->
+
+  <!--inizio main-->
+  <main id="main" class="main">
+  
+    <!-- About Section -->
+    <section id="funzioni-esecutive" class="pricing section light-background">
+      <div class="container" data-aos="fade-up">
+
+        <!-- Featured post -->
+        <div class="card shadow-sm card-equal">
+      
+        <img 
+            src="../assets/img/blog_2/funzioni_esecutive.jpg"
+            class="card-img-top post-card-img img-fluid"
+            alt="Screening DSA e ADHD"
+            loading="lazy">
+
+            <div class="card-body">
+              <article class="pt-container">
+                <h1 class="pt-title">Attenzione</h1>
+               <p>Cos'è l'attenzione, le capacità ed i possibili deficit.</p>
+                <div class="pt-meta text-start py-3" style="color: #888; font-size: 14px;">
+                  <div class="meta-top mb-3 d-flex gap-3 flex-wrap align-items-center">
+                    <!-- Autore con avatar -->
+                        <div class="d-flex align-items-center gap-2">
+                          <img src="../assets/img/blog_1/blog-author-1.jpg" alt="Avatar John Doe" class="rounded-circle" width="32" height="32">
+                        <span class="author-name">Dott.ssa Annalisa Panella</span>
+                        </div>
+                        <!-- Data con icona -->
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock me-1"></i>
+                            <time datetime="2022-01-01">21 Dicembre 2025</time>
+                        </div>
+                    </div>
+                  </div>
+
+                  <h2 class="pt-section-title">Attenzione: Il Focus della Nostra Mente</h2>
+                  <p>
+                     L’attenzione è la funzione cognitiva che ci permette di concentrarci su stimoli specifici, 
+                     ignorandone altri. È come un fascio di luce che illumina ciò che consideriamo importante in 
+                     ogni momento, lasciando il resto in penombra. Senza attenzione, sarebbe impossibile svolgere
+                     quasi qualsiasi attività, dalla lettura di questo testo al mantenere una conversazione o 
+                     guidare un’automobile.
+                     Questa capacità fondamentale non è unica né monolitica, ma si manifesta in diverse forme a 
+                     seconda della situazione. L’attenzione sostenuta ci consente di mantenere il focus su un 
+                     compito per periodi prolungati, come quando leggiamo un intero libro o lavoriamo a un progetto
+                     complesso. L’attenzione selettiva, invece, ci aiuta a filtrare le distrazioni, permettendoci
+                     di concentrarci su una conversazione anche in un ambiente rumoroso, come un ristorante.
+                     L’attenzione divisa ci permette di gestire più fonti di informazione contemporaneamente, 
+                     sebbene con una minore profondità per ciascuna. È ciò che accade, ad esempio, quando cuciniamo
+                     mentre ascoltiamo le notizie. Infine, l’attenzione alternata ci consente di spostare rapidamente
+                     il focus tra diverse attività, come quando interrompiamo la scrittura di un’email per 
+                     rispondere al telefono.
+                     Il cervello consuma una quantità significativa di energia per sostenere l’attenzione; per questo
+                     è normale sperimentare affaticamento mentale dopo periodi prolungati di concentrazione. 
+                     Fattori come la mancanza di sonno, lo stress, l’assunzione di alcuni farmaci o specifiche
+                     condizioni mediche possono influenzare la nostra capacità attentiva, rendendo più difficile
+                     mantenere il focus nel tempo.
+                  </p>
+
+                   <h2 class="pt-section-title">Tipi di attenzione in dettaglio</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <!-- Colonna destra: card -->
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Attenzione Sostenuta</h5>
+                              <p>Capacità di mantenere la concentrazione per periodi prolungati.
+                                 Essenziale per completare compiti lunghi e dettagliati.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Attenzione Selettiva</h5>
+                              <p>Abilità di concentrarsi su stimoli rilevanti ignorando le
+                                distrazioni. Fondamentale in ambienti con
+                                molteplici stimoli.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Attenzione Divisa</h5>
+                              <p>Elaborare simultaneamente informazioni da
+                                 diverse fonti. Permette di svolgere
+                                 più compiti alla volta, seppur con minore
+                                 efficienza.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Controllo Inibitorio</h5>
+                              <p>Sopprimere impulsi e resistere alle distrazioni.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Attenzione Alternata</h5>
+                              <p>Flessibilità nel cambiare la concentrazione tra
+                                 diverse attività o stimoli in base alle
+                                 richieste del momento.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Arousal</h5>
+                              <p> Stato di attivazione fisiologica generale, 
+                                  fondamentale per essere vigili e pronti a 
+                                  rispondere agli stimoli.</p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h2 class="pt-section-title">L'Attenzione nella vita quotidiana</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <!-- Colonna destra: card -->
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Guidare un Veicolo</h5>
+                              <p>Richiede attenzione sostenuta per
+                                 mantenere la concentrazione sulla
+                                 strada, selettiva per ignorare le
+                                 distrazioni e divisa per osservare gli
+                                 specchietti mentre si guida.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Conversazioni</h5>
+                              <p>Utilizziamo l'attenzione selettiva per
+                                 concentrarci sul nostro interlocutore e
+                                 ignorare i rumori ambientali,
+                                 mantenendo il filo della conversazione.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Preparare il Cibo</h5>
+                              <p>Combina attenzione divisa per
+                                 sorvegliare più elementi che cuociono e
+                                 alternata per passare da un'attività di
+                                 preparazione all'altra.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Lettura</h5>
+                              <p>Richiede attenzione sostenuta per
+                                 seguire il testo e selettiva per non
+                                 distrarsi con stimoli esterni durante la
+                                 lettura.</p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                   <h2 class="pt-section-title">Quando l'Attenzione Fallisce</h2>
+                    <p>
+                      È importante distinguere tra le normali distrazioni che tutti
+                      sperimentiamo e i problemi di attenzione che potrebbero
+                      richiedere una valutazione professionale. La distrazione
+                      occasionale fa parte dell'esperienza umana, specialmente
+                      quando siamo stanchi, stressati o in ambienti molto
+                      stimolanti.
+                      Tuttavia, esistono segnali che meritano attenzione. Se lei o
+                      una persona cara sperimenta difficoltà persistenti nel
+                      completare compiti che prima svolgeva senza problemi, si
+                      distrae costantemente anche in ambienti tranquilli,
+                      dimentica cosa stava facendo nel mezzo di un'attività, ha
+                      problemi a seguire conversazioni o istruzioni, o ha bisogno
+                      che le venga ripetuta costantemente l'informazione,
+                      potrebbe essere il momento di consultare un esperto.
+                      Altri indicatori includono difficoltà a mantenere la
+                      concentrazione abbastanza a lungo per completare le
+                      attività quotidiane, commettere errori frequenti per
+                      mancanza di attenzione ai dettagli, sentirsi facilmente
+                      sopraffatti da stimoli che prima gestiva bene, o notare che
+                      i familiari esprimono preoccupazione per il suo livello di
+                      distrazione.
+                      Ricordi che molti fattori possono influenzare
+                      temporaneamente l'attenzione, inclusi problemi di sonno,
+                      effetti collaterali dei farmaci, ansia o depressione. Una
+                      valutazione professionale può determinare la causa e il
+                      miglior percorso da seguire.
+                    </p>
+
+                    <h2 class="pt-section-title">Tipi di deficit attentivo</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <!-- Colonna destra: card -->
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Disturbi da Deficit di Attenzione e Iperattività (ADHD)</h5>
+                              <p>
+                                L’ADHD (Attention-Deficit/Hyperactivity Disorder) è un disturbo del neurosviluppo caratterizzato 
+                                da deficit nell’attenzione sostenuta, nell’inibizione della risposta e nella regolazione emotiva.
+                                Le origini sono neurobiologiche: riduzione del volume nella corteccia prefrontale, disfunzioni nei 
+                                circuiti dopaminergici e noradrenergici.
+                                Impatto funzionale: difficoltà nel mantenimento dell’attenzione, impulsività, iperattività motoria, 
+                                compromissione nella regolazione affettiva
+                                Secondo il DSM-5, esistono tre sottotipi di ADHD:
+                                <strong>Tipo Inattentivo</strong>,
+                                <strong>Tipo Iperattivo-Impulsivo</strong>,
+                                <strong>Tipo Combinato</strong>.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Disturbi specifici dell’apprendimento (DSA) </h5>
+                              <p>
+                                I Disturbi Specifici dell’Apprendimento (DSA) sono disturbi del neurosviluppo 
+                                che compromettono le abilità accademiche, pur in presenza di un’intelligenza 
+                                normale o superiore alla norma.
+                                Le origini sono neurobiologiche: disfunzioni nelle reti neurali della lettura, scrittura e calcolo.
+                                Impatto funzionale: difficoltà persistenti nell’automatizzazione delle competenze scolastiche
+                                Secondo il DSM-5, i principali sottotipi di DSA sono:
+                                <strong>Dislessia</strong>,
+                                <strong>Disortografia</strong>,
+                                <strong>Disgrafia</strong>,
+                                <strong>Discalculia</strong>.
+                              </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <h2 class="pt-section-title">Conclusioni</h2>
+                  <p>
+                      L’attenzione è una risorsa preziosa ma limitata, soggetta a 
+                      cali, distrazioni e affaticamento. Nella vita quotidiana può 
+                      essere compromessa da stress, sovraccarico di stimoli, mancanza 
+                      di sonno o abitudini poco salutari, rendendo più difficile 
+                      concentrarsi e portare a termine i compiti. Tuttavia, esistono
+                      diverse strategie per migliorarla e sostenerla: mantenere una 
+                      buona igiene del sonno, ridurre le distrazioni, organizzare le 
+                      attività in modo chiaro e fare pause regolari. Anche pratiche 
+                      come la mindfulness e l’esercizio fisico possono contribuire a 
+                      rafforzare la capacità attentiva. Nei casi più persistenti o 
+                      invalidanti, è utile rivolgersi a un professionista per individuare
+                      interventi mirati e, se necessario, un supporto terapeutico.
+                  </p>
+
+                  <!-- Author box -->
+                  <footer class="pt-author mt-4 pt-4 border-top">
+                    <div class="d-flex align-items-start gap-3">
+                      <img src="../assets/img/blog_1/blog-author-1.jpg"
+                          alt="Dott.ssa Annalisa Panella"
+                          class="rounded-circle"
+                          width="56" height="56">
+
+                      <div>
+                        <h6 class="mb-1">Dott.ssa Annalisa Panella</h6>
+                        <p class="text-muted mb-1 small">
+                          Psicologa – Neuropsicologa dell’età evolutiva
+                        </p>
+                        <p class="mb-0 small">
+                          Si occupa di valutazione e potenziamento delle funzioni cognitive,
+                          DSA e ADHD, attraverso percorsi basati su evidenze scientifiche.
+                        </p>
+                      </div>
+                    </div>
+                  </footer>
+
+              </article>
+            </div>
+          </div>
+        </div>
+    </section><!-- /About Section -->
+
+  </main>
+  <!--fine main-->
+
+      <!--inizio footer-->
+    <footer id="footer" class="footer position-relative light-background">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="../index.html" class="logo d-flex align-items-center">
+                  <img src="../assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                  <li><a href="../index.html#hero">Home</a></li>
+                  <li><a href="../index.html#about">Mission</a></li>
+                  <li><a href="../index.html#faq">FAQ</a></li>
+                  <li><a href="../index.html#team">Team</a></li>
+                  <li><a href="../index.html#testimonials">Testimonianze</a></li>
+                  <li><a href="../index.html#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <!--<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+  <!--<script src="assets/vendor/php-email-form/validate.js"></script>-->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>

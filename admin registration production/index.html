@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Registration</title>
+<link rel="icon" href="data:,">
+<style>
+body { font-family: Arial; max-width: 500px; margin: auto; padding: 20px; }
+form { display: flex; flex-direction: column; gap: 10px; }
+input, button { padding: 10px; font-size: 16px; }
+button { background: #4CAF50; color: white; border: none; cursor: pointer; }
+button:hover { background: #45a049; }
+#message { margin-top: 20px; font-weight: bold; }
+</style>
+</head>
+<body>
+
+
+    <h2>Admin Registration</h2>
+    <form id="registrationForm">
+      <input type="text" id="name" placeholder="First Name" required />
+      <input type="text" id="surname" placeholder="Surname" required />
+      <input type="email" id="email" placeholder="Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <input type="date" id="birth_date" placeholder="Birth Date" required />
+      <button type="submit">Register</button>
+    </form>
+
+    <div id="message"></div>
+
+   <script type="module">
+       
+        // ✅ Safe: DOM is fully parsed here
+        document.addEventListener("DOMContentLoaded", () => {
+
+          const form = document.getElementById("registrationForm");
+          const msg = document.getElementById("message");
+
+          fillTestUser();
+
+        });
+
+       function fillTestUser() {
+          document.getElementById("name").value = "Vincenzo";
+          document.getElementById("surname").value = "Panella";
+          document.getElementById("email").value =  "mjwpan71@gmail.com";
+          document.getElementById("password").value = "ciao1234";
+          document.getElementById("birth_date").value = "1971-06-08";
+          document.getElementById("message").textContent =`🧪 Loaded Admin`;
+        }
+        
+        import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+        
+        // ✅ IMPORT YOUR FUNCTIONS
+        import {
+          normalizeItalianName,
+          normalizeItalianSurname
+        } from "./js/string_utils.js";
+        
+          // ✅ supabase credentials 
+        const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+        const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+        
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        
+        const form = document.getElementById("registrationForm");
+        const msg = document.getElementById("message");
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          msg.textContent = "";
+
+          const name = document.getElementById("name").value.trim();
+          const surname = document.getElementById("surname").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const password = document.getElementById("password").value;
+          const creationDate = new Date().toISOString();
+          const birthDate = document.getElementById("birth_date").value;
+
+          // Validate inputs
+          if (!name || !surname || !email || !password || !birthDate) {
+            msg.textContent = "❌ Fill all fields and give consent.";
+            return;
+          }
+          
+      //    console.log(name);
+      //    console.log(surname);
+     //     console.log(email);
+     //     console.log(password);
+      //    console.log(creationDate);
+      //    console.log(birthDate);
+        
+         const { signUpData, error } = await supabase.auth.signUp({
+                  email,
+                  password,
+                  options: {
+                    emailRedirectTo: "http://127.0.0.1:5500/confirm.html",
+                    data: {
+                      name: normalizeItalianName(name),
+                      surname: normalizeItalianSurname(surname),
+                      creation_date: creationDate,
+                      birth_date:birthDate
+                    }
+                  }
+                });
+
+                console.log("SIGNUP DATA:", signUpData);
+                console.log("SIGNUP ERROR:", error);
+
+                if (error) {
+                  msg.textContent = "❌ " + error.message;
+                  return;
+                }
+                
+                msg.textContent =
+                  "✅ If the email is valid, you will receive a confirmation link, if you don't, check your spam folder or try registering with a different email address.";
+               
+        });
+
+  
+  </script>
+
+</body>
+</html>
+
+

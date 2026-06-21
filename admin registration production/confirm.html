@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Email Confirmation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+</head>
+
+<body>
+  <h2 id="status">Confirming your account…</h2>
+
+  <script type="module">
+      
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabase = createClient(
+    "https://bjbnkqgyibadjlrcjqfs.supabase.co",
+     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8"
+    );
+
+    const statusEl = document.getElementById("status");
+
+    function redirectToLogin(delay = 4000) {
+      setTimeout(() => {
+        window.location.href = "/login.html";
+      }, delay);
+    }
+
+    function redirectToRegister(delay = 4000) {
+      setTimeout(() => {
+        window.location.href = "/index.html";
+      }, delay);
+    }
+    
+    async function confirmAccount() {
+      // 1️⃣ Get authenticated user from confirmation link
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data?.user) {
+        statusEl.textContent =
+          "⏳ This confirmation link is invalid or has expired. Please sign up again.";
+        redirectToRegister();
+        return;
+      }
+
+      const user = data.user;
+      const meta = user.user_metadata || {};
+      
+      console.log(meta);
+
+      // 2️⃣ Validate required metadata
+      const requiredFields = [
+        "name",
+        "surname",
+        "creation_date",
+        "birth_date",
+      ];
+        
+      for (const field of requiredFields) {
+        if (meta[field] === undefined) {
+          statusEl.textContent =
+            "❌ Incomplete signup data. Please register again.";
+          redirectToRegister();
+          return;
+        }
+      }
+      
+      // 3️⃣ Insert admin profile (RLS-safe)
+      const { error: insertError } = await supabase
+        .from("Admins")
+        .insert({
+          id: user.id,
+          name: meta.name,
+          surname: meta.surname,
+          creation_date: meta.creation_date,
+          birth_date: meta.birth_date,
+        });
+          
+      
+      // 4️⃣ Handle duplicates (double click / reused link)
+      if (insertError) {
+        if (insertError.code === "23505") {
+          statusEl.textContent = "✅ Account already confirmed.";
+          redirectToLogin();
+          return;
+        }
+
+        console.error(insertError);
+        statusEl.textContent =
+          "❌ An error occurred while activating your account.";
+        redirectToRegister();
+        return;
+      }
+
+      // 5️⃣ Cleanup metadata (optional but recommended)
+      const { error: cleanupError } = await supabase.auth.updateUser({
+        data: {}
+      });
+
+      if (cleanupError) {
+        console.warn("Metadata cleanup failed:", cleanupError.message);
+      }
+
+      // 6️⃣ Success
+      statusEl.textContent = "✅ Account confirmed successfully!";
+      redirectToLogin();
+      
+    }
+
+    confirmAccount();
+    
+  </script>
+</body>
+</html>
+
+

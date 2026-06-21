@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <!--<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png?v=2">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">-->
+
+  <!-- Standard favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png?v=1">
+  <!-- Fallback for older browsers -->
+  <!--<link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">-->
+  <!-- Apple (iPhone/iPad home screen) -->
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+  <!-- Include Google Font with lighter weight -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="assets/mycss/style-shared.css" rel="stylesheet">
+
+
+<style>
+
+@media (min-width: 1200px) {
+  /* 1. Make the container fill the full width */
+  .header .container-fluid {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* 2. Give the logo area a flexible basis */
+  .header .logo {
+    flex: 1; 
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* 3. The Navmenu stays in the middle */
+  .navmenu {
+    flex: 0 0 auto; /* Don't grow, don't shrink */
+  }
+
+  /* 4. Create a "Ghost" spacer on the right to balance the logo */
+  .header .container-fluid::after {
+    content: "";
+    flex: 1;
+  }
+}
+
+</style>
+
+      <!--stili password-->
+      <style>
+        .password-meter { display: flex; height: 5px; margin-top: 10px; }
+        .meter-section { flex: 1; background-color: #ddd; }
+        .meter-section.weak { background-color        : rgb(255 , 0   , 0) !important; } /* red */
+        .meter-section.medium { background-color      : rgb(255 , 100 , 0) !important; } /* orange */
+        .meter-section.strong { background-color      : rgb( 0  , 200 , 0) !important; } /* dark green */
+        .meter-section.very-strong { background-color : rgb(0   , 255 , 0) !important; } /* green */
+      </style>
+
+
+<style>
+.registration-card {
+  max-width: 900px;       /* più larga */
+  margin: 0px auto 40px auto; /* più in alto: margine superiore ridotto */
+  padding: 30px 40px;     /* più spazio interno */
+  background: #f8f9fb;
+  border: 1px solid #e2e6ea;
+  border-radius: 10px;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  text-align: left;
+}
+
+.registration-card h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #2c3e50;
+  font-size: 1.6em;
+  text-align: center; /* <--- titolo centrato */
+}
+
+.registration-list {
+  padding-left: 20px;
+  margin-bottom: 20px;
+  list-style: disc inside;
+}
+
+.registration-list li {
+  margin-bottom: 10px;
+  font-size: 1em;
+}
+
+.registration-card a {
+  color: #0d6efd;
+  text-decoration: none;
+}
+
+.registration-card a:hover {
+  text-decoration: underline;
+}
+
+.support {
+  margin-top: 20px;
+  padding-top: 10px;
+  border-top: 1px solid #ddd;
+}
+
+</style>
+
+<style>
+
+.alert {
+  background: #007BFF; /* blu */
+  color: #fff; /* testo bianco */
+  padding: 10px 15px;
+  border-radius: 8px;
+  max-width: 600px;
+  margin: 20px auto;
+  font-size: 12px; /* testo più piccolo */
+  opacity: 0; /* invisibile inizialmente */
+  transition: opacity 0.8s ease-in-out; /* fade-in/fade-out */
+}
+
+.progress {
+  background: rgba(255,255,255,0.3);
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 10px;
+  height: 8px;
+}
+
+.progress-bar {
+  background: #fff;
+  width: 0%;
+  height: 100%;
+  transition: width linear;
+}
+
+</style>
+
+<style>
+
+#redirectBox {
+  position: relative;
+  width: 100%;
+  height: 36px;              /* altezza fissa sufficiente */
+  background-color: #2196f3;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 12px;
+  visibility: hidden;       /* invisibile ma spazio riservato */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#redirectProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: #ffffff;
+  opacity: 0.35;
+  transition: width 4s linear;
+}
+
+#redirectText {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  text-align: center;
+}
+
+#countdown {
+  font-weight: 600;
+  color: #fff;
+  white-space: pre;
+}
+
+</style>
+
+<style>
+
+.registration-list {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+.registration-list li {
+  background: #dbdbdb;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+</style>
+
+<style>
+
+/* --- Sober Mission Styles --- */
+.sober-heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    
+    /* Typography */
+    font-size: clamp(1.75rem, 4vw, 2.25rem) !important;
+    font-weight: 600 !important;
+    color: #012970;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px !important;
+    text-transform: none;
+    text-align: center;
+}
+
+/* The decorative lines */
+.sober-heading::before,
+.sober-heading::after {
+    content: "";
+    height: 2px;
+    width: 60px; /* Slightly longer for better balance */
+    background-color: #4154f1;
+    display: inline-block;
+    opacity: 0.4; /* Softens the blue to stay 'sober' */
+    border-radius: 2px;
+}
+
+.sober-mission {
+    font-size: clamp(1.05rem, 3vw, 1.2rem) !important;
+    line-height: 1.8;
+    color: #555;
+    max-width: 750px;
+    margin: 0 auto; /* Ensures it stays centered if you add more text */
+    font-weight: 400;
+    text-align: center;
+}
+
+/* Subtly highlights key terms */
+.sober-mission .highlight {
+    color: #012970;
+    border-bottom: 2px solid rgba(65, 84, 241, 0.15); /* Slightly thicker but lighter color */
+    padding-bottom: 1px;
+    font-weight: 500; /* Added a tiny bit of weight to the highlight */
+}
+</style>
+
+<style>
+/* --- Navigation Hover Effect --- */
+#navmenu ul li a {
+  color: #64748b; /* Current text color (slate gray) - adjust to match your theme */
+  transition: color 0.25s ease-in-out; /* Smooth transition fade */
+  position: relative;
+}
+
+/* Color state on hover and when active */
+#navmenu ul li a:hover,
+#navmenu ul li a.active {
+  color: rgb(0,0,255) !important; /* Elegant primary blue on hover - replace with your brand color */
+}
+</style>
+
+
+<style>
+
+/* === Minimalist Registration Panel === */
+.registration-panel {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 32px;
+    max-width: 100%;
+    margin: 20px auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Typography Header */
+.registration-panel h3 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 0;
+    margin-bottom: 20px;
+    letter-spacing: -0.01em;
+}
+
+/* Main Text Paragraphs */
+.registration-body p {
+    color: #475569;
+    font-size: 1.0rem;
+    line-height: 1.6;
+    margin-top: 0;
+    margin-bottom: 16px;
+}
+
+.registration-body strong {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+/* Subtle Footer Divider */
+.registration-footer {
+    margin-top: 24px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+    color: #64748b;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+
+/* Clean Hyperlinks */
+.registration-footer a {
+    color: #4e73df;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.registration-footer a:hover {
+    text-decoration: underline;
+}
+
+.registration-footer .email-link {
+    font-weight: 600;
+}
+</style>
+
+<!--<link href="assets/mycss/style-shared.css" rel="stylesheet">-->
+
+</head>
+
+<body class="services-details-page">
+
+  <!--inizio header-->
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
+      
+       <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <img src="assets/img/logo_new_light_1.png" alt="logo" class="logo-default" style="height:40px;">
+        <img src="assets/img/logo_new_light_1.png" alt="logo" class="logo-scrolled" style="height:40px;">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+      <ul>
+          <li><a href="index.html#hero">Home</a></li>
+          <li><a href="index.html#about">Mission</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="index.html#team">Team</a></li>
+          <li><a href="index.html#contact">Contatti</a></li>
+        </ul>
+          <button type="button" class="mobile-nav-toggle d-xl-none bg-transparent border-0 p-0" aria-label="Apri menu">
+            <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+      </nav>
+      
+      <!--<div style="display: flex; gap: 10px;">
+        <a class="btn btn-primary" href="scelta_registrazione_2.html">Registrati</a>
+      </div>-->
+
+    </div>
+  </header>
+  <!--fine header-->
+
+ <main id="pricing" class="main">
+
+  <!-- About / Pricing Section -->
+  <section id="pricing-about" class="faq section light-background py-3 py-md-5">
+
+      <!-- Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+
+           <!-- muted h1 level just to stop the html valdiator to complain-->
+          <h1 class="sr-only">muted h1</h1>
+           <!-- muted h2 level just to stop the html valdiator to complain-->
+          <h2 class="sr-only">muted h2</h2>
+
+          <h3 class="sober-heading">Registrazione Paziente</h3>
+          <p class="sober-mission mx-auto">
+            I tuoi dati sensibili sono al sicuro.
+          </p>
+
+            <div class="container rounded-wrapper offset-top">
+                <div class="row">
+            
+                    <div class="col-md-4 p-0 ">
+                      <img src="assets/img/registrazione/register_clinico_2.jpg" 
+                          style="width:100%; height:100%; object-fit:cover;" 
+                          alt="Registrazione clinico">
+                     </div>
+
+                      <div class="col-md-8 border form-area-padding">
+                           
+                          <div class="registration-panel">
+                              <h3>Inserimento Dati Sensibili</h3>
+                              
+                                <div class="registration-body">
+                                    <p>
+                                        Per procedere con la registrazione, inserisci il <strong>numero di iscrizione al tuo albo professionale</strong> 
+                                        e compila il modulo indicando <strong>nome e cognome senza titoli</strong>. Utilizza 
+                                        <strong>un indirizzo email valido</strong> (ogni indirizzo può essere associato a <strong>un solo profilo</strong>) 
+                                        e <strong>completa tutti i campi richiesti</strong> per finalizzare l'operazione. Al termine, verrai 
+                                        <strong>reindirizzato automaticamente</strong> alla homepage.
+                                    </p>
+                                    
+                                    <p>
+                                        Dopo l’invio del modulo riceverai un’email contenente il 
+                                        <strong>link di conferma necessario per attivare il tuo account</strong>. Se non la trovi nella posta in arrivo, 
+                                        controlla anche la cartella <strong>spam o posta indesiderata</strong>. Se l’email non dovesse arrivare, 
+                                        ti consigliamo di registrarti nuovamente utilizzando <strong>un indirizzo differente</strong>.
+                                    </p>
+                                </div>
+                              
+                                <div class="registration-footer">
+                                    Per qualsiasi problema puoi contattarci tramite la 
+                                    <a href="index.html#contact">sezione Contatti</a> oppure scrivere al nostro supporto tecnico: 
+                                    <a href="mailto:mjwpan71@gmail.com" class="email-link">mjwpan71@gmail.com</a>
+                                </div>
+                          </div>
+
+                          <div class="registration-panel">
+                                <h3 style="font-size: 1.1rem; font-weight: 700; color: #0f172a; margin: 0 0 16px 0; letter-spacing: -0.01em;">
+                                    Inserimento Email Terapeuta
+                                </h3>
+                                
+                                <div class="mb-1">
+                                 <div class="input-group">
+                                   <span class="input-group-text text-primary"><i class="fas fa-address-card"></i></span>
+                                   <input type="text" class="form-control" id="regnum" name="codiceterapeuta" placeholder="Inserisci l'Email fornita dal terapeuta." required>
+                                 </div>
+                              </div>
+
+                                <small id="clinicianHelpText" class="form-text text-muted" style="margin-top: 6px; font-size: 0.8rem; padding-left: 2px;">
+                                    L'Email è indispensabile per la corretta registrazione.
+                                </small>
+                            </div>
+
+                          <form id="registrationForm" class="mt-4" method="POST" action="#">
+                            
+                              <!--Nome-->
+                              <div class="mb-3">
+                                <div class="input-group">
+                                  <span class="input-group-text text-primary"><i class="fas fa-user"></i></span>
+                                  <input type="text" class="form-control" id="nome" name="nome" autocomplete="given-name" placeholder="Inserisci il tuo nome" required>
+                                </div>
+                              </div>
+
+                                <!--Cognome-->
+                              <div class="mb-3">
+                                 <div class="input-group">
+                                   <span class="input-group-text text-primary"><i class="fas fa-user"></i></span>
+                                   <input type="text" class="form-control" id="cognome" name="cognome" autocomplete="family-name" placeholder="Inserisci il tuo Cognome" required>
+                                 </div>
+                              </div>
+
+                              <!--Data di Nascita-->
+                               <div class="mb-3">
+                                  <div class="input-group">
+                                     <span class="input-group-text text-primary"><i class="fas fa-calendar-alt"></i></span>
+                                     <input type="date" class="form-control" id="birthDate" name="birthDate" min="1900-01-01">
+                                  </div>
+                              </div>
+
+                                <!--Regione-->
+                               <div class="mb-3">
+                                 <div class="input-group">
+                                  <span class="input-group-text text-primary"><i class="fas fa-map-marker-alt"></i></span>
+                                     <select class="form-select" id="regione" name="regione" required>
+                                       <option value="" disabled selected>Seleziona Regione</option>
+                                       <option value="Abruzzo">Abruzzo</option>
+                                       <option value="Basilicata">Basilicata</option>
+                                       <option value="Calabria">Calabria</option>
+                                       <option value="Campania">Campania</option>
+                                       <option value="Emilia-Romagna">Emilia-Romagna</option>
+                                       <option value="Friuli Venezia Giulia">Friuli Venezia Giulia</option>
+                                       <option value="Lazio">Lazio</option>
+                                       <option value="Liguria">Liguria</option>
+                                       <option value="Lombardia">Lombardia</option>
+                                       <option value="Marche">Marche</option>
+                                       <option value="Molise">Molise</option>
+                                       <option value="Piemonte">Piemonte</option>
+                                       <option value="Puglia">Puglia</option>
+                                       <option value="Sardegna">Sardegna</option>
+                                       <option value="Sicilia">Sicilia</option>
+                                       <option value="Toscana">Toscana</option>
+                                       <option value="Trentino-Alto Adige">Trentino-Alto Adige</option>
+                                       <option value="Umbria">Umbria</option>
+                                       <option value="Valle d'Aosta">Valle d’Aosta</option>
+                                       <option value="Veneto">Veneto</option>
+                                    </select>
+                                  </div>
+                                </div>
+                                
+                                <!--Genere-->
+                                <div class="mb-3">
+                                  <div class="input-group">
+                                    <span class="input-group-text text-primary"><i class="fas fa-venus-mars"></i></span>
+                                      <select class="form-select" id="genere" name="genere" required>
+                                      <option value="" disabled selected>Seleziona Genere</option>
+                                      <option value="Maschile">Maschile</option>
+                                      <option value="Femminile">Femminile</option>
+                                    </select>
+                                  </div>
+                                </div>
+
+                                <!--Email-->
+                                <div class="mb-3">
+                                  <div class="input-group">
+                                      <span class="input-group-text text-primary"><i class="fas fa-envelope"></i></span>
+                                      <input type="email" class="form-control" id="email" name="email" placeholder="Inserisci la tua email" required autocomplete="email">
+                                  </div>
+                                </div>
+
+                                <!--Password-->
+                                <div class="mb-3">
+                                  <div class="input-group">
+                                    <span class="input-group-text text-primary"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password" name="password" autocomplete="new-password" placeholder="Inserisci la password" required>
+                                    <!-- SHOW / HIDE PASSWORD -->
+                                    <span class="input-group-text password-toggle" style="cursor:pointer">
+                                      <i class="fas fa-eye"></i>
+                                    </span>
+                                  </div>
+                                  <div class="password-meter mt-3 d-flex gap-1">
+                                    <div class="meter-section flex-fill rounded" style="height:5px;background:#ddd;"></div>
+                                    <div class="meter-section flex-fill rounded" style="height:5px;background:#ddd;"></div>
+                                    <div class="meter-section flex-fill rounded" style="height:5px;background:#ddd;"></div>
+                                    <div class="meter-section flex-fill rounded" style="height:5px;background:#ddd;"></div>
+                                  </div>
+                                    <div id="passwordHelp" class="form-text text-muted text-center">
+                                         La Password deve essere comprensiva di almeno 8 caratteri, numeri e simboli, eventuali spazi saranno ignorati.
+                                      </div>
+                                </div>
+
+                                <!--linea di separazione-->
+                                <hr class="my-3 border-secondary">
+
+                                 <!--check buttons 1-->
+                                <div class="row justify-content-left">
+                                      <div class="col-auto">
+                                        <div class="form-check d-flex align-items-center">
+                                              <input class="form-check-input" type="checkbox" id="terms1" required>
+                                                <label class="form-check-label ms-2" for="terms1">
+                                                  <small>
+                                                    Dichiaro di aver letto e compreso l’
+                                                    <a href="privacy_pages/general_privacy.html" target="_blank" rel="noopener noreferrer">
+                                                      Informativa sulla Privacy
+                                                    </a>
+                                                  </small>
+                                                </label>
+                                        </div>
+                                      </div>
+                                </div>
+                                
+                                <!--check buttons 2-->
+                                <div class="row justify-content-left">
+                                      <div class="col-auto">
+                                        <div class="form-check d-flex align-items-center">
+                                          <input class="form-check-input" type="checkbox" id="terms2" required>
+                                            <label class="form-check-label ms-2" for="terms2">
+                                              <small>
+                                                Presto il mio consenso al trattamento dei miei dati clinici, come descritto nella 
+                                                <a href="privacy_pages/clinical_privacy.html" target="_blank" rel="noopener noreferrer">
+                                                  Informativa sulla Privacy 
+                                                </a>
+                                              </small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--check buttons 3-->
+                                <div class="row justify-content-left">
+                                    <div class="col-auto">
+                                      <div class="form-check d-flex align-items-center">
+                                        <input class="form-check-input" type="checkbox" id="terms3" required>
+                                          <label class="form-check-label ms-2" for="terms3">
+                                            <small>
+                                                Dichiaro di aver letto e compreso l’
+                                                <a href="privacy_pages/minor_privacy.html" target="_blank" rel="noopener noreferrer">
+                                                  Informativa sulla Privacy
+                                                </a> sul trattamento dei dati per i minori
+                                            </small>
+                                          </label>
+                                      </div>
+                                    </div>
+                                </div>
+
+                                <!--Submit-->
+                                <div class="row mt-3">
+                                   <button type="submit" id="registrazion_button" class="btn btn-primary px-4">Invia il modulo</button>
+                                   <div id="redirectBox">
+                                    <div id="redirectProgress"></div>
+                                       <span id="redirectText"><span id="countdown"></span>;
+                                      </span>
+                                    </div>
+                                  </div>
+
+                          </form>
+                      
+                     </div>
+                </div>
+            </div>
+      </div>
+
+  </section> <!-- /Pricing Section -->
+
+</main> <!-- /main -->
+
+    <!--inizio footer-->
+    <footer id="footer" class="footer position-relative">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="index.html" class="logo d-flex align-items-center">
+                  <img src="assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                  <li><a href="index.html#hero">Home</a></li>
+                  <li><a href="index.html#about">Mission</a></li>
+                  <li><a href="index.html#faq">FAQ</a></li>
+                  <li><a href="index.html#team">Team</a></li>
+                  <li><a href="index.html#testimonials">Testimonianze</a></li>
+                  <li><a href="index.html#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <!--<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>-->
+  <!--<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>-->
+  <!--<script src="assets/js/subabaseClient.js"></script>-->
+  <!--<script src="assets/js/password_masking.js"></script>-->
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+  <script src="assets/js/clinical-registrazion.js"></script>
+
+
+  
+  <script>
+
+  function showMessage(message, type = "success", onComplete = null) {
+    const box = document.getElementById("redirectBox");
+    const text = document.getElementById("redirectText");
+    const progress = document.getElementById("redirectProgress");
+
+    box.style.display = "block";
+    box.style.visibility = "visible";
+    box.style.opacity = "1";
+
+    // SUCCESS
+    if (type === "success") {
+      box.style.backgroundColor = "#0d6efd";
+      progress.style.width = "0%";
+
+      text.innerHTML = message + 'verrai reindirizzato alla home page in &nbsp;<span class="countdown">4</span>&nbsp;secondi.';
+
+      progress.offsetHeight;
+      progress.style.width = "100%";
+
+      let remaining = 4;
+
+      const timer = setInterval(() => {
+        remaining--;
+
+        const c = text.querySelector(".countdown");
+        if (c) c.textContent = remaining;
+
+        if (remaining <= 0) {
+          clearInterval(timer);
+          if (onComplete) onComplete();
+        }
+      }, 1000);
+    }
+
+    // LOADING
+    else if (type === "loading") {
+      box.style.backgroundColor = "#0d6efd";
+      text.textContent = message;
+      progress.style.width = "0%";
+
+      let progressVal = 0;
+
+      const interval = setInterval(() => {
+        if (progressVal < 90) {
+          progressVal += 0.5;
+          progress.style.width = progressVal + "%";
+        }
+      }, 20);
+
+      return () => {
+        clearInterval(interval);
+        progress.style.transition = "width 0.5s ease";
+        progress.style.width = "100%";
+      };
+    }
+
+    // ERROR
+    else {
+      box.style.backgroundColor = "#f44336";
+      progress.style.width = "0%";
+      text.textContent = message;
+    }
+  }
+
+  </script>
+
+  <script>
+  
+      function showError(message, onComplete = null) {
+        const box = document.getElementById("redirectBox");
+        const text = document.getElementById("redirectText");
+        const progress = document.getElementById("redirectProgress");
+
+        const duration = 4000; // 4 secondi reali
+        const start = performance.now();
+
+        box.style.display = "block";
+        box.style.visibility = "visible";
+        box.style.opacity = "1";
+        box.style.backgroundColor = "#f44336";
+
+        progress.style.width = "0%";
+        progress.style.transition = "none";
+
+        text.innerHTML = message + '&nbsp;<span id="countdown">4</span>&nbsp;secondi.';
+
+        function animate(now) {
+          const elapsed = now - start;
+
+          // percentuale reale basata sul tempo
+          const percent = Math.min((elapsed / duration) * 100, 100);
+          progress.style.width = percent + "%";
+
+          // countdown sincronizzato al tempo reale
+          const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
+          const c = document.getElementById("countdown");
+          if (c) c.textContent = remaining;
+
+          if (elapsed < duration) {
+            requestAnimationFrame(animate);
+          } else {
+            progress.style.width = "100%";
+            if (onComplete) onComplete();
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+
+  </script>
+
+ <script type="module">
+ 
+      // ✅ Import string utils
+      import {
+        normalizeItalianName,
+        normalizeItalianSurname
+      } from "./assets/js/string_utils.js";
+
+        // create supabase client
+      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+    
+      /*
+      const supabase = createClient(
+            "https://bjbnkqgyibadjlrcjqfs.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8"
+        );
+*/
+
+        const supabase = createClient(
+            "https://bjbnkqgyibadjlrcjqfs.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8",
+          {
+            auth: {
+              persistSession: false,   // 🚀 THIS IS THE TRICK
+              autoRefreshToken: false  // 🚀 STOPS BACKGROUND TOKEN SWAPPING
+            }
+          }
+      );
+
+       // Database RPC Trigger
+      async function fetchClinicianProfile(therapistEmail) {
+          console.log("⏱️ Requesting secure cross-schema matching via RPC tunnel...");
+          const { data, error } = await supabase
+              .rpc('get_clinician_profile_by_email', { input_email: therapistEmail });
+          if (error) {
+              console.error("RPC Bridge Error:", error);
+              return { data: null, error };
+          }
+          const profile = (data && data.length > 0) ? data[0] : null;
+          return { data: profile, error: null };
+      }
+
+      function validateAndCleanEmail(inputEmail) {
+          if (!inputEmail) return { isValid: false, email: "" };
+          // 1. Sanitize: Remove accidental spaces and force lowercase
+          const cleanEmail = String(inputEmail).trim().toLowerCase();
+          // 2. Standard RFC 5322 compliant Email Regex
+          const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+          // 3. Test structural validity
+          const isValid = emailRegex.test(cleanEmail);
+          return {
+              isValid: isValid,
+              email: cleanEmail // Returns the polished string safe for your RPC function
+          };
+      }
+
+      // event listeners
+      document.addEventListener("DOMContentLoaded", function () {
+
+      const form = document.getElementById("registrationForm");
+      const submitBtn = document.getElementById("registrazion_button");
+        
+      // ------------------------------------------------------------------------
+      // Event listener for form submission
+      form.addEventListener("submit", async (event) => {
+        
+        event.preventDefault(); // previeni submit di default
+
+        // Disabilita tasto submit per evitare invii multipli
+        submitBtn.disabled = true;
+        submitBtn.style.pointerEvents = "none";
+        
+        // Esegue il log out dell'utente nel caso sia già loggato
+        // Recupera sessione
+        const sessionResult = await supabase.auth.getSession();
+        /*
+        const session = sessionResult.data?.session;
+    
+        if (session) {
+          console.log("sessione attiva:", session);
+
+          // Recupera utente
+          const userResult = await supabase.auth.getUser();
+          const user = userResult.data?.user;
+
+          if (user) {
+            console.log("utente loggato:", user);
+            // Logout automatico
+            await supabase.auth.signOut();
+            console.log("utente sloggato:");
+          }
+        }
+        */
+        // Avvio barra loading
+        const completeLoadingBar =showMessage("⏳ Creazione account in corso...", "loading")|| (() => {});
+
+        // Collect email and password
+        const email = document.getElementById("email").value.trim();
+        // suggerimento di sicurezza: rimuovere spazi per evitare errori di battitura comuni (es. copia-incolla con spazi)
+        const password = document.getElementById("password").value.replace(/\s+/g, "");
+        const now = new Date().toISOString();
+        const validation = validateAndCleanEmail(document.getElementById("regnum").value);
+
+        if (!validation.isValid) {
+              completeLoadingBar();
+              submitBtn.disabled = false;
+              submitBtn.style.pointerEvents = "auto";
+              showError("❌ Email non corretta, stai per essere reindirizzato verso l'home page in", () => {
+              window.location.href = window.location.origin + "/index.html";
+            });
+          return;
+        }
+        console.log(validation.email);
+
+          /////////////////////////////////////////////////////////////////
+
+          // Execute the secure data aggregate fetch
+          const result = await fetchClinicianProfile(validation.email);
+          if (result.error || !result.data) {
+              completeLoadingBar();
+              submitBtn.disabled = false;
+              submitBtn.style.pointerEvents = "auto";
+              showError("❌ Questa Email non appartiene a nessun terapeuta, stai per essere reindirizzato verso l'home page in", () => {
+              window.location.href = window.location.origin + "/index.html";
+            });
+            return;
+          }
+
+          // get clinician data
+          const clinician = result.data;
+          //  console.log("Verified Clinician Details:", clinician);
+          //console.log(clinician.id);
+
+         /////////////////////////////////////////////////////////////////
+
+        //61a758ac-d6c6-44e7-89c3-fd5f473311dc
+
+         // create metadata struct
+        const metadata = 
+        {
+          name:                normalizeItalianName(document.getElementById("nome").value.trim()),
+          surname:             normalizeItalianSurname(document.getElementById("cognome").value.trim()),
+          registration_number: clinician.id,
+          consent_given:       document.getElementById("terms1").checked && 
+                               document.getElementById("terms2").checked && 
+                               document.getElementById("terms3").checked,
+          consent_date:        now,
+          creation_date:       now,
+          sub_type:            2, // il tipo di utente 1=terapeuta, 2=privato
+          birth_date:          document.getElementById("birthDate").value,
+          region:              document.getElementById("regione").value.trim(),
+          genre:               document.getElementById("genere").value.trim(),
+        };
+        
+        // signup
+        try {
+
+            // Simulazione errore per test gestione errori (da rimuovere in produzione)
+            //if (true) { throw new Error("Errore simulato"); }
+            // Simulazione errore per test gestione errori (da rimuovere in produzione)
+              
+            // Esegui signup in parallelo 
+            const signupPromise = supabase.auth.signUp({
+              email,
+              password,
+              options: {
+                emailRedirectTo: window.location.origin + "/confirm_2.html",
+                data: metadata
+              }
+            });
+
+            // Durata minima per UX (progress bar percepita)
+            const minDelay = new Promise(res => setTimeout(res, 1200));
+            // Attende entrambi
+
+            const [signupResult] = await Promise.all([signupPromise, minDelay]);
+            const { data, error } = signupResult;
+
+            // Gestione errore 
+            if (error || !data?.user) 
+            {
+                completeLoadingBar();
+                submitBtn.disabled = false;
+                submitBtn.style.pointerEvents = "auto";
+                showError("❌ Si è verificato un errore, stai per essere reindirizzato verso l'home page in", () => {
+                  window.location.href = window.location.origin + "/index.html";
+                });
+              return;
+            }
+
+              // Successo
+              completeLoadingBar(); // animazione finale al 100%
+              showMessage("✅ Controlla la tua email e clicca il link di conferma", "success", () => {
+              window.location.href = window.location.origin + "/index.html";
+            });
+
+            // Reset form e UI 
+            // form.reset();
+
+            const toggleIcon = document.querySelector('.password-toggle i');
+            if (toggleIcon) {
+              toggleIcon.classList.add('fa-eye');
+              toggleIcon.classList.remove('fa-eye-slash');
+            }
+
+            document.querySelectorAll('.meter-section').forEach(section => {
+              section.className = 'meter-section flex-fill rounded';
+            });
+
+            document.querySelectorAll('[required]').forEach(el =>
+              el.dispatchEvent(new Event('input'))
+            );
+
+        } catch (err) {
+            completeLoadingBar();
+            submitBtn.disabled = false;
+            submitBtn.style.pointerEvents = "auto";
+            showError("❌ Si è verificato un errore, stai per essere reindirizzato verso l'home page in", () => {
+              window.location.href = window.location.origin + "/index.html";
+            });
+        }
+            
+      });
+    });
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ </script>
+
+</body>
+
+</html>

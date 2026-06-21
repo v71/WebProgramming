@@ -1,0 +1,2092 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <!--<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png?v=2">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">-->
+
+  <!-- Standard favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon.png?v=1">
+  <!-- Fallback for older browsers -->
+  <!--<link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">-->
+  <!-- Apple (iPhone/iPad home screen) -->
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png?v=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+  <!-- Include Google Font with lighter weight -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!--mappa-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    
+  <!-- BLOG SLIDER -->
+  <style>
+
+    /* controlli per lo slide del blog */
+    .blog-slider .swiper-slide {
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .blog-slider .swiper-slide .testimonial-item {
+      border: 2px solid transparent;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border 0.3s ease;
+    }
+
+    .blog-slider .swiper-slide:hover .testimonial-item {
+      border: 2px solid rgb(0,0,255) !important;
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+  </style>
+
+<style>
+    /* Combine the main wrappers */
+    .init-swiper-1,
+    .init-swiper-2,
+    .init-swiper-3 {
+      position: relative;
+      cursor: pointer;
+    }
+
+    /* Frecce sovrapposte */
+    .init-swiper-1 .swiper-button-next, .init-swiper-1 .swiper-button-prev,
+    .init-swiper-2 .swiper-button-next, .init-swiper-2 .swiper-button-prev,
+    .init-swiper-3 .swiper-button-next, .init-swiper-3 .swiper-button-prev {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+      box-shadow: 0 4px 4px rgba(0,0,0,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    /* Rimuove il contenuto di default */
+    .init-swiper-1 .swiper-button-next::after, .init-swiper-1 .swiper-button-prev::after,
+    .init-swiper-2 .swiper-button-next::after, .init-swiper-2 .swiper-button-prev::after,
+    .init-swiper-3 .swiper-button-next::after, .init-swiper-3 .swiper-button-prev::after {
+      content: '';
+    }
+
+    /* Aggiungi freccia con CSS puro - SUCCESSIVE */
+    .init-swiper-1 .swiper-button-next::before,
+    .init-swiper-2 .swiper-button-next::before,
+    .init-swiper-3 .swiper-button-next::before {
+      content: '❯';
+      font-size: 20px;
+      color: rgb(0,0,255) !important;
+      font-weight: bold;
+    }
+    
+    /* Aggiungi freccia con CSS puro - PRECEDENTI */
+    .init-swiper-1 .swiper-button-prev::before,
+    .init-swiper-2 .swiper-button-prev::before,
+    .init-swiper-3 .swiper-button-prev::before {
+      content: '❮';
+      font-size: 20px;
+      color: rgb(0,0,255) !important;
+      font-weight: bold;
+    }
+
+    /* Hover leggero */
+    .init-swiper-1 .swiper-button-next:hover, .init-swiper-1 .swiper-button-prev:hover,
+    .init-swiper-2 .swiper-button-next:hover, .init-swiper-2 .swiper-button-prev:hover,
+    .init-swiper-3 .swiper-button-next:hover, .init-swiper-3 .swiper-button-prev:hover {
+      transform: translateY(-50%) scale(1.15);
+    }
+
+    /* Posizione orizzontale */
+    .init-swiper-1 .swiper-button-prev,
+    .init-swiper-2 .swiper-button-prev,
+    .init-swiper-3 .swiper-button-prev { left: 10px; }
+
+    .init-swiper-1 .swiper-button-next,
+    .init-swiper-2 .swiper-button-next,
+    .init-swiper-3 .swiper-button-next { right: 10px; }
+
+    /* Mobile Responsive Viewports */
+    @media (max-width: 768px) {
+      .init-swiper-1 .swiper-button-next, .init-swiper-1 .swiper-button-prev,
+      .init-swiper-2 .swiper-button-next, .init-swiper-2 .swiper-button-prev,
+      .init-swiper-3 .swiper-button-next, .init-swiper-3 .swiper-button-prev {
+        width: 32px;
+        height: 32px;
+      }
+      .init-swiper-1 .swiper-button-next::before, .init-swiper-1 .swiper-button-prev::before,
+      .init-swiper-2 .swiper-button-next::before, .init-swiper-2 .swiper-button-prev::before,
+      .init-swiper-3 .swiper-button-next::before, .init-swiper-3 .swiper-button-prev::before {
+        font-size: 16px;
+      }
+    }
+    
+    /* Container swiper paginazione globale */
+    .init-swiper-1 .swiper-pagination,
+    .init-swiper-2 .swiper-pagination,
+    .init-swiper-3 .swiper-pagination {
+      bottom: 12px;
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    /* Bullet base universale */
+    .init-swiper-1 .swiper-pagination-bullet,
+    .init-swiper-2 .swiper-pagination-bullet,
+    .init-swiper-3 .swiper-pagination-bullet {
+      width: 12px;
+      height: 12px;
+      background: rgba(0, 0, 255, 0.3);
+      border-radius: 50%;
+      transition: all 0.3s ease;
+      transform: scale(1);
+    }
+
+    /* Bullet attivo universale */
+    .init-swiper-1 .swiper-pagination-bullet-active,
+    .init-swiper-2 .swiper-pagination-bullet-active,
+    .init-swiper-3 .swiper-pagination-bullet-active {
+      background: rgb(0,0,255) !important;
+      transform: scale(1.4);
+      box-shadow: 0 0 6px rgba(0, 0, 255, 0.5) !important;
+    }
+
+    /* Hover su bullet */
+    .init-swiper-1 .swiper-pagination-bullet:hover,
+    .init-swiper-2 .swiper-pagination-bullet:hover,
+    .init-swiper-3 .swiper-pagination-bullet:hover {
+      transform: scale(1.2);
+      background: rgba(0, 0, 255, 0.6) !important;
+    }
+  </style>
+
+  <!-- COLORE ICONE SEZIONE CONTATTI -->
+  <style>
+
+    #contact i {
+      color: #007bff; /* blu per tutte le icone nella sezione contatti */
+    }
+
+  </style>
+
+  <!-- MESSAGGI DI ERRORE -->
+  <style>
+
+    .fade {
+      opacity: 0;                 /* inizialmente invisibile */
+      pointer-events: none;       /* non cliccabile quando invisibile */
+      transition: opacity 0.4s ease, transform 0.4s ease; /* fade + small scale for smoothness */
+      /* stile bottone rosso su nero */
+      background-color: black;
+      color: red;
+      border: none;
+      padding: 8px 12px;
+      margin-top: 0;
+      cursor: default;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      text-align: center;
+      border-radius: 8px; 
+    }
+
+    .fade.show {
+      opacity: 1;
+      pointer-events: auto;       /* cliccabile quando visibile */
+    }
+
+</style>
+
+<!-- MESSAGGI DI ERRORE -->
+<style>
+
+    .resend-fade {
+      opacity: 0;
+      transform: translateY(5px);
+      transition: opacity 0.4s ease, transform 0.3s ease;
+    }
+
+    .resend-fade.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+</style>
+
+<!-- TESTO AFFIANCATO VICINO SLIDERS -->
+  <style>
+
+    .info {
+      text-align: left;
+    }
+
+    .info h3,
+    .info p {
+      margin-left: 0;
+      padding-left: 0;
+    }
+
+</style>
+
+
+<style>
+
+/* --- Sober Mission Styles --- */
+.sober-heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    
+    /* Typography */
+    font-size: clamp(1.75rem, 4vw, 2.25rem) !important;
+    font-weight: 600 !important;
+    color: #012970;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px !important;
+    text-transform: none;
+    text-align: center;
+}
+
+/* The decorative lines */
+.sober-heading::before,
+.sober-heading::after {
+    content: "";
+    height: 2px;
+    width: 60px; /* Slightly longer for better balance */
+    background-color: #4154f1;
+    display: inline-block;
+    opacity: 0.4; /* Softens the blue to stay 'sober' */
+    border-radius: 2px;
+}
+
+.sober-mission {
+    font-size: clamp(1.05rem, 3vw, 1.2rem) !important;
+    line-height: 1.8;
+    color: #555;
+    max-width: 750px;
+    margin: 0 auto; /* Ensures it stays centered if you add more text */
+    font-weight: 400;
+    text-align: center;
+}
+
+/* Subtly highlights key terms */
+.sober-mission .highlight {
+    color: #012970;
+   /* border-bottom: 1px solid rgba(65, 84, 241, 0.15);*/ /* Slightly thicker but lighter color */
+    padding-bottom: 1px;
+    font-weight: 600; /* Added a tiny bit of weight to the highlight */
+}
+</style>
+
+<style>
+
+  /* Standard class to hide elements visually but keep them for SEO/Validators */
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+</style>
+
+<style>
+
+  .contact-box {
+    height: 100%;
+    padding: 10px;
+  }
+
+  .contact-box i {
+    font-size: 24px;
+    color: #4154f1;
+    margin-bottom: 15px;
+    display: inline-block;
+    /* Fixed width/height for the icon area ensures alignment */
+    width: 50px;
+    height: 50px;
+    background: rgba(65, 84, 241, 0.05);
+    border-radius: 50%;
+    line-height: 50px;
+    text-align: center;
+  }
+
+  .contact-box h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #012970;
+    margin-bottom: 10px;
+  }
+
+  .contact-box p {
+    font-size: 0.95rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .contact-box {
+    transition: transform 0.3s ease, background 0.3s ease;
+    border-radius: 12px;
+  }
+
+  .contact-box:hover {
+    background: rgba(65, 84, 241, 0.02);
+    transform: translateY(-5px);
+  }
+
+</style>
+
+<link href="assets/mycss/style-shared.css" rel="stylesheet">
+
+</head>
+
+<body class="index-page">
+<h1 class="visually-hidden">MyAssessments - Neurodivergenze ,adhd, dsa, disgrafia, discalculia</h1>
+
+<!-- Inizio header -->
+<header id="header" class="header d-flex align-items-center fixed-top">
+  <div class="container-fluid d-flex align-items-center justify-content-between">
+    
+    <!-- Logo -->
+    <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+      <img src="assets/img/logo_new_light_2.png" alt="logo" class="logo-default" style="height:40px;">
+      <img src="assets/img/logo_new_light_1.png" alt="logo" class="logo-scrolled" style="height:40px;">
+    </a>
+
+    <!--<nav id="navmenu" class="navmenu flex-grow-1 text-center">
+      <ul class="d-flex justify-content-center mb-0">
+        <li><a href="index.html#hero" class="active">Home</a></li>
+        <li><a href="index.html#about">Mission</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+        <li><a href="index.html#team">Team</a></li>
+        <li><a href="index.html#contact">Contatti</a></li>
+      </ul>
+      <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Apri menu"></i>
+    </nav>-->
+
+    <nav id="navmenu" class="navmenu">
+     <ul>
+        <li><a href="index.html#hero" class="active">Home</a></li>
+        <li><a href="index.html#about">Mission</a></li>
+        <li><a href="index.html#faq">FAQ</a></li>
+        <li><a href="index.html#team">Team</a></li>
+        <li><a href="index.html#contact">Contatti</a></li>
+      </ul>
+      <button type="button" class="mobile-nav-toggle d-xl-none bg-transparent border-0 p-0" aria-label="Apri menu">
+        <i class="bi bi-list" aria-hidden="true"></i>
+      </button>
+    </nav>
+    
+    <!-- Pulsanti -->
+      <div style="display: flex; gap: 10px;">
+        <!--<a class="btn btn-primary" href="#about">Iniziamo!</a>-->
+        <a class="btn btn-primary" href="scelta_registrazione_2.html">Registrati</a>
+      </div>
+
+  </div>
+</header>
+<!-- Fine header -->
+
+
+  <!--inizio main-->
+  <main class="main">
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero section dark-background">
+      <img src="assets/img/hero/hero-bg-5.jpg" alt="" data-aos="fade-in">
+      <!-- Container -->
+      <div class="container">
+        <!-- Row -->
+        <div class="row">
+
+          <div class="container d-flex justify-content-center align-items-start" style="min-height:100vh; padding-top:200px;">
+            <div class="row w-100 justify-content-center" data-aos="fade-up" data-aos-delay="100">
+
+              <!-- Titolo -->
+              <div class="col-lg-10 text-center mb-4">
+                <h2>Area Personale</h2>
+                <hr style="border: none; height: 2px; background-color: #ffffff; width: 400px; margin: 20px auto;  opacity: 1;">
+                <p>Inserisci le tue credenziali di accesso</p>
+              </div>
+
+              <!-- Form -->
+                 <div class="col-lg-5">
+                  
+                  <form id="loginFormClinician">
+                    <div class="mb-3">
+                      <input id="email1" type="email" class="form-control" placeholder="Inserisci la tua email" required>
+                    </div>
+
+                    <div class="mb-3">
+                      <div class="input-group">
+                        <input id="password1" type="password" class="form-control" placeholder="Inserisci la tua password" required>
+                        <span class="input-group-text password-toggle" style="cursor:pointer">
+                          <i class="fas fa-eye"></i>
+                        </span>
+                      </div>
+                    </div>
+
+                    <button id="loginBtn" type="submit" class="mb-3 btn btn-primary w-100">Accedi</button>
+
+                  </form>
+
+                   <button id="loginError2" class="fade">-</button>
+                   <button id="resendConfirmation" class="btn btn-primary d-none resend-fade mt-3 w-100">
+                      Rimanda email di conferma
+                  </button>
+
+               </div>
+            </div>
+          </div>
+
+        </div> <!-- Row -->
+      </div> <!-- Container -->
+    </section><!-- /Hero Section -->
+
+    <!-- La nostra Mission -->
+    <section id="about" class="blog-slider testimonials section">
+      
+       <!-- Sober Section Title -->
+      <div class="container section-title" data-aos="fade-up">
+        <h3 class="sober-heading">La nostra Mission</h3>
+        <p class="sober-mission mx-auto">
+          Uniamo <span class="highlight">tecnologia</span>, ricerca scientifica e <span class="highlight">intelligenza artificiale</span> per 
+          rendere la valutazione e il potenziamento cognitivo più semplici, 
+          precisi e coinvolgenti.
+        </p>
+      </div>
+
+      <!-- Container -->
+      <div class="container">
+        <!-- Row align-items-center -->
+       
+        <div class="row justify-content-center">
+          <!-- col-lg -->
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <!-- swiper -->
+            <div class="swiper init-swiper-3" style="min-height: 300px;">
+              <!-- swiper-wrapper -->
+              <div class="swiper-wrapper">
+
+                <!-- Slide 1 -->
+                <div class="swiper-slide" data-url="/mission_pages/machine-learning.html" data-crosslink="true" data-article="article-1">
+                   <div class="testimonial-item">
+                     
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/Mission/microchip.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Cos'è il Machine Learning</h3>
+                          <h4 class="text-wrap">Una risorsa per il Professionista.</h4>
+                        </div>
+                      </div>
+                      <p>
+                          <i class="bi bi-quote quote-icon-left"></i>
+                            <span>
+                             L'integrazione del Machine Learning nella pratica clinica non automatizza la terapia, 
+                             ma potenzia l'efficacia clinica, non delega la scelta, ma fornisce dati oggettivi 
+                             per prendere decisioni terapeutiche migliori...
+                            </span>
+                          <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  
+                <!-- Slide 2 -->
+                <div class="swiper-slide" data-url="/mission_pages/brain.html" data-crosslink="true" data-article="article-2">
+                   <div class="testimonial-item">
+                    
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/mission/brain.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Il Cervello come Direttore d’Orchestra del Nostro Benessere</h3>
+                          <h4 class="text-wrap">Il sistema nervoso centrale opera come un coordinatore centrale integrato.</h4>
+                        </div>
+                      </div>
+                      <p>
+                          <i class="bi bi-quote quote-icon-left"></i>
+                            <span>
+                              Quando si riscontrano disfunzioni neurobiologiche o atipie dello sviluppo, 
+                              l'architettura dei circuiti neurali perde la sua sincronia.<br> 
+                              Il potenziamento cognitivo e psicologico mira a ripristinare l'equilibrio 
+                              funzionale e la connettività sinaptica attraverso protocolli mirati...
+                            </span>
+                          <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 3 -->
+                  <div class="swiper-slide" data-url="/mission_pages/piano-pers.html" data-crosslink="true" data-article="article-3">
+                    <div class="testimonial-item">
+                      
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/mission/diagnosis-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Dalla Diagnosi al Piano di Lavoro Personalizzato</h3>
+                          <h4 class="text-wrap">Il nostro processo unisce la precisione algoritmica 
+                                                all'esperienza clinica per creare percorsi su misura.</h4>
+                        </div>
+                      </div>
+                      <p>
+                          <i class="bi bi-quote quote-icon-left"></i>
+                            <span>
+                              La nostra metodologia operativa si fonda su un paradigma ibrido avanzato, concepito per superare 
+                              le limitazioni della psicometria tradizionale attraverso la convergenza tra la precisione 
+                              computazionale dei modelli di Machine Learning e la profondità dell'analisi clinica...
+                            </span>
+                          <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 4 -->
+                  <div class="swiper-slide" data-url="mission_pages/valutazione.html" data-crosslink="true" data-article="article-4">
+                    <div class="testimonial-item">
+                      
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/mission/personal-growth-1.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Valutazione in itinere</h3>
+                          <h4 class="text-wrap">La Sinergia Perfetta tra<br> Algoritmo e Competenza Clinica.</h4>
+                        </div>
+                      </div>
+                      <p>
+                          <i class="bi bi-quote quote-icon-left"></i>
+                            <span>
+                             Il potenziamento non è un percorso statico, ma un'evoluzione continua. 
+                             Grazie al monitoraggio in itinere, siamo in grado di misurare ogni progresso, 
+                             adattando il piano di lavoro in tempo reale per garantire la massima efficacia terapeutica...
+                            </span>
+                          <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 5 -->
+                  <div class="swiper-slide" data-url="mission_pages/sostegno-famiglia.html" data-crosslink="true" data-article="article-5">
+                    <div class="testimonial-item">
+                      
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/mission/family-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Il Valore del Sostegno alla Famiglia</h3>
+                          <h4 class="text-wrap">Garantire un supporto concreto ai genitori ha un valore terapeutico fondamentale.</h4>
+                        </div>
+                      </div>
+
+                      <p>
+                          <i class="bi bi-quote quote-icon-left"></i>
+                            <span>
+                            Sostenere la famiglia non è un elemento secondario, ma il pilastro centrale per 
+                            il successo del percorso. Quando un figlio affronta fatiche legate a ADHD, DSA o BES,
+                            l'intero nucleo familiare vive una situazione di forte carico emotivo...
+                            </span>
+                          <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                </div> <!-- swiper-wrapper -->
+
+                <div class="swiper-pagination swiper-pagination-bullets"></div>
+                <!-- frecce -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
+            </div> <!-- swiper -->
+          </div> <!--col-lg-->
+        
+           <div class="col-lg-5 info" data-aos="fade-up" data-aos-delay="200">
+              <h3 class="responsive-h3">Il Machine Learning al servizio della terapia</h3>
+              <p class="responsive-description">
+                  La nostra missione è supportare i terapeuti con strumenti innovativi basati su 
+                  intelligenza artificiale, ricerca scientifica e tecnologia avanzata, per rendere 
+                  la valutazione e il trattamento più accurati, efficienti e personalizzati. 
+                  <span class="d-block mt-2">
+                      Crediamo in un approccio che unisce rigore scientifico e semplicità d’uso, 
+                      offrendo soluzioni che migliorano il lavoro dei professionisti e la qualità 
+                      della vita delle persone che assistono.
+                  </span>
+              </p>
+             </div>
+        
+
+        </div> <!-- Row align-items-center -->
+      </div> <!-- Container -->
+    </section> <!-- Mission -->
+
+    <!-- Interventi Clinici Digitali -->
+    <section id="interventi" class="blog-slider testimonials section">
+
+      <!-- Section Title: Aree di Intervento -->
+      <div class="container section-title" data-aos="fade-up">
+        <h3 class="sober-heading">Aree di Intervento</h3>
+        <p class="sober-mission mx-auto">
+          Quando la <span class="highlight">scienza</span> incontra il <span class="highlight">gioco</span>, 
+          la neuroriabilitazione diventa più efficace, coinvolgente e misurabile.
+        </p>
+      </div><!-- End Section Title -->
+
+      <!-- Container -->
+      <div class="container">
+        <!-- Row align-items-center -->
+        <!--<div class="row justify-content-center">-->
+ 
+        <div class="row align-items-center">
+          <div class="col-lg-5 info" data-aos="fade-up" data-aos-delay="200">
+              <h3 class="responsive-h3">Interventi Digitali Assistiti</h3>
+              <p class="responsive-description">
+                  Programmi di valutazione e potenziamento cognitivo basati su evidenze scientifiche, 
+                  pensati per supportare bambini, adolescenti e adulti nel miglioramento delle abilità 
+                  cognitive, dell’apprendimento e del benessere quotidiano.
+                  <span class="d-block mt-2">
+                      Gli interventi sono progettati per accompagnare la persona lungo percorsi 
+                      di sviluppo, prevenzione e riabilitazione neuropsicologica.
+                  </span>
+              </p>
+          </div>
+
+          <!-- col-lg -->
+          <div class="col-lg-7" data-aos="fade-up" data-aos-delay="100">
+            <!-- swiper -->
+            <div class="swiper init-swiper-1" style="min-height: 300px;">
+              <!-- swiper-wrapper -->
+              <div class="swiper-wrapper">
+
+                <!-- Slide 1 -->
+                <div class="swiper-slide" data-url="/ida_pages/funzioni-cognitive.html" data-crosslink="true" data-article="article-1">
+                   <div class="testimonial-item">
+                      
+                       <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/blog_2/critical-thinking-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Funzioni Cognitive</h3>
+                          <h4 class="text-wrap">Le funzioni cognitive sono i processi mentali che ci permettono di svolgere qualsiasi compito.</h4>
+                        </div>
+                      </div>
+                      <p>
+                        <i class="bi bi-quote quote-icon-left"></i>
+                          <span>
+                            Le funzioni cognitive consentono al soggetto di avere un ruolo attivo nei
+                            processi di ricezione, selezione, trasformazione, immagazzinamento, 
+                            elaborazione e recupero delle informazioni, che gli permettono di 
+                            operare nel mondo circostante.
+                          </span>
+                        <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                <!-- Slide 2 -->
+                <div class="swiper-slide" data-url="ida_pages/gnosie.html" data-crosslink="true" data-article="article-2">
+                   <div class="testimonial-item">
+
+                       <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/blog_2/light-bulb-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Gnosie</h3>
+                          <h4 class="text-wrap">Comprendere il mondo attraverso i sensi.</h4>
+                        </div>
+                      </div>
+                      <p>
+                        <i class="bi bi-quote quote-icon-left"></i>
+                          <span>
+                            Le gnosie permettono di riconoscere e interpretare informazioni sensoriali, 
+                            nei disturbi del neurosviluppo, DSA o ADHD, difficoltà gnosiche 
+                            possono ostacolare apprendimento, comunicazione e vita quotidiana.
+                          </span>
+                        <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 3 -->
+                  <div class="swiper-slide" data-url="ida_pages/linguaggio.html" data-crosslink="true" data-article="article-3">
+                    <div class="testimonial-item">
+        
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/blog_2/linguistics-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Linguaggio</h3>
+                          <h4 class="text-wrap">La comunicazione verbale nei disturbi ADHD e DSA.</h4>
+                        </div>
+                      </div>
+                      <p>
+                          <i class="bi bi-quote quote-icon-left"></i>
+                            <span>
+                              Le competenze linguistiche sono fondamentali per sviluppo cognitivo, 
+                              scolastico e sociale; in ADHD e DSA, difficoltà 
+                              specifiche possono influenzare comunicazione, apprendimento e 
+                              partecipazione sociale senza riflettere una mancanza di capacità.
+                            </span>
+                          <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 4 -->
+                  <div class="swiper-slide" data-url="/ida_pages/attenzione.html" data-crosslink="true" data-article="article-4">
+                    <div class="testimonial-item">
+        
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/blog_2/point-up-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Attenzione</h3>
+                          <h4 class="text-wrap">L'attenzione nei disturbi ADHD e DSA.</h4>
+                        </div>
+                      </div>
+                      <p>
+                        <i class="bi bi-quote quote-icon-left"></i>
+                          <span>
+                            L’attenzione consente di selezionare e gestire informazioni rilevanti; in ADHD e DSA, le difficoltà 
+                            attentive possono influenzare apprendimento, organizzazione e vita quotidiana, richiedendo interventi personalizzati.
+                          </span>
+                        <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 5 -->
+                  <div class="swiper-slide" data-url="ida_pages/orientamento.html" data-crosslink="true" data-article="article-5">
+                    <div class="testimonial-item">
+        
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/blog_2/wind-rose-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Orientamento</h3>
+                          <h4 class="text-wrap">Orientarsi nello spazio, nel tempo e nelle attività.</h4>
+                        </div>
+                      </div>
+                      <p>
+                        <i class="bi bi-quote quote-icon-left"></i>
+                          <span>
+                            L’orientamento permette di collocarsi nello spazio, nel tempo e nelle situazioni quotidiane; nei bambini e adulti con ADHD, 
+                            DSA o altri disturbi del neurosviluppo, difficoltà in queste aree possono compromettere organizzazione, autonomia e sicurezza.
+                          </span>
+                        <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 6 -->
+                  <div class="swiper-slide" data-url="ida_pages/memory.html" data-crosslink="true" data-article="article-6">
+                    <div class="testimonial-item">
+        
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/blog_2/amnesia-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Memoria</h3>
+                          <h4 class="text-wrap">Migliorare la memoria e l'apprendimento.</h4>
+                        </div>
+                      </div>
+                      <p>
+                        <i class="bi bi-quote quote-icon-left"></i>
+                          <span>
+                              La memoria è essenziale per apprendere; nei bambini con ADHD o DSA, difficoltà nella memoria di lavoro possono 
+                              influire sul rendimento scolastico. Strategie e strumenti mirati aiutano a potenziare la memoria e supportare l’apprendimento.
+                          </span>
+                        <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 7 -->
+                  <div class="swiper-slide" data-url="ida_pages/funzioni-esecutive.html" data-crosslink="true" data-article="article-7">
+                    <div class="testimonial-item">
+        
+                       <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/blog_2/adaptability-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Funzioni Esecutive</h3>
+                          <h4 class="text-wrap">Pianificare, organizzare, autoregolarsi.</h4>
+                        </div>
+                      </div>
+                      <p>
+                        <i class="bi bi-quote quote-icon-left"></i>
+                          <span>
+                            Le funzioni esecutive coordinano pianificazione, organizzazione, controllo degli impulsi e adattamento ai cambiamenti. Nei bambini con DSA o ADHD, 
+                            difficoltà in queste aree possono limitare autonomia e gestione dei compiti; strategie mirate aiutano a sviluppare sicurezza e indipendenza.
+                          </span>
+                        <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+                  <!-- Slide 8 -->
+                  <div class="swiper-slide" data-url="ida_pages/visuo-spaziali.html" data-crosslink="true" data-article="article-8">
+                    <div class="testimonial-item">
+        
+                       <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/blog_2/skill-3.png" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Abilità Visuo-Spaziali</h3>
+                          <h4 class="text-wrap">Imparare guardando e organizzando.</h4>
+                        </div>
+                      </div>
+                      <p>
+                        <i class="bi bi-quote quote-icon-left"></i>
+                          <span>
+                            Le abilità visuo-spaziali aiutano i bambini con DSA e ADHD a comprendere informazioni, organizzare compiti e 
+                            affrontare la scuola con maggiore concentrazione, autonomia e sicurezza, sfruttando strumenti visivi come schemi, mappe e colori.
+                          </span>
+                        <i class="bi bi-quote quote-icon-right"></i>
+                      </p>
+                        <div class="d-flex">
+                          <img src="assets/img/blog_1/blog-author-1.jpg"
+                            alt="Dott.ssa Annalisa Panella"
+                            class="rounded-circle me-2"
+                            width="40" height="40">
+                            <div class="small text-muted">
+                              <div class="fw-bold text-dark">Dott.ssa Annalisa Panella</div>
+                              <time datetime="2022-01-01">1 Gen 2022</time>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+
+              </div> <!-- swiper-wrapper -->
+
+                <div class="swiper-pagination swiper-pagination-bullets"></div>
+                <!-- frecce -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+
+            </div> <!-- swiper -->
+          </div> <!--col-lg-->
+        </div> <!-- Row align-items-center -->
+      </div> <!-- Container -->
+    </section> <!-- Interventi Clinici Digitali -->
+
+    <!-- Faq Section -->
+    <section id="faq" class="faq section light-background">
+      
+       <!-- Section Title: F.A.Q. -->
+      <div class="container section-title" data-aos="fade-up">
+        <h3 class="sober-heading">F.A.Q.</h3>
+        <p class="sober-mission mx-auto">
+          Tutto quello che desideri sapere sul nostro <span class="highlight">metodo</span> 
+          e sulla nostra <span class="highlight">tecnologia</span>.
+        </p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+        <!--<div class="row justify-content-center">-->
+           <div class="row align-items-center">
+            <div class="col-lg-5 info" data-aos="fade-up" data-aos-delay="200">
+            <h3>Domande più frequenti</h3>
+             <p class="responsive-description">
+                Le risposte presenti nelle FAQ hanno uno scopo informativo e
+                vogliono offrire un primo orientamento. Pur impegnandoci a
+                mantenerle aggiornate, per esigenze personali o casi 
+                specifici ti invitiamo a contattarci o a rivolgerti 
+                a un professionista di riferimento.
+            </p>
+          </div>
+
+            <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="faq-container">
+
+              <div class="faq-item faq-content">
+                <h3><span>Che scale di valutazione vengono utilizzate?</span></h3>
+                <div class="faq-content text-muted">
+                  <p>
+                      Tutte le rampe che portano ai piani superiori , scale di legno, scale in alluminio, 
+                      sgabelli, sedie, poltrone, tutto quello che puo' essere utilizzato per 
+                      prendere cose che stanno in alto.
+                  </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item faq-content">
+                <h3><span>Che cos’è l’ADHD e come si manifesta?</span></h3>
+                <div class="faq-content text-muted">
+                  <p>
+                      L’ADHD (Disturbo da Deficit di Attenzione/Iperattività) è un disturbo dello sviluppo che può rendere difficile per bambini e adulti concentrarsi, controllare l’impulsività e gestire l’energia.
+                      I sintomi principali sono tre : Difficoltà di attenzione: facile distrazione, fatica a completare compiti o seguire istruzioni.
+                      Impulsività: agire senza riflettere, interrompere gli altri, prendere decisioni affrettate.
+                      Iperattività: muoversi continuamente, parlare molto, difficoltà a stare fermi.
+                      I sintomi possono variare da persona a persona e non tutti i bambini iperattivi hanno ADHD. Una diagnosi accurata deve essere fatta da uno specialista.
+                  </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item">
+                <h3><span>L’ADHD è una condizione solo dei bambini o può persistere anche negli adulti?</span></h3>
+                <div class="faq-content text-muted">
+                  <p>
+                      No, il disturbo da ADHD può persistere anche nell’età adulta. Circa il 40-60% delle persone diagnosticate da bambini continua ad avere sintomi, 
+                      che spesso cambiano forma.
+                      L'iperattività può ridursi, trasformandosi in irrequietezza interiore,
+                      disattenzione e impulsività.I sintomi restano spesso presenti, influenzando lavoro, studio e relazioni
+                      Anche chi non è stato diagnosticato da bambino può scoprire da adulto di avere l’ADHD.
+                  </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item">
+                <h3><span>Quali sono le cause dell’ADHD? È genetico o ambientale?</span></h3>
+                <div class="faq-content text-muted">
+                  <p>
+                    Le cause dell’ADHD non sono completamente note, ma dipendono da una combinazione di fattori genetici e ambientali.
+                    Il disturbo da DHD tende a presentarsi più spesso in famiglie dove altri membri hanno il disturbo, si sopsettano origini genetiche.
+                    Anche i fattori ambientali possono contribuire come prematurità, basso peso alla nascita, esposizione prenatale a sostanze dannose o forte stress nei primi anni di vita.
+                    Differenze nello sviluppo e nel funzionamento di alcune aree cerebrali legate all’attenzione e al controllo degli impulsi, possono contribuire alla comparsa del disturbo ADHD.
+                    L’ADHD non è causato da cattiva educazione, troppi stimoli digitali o mancanza di disciplina.
+                  </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item">
+                <h3><span>Esistono test o screening online per l’ADHD? Sono affidabili?</span></h3>
+                <div class="faq-content text-muted">
+                  <p>
+                    Alcuni strumenti online sono basati su questionari validati, come Adult ADHD Self‑Report Scale (ASRS) e possono aiutare 
+                    a identificare segnali tipici di ADHD. <br>Alcuni studi recenti suggeriscono che in certi casi test online strutturati possono 
+                    avvicinarsi a una valutazione clinica, specialmente se accompagnati da interviste virtuali con professionisti. 
+                    In generale, un test online può essere utile come primo passo preliminare: se i risultati fanno emergere difficoltà, 
+                    può servire come spunto per rivolgersi a un professionista.
+                  </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+              <div class="faq-item">
+                <h3><span>Che cos’è il potenziamento cognitivo nei bambini?</span></h3>
+                <div class="faq-content text-muted">
+                  <p>
+                    Il potenziamento cognitivo nei bambini è un insieme di attività, esercizi e strategie pensate per stimolare e migliorare funzioni mentali importanti, come:
+                    attenzione, memoria, linguaggio, capacità di problem solving, controllo degli impulsi, abilità visuo-spaziali, pianificazione e organizzazione.
+                    L’obiettivo non è “rendere un bambino più intelligente”, ma rafforzare abilità che supportano l’apprendimento, la gestione delle emozioni e l’autonomia quotidiana.
+                    Il potenziamento può essere svolto da psicologi, neuropsicologi o educatori specializzati, attraverso giochi strutturati, software cognitivi, training di attenzione, esercizi carta-matita, attività motorie integrate e tecniche metacognitive.
+                    Serve soprattutto in caso di difficoltà scolastiche, ADHD, DSA, ritardi nelle funzioni esecutive o quando si vuole favorire uno sviluppo più armonico delle capacità cognitive.
+                  </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+              
+              <div class="faq-item">
+                <h3><span>A che età è consigliato iniziare il potenziamento cognitivo?</span></h3>
+                <div class="faq-content text-muted">
+                  <p>
+                    Il potenziamento cognitivo può essere iniziato già in età prescolare, intorno ai 4–5 anni, con attività semplici e giocose.
+                    L’età ideale dipende dalle esigenze del bambino fra i 4–6 anni si possono mettere in atto interventi leggeri e ludici per stimolare attenzione, memoria e linguaggio.
+                    Fra i 6–10 anni si puo' iniziare un potenziamento più strutturato, utile per difficoltà scolastiche, DSA o ADHD.
+                    Fra i 11–14 anni l'adoloscente puo' sostenere un training più avanzato su funzioni esecutive, organizzazione e metodo di studio.
+                    In generale, prima si interviene, più è possibile prevenire o ridurre difficoltà future, ma il potenziamento è utile a qualsiasi età dello sviluppo.
+                  </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+               <div class="faq-item">
+                <h3><span>È necessario un monitoraggio professionale durante il percorso di potenziamento cognitivo?</span></h3>
+                <div class="faq-content text-muted">
+                  <p>
+                      Sì, il monitoraggio di un professionista è fortemente consigliato.
+                      Uno psicologo o un esperto in neuropsicologia può valutare i progressi in modo oggettivo,
+                      adattare gli esercizi alle reali esigenze del bambino ed 
+                      evitare attività non adatte o potenzialmente frustranti
+                      guidare genitori e insegnanti nelle strategie da usare a casa e a scuola.
+                      Il potenziamento può includere attività svolte a casa, ma la supervisione professionale garantisce efficacia e sicurezza.
+                  </p>
+                </div>
+                <i class="faq-toggle bi bi-chevron-right"></i>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!--Teams section-->
+    <section id="team" class="team section">
+
+       <!-- Section Title: Teams -->
+      <div class="container section-title" data-aos="fade-up">
+        <h3 class="sober-heading">Team</h3>
+        <p class="sober-mission mx-auto">
+          Fai conoscenza con il nostro team di <span class="highlight">professionisti.</span>
+        </p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+        <div class="row gy-5">
+
+          <!-- Member 1 -->
+          <div class="col-lg-3 col-md-6 member" data-aos="fade-up" data-aos-delay="100">
+            <div class="member-img">
+              <img src="assets/img/team/team-6.jpg" class="img-fluid" alt="">
+              <div class="social">
+                <a href="#"><i class="bi bi-twitter-x"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+            <div class="member-info text-center">
+              <h4>Dott.ssa Annalisa Panella</h4>
+              <span>Founder & Chief Executive Officer (CEO)</span>
+              <p>Responsabile scientifica e fondatrice di MyAssessments.</p>
+            </div>
+          </div>
+
+          <!-- Member 2 -->
+          <div class="col-lg-3 col-md-6 member" data-aos="fade-up" data-aos-delay="100">
+            <div class="member-img">
+              <img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
+              <div class="social">
+                <a href="#"><i class="bi bi-twitter-x"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+            <div class="member-info text-center">
+              <h4>Elena Santisi</h4>
+              <span>Product Manager</span>
+              <p>Coordina sviluppo e qualità dei servizi digitali.</p>
+            </div>
+          </div>
+
+          <!-- Member 3 -->
+          <div class="col-lg-3 col-md-6 member" data-aos="fade-up" data-aos-delay="100">
+            <div class="member-img">
+              <img src="assets/img/team/team-4.jpg" class="img-fluid" alt="">
+              <div class="social">
+                <a href="#"><i class="bi bi-twitter-x"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+            <div class="member-info text-center">
+              <h4>Erica Santisi</h4>
+              <span>Chief Technology Officer (CTO)</span>
+              <p>Responsabile tecnica e innovazione della piattaforma.</p>
+            </div>
+          </div>
+
+          <!-- Member 4 -->
+          <div class="col-lg-3 col-md-6 member" data-aos="fade-up" data-aos-delay="100">
+            <div class="member-img">
+              <img src="assets/img/team/team-5.jpg" class="img-fluid" alt="">
+              <div class="social">
+                <a href="#"><i class="bi bi-twitter-x"></i></a>
+                <a href="#"><i class="bi bi-facebook"></i></a>
+                <a href="#"><i class="bi bi-instagram"></i></a>
+                <a href="#"><i class="bi bi-linkedin"></i></a>
+              </div>
+            </div>
+            <div class="member-info text-center">
+              <h4>Dott.Ing. Vincenzo Panella</h4>
+              <span>Sviluppatore</span>
+              <p>Sviluppo della piattaforma.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="testimonials section light-background">
+
+      <!-- Section Title: Teams -->
+      <div class="container section-title" data-aos="fade-up">
+        <h3 class="sober-heading">Testimonianze</h3>
+        <p class="sober-mission mx-auto">
+            Cosa dicono di <span class="highlight">noi.</span>
+        </p>
+      </div><!-- End Section Title -->
+
+      <div class="container">
+        <div class="row justify-content-center">
+        
+          <div class="col-lg-5 info" data-aos="fade-up" data-aos-delay="200">
+              <h3 class="responsive-h3">Disclaimer</h3>
+              <p class="responsive-description">
+                  Le testimonianze presenti in questa pagina rappresentano esperienze personali fornite volontariamente dagli utenti.
+                  Per motivi di privacy le email non sono visibili.
+                  <span class="d-block mt-2">
+                     Le opinioni riportate non sostituiscono in alcun modo una valutazione clinica o un percorso terapeutico professionale.
+                    Per informazioni personalizzate o per un parere qualificato, è sempre consigliabile rivolgersi a uno psicologo o a un professionista della salute mentale.
+                  </span>
+              </p>
+          </div>
+
+          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+            <div class="swiper init-swiper-2" style="min-height: 300px;">
+              <div class="swiper-wrapper">
+
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                  
+                       <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/testimonials/testimonials-1.jpg" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Saul Goodman</h3>
+                          <h4 class="text-wrap">Ceo Founder</h4>
+                        </div>
+                      </div>
+        
+                    <p>
+                      <i class="bi bi-quote quote-icon-left"></i>
+                      <span>Proin iaculis purus consequat sem cure digni ssim donec porttitora entum suscipit rhoncus. Accusantium quam, ultricies eget id, aliquam eget nibh et. Maecen aliquam, risus at semper.</span>
+                      <i class="bi bi-quote quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
+
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Sara Wilsson</h3>
+                          <h4 class="text-wrap">Designer</h4>
+                        </div>
+                      </div>
+        
+                    <p>
+                      <i class="bi bi-quote quote-icon-left"></i>
+                      <span>Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid cillum eram malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.</span>
+                      <i class="bi bi-quote quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
+
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Jena Karli</h3>
+                          <h4 class="text-wrap">Store Owner</h4>
+                        </div>
+                      </div>
+                    
+                    <p>
+                      <i class="bi bi-quote quote-icon-left"></i>
+                      <span>Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.</span>
+                      <i class="bi bi-quote quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
+
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    
+                      <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">Matt Brandon</h3>
+                          <h4 class="text-wrap">Freelancer</h4>
+                        </div>
+                      </div>
+
+                    <p>
+                      <i class="bi bi-quote quote-icon-left"></i>
+                      <span>Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat minim velit minim dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.</span>
+                      <i class="bi bi-quote quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
+
+                <div class="swiper-slide">
+                  <div class="testimonial-item">
+                    
+                    <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                        <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img flex-shrink-0" alt="" style="width: 120px; height: auto;">
+                        <!-- Added 'flex-grow-1' and 'min-width-0' to prevent bleeding -->
+                        <div class="text-content mb-3 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                          <h3 class="text-truncate-custom">John Larson</h3>
+                          <h4 class="text-wrap">Entrepreneur</h4>
+                        </div>
+                      </div>
+
+                    <p>
+                      <i class="bi bi-quote quote-icon-left"></i>
+                      <span>Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam enim culpa labore duis sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.</span>
+                      <i class="bi bi-quote quote-icon-right"></i>
+                    </p>
+                  </div>
+                </div><!-- End testimonial item -->
+
+              </div>
+
+               <div class="swiper-pagination swiper-pagination-bullets"></div>
+                <!-- frecce -->
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+    </section><!-- Testimonials Section -->
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+
+          <!-- Section Title: Teams -->
+          <div class="container section-title" data-aos="fade-up">
+            <h3 class="sober-heading">Contatti</h3>
+            <div class="sober-divider"></div>
+            <p class="sober-mission mx-auto">
+                Scegli il modo migliore per te di  <span class="highlight">contattarci.</span>
+            </p>
+          </div><!-- End Section Title -->
+
+      <div class="container" data-aos="fade-up">
+        <div class="row gy-4 d-flex align-items-stretch">
+          <!-- Colonna sinistra: Info di contatto -->
+          <div class="col-md-6 d-flex">
+          
+            <div class="info-item p-4 flex-fill">
+              <div class="row g-4 text-center">
+        
+                <!-- Row 1: Address & Email -->
+                <div class="col-md-6">
+                  <div class="contact-box">
+                    <i class="bi bi-geo-alt"></i>
+                    <h3>Indirizzo</h3>
+                    <p>Via Scilla 37<br>Reggio Calabria 89132, Italia</p>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="contact-box">
+                    <i class="bi bi-envelope"></i>
+                    <h3>Email</h3>
+                    <p>mjwpan71@gmail.com</p>
+                  </div>
+                </div>
+
+                <!-- Row 2: Phone & Clock (Now perfectly aligned) -->
+                <div class="col-md-6">
+                  <div class="contact-box">
+                    <i class="bi bi-telephone"></i>
+                    <h3>Telefono</h3>
+                    <p>+39 389-8355263<br>+39 333-2184341</p>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="contact-box">
+                    <i class="bi bi-clock"></i>
+                    <h3>Orari</h3>
+                    <p>Lunedì - Venerdì<br>15:00 - 18:00</p>
+                  </div>
+                </div>
+
+            </div>
+          </div>
+      </div>
+
+      <!-- Colonna destra: Form di contatto -->
+      <div class="col-md-6 d-flex">
+        <div class="info-item p-4 flex-fill d-flex flex-column">
+         <form action="https://formspree.io/f/mwvwrlya" method="POST" class="d-flex flex-column">
+
+              <!-- Name -->
+              <div class="mb-3">
+                <input type="text" name="name" class="form-control no-border" placeholder="Nome" autocomplete="name" required>
+              </div>
+
+              <!-- Email -->
+              <div class="mb-3">
+                <input type="email" name="email" class="form-control no-border" placeholder="Email" autocomplete="email" required>
+              </div>
+
+              <!-- Subject -->
+              <div class="mb-3">
+                <input type="text" name="subject" class="form-control no-border" placeholder="Oggetto" required>
+              </div>
+
+              <!-- Message -->
+              <div class="mb-3 flex-fill">
+                <textarea name="message" class="form-control no-border flex-fill" rows="6" placeholder="Messaggio" required></textarea>
+              </div>
+
+              <!-- Submit -->
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary">Invia Messaggio</button>
+              </div>
+         </form>
+          </div>
+          </div>
+
+           <!--Mappa-->
+                <div id="map" style="border: 1px solid rgb(255, 255, 255); border-radius: 8px;" data-aos="fade-up" data-aos-delay="100">
+                  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+                  <script>
+                    // Center map at reggio di calabria
+                    const map = L.map('map').setView([38.09053861074554, 15.642876710825037], 13);
+
+                    // OpenStreetMap tiles
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                      attribution: '&copy; OpenStreetMap contributors',
+                      maxZoom: 19,
+                    }).addTo(map);
+
+                    // Add marker
+                    L.marker([38.09053861074554, 15.642876710825037])
+                      .addTo(map)
+                      .bindPopup("<b>Noi siamo Qui")
+                      .openPopup();
+                  </script>
+                </div>
+         <!--Fine Mappa-->
+      
+    </div>
+  </div>
+</section>
+
+  </main>
+  <!--fine main-->
+
+    <!--inizio footer-->
+    <footer id="footer" class="footer position-relative light-background">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="index.html" class="logo d-flex align-items-center">
+                  <img src="assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                  <li><a href="#">Home</a></li>
+                  <li><a href="#about">Mission</a></li>
+                  <li><a href="#faq">FAQ</a></li>
+                  <li><a href="#team">Team</a></li>
+                  <li><a href="#testimonials">Testimonianze</a></li>
+                  <li><a href="#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+<!--<script src="assets/vendor/php-email-form/validate.js"></script>-->
+<script src="assets/vendor/aos/aos.js"></script>
+<script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+<script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+<script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+
+<!-- Main JS File -->
+<script src="assets/js/main.js"></script>
+
+<!-- Bootstrap 5 JS Bundle (includes Popper) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <!-- SWIPER INIT CODE -->
+  <script>
+  function initSwiper(selector,Speed=100,Delay=5000) {
+    const el = document.querySelector(selector);
+    if (!el) return;
+
+    new Swiper(el, {
+      loop: false,
+      speed: Speed,
+      
+      // 2. HARD GESTURE TERMINATION (Disallow all dragging actions)
+      simulateTouch: false,   /* Prevents mouse dragging entirely */
+      allowTouchMove: false,  /* Prevents mobile touch swipes entirely */
+      // 3. LAYOUT PROTECTION LIFECYCLES
+      observer: true,
+      observeParents: true,
+      observeSlideChildren: true,
+
+      autoplay: {
+        delay: Delay,
+        disableOnInteraction: false
+      },
+      slidesPerView: 'auto',
+      pagination: {
+        el: el.querySelector('.swiper-pagination'),
+        clickable: true
+      },
+      navigation: {
+        nextEl: el.querySelector('.swiper-button-next'),
+        prevEl: el.querySelector('.swiper-button-prev')
+      }
+    });
+  }
+  </script>
+
+  <!-- CODE TO INITIALISE SWIPERS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        
+          initSwiper('.init-swiper-1', 100, 5000);
+          initSwiper('.init-swiper-2', 100, 5000);
+          initSwiper('.init-swiper-3', 100, 5000);
+            
+      });
+      
+    </script>
+
+    <!--cross indexing per la pagine degli interventi assistiti-->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const slides = document.querySelectorAll('.swiper-slide[data-crosslink="true"]');
+        slides.forEach(slide => {
+          slide.addEventListener('click', () => {
+            const url = slide.dataset.url;
+            const articleId = slide.dataset.article;
+            // navigate to the page with hash pointing to the article
+            window.location.href = `${url}#${articleId}`;
+          });
+        });
+      });
+    </script>
+
+    <script>
+
+        function fadeIn(el) {
+          el.classList.add("show");      // aggiungi classe show → fade in
+          el.style.display = "block";    // assicurati sia visibile
+        }
+
+        function fadeOut(el) {
+          el.classList.remove("show");   // rimuovi classe show → fade out
+          setTimeout(() => {             // dopo la transizione
+            el.style.display = "none";   // nascondi completamente
+          }, 500); // 500ms = durata della transizione CSS
+        }
+
+        function showError(el, message) {
+          if (!el) return;
+          el.textContent = message;
+          el.style.display = "block";
+          setTimeout(() => fadeIn(el), 200);
+        }
+
+        function showResend(el) {
+          if (!el) return;
+          el.classList.remove("d-none");
+          // forza reflow
+          void el.offsetWidth;
+          el.classList.add("show");
+        }
+
+        function hideResend(el) {
+          if (!el) return;
+          el.classList.add("d-none");
+          el.classList.remove("show");
+        }
+
+    </script>
+
+    <!-- TOGGLE PASSWORD -->
+    <script>
+      async function TogglePassword() {
+            const passwordInput = document.getElementById("password1");
+            const toggleIcon = document.querySelector(".password-toggle i");
+            const toggle = document.querySelector(".password-toggle");
+
+            if (toggle && passwordInput && toggleIcon) {
+
+              toggle.addEventListener("click", () => {
+                if (passwordInput.type === "password") {
+                  passwordInput.type = "text";
+                  toggleIcon.classList.remove("fa-eye");
+                  toggleIcon.classList.add("fa-eye-slash");
+                } else {
+                  passwordInput.type = "password";
+                  toggleIcon.classList.remove("fa-eye-slash");
+                  toggleIcon.classList.add("fa-eye");
+                }
+              });
+            }      
+          }
+    </script>
+
+  <!-- LOGIN CODE -->
+    <script type="module">
+
+            // ---------------------------------------------------------------------------------
+            // Crea il client Supabase
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+            
+            // Your page renders instantly, no hidden flash or blocking required!
+
+            const supabase = createClient(
+                "https://bjbnkqgyibadjlrcjqfs.supabase.co",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8"
+            );
+
+            // LOG-OUT forzato (per sicurezza, evita accesso al login se già autenticato)
+            (async () => {
+              try {
+                const { data: { session } } = await supabase.auth.getSession();
+
+                if (session) {
+                  console.log("⚠️ Logout automatico in login page");
+                  await supabase.auth.signOut();
+                }
+
+              } catch (err) {
+                console.error("Errore durante logout automatico:", err);
+              } finally {
+                document.body.style.display = "block";
+              }
+            })();
+
+            // ---------------------------------------------------------------------------------
+            // Assicurati che il DOM sia pronto
+            document.addEventListener("DOMContentLoaded",  () => {
+         
+              // Password toggle button
+              TogglePassword();
+
+              // --- MESSAGE ERROR DISAPPEARS WHEN USER TYPES ---
+              const emailInput = document.getElementById("email1");
+              const errorBtn2 = document.getElementById("loginError2");
+              const resendBtn = document.getElementById("resendConfirmation");
+              const passwordInput = document.getElementById("password1");
+
+              [emailInput, passwordInput].forEach(input => {
+                  input.addEventListener("input", () => {
+                  if (resendBtn) {
+                      hideResend(resendBtn);  
+                  }
+                  if (errorBtn2) {
+                        errorBtn2.style.display = "none";
+                        errorBtn2.textContent = "";
+                    }
+                });
+              });
+            
+            // --- RESEND BUTTON FOR CONFIRMAZION LINK ---
+
+            if (resendBtn) {
+              resendBtn.addEventListener("click", async () => {
+
+                const email = emailInput.value.trim();        
+
+                console.log(email);
+
+                // 👇 nascondi SUBITO il bottone
+                if (resendBtn) {
+                  hideResend(resendBtn);  
+                }
+
+                try {
+                  const { error } = await supabase.auth.resend({
+                    type: "signup",
+                    email: email,
+                    options: {
+                      //emailRedirectTo: "http://127.0.0.1:5500/confirm.html"
+                      emailRedirectTo: window.location.origin + "/confirm.html"
+                    }
+                  });
+
+                 if (error) {
+                      console.error(error);
+
+                      if (errorBtn2) {
+                        showError(errorBtn2, "❌ Email o password errati.");
+                      }
+
+                      setTimeout(() => {
+                      if (resendBtn) {
+                        showResend(resendBtn); // 👈 dopo
+                        }
+                      }, 500);
+
+                    } else {
+
+                      // ✅ NASCONDI ERRORE
+                      if (errorBtn2) 
+                      {
+                          errorBtn2.style.display = "none";
+                          errorBtn2.textContent = "";
+                      }
+              
+                      // opzionale: messaggio separato (consigliato)
+                      console.log("📧 Email inviata con successo");
+                    }
+
+                } catch (err) {
+                  console.error(err);
+
+                  showError(errorBtn2, "❌ Email o password errati.");
+
+                  // 👇 in caso di errore imprevisto lo fai riapparire
+                  setTimeout(() => {
+                    if (resendBtn) {
+                      showResend(resendBtn); 
+                   }
+                 }, 500);
+
+                }
+              });
+            }
+
+            // --- LOGIN FORM SUBMIT ---
+            const form = document.getElementById("loginFormClinician"); 
+
+            if(form)
+            {
+                  form.addEventListener("submit", async (event) => {
+                    event.preventDefault(); // previene il submit normale
+
+                     const submitBtn = document.getElementById("loginBtn");
+                     if (submitBtn) submitBtn.disabled = true;
+
+                    const email      = emailInput.value.trim();        
+                    const password   = passwordInput.value.trim();
+                   
+                    if (!email || !password) {
+                       showError(errorBtn2, "❌ Email o password vuoti");
+                       if (submitBtn) submitBtn.disabled = false; // 👈 RIATTIVA
+                      return;
+                    }
+    
+                    try {
+                          // Login con Supabase
+                          const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+                        
+                          if (error) {
+
+                             // console.log("Login response:", { data, error });
+
+                              // email o password sbagliati
+                              if (error.message?.toLowerCase().includes("invalid"))
+                              {
+                                console.log("❌ Email o password errati:", error.message);
+             
+                                if(errorBtn2){
+                                  showError(errorBtn2, "❌ Email o password errati");
+                                if (submitBtn) submitBtn.disabled = false; // 👈 RIATTIVA
+                                }
+                                return;
+                              }
+                       
+                              // email non confermata
+                              if (error.message?.toLowerCase().includes("confirm"))
+                              {
+                                console.log("❌ Email non confermata:", error.message);
+             
+                                if(errorBtn2){
+                                  showError(errorBtn2, "❌ Email non confermata.");
+                                  if (submitBtn) submitBtn.disabled = false; // 👈 RIATTIVA
+                                }
+
+                                setTimeout(() => {
+                                  if (resendBtn) {
+                                    showResend(resendBtn); // 👈 dopo
+                                  }
+                                }, 500);
+
+                                return;
+                              }
+
+                              // fallback generico
+                               if(errorBtn2){
+                                  // Fade in dopo 1 secondo
+                                  showError(errorBtn2, "❌ Errore: " + error.message);
+                                  if (submitBtn) submitBtn.disabled = false; // 👈 RIATTIVA
+                                }
+                                
+                                console.log("❌ Email o password errati:", error.message);
+                                
+                                return;
+                            }
+
+                          // Login riuscito → Inserisci / aggiorna utente nella tua tabella
+                          const user = data.user;
+
+                          if (!user?.email_confirmed_at) {
+                            showError(errorBtn2, "❌ Email non confermata.");
+                            if (submitBtn) submitBtn.disabled = false;
+                            setTimeout(() => {
+                              if (resendBtn) showResend(resendBtn);
+                            }, 500);
+                            
+                            // logout necessario QUI (perché login è riuscito)
+                            await supabase.auth.signOut();
+                            return;
+                          }
+
+                          if (user.email_confirmed_at) 
+                          {
+                              console.log(user.user_metadata);
+
+                              // get meta data from user
+                              const meta = user.user_metadata || {};
+
+                              if (!meta.name || !meta.surname) {
+                                showError(errorBtn2, "❌ Dati utente non validi");
+                                if (submitBtn) submitBtn.disabled = false; // 👈 RIATTIVA
+                                return;
+                              }
+
+                              let upsertData;      
+                              let insertError;     
+                              let response;
+                              let subType;
+
+                              subType=meta.sub_type;
+
+                            //  console.log(subType);
+
+                              if ( subType===1)
+                              {
+                                // Insert user into Clinicals table (if first login)
+                                response = await supabase
+                                      .from("Clinicals")
+                                      .upsert([{
+                                        id:                  user.id,
+                                        name:                meta.name,
+                                        surname:             meta.surname,
+                                        registration_number: meta.registration_number,
+                                        consent_given:       meta.consent_given,
+                                        consent_date:        meta.consent_date,
+                                        creation_date:       meta.creation_date,
+                                        sub_type:            meta.sub_type,
+                                        birth_date:          meta.birth_date,
+                                        region:              meta.region,
+                                        genre:               meta.genre
+                                      }], { onConflict: "id" }).select(); 
+                                    }
+                              else{
+                                  // Insert user into Clients table (if first login)
+                                  response = await supabase
+                                      .from("Clients")
+                                      .upsert([{
+                                        id:                  user.id,
+                                        name:                meta.name,
+                                        surname:             meta.surname,
+                                        clinical_id:         meta.registration_number,
+                                        consent_given:       meta.consent_given,
+                                        consent_date:        meta.consent_date,
+                                        creation_date:       meta.creation_date,
+                                        sub_type:            meta.sub_type,
+                                        birth_date:          meta.birth_date,
+                                        region:              meta.region,
+                                        genre:               meta.genre
+                                      }], { onConflict: "id" }).select(); 
+                              }
+
+                              // assign to external variables
+
+                              insertError = response.error;
+                              
+                              if (insertError) {
+                                console.error(insertError);
+                                showError(errorBtn2, insertError.message);
+                                if (submitBtn) submitBtn.disabled = false; // 👈 RIATTIVA
+                                return;
+                              }
+                               
+                              // ✅ Resetta i campi
+                              emailInput.value = "";
+                              passwordInput.value = "";
+              
+                              if (errorBtn2) {
+                                  errorBtn2.style.display = "none";
+                                  errorBtn2.textContent = "";
+                              }
+
+                              switch(subType)
+                              {
+                                case 1:
+                                  window.location.href = "clinician-dashboard.html";
+                                  break;
+                                case 2:
+                                  window.location.href = "patient-dashboard.html";
+                                  break;
+                                default:
+                                  console.warn("Tipo utente sconosciuto:", meta.sub_type);
+                              }
+
+                        }
+                            
+                      } 
+                    catch (err) {
+                      console.error("Errore imprevisto:", err);
+                      showError(errorBtn2, "❌ Errore: " + err.message);
+                      if (submitBtn) submitBtn.disabled = false; // 👈 RIATTIVA
+                    }               
+                  
+                });
+              }
+          });
+
+    </script>
+
+
+  <script>
+
+  // This function clears the form fields
+    function clearContactForm() {
+      const form = document.querySelector('form[action*="formspree.io"]');
+      if (form) {
+        form.reset();
+        // Manually clear inputs in case reset() is blocked by browser autocomplete
+        form.querySelectorAll('input, textarea').forEach(input => {
+          input.value = '';
+        });
+      }
+    }
+    // Run on standard load
+    window.addEventListener('load', clearContactForm);
+    // Run when coming back via back button or cached redirect
+    window.addEventListener('pageshow', clearContactForm);
+
+</script>
+
+</body>
+
+</html>

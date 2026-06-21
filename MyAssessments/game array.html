@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sequential Mini Games - Mixed Types</title>
+<style>
+  body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+  #game-container {
+    border: 2px solid #333;
+    padding: 20px;
+    margin: 20px auto;
+    width: 300px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  button { padding: 10px 20px; margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<h1>Mini Games Sequence</h1>
+<div id="game-container">Waiting to start...</div>
+<button id="start-button">Start Games</button>
+
+<script>
+const container = document.getElementById('game-container');
+
+// ===== TIMED GAME =====
+function timedGame(timeLimit) {
+    return new Promise(resolve => {
+        let timeLeft = timeLimit; // seconds
+        container.textContent = `Timed Game started! Time left: ${timeLeft}s`;
+
+        const interval = setInterval(() => {
+            timeLeft -= 1;
+            if (timeLeft > 0) {
+                container.textContent = `Timed Game started! Time left: ${timeLeft}s`;
+            } else {
+                clearInterval(interval);
+                container.textContent = 'Timed Game finished!';
+                resolve();
+            }
+        }, 1000);
+    });
+}
+
+// ===== COMPLETION GAME =====
+function completionGame() {
+    return new Promise(resolve => {
+        container.textContent = 'Completion Game - click to finish';
+        const finishButton = document.createElement('button');
+        finishButton.textContent = 'Finish Game';
+        container.appendChild(finishButton);
+
+        finishButton.addEventListener('click', () => {
+            container.textContent = 'Completion Game finished!';
+            resolve();
+        });
+    });
+}
+
+// ===== HYBRID GAME (TIMED + COMPLETION) =====
+function hybridGame(timeLimit) {
+    return new Promise(resolve => {
+        let timeLeft = timeLimit; // seconds
+        container.textContent = `Hybrid Game started! Time left: ${timeLeft}s`;
+
+        const finishButton = document.createElement('button');
+        finishButton.textContent = 'Finish Early';
+        container.appendChild(finishButton);
+
+        const interval = setInterval(() => {
+            timeLeft -= 1;
+            if (timeLeft > 0) {
+                container.textContent = `Hybrid Game started! Time left: ${timeLeft}s`;
+                container.appendChild(finishButton); // keep button visible
+            } else {
+                clearInterval(interval);
+                container.textContent = 'Hybrid Game finished!';
+                resolve();
+            }
+        }, 1000);
+
+        finishButton.addEventListener('click', () => {
+            clearInterval(interval);
+            container.textContent = 'Hybrid Game finished early!';
+            resolve();
+        });
+    });
+}
+
+// ===== GAME SEQUENCE =====
+const games = [
+    { name: 'Timed Game', run: () => timedGame(10) },      // 5-second timer
+    { name: 'Completion Game', run: completionGame },     // no timer
+    { name: 'Hybrid Game', run: () => hybridGame(5) },   // 10-second timer
+];
+
+// ===== RUN GAMES SEQUENTIALLY =====
+async function runAllGames() {
+    for (const game of games) {
+        await game.run();
+    }
+    container.textContent = 'All games finished!';
+}
+
+// ===== START BUTTON =====
+document.getElementById('start-button').addEventListener('click', runAllGames);
+</script>
+
+</body>
+</html>

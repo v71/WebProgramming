@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quad Grid Game</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    /* Fixed 6x6 grid, fluid columns */
+    #game {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(auto, 1fr)); /* fluid columns */
+      grid-auto-rows: auto;        /* auto row height to allow gap scaling */
+      row-gap: 20px;               /* desktop vertical gap */
+      column-gap: 20px;            /* desktop horizontal gap */
+      justify-content: center;
+      padding: 8px;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Desktop quads */
+    .quad {
+      width: 60px;
+      height: 60px;
+      background: #2a2a2a;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .quad:hover {
+      background: #3a3a3a;
+    }
+
+    .target {
+      background: #1e88e5;
+    }
+
+    .found {
+      background: #43a047 !important;
+      cursor: default;
+    }
+
+    #ui {
+      position: absolute;
+      top: 20px;
+      text-align: center;
+      width: 100%;
+      font-size: 18px;
+    }
+
+    /* Tablet layout */
+    @media (max-width: 900px) {
+      #game {
+        row-gap: 15px;      /* smaller vertical gap */
+        column-gap: 15px;   /* smaller horizontal gap */
+      }
+      .quad {
+        width: 50px;
+        height: 50px;
+      }
+    }
+
+    /* Mobile layout */
+    @media (max-width: 600px) {
+      #game {
+        row-gap: 10px;      /* even smaller vertical gap */
+        column-gap: 10px;   /* even smaller horizontal gap */
+      }
+      .quad {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="ui">Find all blue quads!</div>
+  <div id="game"></div>
+
+  <script>
+    const SIZE = 36;          // number of tiles
+    const TARGETS = 8;        // how many correct tiles
+    const game = document.getElementById('game');
+    const ui = document.getElementById('ui');
+
+    let remaining = TARGETS;
+
+    function randomRotation() {
+      return Math.random() * 45; // random angle between 0 and 45 degrees
+    }
+
+    function createBoard() {
+      const targetIndices = new Set();
+      while (targetIndices.size < TARGETS) {
+        targetIndices.add(Math.floor(Math.random() * SIZE));
+      }
+
+      for (let i = 0; i < SIZE; i++) {
+        const div = document.createElement('div');
+        div.className = 'quad';
+
+        const angle = randomRotation();
+        div.style.transform = `rotate(${angle}deg)`;
+
+        if (targetIndices.has(i)) {
+          div.classList.add('target');
+          div.dataset.target = '1';
+        }
+
+        div.addEventListener('click', () => onClick(div));
+        game.appendChild(div);
+      }
+    }
+
+    function onClick(tile) {
+      if (tile.classList.contains('found')) return;
+
+      if (tile.dataset.target === '1') {
+        tile.classList.add('found');
+        remaining--;
+        ui.textContent = `Correct! Remaining: ${remaining}`;
+
+        if (remaining === 0) {
+          ui.textContent = 'You win! Refresh to play again.';
+        }
+      } else {
+        tile.style.background = '#b71c1c';
+        setTimeout(() => tile.style.background = '', 200);
+      }
+    }
+
+    createBoard();
+  </script>
+</body>
+</html>

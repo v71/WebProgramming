@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Patient Dashboard</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f7fc; }
+        .patient-card { background: white; border: 1px solid #e2e8f0; padding: 15px; margin-bottom: 10px; border-radius: 12px; }
+    </style>
+</head>
+<body>
+
+    <h1>Database Pazienti</h1>
+    <div id="output">Caricamento in corso...</div>
+
+    <script>
+        async function init() {
+            try {
+                // Fetch the external JSON file
+                const response = await fetch('patients.json');
+                if (!response.ok) throw new Error("File non trovato");
+                
+                // Parse it into an array
+                const patients = await response.json();
+                
+                // === SORTING LOGIC ===
+                // We sort by 'nome'. a.nome.localeCompare(b.nome) handles A-Z sorting.
+                patients.sort((a, b) => a.nome.localeCompare(b.nome));
+                
+                // Render it
+                const outputDiv = document.getElementById('output');
+                outputDiv.innerHTML = `<h3>Totale pazienti caricati: ${patients.length}</h3>`;
+                
+                patients.forEach(p => {
+                    outputDiv.innerHTML += `
+                        <div class="patient-card">
+                            <strong>${p.nome} ${p.surname}</strong> - ${p.regione}
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                document.getElementById('output').innerText = "Errore: " + err.message;
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - Clinicians</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 14px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      border: none;
+      background: #4CAF50;
+      color: white;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #f2f2f2;
+    }
+    #message {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Clinicians</h2>
+<button id="logoutBtn">Logout</button>
+<div id="message"></div>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Surname</th>
+      <th>Registration Number</th>
+      <th>Consent Given</th>
+      <th>Consent Date</th>
+      <th>Creation Date</th>
+      <th>Expiration Date</th>
+      <th>Enabled</th>
+      <th>SubType</th>
+      <th>BirthDate</th>
+      <th>Region</th>
+      <th>Gender</th>
+    </tr>
+  </thead>
+  <tbody id="cliniciansBody"></tbody>
+</table>
+
+<script type="module">
+
+            import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+
+            const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            const message = document.getElementById("message");
+            const tbody = document.getElementById("cliniciansBody");
+            const logoutBtn = document.getElementById("logoutBtn");
+
+            // 🔐 Check authentication + admin role
+            async function checkAdmin() {
+              const { data: { session } } = await client.auth.getSession();
+
+              if (!session) {
+                  window.location.href = "index.html";
+                  return null;
+              }
+
+              const uid = session.user.id;
+
+              const { data: adminRow, error } = await client
+                  .from("Admins")
+                  .select("id")
+                  .eq("id", uid)
+                  .single();
+
+              if (error || !adminRow) {
+                  await client.auth.signOut();
+                  window.location.href = "index.html";
+                  return null;
+              }
+
+              return uid;
+            }
+
+            // 📋 Load clinicians
+            async function loadClinicians() {
+            const { data, error } = await client
+                .from("Clinicals")
+                .select("*")
+                .order("name", { ascending: true });
+
+            if (error) {
+                message.textContent = "❌ Error loading clinicians: " + error.message;
+                return;
+            }
+
+            if (!data.length) {
+                message.textContent = "No clinicians found.";
+                return;
+            }
+
+            data.forEach(clinician => {
+
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                
+                <td>${clinician.name || ""}</td>
+                <td>${clinician.surname || ""}</td>
+                <td>${clinician.registration_number || ""}</td>
+                <td>${clinician.consent_given || ""}</td>
+                <td>${clinician.consent_date || ""}</td>
+                <td>${clinician.creation_date || ""}</td>
+                <td>${clinician.expiration_date || ""}</td>
+                <td>${clinician.enabled ?? ""}</td>
+                <td>${clinician.sub_type || ""}</td>
+                <td>${clinician.birth_date || ""}</td>
+                <td>${clinician.region || ""}</td>
+                <td>${clinician.genre || ""}</td>
+                
+                <td>
+                  <button onclick="toggleClients('${clinician.id}', this)">
+                    View Clients
+                  </button>
+                </td>
+                `;
+                tbody.appendChild(tr);
+            });
+         
+                 
+          }
+
+            // 🚪 Logout
+            logoutBtn.addEventListener("click", async () => {
+              await client.auth.signOut();
+              window.location.href = "index.html";
+            });
+
+            // 🚀 On page load
+            (async () => {
+            const admin = await checkAdmin();
+            if (admin) {
+                loadClinicians();
+            }
+            })();
+
+
+
+let currentlyExpandedRow = null;
+
+window.toggleClients = async function(clinicianId, button) {
+
+  const parentRow = button.closest("tr");
+
+  // 🔁 Collapse if already open
+  if (currentlyExpandedRow && currentlyExpandedRow.previousSibling === parentRow) {
+    currentlyExpandedRow.remove();
+    currentlyExpandedRow = null;
+    button.textContent = "View Clients";
+    return;
+  }
+
+  // ❌ Remove previously opened row
+  if (currentlyExpandedRow) {
+    currentlyExpandedRow.remove();
+    currentlyExpandedRow = null;
+    document.querySelectorAll("button").forEach(b => {
+      if (b.textContent === "Hide Clients") {
+        b.textContent = "View Clients";
+      }
+    });
+  }
+
+  // 🔄 Change button text
+  button.textContent = "Hide Clients";
+
+  // 📥 Fetch clients
+  const { data, error } = await client
+    .from("Clients")
+    .select("*")
+    .eq("clinical_id", clinicianId)
+    .order("surname", { ascending: true });
+
+  if (error) {
+    alert("Error loading clients: " + error.message);
+    return;
+  }
+
+  // 📌 Create expandable row
+  const newRow = document.createElement("tr");
+  const newCell = document.createElement("td");
+
+  newCell.colSpan = parentRow.children.length;
+  newCell.style.background = "#f9f9f9";
+
+  if (!data.length) {
+    newCell.innerHTML = "<strong>No clients found.</strong>";
+  } else {
+    let html = `
+      <table style="width:100%; border-collapse: collapse;">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Birth Date</th>
+            <th>Gender</th>
+            <th>Region</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    data.forEach(c => {
+      html += `
+        <tr>
+          <td>${c.name || ""}</td>
+          <td>${c.surname || ""}</td>
+          <td>${c.birth_date || ""}</td>
+          <td>${c.genre || ""}</td>
+          <td>${c.region || ""}</td>
+        </tr>
+      `;
+    });
+
+    html += "</tbody></table>";
+    newCell.innerHTML = html;
+  }
+
+  newRow.appendChild(newCell);
+
+  parentRow.parentNode.insertBefore(newRow, parentRow.nextSibling);
+
+  currentlyExpandedRow = newRow;
+};
+
+</script>
+
+</body>
+</html>

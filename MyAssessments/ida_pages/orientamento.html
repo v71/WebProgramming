@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon.png?v=2">
+  <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  .pt-container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Inter', sans-serif;
+    color: #2a2a2a;
+    line-height: 1.8;
+  }
+
+  .pt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.7rem;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #0f0f0f;
+  }
+
+  .pt-meta {
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+
+  .pt-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    color: #1e1e1e;
+    border-left: 4px solid #005bbb;
+    padding-left: 12px;
+  }
+
+  .pt-subtitle {
+    font-size: 1.15rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 35px;
+  }
+
+  .pt-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    background: #f4f7ff;
+    padding: 25px 30px;
+    border-left: 5px solid #005bbb;
+    margin: 40px 0;
+    color: #233;
+  }
+
+  .pt-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .pt-list li {
+    margin-bottom: .5rem;
+  }
+
+  .pt-highlight-box {
+    background: #fafafa;
+    border: 1px solid #e6e6e6;
+    padding: 20px 25px;
+    border-radius: 6px;
+    margin: 35px 0;
+  }
+
+  .pt-highlight-box strong {
+    color: #005bbb;
+  }
+  
+#funzioni-esecutive {
+  padding-bottom: 60px;
+}
+
+.pt-section-title {
+  margin-bottom: 30px;
+}
+
+.ef-item p {
+  text-align: center;
+}
+</style>
+
+<style>
+
+.section-title {
+  font-weight: 700;
+  color: #2c3e50;
+}
+</style>
+
+<style>
+
+/* TESTO GENERICO */
+.ef-item p {
+  text-align: center;
+}
+
+/* IMMAGINE */
+.ef-image {
+  border-radius: 12px;
+}
+
+/* GRID */
+.ef-grid {
+  display: grid;
+  /*grid-template-columns: repeat(2, 1fr);*/
+  gap: 20px;
+}
+
+/* CARD */
+.ef-card {
+  background: #bdbdfa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* TITOLO */
+.ef-card h5 {
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* TESTO */
+.ef-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ICONA */
+.ef-icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .ef-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<style>
+
+/* Centrare l'immagine sotto il titolo */
+.title-image-container {
+    text-align: center; /* centra l'immagine orizzontalmente */
+    margin: 3rem 0;     /* spazio sopra e sotto */
+}
+
+.title-image {
+    max-width: 100%;   /* non supera la larghezza del container */
+    height: auto;      /* mantiene proporzioni */
+    border-radius: 10px; /* opzionale: bordi arrotondati come le card */
+    display: inline-block;
+}
+
+</style>
+
+<link href="../assets/mycss/style-shared.css" rel="stylesheet">
+
+<style>
+
+  /* --- Centering the Nav Menu --- */
+@media (min-width: 1200px) {
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Keeps logo left, menu center, CTA right */
+    }
+
+    .navmenu {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center; /* This is the "magic" centering line */
+    }
+
+    .navmenu ul {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+/* Ensure mobile toggle doesn't break the layout */
+@media (max-width: 1199px) {
+    .navmenu {
+        /* On mobile, we usually want it to stay functional as a sidebar or dropdown */
+        display: block; 
+    }
+}
+</style>
+</head>
+
+<body class="services-details-page">
+
+  <!--inizio header-->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      
+      <!-- Logo -->
+      <a href="../index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <img src="../assets/img/logo_new_light_1.png" alt="logo">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+      <ul>
+          <li><a href="../index.html#hero" class="active">Home</a></li>
+          <li><a href="../index.html#about">Mission</a></li>
+          <li><a href="../index.html#faq">FAQ</a></li>
+          <li><a href="../index.html#team">Team</a></li>
+          <li><a href="../index.html#contact">Contatti</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Apri menu"></i>
+      </nav>
+
+    </div>
+  </header>
+  <!--fine header-->
+
+  <!--inizio main-->
+  <main id="main" class="main">
+  
+    <!-- About Section -->
+    <section id="funzioni-esecutive" class="pricing section light-background">
+      <div class="container" data-aos="fade-up">
+
+        <!-- Featured post -->
+        <div class="card shadow-sm card-equal">
+      
+        <img 
+            src="../assets/img/blog_2/funzioni_esecutive.jpg"
+            class="card-img-top post-card-img img-fluid"
+            alt="Screening DSA e ADHD"
+            loading="lazy">
+
+            <div class="card-body">
+             
+              <article class="pt-container">
+
+              <h1 class="pt-title">Orientamento</h1>
+               <p>L’orientamento è la capacità di essere consapevoli di sé stessi e del contesto in cui ci si trova in un determinato momento.</p>
+                <div class="pt-meta text-start py-3" style="color: #888; font-size: 14px;">
+                  <div class="meta-top mb-3 d-flex gap-3 flex-wrap align-items-center">
+                    <!-- Autore con avatar -->
+                        <div class="d-flex align-items-center gap-2">
+                          <img src="../assets/img/blog_1/blog-author-1.jpg" alt="Avatar John Doe" class="rounded-circle" width="32" height="32">
+                        <span class="author-name">Dott.ssa Annalisa Panella</span>
+                        </div>
+                        <!-- Data con icona -->
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock me-1"></i>
+                            <time datetime="2022-01-01">21 Dicembre 2025</time>
+                        </div>
+                    </div>
+                  </div>
+
+                  <h2 class="pt-section-title">Attenzione: Il Focus della Nostra Mente</h2>
+                  <p>
+                    L’orientamento rappresenta quindi una funzione cognitiva 
+                    fondamentale che ci permette di muoverci con sicurezza nella 
+                    realtà, comprendendo chi siamo, dove ci troviamo e in quale 
+                    momento viviamo. Quando questa capacità è ben sviluppata, 
+                    favorisce autonomia, organizzazione e adattamento alle situazioni 
+                    quotidiane. Al contrario, difficoltà nell’orientamento possono 
+                    generare confusione e disorientamento, incidendo sulla qualità 
+                    della vita. Per questo motivo, è importante stimolare e mantenere 
+                    attive queste abilità attraverso routine, esperienze e attività 
+                    che rafforzino la consapevolezza di sé, dello spazio e del tempo.
+                  </p>
+
+               
+                  <h2 class="pt-section-title">L’orientamento si suddivide in tre tipi</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <!-- Colonna destra: card -->
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Orientamento personale</h5>
+                              <p>
+                                Capacità di integrare le informazioni relative alla storia e 
+                                all’identità personale, come l’età, lo stato civile o gli studi effettuati.
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Orientamento temporale</h5>
+                              <p>
+                                Capacità di gestire le informazioni relative a diversi 
+                                eventi o situazioni e di collocarle cronologicamente nel 
+                                tempo, cioè informazioni relative all’ora, al giorno, 
+                                al mese, all’anno, alle festività, alle stagioni. 
+                                per comportarsi di conseguenza.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Orientamento spaziale</h5>
+                              <p>
+                                Capacità di gestire le informazioni relative alla provenienza, 
+                                al luogo in cui ci si trova in un determinato momento, alla destinazione.
+                                </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h2 class="pt-section-title">L’orientamento coinvolge diverse aree cerebrali</h2>
+                      <!-- Immagine centrata sotto il titolo -->
+                      <div class="title-image-container">
+                          <img src="../assets/img/blog_2/parti-del-cervello-2.jpg" alt="Funzioni esecutive" class="title-image">
+                      </div>
+                    <p>
+                     Le aree interessate sono l' Ippocampo: fondamentale per la memoria e la navigazione spaziale, la
+                     corteccia prefrontale: coinvolta nella pianificazione e nell’organizzazione,
+                     lobi parietali: importanti per la percezione dello spazio.
+                     Queste aree lavorano insieme per integrare informazioni sensoriali, mnemoniche e cognitive.
+                     L’orientamento si sviluppa progressivamente
+                     nei bambini attraverso routine, esperienze e apprendimento,
+                     negli adulti si consolida con l’esperienza quotidiana,
+                     negli anziani può subire un declino fisiologico.
+                    </p>
+
+                    <h2 class="pt-section-title">Disturbi dell’Orientamento</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Demenze senili</h5>
+                              <p>
+                                Perdita di memoria a breve termine, disorientamento 
+                                spaziale e temporale, difficoltà nel linguaggio e 
+                                nello svolgimento di attività quotidiane. 
+                                Si riscontrano anche cambi di personalità, 
+                                confusione, riduzione della capacità di 
+                                giudizio e problemi a concentrarsi o pianificare. 
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Traumi cranici</h5>
+                              <p>
+                                Un trauma cranico può causare conseguenze lievi e 
+                                temporanee (mal di testa, confusione, nausea) o 
+                                gravi e durature, tra cui emorragie cerebrali 
+                                (ematomi), edemi, deficit cognitivi, disturbi 
+                                della memoria, del linguaggio e della personalità, 
+                                nonché epilessia post-traumatica. La gravità 
+                                dipende dall'intensità dell'impatto.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Ictus</h5>
+                              <p>
+                                  I sintomi insorgono improvvisamente e includono bocca storta, 
+                                  debolezza o intorpidimento a un braccio/gamba 
+                                  (specialmente su un lato), difficoltà a parlare o 
+                                  capire, disturbi della vista e forte mal di testa. 
+                                  Chiamare immediatamente il 112 è fondamentale, 
+                                  poiché ogni minuto conta per ridurre i danni cerebrali.
+                                </p>
+                            </div>
+
+                             <div class="ef-card">
+                              <h5>Disturbi neurologici o psichiatrici</h5>
+                              <p>
+                                 I disturbi neurologici e psichiatrici presentano 
+                                 sintomi sovrapponibili che coinvolgono il sistema 
+                                 nervoso e il comportamento. I segnali neurologici 
+                                 includono debolezza, tremori, formicolii, vertigini, 
+                                 mal di testa e deficit cognitivi. I sintomi psichiatrici 
+                                 spaziano da alterazioni dell'umore e apatia a psicosi, 
+                                 deliri e disturbi del sonno.
+                                </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                   <h2 class="pt-section-title">Strategie di intervento e supporto</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Creare routine quotidiane stabili</h5>
+                              <p>
+                                Mantenere orari regolari per svegliarsi, mangiare e dormire,
+                                associare attività precise a momenti della giornata (es. colazione = mattina),
+                                ripetere le stesse sequenze ogni giorno.
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Utilizzare riferimenti temporali</h5>
+                              <p>
+                                Una forma di terapia include utlizzare calendari ben visibili,
+                                orologi (meglio se grandi e chiari),
+                                agende o planner giornalieri,
+                                tabelle con le attività della giornata.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Favorire l’uso di mappe e punti di riferimento</h5>
+                              <p>
+                                Utilizzare punti di riferimento noti e sicuri, etichettare stanze 
+                                o oggetti (es. “cucina”, “bagno”),
+                                usare colori o simboli per distinguere gli spazi,
+                                mantenere l’ambiente ordinato e stabile.
+                                </p>
+                            </div>
+
+                             <div class="ef-card">
+                              <h5>Stimolare la memoria attraverso attività cognitive</h5>
+                              <p>
+                                Utilizzare giochi di memoria,
+                                memory (abbinamento di carte),
+                                ricordare liste di parole o oggetti,
+                                ripetere sequenze (numeri, colori, nomi).
+                                </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <h2 class="pt-section-title">Conclusioni</h2>
+                  <p>
+                    L’orientamento, quindi, rappresenta una competenza essenziale 
+                    che guida il nostro comportamento quotidiano, permettendoci di 
+                    adattarci in modo efficace alle diverse situazioni. Grazie a 
+                    questa capacità, riusciamo a organizzare le nostre giornate, 
+                    riconoscere i contesti e interagire in maniera appropriata 
+                    con le persone e l’ambiente. Quando l’orientamento è ben 
+                    sviluppato, favorisce autonomia e sicurezza; al contrario, 
+                    eventuali difficoltà possono generare confusione e disorientamento. 
+                    Per questo è importante coltivarlo e sostenerlo nel tempo, 
+                    attraverso abitudini stabili e attività che rafforzino la 
+                    consapevolezza di sé, dello spazio e del tempo.
+                  </p>
+
+
+                  <!-- Author box -->
+                  <footer class="pt-author mt-4 pt-4 border-top">
+
+                    <div class="d-flex align-items-start gap-3">
+                      <img src="../assets/img/blog_1/blog-author-1.jpg"
+                          alt="Dott.ssa Annalisa Panella"
+                          class="rounded-circle"
+                          width="56" height="56">
+
+                      <div>
+                        <h6 class="mb-1">Dott.ssa Annalisa Panella</h6>
+                        <p class="text-muted mb-1 small">
+                          Psicologa – Neuropsicologa dell’età evolutiva
+                        </p>
+                        <p class="mb-0 small">
+                          Si occupa di valutazione e potenziamento delle funzioni cognitive,
+                          DSA e ADHD, attraverso percorsi basati su evidenze scientifiche.
+                        </p>
+                      </div>
+                    
+                    </div>
+
+                  </footer>
+
+              </article>
+            </div>
+          </div>
+        </div>
+    </section><!-- /About Section -->
+
+  </main>
+  <!--fine main-->
+
+      <!--inizio footer-->
+    <footer id="footer" class="footer position-relative light-background">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="../index.html" class="logo d-flex align-items-center">
+                  <img src="../assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                   <li><a href="../index.html#hero">Home</a></li>
+                  <li><a href="../index.html#about">Mission</a></li>
+                  <li><a href="../index.html#faq">FAQ</a></li>
+                  <li><a href="../index.html#team">Team</a></li>
+                  <li><a href="../index.html#testimonials">Testimonianze</a></li>
+                  <li><a href="../index.html#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <!--<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+  <!--<script src="assets/vendor/php-email-form/validate.js"></script>-->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>

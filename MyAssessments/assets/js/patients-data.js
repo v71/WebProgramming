@@ -1,0 +1,138 @@
+// ===============================
+// Global patients dataset (ISO Format)
+// ===============================
+window.patients = [
+  { 
+    nome: "Mannaggino", 
+    surname: "Antonino", 
+    data_di_nascita: "2019-06-15", 
+    eta: 11, 
+    genere: "Maschile", 
+    regione: "Sicilia", 
+    dataIscrizione: "2025-07-01", 
+    email: "MannagginoAntonino@gmail.com",
+    terapia:{},
+    cronologia_terapie: [],
+    certificati:[]
+  },
+  { 
+    nome: "Luca", 
+    surname: "Bianchi", 
+    data_di_nascita: "2015-08-22", 
+    eta: 10,  
+    genere: "Maschile", 
+    regione: "Lazio", 
+    dataIscrizione: "2024-05-15", 
+    email: "LucaBianchi@gmail.com",
+    terapia:{},
+    cronologia_terapie: [] ,
+    certificati:[]
+  },
+  { 
+    nome: "Sofia", 
+    surname: "Russo", 
+    data_di_nascita: "2019-11-05", 
+    eta: 6,  
+    genere: "Femminile", 
+    regione: "Campania", 
+    dataIscrizione: "2025-09-01", 
+    email: "SofiaRusso@gmail.com",
+    terapia:{},
+    cronologia_terapie: [],
+    certificati:[]    
+  },
+  { 
+    nome: "Matteo", 
+    surname: "Esposito", 
+    data_di_nascita: "2017-01-30", 
+    eta: 9,  
+    genere: "Maschile",
+    regione: "Toscana", 
+    dataIscrizione: "2025-02-20", 
+    email: "MatteoEsposito@gmail.com",
+    terapia:{},
+    cronologia_terapie: [],
+    certificati:[] 
+  },
+  { 
+    nome: "Elena", 
+    surname: "Conti", 
+    data_di_nascita: "2021-07-14", 
+    eta: 4,  
+    genere: "Femminile", 
+    regione: "Piemonte", 
+    dataIscrizione: "2025-10-10",
+    email: "ElenaConti@gmail.com",
+    terapia:{},
+    cronologia_terapie: [],
+    certificati:[]     
+  },
+  { 
+    nome: "Francesco", 
+    surname: "Bruno", 
+    data_di_nascita: "2014-05-02", 
+    eta: 12,  
+    genere: "Maschile", 
+    regione: "Puglia", 
+    dataIscrizione: "2025-01-01", 
+    email: "FrancescoBruno@gmail.com",
+    terapia:{},
+    cronologia_terapie: [],
+    certificati:[]   
+  },
+  { 
+    nome: "Aurora", 
+    surname: "Vitale", 
+    data_di_nascita: "2006-09-19", 
+    eta: 19, 
+    genere: "Femminile", 
+    regione: "Veneto", 
+    dataIscrizione: "2025-03-15", 
+    email: "AuroraVitale@gmail.com",
+    terapia:{},
+    cronologia_terapie: [],
+    certificati:[] 
+  },
+  { 
+    nome: "Alessandro", 
+    surname: "Greco", 
+    data_di_nascita: "2020-12-25", 
+    eta: 5,  
+    genere: "Maschile", 
+    regione: "Emilia-Romagna", 
+    dataIscrizione: "2025-11-01", 
+    email: "AlessandroGreco@gmail.com",
+    terapia:{ nome: "CINGHIATE-T0", dataInizio: "2026-01-01", dataFine: "2026-06-04", posizioneCorrente: -1, posizioniTotali: 30, stato: 0, interrotta:0 },
+    cronologia_terapie: [],
+    certificati: [
+      { nome: "Neurodivergenza", UploadDate: "2026-01-10", gravita: 0, ente:"ASL" },
+      { nome: "ADHD"           , UploadDate: "2026-02-15", gravita: 1, ente:"privato" }
+    ]
+  },
+  { 
+    nome: "Chiara", 
+    surname: "Leone", 
+    data_di_nascita: "2015-04-08", 
+    eta: 11,  
+    genere: "Femminile", 
+    regione: "Calabria", 
+    dataIscrizione: "2025-06-20", 
+    email: "ChiaraLeone@gmail.com",
+    terapia:{},
+    cronologia_terapie: [],
+    certificati:[]  
+  },
+  { 
+    nome: "Davide", 
+    surname: "Marino", 
+    data_di_nascita: "2017-02-11", 
+    eta: 9,  
+    genere: "Maschile", 
+    regione: "Sardegna", 
+    dataIscrizione: "2025-09-01", 
+    email: "DavideMarino@gmail.com",
+    terapia:{},
+    cronologia_terapie: [],
+    certificati:[]   
+  }
+];

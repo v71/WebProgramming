@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyAssessments</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <style>
+        /* Custom Overrides for the "Renaizant" look */
+        #accordionSidebar { background-color: rgb(17, 25, 131) !important; background-image: none !important; }
+        .sidebar-dark .nav-item .nav-link { color: rgba(255, 255, 255, 0.7); }
+        .sidebar-dark .nav-item.active .nav-link { color: #fff; font-weight: 700; border-left: 3px solid #e91e63; }
+        .bg-custom-gray { background-color: #f8f9fc; }
+        .card { border: none; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05); }
+        .progress-bar-orange { background-color: #ff9800; }
+        .org-footer { background: #3d2b46; border-radius: 8px; margin: 1rem; padding: 10px; }
+    </style>
+
+    <style>
+
+        /* Standard Desktop Layout */
+        @media (min-width: 768px) {
+            .responsive-side-panel {
+                flex-basis: 300px;
+                flex-grow: 0;
+                min-width: 260px;
+            }
+        }
+
+        /* Fluid Mobile Layout when compressed or sidebar is open */
+        @media (max-width: 767.98px) {
+            .responsive-side-panel {
+                width: 100%;
+                flex-basis: auto;
+                flex-grow: 1;
+                min-width: 0; /* Prevents layout blowout */
+                margin-bottom: 1.5rem; /* Cleaner separation if other cards stack under it */
+            }
+        }
+
+    </style>
+    
+    <style>
+
+        /* Force the body and wrapper to be exactly the screen height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevents the 'scrolling arrows' on the main body */
+        }
+
+        #wrapper {
+            height: 100vh;
+        }
+
+        #content-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #content {
+            flex: 1; /* This takes up all available space between topbar and footer */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Keeps the scrolling inside the cards, not the page */
+        }
+
+         /* Make the container fill the remaining space */
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 0.5rem;    /* Balanced spacing at the top */
+            padding-bottom: 0.5rem; /* Identical spacing at the bottom */
+        }
+
+        /* Ensure the row and columns fill the height */
+        .container-fluid > .row {
+            flex: 1;
+        }
+
+    </style>
+
+<style>
+
+@media (min-width: 768px) {
+    /* Force the sidebar to be visible and full-width on desktop */
+    .sidebar {
+        display: flex !important;
+        width: 14rem !important; /* Standard SB Admin 2 desktop width */
+        margin-left: 0 !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    /* Prevent the mobile 'toggled' class from shrinking it on desktop */
+    .sidebar.toggled {
+        width: 14rem !important;
+    }
+
+    /* Ensure the brand/logo area stays visible */
+    .sidebar .sidebar-brand .sidebar-brand-text {
+        display: inline !important;
+    }
+
+    /* Remove the blur effect if the window is resized to desktop */
+    #content-wrapper {
+        filter: none !important;
+        opacity: 1 !important;
+    }
+}
+
+</style>
+
+    <style>
+        
+        /* 1. Navigation Styling */
+        .modern-pills .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .modern-pills .nav-link.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: transparent;
+        }
+
+        /* 2. Spaced Button Styling */
+        .spaced-action-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            text-decoration: none !important;
+            background: #ffffff;
+            border: 1px solid #f1f5f9; /* Subtle border */
+            border-radius: 12px; /* Rounded corners */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .spaced-action-item:hover {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+            transform: translateX(4px); /* Subtle slide effect */
+        }
+
+        .action-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* 3. Small Modern Icons */
+        .icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Soft Colors */
+        .bg-blue-soft { background-color: #eff6ff; }
+        .bg-red-soft { background-color: #fef2f2; }
+        .bg-purple-soft { background-color: #f5f3ff; }
+        .bg-green-soft { background-color: #ecfdf5; }
+        .text-purple { color: #8b5cf6; }
+        
+        .ms-auto { margin-left: auto; }
+
+
+    </style>
+
+<style>
+
+    @media (max-width: 768px) {
+        .card-grid-container > .card {
+            flex: 0 0 100% !important; /* 1 card per row on mobile */
+        }
+    }
+
+    @media (min-width: 769px) and (max-width: 1199px) {
+        .card-grid-container > .card {
+            flex: 0 0 calc(50% - 10px) !important; /* 2 cards per row on tablet */
+        }
+    }
+
+</style>
+
+    <style>
+
+        .inner-action-btn {
+            flex: 1;
+            min-width: 100px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #d1e9ff;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            text-decoration: none !important;
+            cursor: pointer;
+            color: #4a4a4a;
+        }
+
+        .inner-action-btn:hover {
+            background-color: #ffffff;
+            border-color: #4e73df;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .inner-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .inner-action-btn i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        
+        /* The 'Muted' state for your custom button */
+        .inner-action-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;    /* Physically prevents clicking */
+            cursor: not-allowed;
+            filter: grayscale(1);    /* Optional: makes the green icon look grey */
+            text-decoration: none;
+        }
+
+    </style>
+
+<!---------------------------------------------------------------------------->
+
+</head>
+
+<body id="page-top">
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+
+        <ul class="navbar-nav bg-white sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <div class="sidebar-brand d-flex align-items-center justify-content-center">
+                <!-- The custom class enforces the animation timeline natively -->
+                <img src="assets/img/logo_new_light_3.png"
+                    class="img-fluid fade-on-load" 
+                    alt="logo" 
+                    style="width: 100%; height: auto; object-fit: contain;">
+            </div>
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+            
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                
+                <!-- Menu Wrapper with the same robust animation class -->
+                <div class="fade-on-load">
+                    <a class="nav-link nav-link-blue" href="#">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+
+                    <a class="nav-link nav-link-blue" href="mockboard.html">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Lista Pazienti</span>
+                    </a>
+                </div>
+
+            </li>
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- content-wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column" style="background-color: #f6f8fa !important;">
+            <!-- content -->
+            <div id="content">
+                
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-3 static-top shadow-sm px-4">
+                    
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <h1 class="h4 mb-0 text-gray-800">Dashboard Clinico</h1>
+
+                    <ul class="navbar-nav ml-auto">
+                        <li class="topbar-divider d-none d-sm-block"></li>
+                            <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span id="userFullName" class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                        <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
+                                    </span>
+                                    <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
+                                        <!-- Updated class from 'border' to 'border border-primary' -->
+                                        <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border shadow-sm" style="border: 1px solid #0000FF !important;">
+                                            <i id="avatarSpinnerIcon1" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
+                                            <img id="profileAvatar1" 
+                                                class="img-fluid rounded-circle d-none" 
+                                                width="140" height="140" 
+                                                alt="Foto profilo"
+                                                style="object-fit: cover;">
+                                        </div>
+                                    </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <!--<a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>-->
+                                <!--<div class="dropdown-divider"></div>
+                                <a class="btn btn-sm text-danger ml-2" id="logoutBtn" href="index.html" style="border: none;">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span class="d-none d-md-inline ml-1">Logout</span>
+                                </a>-->
+
+                                <div class="dropdown-divider"></div>
+                                    <a class="btn btn-sm text-danger ml-2 d-inline-flex align-items-center" id="logoutBtn" href="index.html" style="border: none;">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span class="ml-2 font-weight-bold" style="font-size: 0.85rem;">Logout</span>
+                                    </a>
+
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+
+
+<div class="container-fluid full-height-container">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 d-flex">
+            <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
+                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Configurazione Protocolli Terapeutici</h6>
+                </div>
+
+
+
+                <div class="d-flex flex-column h-100 pl-4">
+                                
+                                            <!-- TOP ROW: 20% Height -->
+                                            <div class="row m-0" style="min-height: 20%; flex-shrink: 0;">
+                                                <!-- Added d-flex and align-items-center to put image and text side-by-side -->
+                                                <div class="col-12 py-3 d-flex align-items-center">
+
+                                                    <!-- Profile Image Container -->
+                                                    <div class="position-relative flex-shrink-0 mr-3" style="width: 80px; height: 80px;">
+                                                        <!-- Added a 3px solid custom blue border matching your previous styling style -->
+                                                        <img id="patientAvatar-2" src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                            class="img-fluid rounded-circle border shadow-sm p-1" 
+                                                            style="background-color: #fff; object-fit: cover; width: 100%; height: 100%; display: block; border: 1px solid #0000FF !important;">
+                                                    </div>
+
+                                                    <!-- Text Content Wrapper -->
+                                                    <div class="d-flex flex-column overflow-hidden">
+             
+                                                         <h5 id="patientFullName_2" class="text-dark mb-2 font-weight-bold text-truncate" style="font-size: 2.0rem; line-height: 1.2;">
+                                                            Davide cleopadre           
+                                                        </h5>
+
+                                                        <!-- Badges Row -->
+                                                        <!-- d-flex here allows badges to sit side-by-side if you want,or remove d-flex to keep them stacked -->
+                                                       <div class="d-flex flex-wrap" style="gap: 5px;">
+                                                            <!-- Active User Badge (Centered Layout) -->
+                                                            <span class="badge d-inline-flex align-items-center justify-content-center" 
+                                                                style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4e73df; color: #fff; font-weight: 600;">
+                                                                <i class="fas fa-check-circle mr-1 flex-shrink-0"></i>Utente Attivo
+                                                            </span>
+                                                            <!-- Patient Status Badge Wrapper (Centered Layout) -->
+                                                            <span id="patientMinorOrMajor_2" 
+                                                                class="badge d-inline-flex align-items-center justify-content-center" 
+                                                                style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%;">
+                                                                ciao       
+                                                            </span>
+                                                        </div>
+
+                                                         <!-- Subscription Date: Placed right under badges -->
+                                                        <div class="mt-2">
+                                                            <small  class="text-muted" style="font-size: 0.85rem;">
+                                                              <i class="far fa-calendar mr-1"></i> 
+                                                              <span id="patientSubDate_2"> 
+                                                                1-1-2026
+                                                              </span>   
+                                                            </small>
+                                                        </div>
+
+                                                   </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Unified Info Card -->
+                                            <div class="shadow-sm rounded p-3 mt-2 mr-4 mb-4" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                                      
+                                                <!-- CARD HEADER -->
+                                                <div class="d-flex align-items-center mb-3 pb-2 border-bottom" style="border-bottom-color: #dfdfdf  !important;">
+                                                    <i class="fas fa-file-medical-alt text-primary mr-2" style="font-size: 0.9rem;"></i>
+                                                    <h6 class="m-0 font-weight-bold text-muted" style="font-size: 0.9rem; letter-spacing: 1px;">
+                                                        Terapia Attualmente Osservata
+                                                    </h6>
+                                                </div>
+
+                                                <!-- DATA CONTAINER (Your original code wrapped) -->
+                                                <div id="therapyDataContainer">
+                                                    <!-- ROW 1 -->
+                                                    <div class="row no-gutters mb-0 align-items-center">
+                                                        <!-- SECTION 1: Text Labels (Left) -->
+                                                        <div class="col-12" style="border-right-color: #fce8ed !important;">
+                                                         </div>   
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid full-height-container">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12 d-flex">
+            <div class="card mb-4 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
+                
+                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Configurazione Protocolli Terapeutici</h6>
+                </div>
+
+                <div class="card-header bg-white p-0">
+                    <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
+                        <li class="nav-item flex-fill text-center">
+                            <a class="nav-link active" id="tutti-tab" data-toggle="tab" href="#tutti" role="tab">Tutti</a>
+                        </li>
+                        <li class="nav-item flex-fill text-center">
+                            <a class="nav-link" id="azioni-tab" data-toggle="tab" href="#profilo" role="tab">Profilo Personale</a>
+                        </li>
+                        <li class="nav-item flex-fill text-center">
+                            <a class="nav-link" id="referti-tab" data-toggle="tab" href="#terapie" role="tab">Terapie</a>
+                        </li>
+                        <li class="nav-item flex-fill text-center">
+                            <a class="nav-link" id="reazioni-tab" data-toggle="tab" href="#certificati" role="tab">Certificati</a>
+                        </li>
+                    </ul>
+                </div>
+            
+          
+                <div class="card-body">
+                    <div class="tab-content">
+
+
+                        <div class="tab-pane fade show active" id="tutti" role="tabpanel">
+                            
+                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                
+                               <div id="card-1" class="card shadow-sm border-0 h-100" style="flex: 0 0 calc(33.333% - 14px); border-radius: 12px; overflow: hidden; transition: transform 0.2s ease;">
+                                    <div style="height: 140px; position: relative; overflow: hidden; border-radius: 12px 12px 0 0;">
+                                        <img src="assets/img/place-holder.jpg" 
+                                            alt="Protocollo" 
+                                            style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                                    </div>
+                                    <div class="card-body p-4">
+                                        <h5 class="card-title text-dark mb-2">Protocollo Cognitivo</h5>
+
+                                        <div class="mb-2">
+                                            <span id="quickrecaptherapies" 
+                                                class="badge badge-success d-inline-flex align-items-center rounded-pill" 
+                                                style="font-size: 0.75rem; padding: 4px 12px; letter-spacing: 0.5px; line-height: 1.2;">
+                                                <span class="text-white">
+                                                    Success badge
+                                                </span>
+                                            </span>
+                                        </div>
+
+                                        <p class="card-text text-muted mb-2" style="font-size: 0.9rem; line-height: 1.5;">
+                                            Percorso intensivo mirato al miglioramento delle funzioni esecutive e della memoria breve termine.
+                                        </p>
+
+                                        <!--<div class="d-flex">
+                                            <button class="btn btn-outline-primary btn-sm flex-fill me-3" style="border-radius: 8px;">Dettagli</button>
+                                            <button class="btn btn-primary btn-sm flex-fill" style="border-radius: 8px;">Modifica</button>
+                                        </div>-->
+
+                                         <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
+            
+                                          
+                                            <!-- Button 2: New -->
+                                            <a id="viewTherapyBtn" href="#" class="inner-action-btn">
+                                                <i class="fas fa-play text-primary"></i> Demo 
+                                            </a>
+
+                                              <!-- Button 2: New -->
+                                            <a id="viewTherapyBtn" href="#" class="inner-action-btn">
+                                                <i class="fas fa-plus-circle text-success"></i> Aggiungi  
+                                            </a>
+
+                                        </div>
+            
+
+                                    </div>
+                                </div>
+
+
+                                <div class="card shadow-sm border-0" style="flex: 0 0 calc(33.333% - 14px);">
+                                    <div class="card-body">Card 2</div>
+                                </div>
+
+                                <div class="card shadow-sm border-0" style="flex: 0 0 calc(33.333% - 14px);">
+                                    <div class="card-body">Card 3</div>
+                                </div>
+
+                                <div class="card shadow-sm border-0" style="flex: 0 0 calc(33.333% - 14px);">
+                                    <div class="card-body">Card 4</div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="profilo" role="tabpanel">
+                            <h5>Profilo Personale</h5>
+                            <p>Dati anagrafici e impostazioni utente...</p>
+                        </div>
+                        <div class="tab-pane fade" id="terapie" role="tabpanel">
+                            <h5>Gestione Terapie</h5>
+                            <p>Lista delle terapie attive e storiche...</p>
+                        </div>
+                        <div class="tab-pane fade" id="certificati" role="tabpanel">
+                            <h5>Certificati</h5>
+                            <p>Documentazione medica e certificazioni...</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div> 
+        </div>
+    </div> 
+</div>
+
+
+
+            </div> <!-- content -->
+
+           <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; MyAssessments.it 2025</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div><!-- content-wrapper -->
+    </div><!-- Wrapper -->
+
+        
+        <!--<script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
+        <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
+
+        <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
+        <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+
+        <script>
+
+            // A global tracker variable to protect against aggressive database render loops
+            let isAvatarStateLocked = false;
+
+            function updateUserAvatar(userGender) {
+                // If the loop tries to run a second time, immediately reject it to save performance
+                if (isAvatarStateLocked) return;
+                
+                const avatarImg1 = document.getElementById('profileAvatar1');
+                const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
+                const container1 = document.getElementById('avatarContainer1');
+
+                if (!avatarImg1 || !spinnerIcon1) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc  = 'assets/sb-admin-2/img/undraw_profile.svg';
+                let targetSrc1 = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc  = 'assets/img/registrazione/terapeuta-female.png';
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-female.png';
+
+                } else if (userGender === 'Maschile') {
+                    targetSrc  = 'assets/img/registrazione/terapeuta-male.png';
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-male.png';
+                }
+
+                // 2. Assign source asset
+                avatarImg1.src = targetSrc1;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon1.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg1.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container1) {
+                    container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+                
+                // 4. Lock down state so external asynchronous loops cannot re-enable the loading indicators
+                isAvatarStateLocked = true;
+            }
+        
+        </script>
+
+        <script>
+
+            $(document).ready(function() {
+                // Intercept the Logout button click
+                $('#logoutBtn').on('click', function(e) {
+                    // 1. Stop the browser from immediately redirecting to index.html
+                    e.preventDefault();
+                    // 2. Run your application cleanup logic here
+                    console.log("Logging out... clearing patient session data.");
+                    // Clear your persistent patient storage so it doesn't hang around
+                    localStorage.removeItem('selectedPatientEmail');
+                    // If you need to clear all session tokens, you could do:
+                    // localStorage.clear(); 
+                    // 3. Manually trigger the redirect now that the data is wiped
+                    window.location.href = $(this).attr('href'); 
+                });
+            });
+
+        </script>
+
+        <!-- Main -->
+        <script type="module">
+        
+             // ✅ Import string utils
+             import {
+                formatName,
+                convertToItalianFormat,
+                extractDate,
+                calculateAgeWithMonths
+            } from "./assets/js/string_utils.js";
+
+           import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+           
+           // --- Supabase setup ---
+           const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+           const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+           const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            // --- Event Listeners 
+            document.addEventListener("DOMContentLoaded", async () => {
+            
+                // CHECK SESSIONE
+                const { data: { session } } = await supabase.auth.getSession();
+
+                if (!session?.user) {
+                    window.location.replace("index.html");
+                    return;
+                }
+                
+                 const user = session.user;
+
+                // AUTO LOGOUT HANDLER
+                supabase.auth.onAuthStateChange((event, session) => {
+                    if (event === "SIGNED_OUT" || !session) {
+                    window.location.replace("index.html");
+                    }
+                });
+
+                // DATI BASE USER (SOLO AUTH)
+                const email = user.email;
+                
+             //   console.log("Utente:", user);
+
+                // CARICA PROFILO DAL DATABASE 
+                const { data: profile, error } = await supabase
+                    .from("Clinicals")
+                    .select("*")
+                    .eq("id", user.id)
+                    .single();
+
+                if (error || !profile) {
+                    console.error("Errore caricamento profilo:", error);
+                    window.location.replace("index.html");
+                    return;
+                }
+
+                // COSTRUZIONE DATI UI
+                const name         = `${profile.name}`;
+                const surname      = `${profile.surname}`;
+                const birthDate    = profile.birth_date;
+                const genre        = profile.genre;
+                const region       = profile.region;
+                const regNum       = profile.registration_number;
+                const regDate      = convertToItalianFormat(extractDate(profile.creation_date));
+                const age          = calculateAgeWithMonths(birthDate);
+                const userId       = user.id;
+                let totalCredits   = profile.total_credits;
+                let usedCredits    = profile.used_credits;
+                const subType      = profile.sub_type;
+                let prefix       = "";
+                if ( subType===1){
+                    prefix = genre === "Femminile" ? "Dott.ssa" : "Dott.";
+                } else if( subType===2) {
+                    prefix = genre === "Femminile" ? "Sig.ra" : "Sig.";
+                } else if( subType===3) {
+                    prefix = genre === "Femminile" ? "Prof.ssa" : "Prof.";
+                }
+                const title = prefix + " " +formatName(surname,name);
+                const fullNameNoPrefix = `${name} ${surname}`;
+                const fullName = `${prefix} ${name} ${surname}`;
+
+                totalCredits=200;
+                usedCredits=40;
+                
+               const totalPerc = Math.round((totalCredits-usedCredits)*100/totalCredits);
+               const usedPerc=100-totalPerc;
+/*
+               console.log(totalCredits);
+               console.log(usedCredits);
+               console.log(totalPerc+"%");
+               console.log(usedPerc+"%");
+               console.log(fullName);
+               console.log(birthDate);
+               console.log(genre);
+               console.log(region);
+               console.log(regDate);
+               console.log(age);
+               console.log(name);
+               console.log(surname);
+               console.log(userId);
+               console.log(totalCredits);
+               console.log(usedCredits);
+               console.log(subType);
+               console.log(email);
+*/
+                // --- Nome nella NavBar ---
+                const userFullNameElement = document.getElementById("userFullName");
+                if (userFullNameElement) {
+                    userFullNameElement.textContent = fullNameNoPrefix;
+                }
+              
+                // update avatar in the navbar
+                updateUserAvatar(genre);
+                    
+            });
+
+        </script>
+
+<script>
+
+</script>
+
+</body>
+</html>

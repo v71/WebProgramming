@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <!--<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png?v=2">
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">-->
+
+  <!-- Standard favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png?v=1">
+  <!-- Fallback for older browsers -->
+  <!--<link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">-->
+  <!-- Apple (iPhone/iPad home screen) -->
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png?v=1">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+  <!-- Include Google Font with lighter weight -->
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="assets/mycss/style-shared.css" rel="stylesheet">
+
+<style>
+
+@media (min-width: 1200px) {
+  /* 1. Make the container fill the full width */
+  .header .container-fluid {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center;
+    width: 100%;
+  }
+
+  /* 2. Give the logo area a flexible basis */
+  .header .logo {
+    flex: 1; 
+    display: flex;
+    justify-content: flex-start;
+  }
+
+  /* 3. The Navmenu stays in the middle */
+  .navmenu {
+    flex: 0 0 auto; /* Don't grow, don't shrink */
+  }
+
+  /* 4. Create a "Ghost" spacer on the right to balance the logo */
+  .header .container-fluid::after {
+    content: "";
+    flex: 1;
+  }
+}
+
+/* Ensure links are visible if background is light */
+/*
+.navmenu ul li a {
+  color: #012970 !important;
+  font-weight: 500;
+  padding: 10px 15px;
+}
+  */
+</style>
+
+
+<style>
+
+/* --- Sober Mission Styles --- */
+.sober-heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    
+    /* Typography */
+    font-size: clamp(1.75rem, 4vw, 2.25rem) !important;
+    font-weight: 600 !important;
+    color: #012970;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px !important;
+    text-transform: none;
+    text-align: center;
+}
+
+/* The decorative lines */
+.sober-heading::before,
+.sober-heading::after {
+    content: "";
+    height: 2px;
+    width: 60px; /* Slightly longer for better balance */
+    background-color: #4154f1;
+    display: inline-block;
+    opacity: 0.4; /* Softens the blue to stay 'sober' */
+    border-radius: 2px;
+}
+
+.sober-mission {
+    font-size: clamp(1.05rem, 3vw, 1.2rem) !important;
+    line-height: 1.8;
+    color: #555;
+    max-width: 750px;
+    margin: 0 auto; /* Ensures it stays centered if you add more text */
+    font-weight: 400;
+    text-align: center;
+}
+
+/* Subtly highlights key terms */
+.sober-mission .highlight {
+    color: #012970;
+    border-bottom: 2px solid rgba(65, 84, 241, 0.15); /* Slightly thicker but lighter color */
+    padding-bottom: 1px;
+    font-weight: 500; /* Added a tiny bit of weight to the highlight */
+}
+</style>
+
+<style>
+/* --- Navigation Hover Effect --- */
+#navmenu ul li a {
+  color: #64748b; /* Current text color (slate gray) - adjust to match your theme */
+  transition: color 0.25s ease-in-out; /* Smooth transition fade */
+  position: relative;
+}
+
+/* Color state on hover and when active */
+#navmenu ul li a:hover,
+#navmenu ul li a.active {
+  color: rgb(0,0,255) !important; /* Elegant primary blue on hover - replace with your brand color */
+}
+</style>
+
+</head>
+
+
+<body class="services-details-page">
+
+  <!--inizio header-->
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid position-relative d-flex align-items-center justify-content-between">
+      
+       <a href="index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <img src="assets/img/logo_new_light_1.png" alt="logo" class="logo-default" style="height:40px;">
+        <img src="assets/img/logo_new_light_1.png" alt="logo" class="logo-scrolled" style="height:40px;">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+      <ul>
+          <li><a href="index.html#hero">Home</a></li>
+          <li><a href="index.html#about">Mission</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="index.html#team">Team</a></li>
+          <li><a href="index.html#contact">Contatti</a></li>
+        </ul>
+        <button type="button" class="mobile-nav-toggle d-xl-none bg-transparent border-0 p-0" aria-label="Apri menu">
+          <i class="bi bi-list" aria-hidden="true"></i>
+        </button>
+      </nav>
+      
+    </div>
+  </header>
+  <!--fine header-->
+
+ <main id="pricing" class="main">
+
+  <!-- About / Pricing Section -->
+  <section id="pricing-about" class="faq section light-background py-3 py-md-5">
+
+    <!-- muted h1 level just to stop the html valdiator to complain-->
+    <h1 class="sr-only">muted h1</h1>
+    <!-- muted h2 level just to stop the html valdiator to complain-->
+    <h2 class="sr-only">muted h2</h2>
+
+      <!-- Section Title: Aree di Intervento -->
+      <div class="container section-title" data-aos="fade-up">
+        <h3 class="sober-heading">Registrazione</h3>
+        <p class="sober-mission mx-auto">
+         Scegli il metodo di registrazione più adatto a te.
+        </p>
+      </div><!-- End Section Title -->
+
+    <!-- muted h4 level just to stop the html valdiator to complain-->
+    <h4 class="sr-only">muted h4</h4>
+
+    <div class="container offset-top pb-5" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-4 justify-content-center">
+
+        <div class="col-sm-6 col-md-5 d-flex">
+          <div class="card shadow-sm card-hover flex-fill" style="background: #ffffff;">
+            
+            <div class="d-flex align-items-center justify-content-center py-4">
+              <img src="assets/img/registrazione/clinico.png" 
+                  class="img-fluid" 
+                  alt="Terapeuta" 
+                  style="width: 35%; height: auto; object-fit: contain;">
+            </div>
+
+            <div class="card-body d-flex flex-column align-items-center text-center px-4 pb-4 pt-0">
+              <div class="mb-3">
+                <h5 class="card-title font-weight-bold" style="color: #1e293b; font-size: 1.25rem; letter-spacing: -0.02em;">
+                  Terapeuta
+                </h5>
+                <p class="card-text px-2 mb-0" style="color: #475569; font-size: 0.925rem; line-height: 1.5; -webkit-font-smoothing: antialiased;">
+                  Per registrarsi come personale clinico è necessario fornire il numero di iscrizione all'albo.
+                </p>
+              </div>
+              
+              <a href="registrati_clinico_3.html" 
+                class="btn btn-primary px-4 py-2 font-weight-600 shadow-sm transition-all mt-3" 
+                style="border-radius: 8px; font-size: 0.9rem; min-width: 140px;">
+                Registrati
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-sm-6 col-md-5 d-flex">
+          <div class="card shadow-sm card-hover flex-fill" style="background: #ffffff;">
+      
+             <div class="d-flex align-items-center justify-content-center py-4">
+               <img src="assets/img/registrazione/paziente.png" 
+                  class="img-fluid" 
+                  alt="Terapeuta" 
+                  style="width: 35%; height: auto; object-fit: contain;">
+            </div>
+      
+              <div class="card-body d-flex flex-column align-items-center text-center px-4 pb-4 pt-0">
+                 <div class="mb-3">
+                  <h5 class="card-title font-weight-bold" style="color: #1e293b; font-size: 1.25rem; letter-spacing: -0.02em;">
+                      Paziente
+                  </h5>
+                  <p class="card-text px-2" style="color: #475569; font-size: 0.925rem; line-height: 1.5; -webkit-font-smoothing: antialiased;">
+                    Per registrarti come paziente devi essere in possesso del codice che ti è stato fornito dal tuo terapeuta.
+                  </p>
+                 <a href="registrati_privato_3.html" 
+                  class="btn btn-primary px-4 py-2 font-weight-600 shadow-sm transition-all" 
+                  style="border-radius: 8px; font-size: 0.9rem; min-width: 140px;">
+                  Registrati
+                </a>
+
+                </div>
+              </div>
+      
+          </div>
+        </div>
+
+      </div>
+    </div> 
+
+  </section> <!-- /Pricing Section -->
+
+</main> <!-- /main -->
+
+  
+    <!--inizio footer-->
+    <footer id="footer" class="footer position-relative">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="index.html" class="logo d-flex align-items-center">
+                  <img src="assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                  <li><a href="index.html#hero">Home</a></li>
+                  <li><a href="index.html#about">Mission</a></li>
+                  <li><a href="index.html#faq">FAQ</a></li>
+                  <li><a href="index.html#team">Team</a></li>
+                  <li><a href="index.html#testimonials">Testimonianze</a></li>
+                  <li><a href="index.html#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <!--<script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>-->
+  <!--<script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>-->
+  <!--<script src="assets/js/subabaseClient.js"></script>-->
+  <!--<script src="assets/js/password_masking.js"></script>-->
+
+  <!-- Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

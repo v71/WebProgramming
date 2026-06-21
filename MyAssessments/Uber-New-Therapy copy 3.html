@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogo Giochi</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary:    #4e73df;
+    --primary-dk: #2e59d9;
+    --success:    #1cc88a;
+    --info:       #36b9cc;
+    --warning:    #f6c23e;
+    --danger:     #e74a3b;
+    --secondary:  #858796;
+    --dark:       #5a5c69;
+    --light:      #f8f9fc;
+    --white:      #ffffff;
+    --border:     #e3e6f0;
+    --shadow-sm:  0 .125rem .25rem 0 rgba(58,59,69,.2);
+  }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--light);
+    color: var(--dark);
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── Topbar ── */
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-brand {
+    font-size: 15px;
+    font-weight: 800;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--secondary);
+  }
+  .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  /* ── Page content ── */
+  .page-content {
+    padding: 24px;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  .page-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .page-heading h1 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--dark);
+  }
+  .breadcrumb {
+    font-size: 11px;
+    color: var(--secondary);
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+  }
+
+  /* ── Filter row ── */
+  .filter-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .filter-row label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-right: 4px;
+  }
+  .filter-chip {
+    border: 1px solid var(--border);
+    background: var(--white);
+    border-radius: 20px;
+    padding: 5px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--secondary);
+    cursor: pointer;
+    transition: all .15s;
+    font-family: inherit;
+  }
+  .filter-chip:hover { border-color: var(--primary); color: var(--primary); }
+  .filter-chip.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+  /* ── Grid ── */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  /* ── Card — No translate, si ingrandisce di poco con bordo blu ── */
+  .card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow .2s, border-color .2s, transform .2s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transform: scale(1);
+  }
+  .card:hover {
+    border-color: var(--primary);
+    box-shadow: 0 .4rem 2rem 0 rgba(78, 115, 223, 0.15);
+    transform: scale(1.015);
+  }
+  .card.selected {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(78,115,223,.2), var(--shadow-sm);
+  }
+  .card.selected:hover {
+    transform: scale(1.015);
+    box-shadow: 0 0 0 3px rgba(78,115,223,.25), 0 .4rem 2rem 0 rgba(78, 115, 223, 0.2);
+  }
+
+  /* Checkmark badge */
+  .card-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 24px;
+    height: 24px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(.5);
+    transition: opacity .18s, transform .18s;
+    z-index: 2;
+    box-shadow: 0 2px 6px rgba(78,115,223,.4);
+  }
+  .card.selected .card-check { opacity: 1; transform: scale(1); }
+  .card-check i { color: white; font-size: 11px; }
+
+  /* Image */
+  .card-img-wrap {
+    position: relative;
+    height: 170px;
+    overflow: hidden;
+    background: #eaecf4;
+    flex-shrink: 0;
+  }
+  .card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform .3s;
+  }
+  .card:hover .card-img-wrap img { transform: scale(1.02); }
+
+  .card-badge {
+    position: absolute;
+    bottom: 9px;
+    left: 9px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    padding: 3px 9px;
+    border-radius: 3px;
+  }
+  .badge-primary   { background: var(--primary);   color: white; }
+  .badge-success   { background: var(--success);   color: white; }
+  .badge-info      { background: var(--info);      color: white; }
+  .badge-warning   { background: var(--warning);   color: white; }
+  .badge-secondary { background: var(--secondary); color: white; }
+
+  /* Body */
+  .card-body {
+    padding: 14px 16px 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    line-height: 1.3;
+    margin-bottom: 3px;
+  }
+  .card-sub {
+    font-size: 11px;
+    color: var(--secondary);
+    margin-bottom: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+  }
+  .card-desc {
+    font-size: 12.5px;
+    color: #858796;
+    line-height: 1.55;
+    flex: 1;
+    font-weight: 400;
+  }
+
+  /* Footer */
+  .card-footer {
+    border-top: 1px solid var(--border);
+    padding: 9px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--light);
+  }
+  .card-age {
+    font-size: 11px;
+    color: var(--secondary);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-add {
+    border: none;
+    border-radius: 4px;
+    padding: 6px 13px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s;
+    white-space: nowrap;
+    background: var(--primary);
+    color: white;
+  }
+  .btn-add:hover { background: var(--primary-dk); }
+  .card.selected .btn-add { background: var(--danger); }
+  .card.selected .btn-add:hover { background: #c0392b; }
+
+  .btn-demo {
+    border: 1.5px solid var(--info);
+    border-radius: 4px;
+    padding: 6px 13px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+    background: transparent;
+    color: var(--info);
+  }
+  .btn-demo:hover { background: var(--info); color: white; }
+
+  /* ── Demo modal ── */
+  .demo-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(58,59,69,.55);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .demo-overlay.open { opacity: 1; pointer-events: all; }
+
+  .demo-modal {
+    background: var(--white);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 560px;
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.25);
+    overflow: hidden;
+    transform: translateY(16px) scale(.97);
+    transition: transform .22s ease;
+  }
+  .demo-overlay.open .demo-modal { transform: translateY(0) scale(1); }
+
+  .demo-modal-header {
+    background: var(--info);
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .demo-modal-header h3 {
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .demo-modal-close {
+    background: rgba(255,255,255,.2);
+    border: none;
+    color: white;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
+  .demo-modal-close:hover { background: rgba(255,255,255,.35); }
+
+  .demo-modal-img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+  }
+
+  .demo-modal-body {
+    padding: 20px;
+  }
+  .demo-modal-body .dm-sub {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--info);
+    margin-bottom: 6px;
+  }
+  .demo-modal-body .dm-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--dark);
+    margin-bottom: 10px;
+  }
+  .demo-modal-body .dm-desc {
+    font-size: 13px;
+    color: var(--secondary);
+    line-height: 1.6;
+    margin-bottom: 18px;
+  }
+  .demo-steps {
+    background: var(--light);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+  }
+  .demo-steps-title {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--secondary);
+    margin-bottom: 10px;
+  }
+  .demo-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 12.5px;
+    color: var(--dark);
+    line-height: 1.45;
+  }
+  .demo-step + .demo-step { margin-top: 8px; }
+  .demo-step-num {
+    width: 20px;
+    height: 20px;
+    background: var(--info);
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .demo-modal-footer {
+    border-top: 1px solid var(--border);
+    padding: 12px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    background: var(--light);
+  }
+
+  @media (max-width: 600px) {
+    .page-content { padding: 14px; }
+    .cards-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .card, .card-img-wrap img, .card-check { transition: none; animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="topbar">
+  <a class="topbar-brand" href="#">
+    <i class="fa-solid fa-hospital-user"></i>
+    ClinicalPlay
+  </a>
+  <div class="topbar-right">
+    <span><i class="fa-regular fa-bell"></i></span>
+    <span class="topbar-user">
+      <i class="fa-regular fa-circle-user"></i>
+      Dr. Rossi
+    </span>
+  </div>
+</nav>
+
+<div class="page-content">
+
+  <div class="page-heading">
+    <div>
+      <h1>Catalogo Giochi Terapeutici</h1>
+      <div class="breadcrumb">
+        <i class="fa-solid fa-house" style="font-size:10px"></i>
+        Dashboard &rsaquo; Sessioni &rsaquo; Nuovo piano
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <label>Categoria</label>
+    <button class="filter-chip active" data-filter="all">Tutti</button>
+    <button class="filter-chip" data-filter="Cognitivo">Cognitivo</button>
+    <button class="filter-chip" data-filter="Motorio">Motorio</button>
+    <button class="filter-chip" data-filter="Linguaggio">Linguaggio</button>
+    <button class="filter-chip" data-filter="Sociale">Sociale</button>
+    <button class="filter-chip" data-filter="Sensoriale">Sensoriale</button>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid">
+
+    <div class="card" data-id="1" data-name="Memory Colori" data-cat="Cognitivo" data-img="https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=600&q=80" alt="Memory">
+        <span class="card-badge badge-primary">Cognitivo</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Memory Colori</div>
+        <div class="card-sub">Attenzione e memoria visiva</div>
+        <div class="card-desc">Abbinamento di copie per stimolare la memoria a breve termine e la concentrazione sostenuta.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 4–8 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="1"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="2" data-name="Puzzle Sequenze" data-cat="Cognitivo" data-img="https://images.unsplash.com/photo-1586943759359-c547d2ab3e2e?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1586943759359-c547d2ab3e2e?w=600&q=80" alt="Puzzle">
+        <span class="card-badge badge-primary">Cognitivo</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Puzzle Sequenze</div>
+        <div class="card-sub">Ragionamento logico</div>
+        <div class="card-desc">Completamento di sequenze visive per sviluppare il pensiero logico-deduttivo e la pianificazione.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 5–10 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="2"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="3" data-name="Percorso Motorio" data-cat="Motorio" data-img="https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?w=600&q=80" alt="Motorio">
+        <span class="card-badge badge-success">Motorio</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Percorso Motorio</div>
+        <div class="card-sub">Coordinazione grosso-motoria</div>
+        <div class="card-desc">Esercizi su percorso per migliorare equilibrio, coordinazione e schemi motori di base.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 3–6 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="3"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="4" data-name="Costruzioni Blocchi" data-cat="Motorio" data-img="https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1587654780291-39c9404d746b?w=600&q=80" alt="Blocchi">
+        <span class="card-badge badge-success">Motorio</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Costruzioni Blocchi</div>
+        <div class="card-sub">Motricità fine e planning</div>
+        <div class="card-desc">Attività structured con blocchi per affinare la presa a pinza e il controllo bimanuale.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 2–5 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="4"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="5" data-name="Lotto Immagini" data-cat="Linguaggio" data-img="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=600&q=80" alt="Linguaggio">
+        <span class="card-badge badge-info">Linguaggio</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Lotto Immagini</div>
+        <div class="card-sub">Vocabolario ricettivo</div>
+        <div class="card-desc">Associazione parola-immagine per ampliare il repertorio lessicale e la comprensione verbale.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 2–6 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="5"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="6" data-name="Storie Sequenziali" data-cat="Linguaggio" data-img="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=600&q=80" alt="Storie">
+        <span class="card-badge badge-info">Linguaggio</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Storie Sequenziali</div>
+        <div class="card-sub">Narrazione e sintassi</div>
+        <div class="card-desc">Ordinamento di tavole illustrate per lavorare sulla struttura narrativa e la produzione di frasi.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 4–9 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="6"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="7" data-name="Il Mio Turno" data-cat="Sociale" data-img="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" alt="Sociale">
+        <span class="card-badge badge-warning">Sociale</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Il Mio Turno</div>
+        <div class="card-sub">Alternanza e cooperazione</div>
+        <div class="card-desc">Gioco a turni guidato per esercitare la reciprocità, l'attesa e la regolazione emotiva.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 3–7 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="7"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="8" data-name="Emozioni in Gioco" data-cat="Sociale" data-img="https://images.unsplash.com/photo-1607453998774-d533f65dac99?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1607453998774-d533f65dac99?w=600&q=80" alt="Emozioni">
+        <span class="card-badge badge-warning">Sociale</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Emozioni in Gioco</div>
+        <div class="card-sub">Riconoscimento affettivo</div>
+        <div class="card-desc">Carte con espressioni facciali per identificare e denominare stati emotivi propri e altrui.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 4–10 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="8"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="9" data-name="Scatola Sensoriale" data-cat="Sensoriale" data-img="https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1519340241574-2cec6aef0c01?w=600&q=80" alt="Sensoriale">
+        <span class="card-badge badge-secondary">Sensoriale</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Scatola Sensoriale</div>
+        <div class="card-sub">Integrazione tattile</div>
+        <div class="card-desc">Esplorazione di materiali a diverse texture per stimolare l'elaborazione tattile e propriocettiva.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 1–5 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="9"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-id="10" data-name="Tamburo Ritmico" data-cat="Sensoriale" data-img="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&q=70">
+      <div class="card-check"><i class="fa-solid fa-check"></i></div>
+      <div class="card-img-wrap">
+        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=600&q=80" alt="Musica">
+        <span class="card-badge badge-secondary">Sensoriale</span>
+      </div>
+      <div class="card-body">
+        <div class="card-title">Tamburo Ritmico</div>
+        <div class="card-sub">Percezione uditiva e ritmo</div>
+        <div class="card-desc">Attività di imitazione ritmica per sviluppare l'elaborazione uditiva e la sincronizzazione motoria.</div>
+      </div>
+      <div class="card-footer">
+        <span class="card-age"><i class="fa-solid fa-child"></i> 3–8 anni</span>
+        <div style="display:flex;gap:6px">
+          <button class="btn-demo" data-demo="10"><i class="fa-solid fa-play"></i> Demo</button>
+          <button class="btn-add"><i class="fa-solid fa-plus"></i> Aggiungi gioco</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="demo-overlay" id="demoOverlay">
+  <div class="demo-modal" id="demoModal">
+    <div class="demo-modal-header">
+      <h3><i class="fa-solid fa-circle-play"></i> <span id="demoModalTitle">Demo</span></h3>
+      <button class="demo-modal-close" id="demoClose"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <img class="demo-modal-img" id="demoModalImg" src="" alt="">
+    <div class="demo-modal-body">
+      <div class="dm-sub" id="demoModalSub"></div>
+      <div class="dm-title" id="demoModalName"></div>
+      <div class="dm-desc" id="demoModalDesc"></div>
+      <div class="demo-steps">
+        <div class="demo-steps-title"><i class="fa-solid fa-list-check"></i> &nbsp;Come si svolge</div>
+        <div id="demoStepsList"></div>
+      </div>
+    </div>
+    <div class="demo-modal-footer">
+      <button class="btn-demo" id="demoModalClose2" style="border-color:var(--secondary);color:var(--secondary)">
+        <i class="fa-solid fa-xmark"></i> Chiudi
+      </button>
+      <button class="btn-add" id="demoModalAdd" style="background:var(--primary)">
+        <i class="fa-solid fa-plus"></i> Aggiungi gioco
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let selectedList = [];
+
+  const demoStepsDb = {
+    "1": ["Mostra una griglia di carte coperte a schermo.", "Il paziente gira due carte consecutivamente alla ricerca della coppia.", "In caso di errore, memorizza la posizione prima del feedback visivo."],
+    "2": ["Presenta una serie di immagini con un elemento logico mancante.", "Richiedi al paziente di selezionare l'elemento corretto tra 4 opzioni.", "Aumenta la complessità in base alla velocità di risposta."],
+    "3": ["Avvia la calibrazione della telecamera o del sensore di movimento.", "Guida il paziente a seguire la linea virtuale sollevando le ginocchia.", "Registra le oscillazioni posturali per il report finale."],
+    "4": ["Mostra un modello tridimensionale sul lato sinistro dello schermo.", "Richiedi di trascinare i blocchi digitali per replicare la struttura.", "Valuta il tempo di pianificazione e la precisione del rilascio."],
+    "5": ["Riproduci una traccia audio chiara (es. 'Mela').", "Il paziente seleziona l'immagine correspondant tra quelle proposte.", "Fornisce un rinforzo visivo e fonetico immediato."],
+    "6": ["Presenta 4 vignette in ordine sparso sulla linea temporale.", "Il paziente deve riordinarle da sinistra a destra (Inizio -> Fine).", "Richiede una validazione finale con sintesi vocale."],
+    "7": ["Configura una sessione cooperativa a turni alternati con l'avatar.", "Il paziente deve attendere che l'indicatore diventi verde prima di agire.", "Penalizza l'impulsività incentivando l'attesa regolata."],
+    "8": ["Mostra il primo piano di un volto che esprime un'emozione complessa.", "Seleziona il marker emotivo corretto (es. Sorpresa vs Paura).", "Propone un breve video di contesto per l'analisi situazionale."],
+    "9": ["Richiede l'ausilio della scatola fisica collegata o interazione touch.", "Identifica i materiali proposti a schermo tramite feedback aptico.", "Associa la texture visiva alla consistenza percepita."],
+    "10": ["Riproduci una sequenza di colpi ritmici di intensità variabile.", "Il paziente replica il pattern premendo sul tamburo virtuale.", "Calcola lo scostamento in millisecondi dal tempo ideale."]
+  };
+
+  function isSelected(id) {
+    return selectedList.some(x => x.id === id);
+  }
+
+  function deselect(id) {
+    selectedList = selectedList.filter(x => x.id !== id);
+    const card = document.querySelector(`.card[data-id="${id}"]`);
+    if (card) {
+      card.classList.remove('selected');
+      card.querySelector('.btn-add').innerHTML = '<i class="fa-solid fa-plus"></i> Aggiungi gioco';
+    }
+    syncModalAddButton(id);
+  }
+
+  document.querySelectorAll('.btn-add').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('.card');
+      const id = card.dataset.id;
+      const name = card.dataset.name;
+      const img = card.dataset.img;
+
+      if (isSelected(id)) {
+        deselect(id);
+      } else {
+        card.classList.add('selected');
+        selectedList.push({ id, name, img });
+        btn.innerHTML = '<i class="fa-solid fa-minus"></i> Rimuovi';
+      }
+    });
+  });
+
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      document.querySelector('.filter-chip.active').classList.remove('active');
+      chip.classList.add('active');
+
+      const filterValue = chip.dataset.filter;
+      document.querySelectorAll('.card').forEach(card => {
+        if (filterValue === 'all' || card.dataset.cat === filterValue) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  const overlay = document.getElementById('demoOverlay');
+  let currentDemoId = null;
+
+  function syncModalAddButton(id) {
+    const modalAddBtn = document.getElementById('demoModalAdd');
+    if (currentDemoId === id) {
+      if (isSelected(id)) {
+        modalAddBtn.style.background = 'var(--danger)';
+        modalAddBtn.innerHTML = '<i class="fa-solid fa-minus"></i> Rimuovi dal piano';
+      } else {
+        modalAddBtn.style.background = 'var(--primary)';
+        modalAddBtn.innerHTML = '<i class="fa-solid fa-plus"></i> Aggiungi gioco';
+      }
+    }
+  }
+
+  document.querySelectorAll('.btn-demo').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.stopPropagation();
+      const card = btn.closest('.card');
+      currentDemoId = card.dataset.id;
+
+      const name = card.dataset.name;
+      const sub = card.querySelector('.card-sub').textContent;
+      const desc = card.querySelector('.card-desc').textContent;
+      const img = card.dataset.img;
+
+      document.getElementById('demoModalName').textContent = name;
+      document.getElementById('demoModalSub').textContent = sub;
+      document.getElementById('demoModalDesc').textContent = desc;
+      document.getElementById('demoModalImg').src = img;
+      document.getElementById('demoModalImg').alt = name;
+
+      const stepsListContainer = document.getElementById('demoStepsList');
+      stepsListContainer.innerHTML = '';
+      const steps = demoStepsDb[currentDemoId] || ["Nessuna specifica d'esecuzione inserita."];
+      
+      steps.forEach((stepText, index) => {
+        const stepDiv = document.createElement('div');
+        stepDiv.className = 'demo-step';
+        stepDiv.innerHTML = `
+          <div class="demo-step-num">${index + 1}</div>
+          <div>${stepText}</div>
+        `;
+        stepsListContainer.appendChild(stepDiv);
+      });
+
+      syncModalAddButton(currentDemoId);
+      overlay.classList.add('open');
+    });
+  });
+
+  function closeModal() {
+    overlay.classList.remove('open');
+    currentDemoId = null;
+  }
+
+  document.getElementById('demoClose').addEventListener('click', closeModal);
+  document.getElementById('demoModalClose2').addEventListener('click', closeModal);
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeModal();
+  });
+
+  document.getElementById('demoModalAdd').addEventListener('click', () => {
+    if (!currentDemoId) return;
+    const targetCard = document.querySelector(`.card[data-id="${currentDemoId}"]`);
+    if (targetCard) {
+      targetCard.querySelector('.btn-add').click();
+      syncModalAddButton(currentDemoId);
+    }
+  });
+</script>
+
+</body>
+</html>

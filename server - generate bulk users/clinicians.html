@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Dashboard - Clinicians</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 8px 14px;
+      margin-bottom: 15px;
+      cursor: pointer;
+      border: none;
+      background: #4CAF50;
+      color: white;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background: #f2f2f2;
+    }
+    #message {
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Clinicians</h2>
+<button id="logoutBtn">Logout</button>
+<div id="message"></div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Surname</th>
+      <th>Registration Number</th>
+      <th>Consent Given</th>
+      <th>Consent Date</th>
+      <th>Creation Date</th>
+      <th>Expiration Date</th>
+      <th>Enabled</th>
+      <th>SubType</th>
+      <th>BirthDate</th>
+      <th>Region</th>
+      <th>Gender</th>
+    </tr>
+  </thead>
+  <tbody id="cliniciansBody"></tbody>
+</table>
+
+<button id="generateClientsBtn">Generate Test Clients</button>
+
+<script type="module">
+
+            import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+
+            const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            const message = document.getElementById("message");
+            const tbody = document.getElementById("cliniciansBody");
+            const logoutBtn = document.getElementById("logoutBtn");
+
+            // 🔐 Check authentication + admin role
+            async function checkAdmin() {
+              const { data: { session } } = await client.auth.getSession();
+
+              if (!session) {
+                  window.location.href = "login.html";
+                  return null;
+              }
+
+              const uid = session.user.id;
+
+              const { data: adminRow, error } = await client
+                  .from("Admins")
+                  .select("id")
+                  .eq("id", uid)
+                  .single();
+
+              if (error || !adminRow) {
+                  await client.auth.signOut();
+                  window.location.href = "login.html";
+                  return null;
+              }
+
+              return uid;
+            }
+
+            // 📋 Load clinicians
+            async function loadClinicians() {
+            const { data, error } = await client
+                .from("Clinicals")
+                .select("*")
+                .order("name", { ascending: true });
+
+            if (error) {
+                message.textContent = "❌ Error loading clinicians: " + error.message;
+                return;
+            }
+
+            if (!data.length) {
+                message.textContent = "No clinicians found.";
+                return;
+            }
+
+            data.forEach(clinician => {
+                const tr = document.createElement("tr");
+                tr.innerHTML = `
+                <td>${clinician.name || ""}</td>
+                <td>${clinician.surname || ""}</td>
+                <td>${clinician.registration_number || ""}</td>
+                <td>${clinician.consent_given || ""}</td>
+                <td>${clinician.consent_date || ""}</td>
+                <td>${clinician.creation_date || ""}</td>
+                <td>${clinician.expiration_date || ""}</td>
+                <td>${clinician.enabled || ""}</td>
+                <td>${clinician.sub_type || ""}</td>
+                <td>${clinician.birth_date || ""}</td>
+                <td>${clinician.region || ""}</td>
+                <td>${clinician.genre || ""}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            }
+
+            // 🚪 Logout
+            logoutBtn.addEventListener("click", async () => {
+              await client.auth.signOut();
+              window.location.href = "login.html";
+            });
+
+            // 🚀 On page load
+            (async () => {
+            const admin = await checkAdmin();
+            if (admin) {
+                loadClinicians();
+            }
+            })();
+
+            // Generate a random birth date for age between 20 and 60
+            function randomBirthDate() {
+              const now = new Date();
+              const minAge = 18;
+              const maxAge = 80;
+              // Calculate timestamps
+              const maxDate = new Date(now.getFullYear() - minAge, now.getMonth(), now.getDate()).getTime();
+              const minDate = new Date(now.getFullYear() - maxAge, now.getMonth(), now.getDate()).getTime();
+              // Random timestamp between minDate and maxDate
+              const randomTs = Math.floor(Math.random() * (maxDate - minDate)) + minDate;
+              return new Date(randomTs).toISOString().split("T")[0]; // YYYY-MM-DD format
+            }
+
+
+            document.getElementById("generateClientsBtn").addEventListener("click", async () => {
+
+            const clinicianId1 = "78adc98e-8f83-4684-a622-1f01dfbd5194"; // Erica
+            const clinicianId2 = "97740b0e-a2dd-4867-82d2-796a53ce79ca"; // Elena
+            const clinicianId3 = "49760c90-801e-42b2-b8c4-fbbbb95c389f"; // Annalisa
+
+            // List of Italian regions
+            const italianRegions = [
+                "Abruzzo","Basilicata","Calabria","Campania","Emilia-Romagna",
+                "Friuli-Venezia Giulia","Lazio","Liguria","Lombardia","Marche",
+                "Molise","Piemonte","Puglia","Sardegna","Sicilia",
+                "Toscana","Trentino-Alto Adige","Umbria","Valle d'Aosta","Veneto"
+              ];
+
+               // Function to generate a random gender
+              const genders = ["Male", "Female"];
+
+              // Function to pick a random region
+              function randomRegion() {
+                const idx = Math.floor(Math.random() * italianRegions.length);
+                return italianRegions[idx];
+              }
+
+             // Function to generate random geneder
+             function randomGender() {
+                const idx = Math.floor(Math.random() * genders.length);
+                return genders[idx];
+              }
+
+            // Generate clients for a single clinician
+            async function generateClientsForClinician(clinicianId, count,offset)
+            {
+              for (let i = 1; i <= count; i++) 
+              {
+                const email = `client_${i+offset}@test.com`;
+                const password = "ciao1234";
+
+                // 1️⃣ Create Auth user
+                const { data, error } = await client.auth.signUp({ email, password });
+                if (error) {
+                  console.log("Auth error:", error.message);
+                  continue;
+                }
+                else
+                {
+                  console.log("Auth :",email,password);
+                }
+
+                // 2️⃣ Insert into Clients table
+                const { error: insertError } = await client
+                  .from("Clients")
+                  .insert({
+                    id: data.user.id,
+                    name: `Test`,
+                    surname: `Client ${i+offset}`,
+                    clinical_id: clinicianId,
+                    consent_given: true,
+                    consent_date: new Date().toISOString(),
+                    creation_date: new Date().toISOString(),
+                    birth_date: randomBirthDate(),
+                    region: randomRegion(),
+                    genre: randomGender(),
+                  });
+
+                  if (insertError) {
+                    console.log("Insert error:", insertError.message);
+                  } else {
+                    console.log("Created:", email);
+                  }
+
+                // Optional delay to avoid rate limits
+                await new Promise(r => setTimeout(r, 100));
+              }
+            }
+
+            generateClientsForClinician(clinicianId1, 2,0); 
+            generateClientsForClinician(clinicianId2, 3,100); 
+            generateClientsForClinician(clinicianId3, 4,1000); 
+
+            console.log("Finished generating test clients");
+
+            });
+
+
+</script>
+
+</body>
+</html>

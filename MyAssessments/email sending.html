@@ -1,0 +1,52 @@
+<div id="form-success" data-fs-success></div>
+<div id="form-error" data-fs-error></div>
+
+<form id="contact-form">
+  
+  <label>Email</label>
+  <input 
+    type="email" 
+    name="email" 
+    placeholder="Your email" 
+    required 
+    data-fs-field 
+  />
+  <span data-fs-error="email"></span>
+
+  <label>Message</label>
+  <textarea 
+    name="message" 
+    placeholder="Your message" 
+    required 
+    data-fs-field
+  ></textarea>
+  <span data-fs-error="message"></span>
+
+  <!-- Optional extra fields -->
+  <input type="hidden" name="_subject" value="Nuovo Messaggio da MyAssessments.it">
+
+  <button type="submit" data-fs-submit-btn>
+    Send
+  </button>
+</form>
+
+<script>
+  window.formspree = window.formspree || function () {
+    (formspree.q = formspree.q || []).push(arguments);
+  };
+
+  formspree('initForm', {
+    formElement: '#contact-form',
+    formId: 'xeepldwj',
+
+    onSuccess: function () {
+      document.getElementById('form-success').innerHTML = "✅ Message sent!";
+    },
+
+    onError: function () {
+      document.getElementById('form-error').innerHTML = "❌ Something went wrong.";
+    }
+  });
+</script>
+
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>

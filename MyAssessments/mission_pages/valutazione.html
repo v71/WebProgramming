@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon.png?v=2">
+  <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  .pt-container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Inter', sans-serif;
+    color: #2a2a2a;
+    line-height: 1.8;
+  }
+
+  .pt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.8rem;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #0f0f0f;
+  }
+
+  .pt-meta {
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+
+  .pt-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    color: #1e1e1e;
+    border-left: 4px solid #005bbb;
+    padding-left: 12px;
+  }
+
+  .pt-subtitle {
+    font-size: 1.15rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 35px;
+  }
+
+  .pt-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    background: #f4f7ff;
+    padding: 25px 30px;
+    border-left: 5px solid #005bbb;
+    margin: 40px 0;
+    color: #233;
+  }
+
+  .pt-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .pt-list li {
+    margin-bottom: .5rem;
+  }
+
+  .pt-highlight-box {
+    background: #fafafa;
+    border: 1px solid #e6e6e6;
+    padding: 20px 25px;
+    border-radius: 6px;
+    margin: 35px 0;
+  }
+
+  .pt-highlight-box strong {
+    color: #005bbb;
+  }
+  
+#funzioni-esecutive {
+  padding-bottom: 60px;
+}
+
+.pt-section-title {
+  margin-bottom: 30px;
+}
+
+.ef-item p {
+  text-align: center;
+}
+</style>
+
+<style>
+
+.section-title {
+  font-weight: 700;
+  color: #2c3e50;
+}
+</style>
+
+<style>
+
+/* TESTO GENERICO */
+.ef-item p {
+  text-align: center;
+}
+
+/* IMMAGINE */
+.ef-image {
+  border-radius: 12px;
+}
+
+/* GRID */
+.ef-grid {
+  display: grid;
+  /*grid-template-columns: repeat(2, 1fr);*/
+  gap: 20px;
+}
+
+/* CARD */
+.ef-card {
+  background: #bdbdfa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* TITOLO */
+.ef-card h5 {
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* TESTO */
+.ef-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ICONA */
+.ef-icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .ef-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+
+<style>
+
+/* Centrare l'immagine sotto il titolo */
+.title-image-container {
+    text-align: center; /* centra l'immagine orizzontalmente */
+    margin: 3rem 0;     /* spazio sopra e sotto */
+}
+
+.title-image {
+    max-width: 100%;   /* non supera la larghezza del container */
+    height: auto;      /* mantiene proporzioni */
+    border-radius: 10px; /* opzionale: bordi arrotondati come le card */
+    display: inline-block;
+}
+
+</style>
+
+<link href="../assets/mycss/style-shared.css" rel="stylesheet">
+
+<style>
+
+  /* --- Centering the Nav Menu --- */
+@media (min-width: 1200px) {
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Keeps logo left, menu center, CTA right */
+    }
+
+    .navmenu {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center; /* This is the "magic" centering line */
+    }
+
+    .navmenu ul {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+/* Ensure mobile toggle doesn't break the layout */
+@media (max-width: 1199px) {
+    .navmenu {
+        /* On mobile, we usually want it to stay functional as a sidebar or dropdown */
+        display: block; 
+    }
+}
+</style>
+</head>
+
+<body class="services-details-page">
+
+  <!--inizio header-->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      
+      <!-- Logo -->
+      <a href="../index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <img src="../assets/img/logo_new_light_1.png" alt="logo">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+      <ul>
+          <li><a href="../index.html#hero" class="active">Home</a></li>
+          <li><a href="../index.html#about">Mission</a></li>
+          <li><a href="../index.html#faq">FAQ</a></li>
+          <li><a href="../index.html#team">Team</a></li>
+          <li><a href="../index.html#contact">Contatti</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Apri menu"></i>
+      </nav>
+
+    </div>
+  </header>
+  <!--fine header-->
+
+  <!--inizio main-->
+   <main id="main" class="main" style="padding-top: 100px;">
+  
+    <!-- About Section -->
+    <section id="funzioni-esecutive" class="pricing section light-background">
+      <div class="container" data-aos="fade-up">
+
+        <!-- Featured post -->
+        <div class="card shadow-sm card-equal">
+      
+        <!--<img 
+            src="../assets/img/blog_2/funzioni_esecutive.jpg"
+            class="card-img-top post-card-img img-fluid"
+            alt="Screening DSA e ADHD">
+            -->
+
+            <div class="card-body">
+              <article class="pt-container">
+                <h1 class="pt-title">Valutazione in itinere</h1>
+                
+                  <div class="pt-meta text-start py-3" style="color: #888; font-size: 14px;">
+                    <div class="d-flex align-items-start gap-3">
+                      <img src="../assets/img/blog_1/blog-author-1.jpg"
+                          alt="Dott.ssa Annalisa Panella"
+                          class="rounded-circle"
+                          width="56" height="56">
+                      <div>
+                        <h6 class="mb-1">Dott.ssa Annalisa Panella</h6>
+                        <p class="text-muted mb-1 small">
+                          Psicologa – Neuropsicologa dell’età evolutiva
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h2 class="pt-section-title">La Sinergia Perfetta tra Algoritmo e Competenza Clinica</h2>
+                  <p style="text-align: justify; line-height: 1.6; color: var(--text-main, #333);">
+                      Il potenziamento non è un percorso statico, ma un'evoluzione continua. 
+                      Grazie al monitoraggio in itinere, siamo in grado di misurare ogni progresso, 
+                      adattando il piano di lavoro in tempo reale per garantire la massima efficacia terapeutica.
+                  </p>
+
+                  <h2 class="pt-section-title">Un Monitoraggio Dinamico a più Livelli</h2>
+                  <p style="text-align: justify; line-height: 1.6; color: var(--text-main, #333);">
+                      L'efficacia del protocollo clinico è sostenuta da un'architettura di monitoraggio dinamico strutturata 
+                      su più livelli interconnessi, progettata per catturare la complessità dell'evoluzione del paziente. 
+                      Questo approccio permette di incrociare simultaneamente i tempi di reazione, i pattern di 
+                      errore e le variazioni nei livelli di attenzione, restituendo al clinico un quadro completo.
+                  </p>
+
+                  <h2 class="pt-section-title">L'Oggettività del Machine Learning</h2>
+                  <p style="text-align: justify; line-height: 1.6; color: var(--text-main, #333);">
+                      La piattaforma analizza costantemente i dati di performance del paziente, 
+                      tracciando i tempi di risposta, i tassi di errore e i pattern di apprendimento. 
+                      Questa analisi predittiva rileva micro-cambiamenti invisibili a occhio nudo, 
+                      offrendo uno screening oggettivo e costante della traiettoria di sviluppo.
+                  </p>
+        
+                  <h2 class="pt-section-title">La Governance del Clinico</h2>
+                  <p style="text-align: justify; line-height: 1.6; color: var(--text-main, #333);">
+                      I risultati matematici non sostituiscono il professionista, lo potenziano. 
+                      Il clinico interpreta i report, valuta i fattori emotivo-comportamentali e 
+                      supervisiona la validità del percorso. È la sua competenza a guidare e 
+                      rimodulare il piano personalizzato, garantendo l'accuratezza di ogni step.
+                  </p>
+            
+                  <h2 class="pt-section-title">Zero protocolli standardizzati</h2>
+                  <p style="text-align: justify; line-height: 1.6; color: var(--text-main, #333);">
+                     L'iter terapeutico non è una struttura rigida, ma un'architettura fluida concepita per evolvere 
+                     in perfetta sincronia con lo sviluppo del paziente. Rifiutando logiche di intervento 
+                     standardizzate o preimpostate, ogni singola fase del percorso si rimodula organicamente sulla base 
+                     della maturazione cognitiva, dei cambiamenti comportamentali e delle risposte adattive che emergono 
+                     durante le sessioni.
+                  </p>
+            
+                  <h2 class="pt-section-title">Prevenzione della frustrazione</h2>
+                  <p style="text-align: justify; line-height: 1.6; color: var(--text-main, #333);">
+                    La salvaguardia del benessere emotivo durante il potenziamento neuropsicologico costituisce un 
+                    fattore predittivo cruciale per la compliance al trattamento. Il monitoraggio costante dei livelli 
+                    di tolleranza allo stress permette di implementare una rigorosa prevenzione della frustrazione, 
+                    evitando che compiti eccessivamente complessi inneschino meccanismi di rifiuto, ansia da prestazione 
+                    o vissuti di inadeguatezza.
+                </p>
+
+                  <h2 class="pt-section-title">Risultati misurabili</h2>
+                  <p style="text-align: justify; line-height: 1.6; color: var(--text-main, #333);">
+                      La validazione del percorso riabilitativo si fonda sulla traduzione del progresso clinico in risultati 
+                      misurabili, oggettivi e scientificamente verificabili. 
+                      Ogni sessione genera report analitici che convertono i tempi di risposta, l'accuratezza nell'esecuzione 
+                      e i tassi di errore in grafici di andamento e KPI di performance cognitiva immediatamente leggibili. 
+                      Questa granularità del dato permette al professionista di documentare matematicamente l'efficacia del 
+                      trattamento, offrendo sia al team clinico sia alla famiglia un'evidenza tangibile del recupero funzionale 
+                      e del raggiungimento degli obiettivi terapeutici prefissati.
+                  </p>
+
+              
+                  <h2 class="pt-section-title">Conclusioni</h2>
+                  <p style="text-align: justify; line-height: 1.6; color: var(--text-main, #333);">
+                    Questo paradigma scardina la concezione tradizionale della valutazione intesa come un rigido "esame finale", 
+                    riconfigurandola come uno strumento di orientamento e una guida costante lungo l'intero asse evolutivo. 
+                    Il monitoraggio non si limita a fotografare un momento statico, ma si trasforma in un processo continuo 
+                    e dinamico.
+                  </p>
+
+                  <!-- Author box -->
+                  <footer class="pt-author mt-5 pt-4 border-top">
+                    <div class="d-flex align-items-start gap-3">
+                      <img src="../assets/img/blog_1/blog-author-1.jpg"
+                          alt="Dott.ssa Annalisa Panella"
+                          class="rounded-circle"
+                          width="56" height="56">
+                      <div>
+                        <h6 class="mb-1">Dott.ssa Annalisa Panella</h6>
+                        <p class="text-muted mb-1 small">
+                          Psicologa – Neuropsicologa dell’età evolutiva
+                        </p>
+                      </div>
+                    </div>
+                  </footer>
+
+              </article>
+            </div>
+          </div>
+        </div>
+    </section><!-- /About Section -->
+
+  </main>
+  <!--fine main-->
+
+      <!--inizio footer-->
+    <footer id="footer" class="footer position-relative light-background">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="../index.html" class="logo d-flex align-items-center">
+                  <img src="../assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                  <li><a href="../index.html#hero">Home</a></li>
+                  <li><a href="../index.html#about">Mission</a></li>
+                  <li><a href="../index.html#faq">FAQ</a></li>
+                  <li><a href="../index.html#team">Team</a></li>
+                  <li><a href="../index.html#testimonials">Testimonianze</a></li>
+                  <li><a href="../index.html#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <!--<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+  <!--<script src="assets/vendor/php-email-form/validate.js"></script>-->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+    <script>
+    if ('scrollRestoration' in history) {
+      history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+  </script>
+  <script src="../assets/vendor/aos/aos.js"></script>
+  
+</body>
+
+</html>

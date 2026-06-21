@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+  <h2>Dashboard</h2>
+  <pre id="output">Loading…</pre>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const supabase = createClient(
+            "https://bjbnkqgyibadjlrcjqfs.supabase.co",
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8"
+    );
+
+    const output = document.getElementById("output");
+
+    async function loadProfile() {
+      // 1️⃣ Ensure user is logged in
+      const { data: { user }, error: authError } =
+        await supabase.auth.getUser();
+
+      if (authError || !user) {
+        output.textContent = "❌ Not authenticated. Redirecting to login…";
+        setTimeout(() => {
+          window.location.href = "/login.html";
+        }, 1500);
+        return;
+      }
+
+      // 2️⃣ Fetch Clinical profile (RLS-safe)
+      const { data, error } = await supabase
+        .from("Admins")
+        .select("*")
+        .single();
+
+      if (error) {
+        // No profile found
+        if (error.code === "PGRST116") {
+          output.textContent =
+            "⚠️ No admin profile found. Please contact support.";
+          return;
+        }
+
+        console.error(error);
+        output.textContent = "❌ Error loading profile.";
+        return;
+      }
+
+      // 3️⃣ Success
+      output.textContent =
+        "✅ Admin profile loaded:\n\n" +
+        JSON.stringify(data, null, 2);
+    }
+
+    loadProfile();
+  </script>
+</body>
+</html>

@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon.png?v=2">
+  <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  .pt-container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Inter', sans-serif;
+    color: #2a2a2a;
+    line-height: 1.8;
+  }
+
+  .pt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.7rem;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #0f0f0f;
+  }
+
+  .pt-meta {
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+
+  .pt-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    color: #1e1e1e;
+    border-left: 4px solid #005bbb;
+    padding-left: 12px;
+  }
+
+  .pt-subtitle {
+    font-size: 1.15rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 35px;
+  }
+
+  .pt-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    background: #f4f7ff;
+    padding: 25px 30px;
+    border-left: 5px solid #005bbb;
+    margin: 40px 0;
+    color: #233;
+  }
+
+  .pt-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .pt-list li {
+    margin-bottom: .5rem;
+  }
+
+  .pt-highlight-box {
+    background: #fafafa;
+    border: 1px solid #e6e6e6;
+    padding: 20px 25px;
+    border-radius: 6px;
+    margin: 35px 0;
+  }
+
+  .pt-highlight-box strong {
+    color: #005bbb;
+  }
+  
+#funzioni-esecutive {
+  padding-bottom: 60px;
+}
+
+.pt-section-title {
+  margin-bottom: 30px;
+}
+
+.ef-item p {
+  text-align: center;
+}
+</style>
+
+<style>
+
+.section-title {
+  font-weight: 700;
+  color: #2c3e50;
+}
+</style>
+
+<style>
+
+/* TESTO GENERICO */
+.ef-item p {
+  text-align: center;
+}
+
+/* IMMAGINE */
+.ef-image {
+  border-radius: 12px;
+}
+
+/* GRID */
+.ef-grid {
+  display: grid;
+  /*grid-template-columns: repeat(2, 1fr);*/
+  gap: 20px;
+}
+
+/* CARD */
+.ef-card {
+  background: #bdbdfa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* TITOLO */
+.ef-card h5 {
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* TESTO */
+.ef-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ICONA */
+.ef-icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .ef-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+<style>
+  /* Giustifica il testo all'interno della sezione */
+#adhd + p,
+#adhd + p ~ p {
+  text-align: justify;
+  text-justify: inter-word; /* migliora la distribuzione delle parole */
+  line-height: 1.6; /* rende il testo più leggibile */
+}
+</style>
+
+<style>
+
+/* Centrare l'immagine sotto il titolo */
+.title-image-container {
+    text-align: center; /* centra l'immagine orizzontalmente */
+    margin: 3rem 0;     /* spazio sopra e sotto */
+}
+
+.title-image {
+    max-width: 100%;   /* non supera la larghezza del container */
+    height: auto;      /* mantiene proporzioni */
+    border-radius: 10px; /* opzionale: bordi arrotondati come le card */
+    display: inline-block;
+}
+
+</style>
+
+<link href="../assets/mycss/style-shared.css" rel="stylesheet">
+
+<style>
+
+  /* --- Centering the Nav Menu --- */
+@media (min-width: 1200px) {
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Keeps logo left, menu center, CTA right */
+    }
+
+    .navmenu {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center; /* This is the "magic" centering line */
+    }
+
+    .navmenu ul {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+/* Ensure mobile toggle doesn't break the layout */
+@media (max-width: 1199px) {
+    .navmenu {
+        /* On mobile, we usually want it to stay functional as a sidebar or dropdown */
+        display: block; 
+    }
+}
+</style>
+</head>
+
+<body class="services-details-page">
+
+  <!--inizio header-->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      
+      <!-- Logo -->
+      <a href="../index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <img src="../assets/img/logo_new_light_1.png" alt="logo">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+      <ul>
+          <li><a href="../index.html#hero" class="active">Home</a></li>
+          <li><a href="../index.html#about">Mission</a></li>
+          <li><a href="../index.html#faq">FAQ</a></li>
+          <li><a href="../index.html#team">Team</a></li>
+          <li><a href="../index.html#contact">Contatti</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Apri menu"></i>
+      </nav>
+
+    </div>
+  </header>
+  <!--fine header-->
+
+  <!--inizio main-->
+  <main id="main" class="main">
+  
+    <!-- About Section -->
+    <section id="funzioni-esecutive" class="pricing section light-background">
+      <div class="container" data-aos="fade-up">
+
+        <!-- Featured post -->
+        <div class="card shadow-sm card-equal">
+      
+        <img 
+            src="../assets/img/blog_2/funzioni_esecutive.jpg"
+            class="card-img-top post-card-img img-fluid"
+            alt="Screening DSA e ADHD"
+            loading="lazy">
+
+            <div class="card-body">
+              <article class="pt-container">
+
+                <h1 class="pt-title">Funzioni Esecutive</h1>
+                  <p>Le funzioni esecutive in età evolutiva.</p>
+                  <div class="pt-meta text-start py-3" style="color: #888; font-size: 14px;">
+                    <div class="meta-top mb-3 d-flex gap-3 flex-wrap align-items-center">
+                      <!-- Autore con avatar -->
+                          <div class="d-flex align-items-center gap-2">
+                            <img src="../assets/img/blog_1/blog-author-1.jpg" alt="Avatar John Doe" class="rounded-circle" width="32" height="32">
+                            <span class="author-name">Dott.ssa Annalisa Panella</span>
+                          </div>
+                          <!-- Data con icona -->
+                          <div class="d-flex align-items-center gap-2">
+                              <i class="bi bi-clock me-1"></i>
+                              <time datetime="2022-01-01">21 Dicembre 2025</time>
+                          </div>
+                      </div>
+                    </div>
+
+                    <h2 class="pt-section-title">Cosa sono le Funzioni Esecutive ?</h2>
+                    <p>
+                      Le funzioni esecutive sono un insieme di abilità cognitive che ci permettono
+                      di pianificare, organizzare, prendere decisioni e regolare il nostro comportamento
+                      in modo adattivo. Esse includono capacità come l’attenzione selettiva, la memoria 
+                      di lavoro, il controllo degli impulsi e la flessibilità mentale. Grazie alle funzioni
+                      esecutive, possiamo stabilire obiettivi, monitorare i nostri progressi e adattarci 
+                      a situazioni nuove o complesse. Quando queste funzioni sono compromesse, possono 
+                      sorgere difficoltà nella gestione delle attività quotidiane, nella concentrazione 
+                      o nel raggiungimento di obiettivi a lungo termine. Fortunatamente, attraverso 
+                      esercizi mirati, strategie organizzative e supporti esterni, è possibile 
+                      rafforzarle e migliorarne l’efficacia.
+                    </p>
+ 
+                    <h2 class="pt-section-title">Perché È importante conoscere le Funzioni Esecutive ?</h2>
+                    <p>
+                        La conoscenza delle funzioni esecutive riveste un ruolo fondamentale in relazione
+                        alla qualità di vita dell’individuo e del suo contesto familiare e assistenziale. 
+                        In primo luogo, consente il riconoscimento precoce di eventuali alterazioni rispetto
+                        al funzionamento atteso. È infatti frequente che cambiamenti cognitivi vengano
+                        erroneamente attribuiti al fisiologico processo di invecchiamento, quando possono
+                        invece rappresentare manifestazioni iniziali di condizioni suscettibili di
+                        valutazione e intervento.
+                        Un’adeguata comprensione dei processi cognitivi contribuisce inoltre alla riduzione
+                        di ansia e incertezza, favorendo un approccio più consapevole alle difficoltà 
+                        emergenti. Ciò permette di orientare in modo appropriato la richiesta di assistenza,
+                        di partecipare attivamente ai percorsi diagnostici e riabilitativi e di instaurare 
+                        una comunicazione più efficace con i professionisti sanitari.
+                        Nel contesto familiare e assistenziale, tali conoscenze assumono un valore 
+                        particolarmente rilevante. Esse facilitano l’interpretazione dei cambiamenti 
+                        comportamentali, supportano l’adozione di strategie di gestione più adeguate e 
+                        promuovono il mantenimento di atteggiamenti empatici e adattivi. Inoltre, consentono
+                        di identificare con maggiore tempestività la necessità di una valutazione specialistica
+                        o di una revisione del piano di cura.
+                    </p>
+
+                     <h2 class="pt-section-title">Funzioni Esecutive: Il Direttore d'orchestra</h2>
+                    <p>
+                        Le funzioni esecutive sono processi cognitivi di alto livello che ci permettono di 
+                        pianificare, organizzare, avviare e portare a termine compiti complessi. Possono e
+                        ssere paragonate a un “direttore d’orchestra” del cervello, che coordina e supervisiona
+                        le altre funzioni cognitive per il raggiungimento di obiettivi specifici. Senza funzioni
+                        esecutive efficienti, potremmo sapere cosa fare, ma non come, quando o in quale ordine farlo.
+                        Queste funzioni sono principalmente associate ai lobi frontali, in particolare alla 
+                        corteccia prefrontale. Si tratta di una delle aree cerebrali che maturano più tardi
+                        — intorno ai 25 anni — ed è anche tra le più vulnerabili ai processi di invecchiamento
+                        e alle malattie neurodegenerative. Le funzioni esecutive non costituiscono un sistema
+                        unitario, ma un insieme di abilità interconnesse che operano in modo flessibile in 
+                        base alle richieste della situazione.
+                        Tra queste, la pianificazione consente di definire obiettivi e individuare i passaggi 
+                        necessari per raggiungerli. L’organizzazione permette di strutturare informazioni e 
+                        risorse in modo coerente ed efficiente. La flessibilità cognitiva (o shifting) rende 
+                        possibile modificare strategia quando quella in uso non è efficace, adattando il pensiero
+                        a nuove condizioni. Il controllo inibitorio, invece, permette di sopprimere risposte 
+                        automatiche inappropriate e di resistere a distrazioni o impulsi.
+                        Altre componenti fondamentali includono l’iniziazione, che consente di avviare un
+                        compito senza procrastinazione eccessiva, e il monitoraggio, che permette di valutare
+                        e correggere il proprio comportamento durante l’esecuzione. La memoria di lavoro, 
+                        spesso considerata parte integrante delle funzioni esecutive, consente di mantenere
+                        e manipolare temporaneamente le informazioni necessarie per svolgere compiti complessi.
+                        Infine, la metacognizione permette di riflettere sui propri processi di pensiero e
+                        apprendimento, favorendo un maggiore controllo consapevole delle proprie azioni cognitive.
+                    </p>
+
+                     <h2 class="pt-section-title">Funzioni Esecutive: Componenti chiave</h2>
+
+                     <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <!-- Colonna destra: card -->
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Pianificazione</h5>
+                              <p>Stabilire obiettivi e progettare strategie per raggiungerli.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Organizzazione</h5>
+                              <p>Strutturare informazioni e compiti in modo logico ed efficiente.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Flessibilità Mentale</h5>
+                              <p>Adattare pensiero e comportamento a nuove situazioni.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Controllo Inibitorio</h5>
+                              <p>Sopprimere impulsi e resistere alle distrazioni.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Presa di Decisioni</h5>
+                              <p>Valutare opzioni e scegliere il corso d’azione migliore.</p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Iniziazione</h5>
+                              <p>Iniziare i compiti senza eccessivo ritardo.</p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h2 class="pt-section-title">Funzioni Esecutive in azione</h2>
+                      <!-- Immagine centrata sotto il titolo -->
+                      <div class="title-image-container">
+                          <img src="../assets/img/blog_2/EXECUTIVEFUNCTIONS.png" alt="Funzioni esecutive" class="title-image">
+                      </div>
+                    <p>
+                        Le funzioni esecutive sono presenti in quasi tutte le attività che richiedono pianificazione e
+                        autocontrollo. Pianificare una vacanza, ad esempio, coinvolge molteplici funzioni esecutive: stabilire
+                        l'obiettivo (dove andare), ricercare opzioni, prendere decisioni su budget e date, organizzare
+                        prenotazioni e documenti, mantenere la flessibilità se sorgono cambiamenti e avviare le azioni
+                        necessarie con sufficiente anticipo.
+                        Nel lavoro, le funzioni esecutive ci permettono di prioritizzare i compiti, gestire il tempo in modo
+                        efficace, mantenere la concentrazione nonostante le interruzioni e adattare le nostre strategie
+                        quando affrontiamo sfide inaspettate. In casa, ci aiutano a mantenere le routine, coordinare gli orari
+                        familiari, gestire le finanze e completare progetti che richiedono più passaggi.
+                        Anche attività apparentemente semplici richiedono funzioni esecutive. Preparare una cena per gli
+                        invitati implica pianificare il menù considerando preferenze e restrizioni alimentari, organizzare
+                        l'acquisto degli ingredienti, coordinare i tempi di cottura dei diversi piatti affinché siano pronti
+                        simultaneamente e adattare il piano se qualcosa non va come previsto. La complessità di queste
+                        attività quotidiane dimostra quanto siano fondamentali le funzioni esecutive per l'indipendenza e il
+                        funzionamento quotidiano.
+                    </p>
+
+                    <h2 class="pt-section-title">Quando le Funzioni Esecutive falliscono</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Disorganizzazione</h5>
+                              <p>
+                                Difficoltà a mantenere gli spazi ordinati, perdita frequente di oggetti
+                                e problemi nel strutturare informazioni o pianificare attività.
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Impulsività</h5>
+                              <p>
+                                Tendenza ad agire senza considerare le conseguenze, difficoltà ad
+                                aspettare il proprio turno e a controllare interruzioni nelle
+                                conversazioni o decisioni affrettate.
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Rigidità Mentale</h5>
+                              <p>
+                                Difficoltà ad adattarsi ai cambiamenti, tendenza a perseverare in
+                                strategie inefficaci e resistenza verso nuove idee o approcci.
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Procrastinazione</h5>
+                              <p>
+                                Difficoltà ad iniziare i compiti, soprattutto quelli complessi o
+                                poco piacevoli, con tendenza a rimandare responsabilità importanti.
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Gestione del Tempo</h5>
+                              <p>
+                                Difficoltà a stimare il tempo necessario, frequenti ritardi e
+                                problemi nel rispettare scadenze o completare i compiti.
+                              </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Relazioni Interpersonali</h5>
+                              <p>
+                                Difficoltà nel controllo delle emozioni e dei comportamenti sociali,
+                                con possibili ripercussioni sulle relazioni, sul lavoro e sulla
+                                capacità di mantenere abitudini sane.
+                              </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <h2 class="pt-section-title">Conclusioni</h2>
+                    <p>
+                       Le difficoltà nelle funzioni esecutive possono manifestarsi in vari modi, 
+                       come problemi di pianificazione, procrastinazione, difficoltà a mantenere la
+                       concentrazione o incapacità di adattarsi a situazioni nuove. Questi deficit 
+                       possono influenzare negativamente la vita quotidiana, il lavoro e le relazioni. 
+                       Tuttavia, esistono strategie per compensarli: l’uso di liste e promemoria, 
+                       la suddivisione dei compiti complessi in passi più piccoli, esercizi di memoria 
+                       e attenzione, tecniche di gestione del tempo e l’adozione di routine strutturate
+                       possono migliorare notevolmente l’efficacia delle funzioni esecutive. Inoltre, 
+                       la pratica costante, l’auto-riflessione e, se necessario, il supporto di professionisti
+                       come psicologi o logopedisti possono aiutare a sviluppare strategie personalizzate 
+                       per affrontare queste difficoltà.
+                    </p>
+
+                  <!-- Author box -->
+                  <footer class="pt-author mt-4 pt-4 border-top">
+
+                    <div class="d-flex align-items-start gap-3">
+                      <img src="../assets/img/blog_1/blog-author-1.jpg"
+                          alt="Dott.ssa Annalisa Panella"
+                          class="rounded-circle"
+                          width="56" height="56">
+
+                      <div>
+                        <h6 class="mb-1">Dott.ssa Annalisa Panella</h6>
+                        <p class="text-muted mb-1 small">
+                          Psicologa – Neuropsicologa dell’età evolutiva
+                        </p>
+                        <p class="mb-0 small">
+                          Si occupa di valutazione e potenziamento delle funzioni cognitive,
+                          DSA e ADHD, attraverso percorsi basati su evidenze scientifiche.
+                        </p>
+                      </div>
+                    
+                    </div>
+
+                  </footer>
+
+              </article>
+            </div>
+          </div>
+        </div>
+    </section><!-- /About Section -->
+
+  </main>
+  <!--fine main-->
+
+      <!--inizio footer-->
+    <footer id="footer" class="footer position-relative light-background">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="../index.html" class="logo d-flex align-items-center">
+                  <img src="../assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                  <li><a href="../index.html#hero">Home</a></li>
+                  <li><a href="../index.html#about">Mission</a></li>
+                  <li><a href="../index.html#faq">FAQ</a></li>
+                  <li><a href="../index.html#team">Team</a></li>
+                  <li><a href="../index.html#testimonials">Testimonianze</a></li>
+                  <li><a href="../index.html#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <!--<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+  <!--<script src="assets/vendor/php-email-form/validate.js"></script>-->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,24 @@
+{
+  "decimal": "",
+  "emptyTable": "Nessun dato disponibile nella tabella",
+  "info": "Visualizzati da _START_ a _END_ di _TOTAL_ elementi",
+  "infoEmpty": "Visualizzati da 0 a 0 di 0 elementi",
+  "infoFiltered": "(filtrati da _MAX_ elementi totali)",
+  "infoPostFix": "",
+  "thousands": ".",
+  "lengthMenu": "Mostra _MENU_ elementi",
+  "loadingRecords": "Caricamento...",
+  "processing": "Elaborazione...",
+  "search": "Cerca:",
+  "zeroRecords": "Nessun elemento trovato",
+  "paginate": {
+    "first": "Prima",
+    "last": "Ultima",
+    "next": "Successiva",
+    "previous": "Precedente"
+  },
+  "aria": {
+    "sortAscending": ": attiva per ordinare la colonna in ordine crescente",
+    "sortDescending": ": attiva per ordinare la colonna in ordine decrescente"
+  }
+}

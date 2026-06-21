@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Static To-Do List with Status Colors</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: #636c7a;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .todo-container {
+      background: #ffffff;
+      width: 100%;
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgb(0, 0, 0);
+      max-height: 90vh;
+      overflow-y: auto;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* Status colors */
+    li.not-started {
+      color: rgb(255,0,0);  /* red */
+    }
+
+    li.in-progress {
+      color: rgb(0,0,255);  /* yellow */
+    }
+
+    li.completed {
+      color: rgb(0, 110, 46);  /* green */
+     
+    }
+  </style>
+</head>
+<body>
+
+  <div class="todo-container">
+    <h1>My To-Do List</h1>
+    <ul>
+
+      <!--Completed-->
+
+      <li class="completed">Business              : Buy a Hostinger domain</li>
+      <li class="completed">Business              : Create a SupaBase database for clinicians</li>
+      <li class="completed">Business              : ADHD e DSA: differenze, segnali e interventi</li>
+      <li class="completed">Business              : Stimolazione Cognitiva</li>
+      <li class="completed">Business              : Riconoscere i disturbi da DSA e ADHD</li>
+      <li class="completed">Business              : Funzioni Esecutive e DSA</li>
+      <li class="completed">Business              : Create a SupaBase database for clinicians</li>
+      <li class="completed">Business              : Create a SupaBase database for patients</li>
+      <li class="completed">Business              : Create a SupaBase database for admins</li>
+      <li class="completed">Business              : Connect SupaBase database for clinicians and patients</li>
+      <li class="completed">Business              : Create a SupaBase registration code for clinicians</li>
+      <li class="compleied">Business              : Create a SupaBase registration code for patients</li>
+      <li class="compleied">Business              : Create a SupaBase registration code for admins</li>
+      <li class="completed">Business              : Removed Blog</li>
+      <li class="completed">Business              : Connected Supabase with TurboSmtp</li>
+      <li class="completed">Business              : Registering clinicians using website to supabase</li>
+      <li class="completed">Business              : Create a page for 'funzioni esecutive'</li>
+      <li class="completed">Business              : Removed Teacher category'</li>
+      <li class="completed">Business              : Create a page for 'cognizione sociale'</li>
+      <li class="completed">Business              : Create a page for 'gnosie'</li>
+      <li class="completed">Business              : Create a page for 'linguaggio'</li>
+      <li class="completed">Business              : Create a page for 'attenzione'</li>
+      <li class="completed">Business              : Create a page for 'orientamento'</li>
+      <li class="completed">Business              : Create a page for 'memoria'</li>
+      <li class="completed">Business              : Create a page for 'abilità visuo-spaziali'</li>
+      <li class="completed">Business              : Add terapie and Certificati badges in the clinician view of current patient card</li>
+      
+      <li class="completed">Patient Dashboard     : Creation and Layout</li>
+
+      <li class="completed">Clinician Dashboard   : Creation and Layout</li>
+      <li class="completed">Clinicial dashboard   : Age computation</li>
+      <li class="completed">Clinician dashboard   : Patient data connected from the table</li>
+      <li class="completed">Clinician dashboard   : Patient title according to age and gender</li>
+      <li class="completed">Clinician Dashboard   : Fixed an error with total number of patients</li>
+      <li class="completed">Clinician Dashboard   : Patient Selected info-box</li>
+      <li class="completed">Clinician Dashboard   : Log in for clinicians</li>
+      <li class="completed">Clinician Dashboard   : Rewritten the page layout</li>
+      
+      <li class="completed">Main Page             : Create a Front end Page</li>
+      <li class="completed">Main Page             : Create 5 sections</li>
+      <li class="completed">Main Page             : Create 'Mission' section</li>
+      <li class="completed">Main Page             : Create 'Action' section</li>
+      <li class="completed">Main Page             : Create 'Faq' section</li>
+      <li class="completed">Main Page             : Create 'Team' section</li>
+      <li class="completed">Main Page             : Create 'Testimonials' section</li>
+      <li class="completed">Main Page             : Create 'Contact' section</li>
+      <li class="completed">Main page             : Make the email sending working</li>
+      <li class="completed">Main page             : Refactored time line</li>
+      <li class="completed">Main page             : Colors switched from red to blue</li>
+     
+      <li class="completed">Registration          : Create a registration page section</li>
+      <li class="completed">Registration          : Create a registration page for clinicians</li>
+      <li class="completed">Registration          : Create a registration page for patients</li>
+      <li class="completed">Registration          : Written code to fix birthdates must be added to the registration form</li>
+      <li class="completed">Registration          : Create a minor consensum checkbox for patients</li>
+      <li class="completed">Registration          : Fix BirthDates example : 07/08/15 -> 7/8/15</li>
+      
+      <!--In progress--> 
+
+      <li class="in-progress">Business            : Fill 'cognizione sociale'</li>
+      <li class="in-progress">Business            : Fill 'gnosie'</li>
+      <li class="in-progress">Business            : Fill 'linguaggio'</li>
+      <li class="in-progress">Business            : Fill 'attenzione'</li>
+      <li class="in-progress">Business            : Fill 'orientamento'</li>
+      <li class="in-progress">Business            : Fill 'memoria'</li>
+      <li class="in-progress">Business            : Fill 'abilità visuo-spaziali'</li>
+      <li class="in-progress">Clinician Dashboard : Create game creation procedure for patients</li>
+      <li class="in-progress">Clinician Dashboard : Create game creation list to attach to a specific patient</li>
+      <li class="in-progress">Clinician Dashboard : Execute game lists for each patients</li>
+      <li class="in-progress">Business            : Connect patient data from supabase to table</li>
+      
+      <!--Not started-->
+
+      <li class="not-started">Business            : Create a therapies list viewer</li>
+      <li class="not-started">Business            : Create a certificates list viewer</li>
+
+      <li class="not-started">Business            : Create a git repository</li>
+      <li class="not-started">Business            : Upload website to Hostinger</li>
+      <li class="not-started">Registration        : Create a dummy list of patients connected to a dummy list of clinicians</li>
+     
+      <li class="not-started">Clinician Dashboard : Create a Messaging system for clinicians</li>
+      <li class="not-started">Business            : Create a Messaging system for patients</li>
+      <li class="not-started">Business            : Create a Messaging system for teachers</li>
+      <li class="not-started">Business            : Create a Messaging system for Admin</li>
+      <li class="not-started">Business            : Log in for patients</li>
+      <li class="not-started">Business            : Log in for teachers</li>
+      <li class="not-started">Business            : Log in for admin</li>
+      
+      <li class="not-started">Create groups for games</li>
+      <li class="not-started">Create games for each group</li>
+      <li class="not-started">Cockie consent</li>
+      <li class="not-started">Dashboard navbar must be functional</li>
+      <li class="not-started">Create a GodMode page : Admin can see all clinicians and all patients</li>
+      <li class="not-started">Create a GodMode page : Statistics for everything</li>
+    
+    </ul>
+  </div>
+
+</body>
+</html>

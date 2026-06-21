@@ -1,0 +1,2457 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>MyAssessments</title>
+    
+        <!-- Custom fonts for this template -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="assets/sb-admin-2/css/sb-admin-2.min.css" rel="stylesheet">
+        <!-- Custom styles for this page -->
+        <link href="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom Overrides for the "Renaizant" look */
+        #accordionSidebar { background-color: rgb(17, 25, 131) !important; background-image: none !important; }
+        .sidebar-dark .nav-item .nav-link { color: rgba(255, 255, 255, 0.7); }
+        .sidebar-dark .nav-item.active .nav-link { color: #fff; font-weight: 700; border-left: 3px solid #e91e63; }
+        .bg-custom-gray { background-color: #f8f9fc; }
+        .card { border: none; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05); }
+        .progress-bar-orange { background-color: #ff9800; }
+        .org-footer { background: #3d2b46; border-radius: 8px; margin: 1rem; padding: 10px; }
+    </style>
+
+    <style>
+
+        /* Ensures the button doesn't look weird on mobile vs desktop */
+
+        @media (min-width: 768px) {
+            .btn-md-inline {
+                width: auto !important;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+
+    </style>
+
+    <style>
+
+        /* Force the body and wrapper to be exactly the screen height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevents the 'scrolling arrows' on the main body */
+        }
+
+        #wrapper {
+            height: 100vh;
+        }
+
+        #content-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #content {
+            flex: 1; /* This takes up all available space between topbar and footer */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Keeps the scrolling inside the cards, not the page */
+        }
+
+        /* Make the container fill the remaining space */
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0.5rem; /* This is your gap between cards and footer */
+        }
+
+        /* Ensure the row and columns fill the height */
+        .container-fluid > .row {
+            flex: 1;
+        }
+
+    </style>
+
+    <style>
+        
+        /* 1. Navigation Styling */
+        .modern-pills .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .modern-pills .nav-link.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: transparent;
+        }
+
+        /* 2. Spaced Button Styling */
+        .spaced-action-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            text-decoration: none !important;
+            background: #ffffff;
+            border: 1px solid #f1f5f9; /* Subtle border */
+            border-radius: 12px; /* Rounded corners */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .spaced-action-item:hover {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+            transform: translateX(4px); /* Subtle slide effect */
+        }
+
+        .action-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* 3. Small Modern Icons */
+        .icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Soft Colors */
+        .bg-blue-soft { background-color: #eff6ff; }
+        .bg-red-soft { background-color: #fef2f2; }
+        .bg-purple-soft { background-color: #f5f3ff; }
+        .bg-green-soft { background-color: #ecfdf5; }
+        .text-purple { color: #8b5cf6; }
+        
+        .ms-auto { margin-left: auto; }
+
+    </style>
+
+    <style>
+
+        .inner-action-btn {
+            flex: 1;
+            min-width: 100px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #d1e9ff;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            text-decoration: none !important;
+            cursor: pointer;
+            color: #4a4a4a;
+        }
+
+        .inner-action-btn:hover {
+            background-color: #ffffff;
+            border-color: #4e73df;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .inner-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .inner-action-btn i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        
+        /* The 'Muted' state for your custom button */
+        .inner-action-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;    /* Physically prevents clicking */
+            cursor: not-allowed;
+            filter: grayscale(1);    /* Optional: makes the green icon look grey */
+            text-decoration: none;
+        }
+
+    </style>
+
+    <style>
+
+        /* Force the table to stop expanding beyond its container */
+        #PatientdataTable {
+            width: 100% !important;
+            margin: 0 !important;
+            table-layout: fixed; /* This forces columns to fit within the 100% */
+            word-wrap: break-word;
+        }
+
+        /* Allow text to wrap so columns can shrink */
+        #PatientdataTable td, #PatientdataTable th {
+            white-space: normal !important;
+            vertical-align: middle;
+        }
+
+        /* Add internal breathing room to cells */
+        #PatientdataTable th, 
+        #PatientdataTable td {
+            padding: 12px 15px !important; /* Adjust these numbers to your liking */
+            vertical-align: middle;
+        }
+
+        /* Ensure the table isn't touching the card edges */
+        .dataTables_wrapper {
+            padding: 10px;
+        }
+
+        /* Add space between the Search bar/Length menu and the actual table */
+        .dataTables_filter, .dataTables_length {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_info, .dataTables_paginate {
+            margin-top: 15px;
+        }
+
+</style>
+
+<style>
+
+    /* 4. Fix Pagination alignment */
+    .dataTables_paginate {
+        float: right;
+        margin-top: 1rem;
+    }
+
+    /* Consolidated DataTables Info Text (e.g., "Showing 1 to 10 of 50") */
+    .dataTables_info {
+        padding-top: 0.5rem !important; /* Balanced spacing */
+        font-size: 0.8rem;
+        color: #858796;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Prevents text from breaking the layout if container shrinks */
+    }
+
+    /* 2. Search Bar Alignment: Modern Flexbox approach */
+    .dataTables_filter {
+        display: flex;
+        justify-content: flex-end; /* Replaces float: right */
+        align-items: center;      /* Centers the "Search:" label with the input box */
+        gap: 0.5rem;               /* Optional: adds a clean gap between label and input */
+        margin-top: 4px;
+    }
+
+    /* 3. Standardized Search Input: Bootstrap look with fixed width */
+    .dataTables_filter input {
+        width: 200px !important; 
+        border: 1px solid #d1d3e2;
+        border-radius: 0.35rem;
+        padding: 0.3rem 0.75rem;
+        margin-left: 0.5rem !important; /* Keep the gap so the label doesn't touch the box */
+        margin-right: 0 !important;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    /* Optional: Add a blue glow on focus to match Bootstrap's behavior */
+    .dataTables_filter input:focus {
+        border-color: #bac8f3;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+
+</style>
+
+<style>
+
+    /* 2. Force the Dropdown width to match */
+    #searchColumn {
+        width: 200px !important; /* Must match the input width above */
+    }
+
+    /* 3. Ensure the container doesn't add extra padding */
+    #customFilterPlaceholder {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /* 6. Clean up the table headers */
+    #PatientdataTable thead th {
+        background-color: #f8f9fc;
+        border-bottom: 2px solid #e3e6f0;
+        color: #4e73df;
+    }
+
+    /* Center text in both header and body cells */
+    #PatientdataTable th, 
+    #PatientdataTable td {
+        text-align: center;
+        vertical-align: middle !important; /* Also keeps text centered vertically */
+    }
+
+    /* Target the cells directly to force the cursor change */
+    #PatientdataTable tbody tr td {
+        cursor: pointer !important;
+    }
+
+    /* Force the hover color on the cells */
+    #PatientdataTable tbody tr:hover td {
+        background-color: #f8f9fc !important; 
+        color: #4e73df !important; /* Optional: changes text color to blue on hover */
+    }
+
+    #searchColumn {
+        font-weight: 800;
+        color: #4e73df; /* SB Admin 2 Primary Blue */
+    }
+
+</style>
+
+<style>
+
+    /* Standardize the top border of the header cells */
+    .table thead th {
+        border-bottom: none !important; /* Slightly thicker but matches SB Admin style */
+        border-top: none !important;
+    } 
+
+    /* 1. Remove the forced scrollbar but keep the table inside the card */
+    .table-responsive {
+        overflow-x: hidden !important; 
+        padding: 1rem;
+    }
+
+    /* Apply this to the wrapper around your table */
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto !important; /* Forces the scrollbar back */
+        -webkit-overflow-scrolling: touch; /* High-performance scrolling for mobile */
+        border: none; /* Removes any double borders */
+    }
+
+</style>
+
+<style>
+
+    #loadingSpinner {
+        /* Adjust min-height to match the space your 5-row table usually takes */
+        min-height: 450px; 
+        display: flex;
+        flex-direction: column; /* Stack spinner and text vertically */
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
+        background-color: #fff; /* Match the card background */
+    }
+
+    /* Make the spinner "thickness" look proportional to the new size */
+    .spinner-border {
+        border-width: 0.5rem; 
+    }
+
+</style>
+
+<style>
+
+    @media (max-width: 768px) {
+        /* Force the table, rows, and cells to behave like a table */
+        .table-responsive table, 
+        .table-responsive thead, 
+        .table-responsive tbody, 
+        .table-responsive th, 
+        .table-responsive td, 
+        .table-responsive tr {
+            display: table !important; /* Overrides 'block' or 'flex' */
+            width: auto !important;
+        }
+        
+        .table-responsive tr {
+            display: table-row !important;
+        }
+        
+        .table-responsive td, 
+        .table-responsive th {
+            display: table-cell !important;
+            /* Prevent text from wrapping so the cell width stays fixed */
+            white-space: nowrap !important; 
+            padding: 10px 15px !important;
+        }
+    }
+
+    /* Force table layout to remain consistent */
+    .table-responsive table {
+        table-layout: auto !important; /* Let content dictate width */
+        border-collapse: collapse !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Ensure Header and Body cells have the exact same sizing rules */
+    .table-responsive th,
+    .table-responsive td {
+        width: auto !important;
+        min-width: 120px; /* Adjust this based on your longest data piece */
+        box-sizing: border-box !important;
+    }
+
+    /* Fix for DataTables that use a separate scroll-head div */
+    .dataTables_scrollHeadInner, 
+    .dataTables_scrollHeadInner table {
+        width: 100% !important;
+        padding-right: 0 !important;
+    }
+
+</style>
+
+<style>
+
+    @media (min-width: 768px) {
+        .sidebar {
+            display: flex !important;
+            width: 14rem !important; 
+            margin-left: 0 !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+
+        .sidebar.toggled {
+            width: 14rem !important;
+        }
+
+        .sidebar .sidebar-brand .sidebar-brand-text {
+            display: inline !important;
+        }
+
+        #content-wrapper {
+            filter: none !important;
+            opacity: 1 !important;
+        }
+    }
+
+</style>
+
+<style>
+
+.content-fade-in {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style>
+
+<style>
+
+/* Custom border to match SB Admin 2 table borders exactly (#e3e6f0) */
+.border-light-custom {
+    border: 1px solid #d1d3e2 !important;
+}
+
+/* Ensure the input-group-text and the input share the same border color */
+.input-group-sm > .input-group-prepend > .input-group-text {
+    border-right: none !important; /* Prevents double border between icon and input */
+    border-color: #d1d3e2 !important;
+}
+
+.input-group-sm > .form-control {
+    border-left: none !important; /* Prevents double border */
+}
+
+/* Optional: Slight focus effect that matches SB Admin 2 primary theme */
+#customSearchInput:focus, #searchColumn:focus {
+    border-color: #bac8f3 !important;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.1) !important;
+    outline: 0;
+}
+
+.btn-white:disabled {
+    background-color: #eaecf4 !important; /* Light gray */
+    color: #d1d3e2 !important;
+    cursor: not-allowed;
+    border-color: #d1d3e2 !important;
+}
+</style>
+
+<!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
+<style>
+    @keyframes structuralFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .fade-on-load {
+        opacity: 0;
+        animation: structuralFadeIn 0.25s ease-in-out forwards;
+        animation-delay: 0.1s; /* Tiny delay to let fonts and responsive break points calculate first */
+    }
+</style>
+
+<style>
+/* When the menu item is active (blue background), make the checkmark white */
+#columnSelectorMenu .dropdown-item.active .fa-check {
+    color: #ffffff !important;
+}
+</style>
+
+<body id="page-top">
+    <!--id wrapper-->
+    <div id="wrapper"> 
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-white sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <div class="sidebar-brand d-flex align-items-center justify-content-center">
+                <!-- The custom class enforces the animation timeline natively -->
+                <img src="assets/img/logo_new_light_3.png"
+                    class="img-fluid fade-on-load" 
+                    alt="logo" 
+                    style="width: 100%; height: auto; object-fit: contain;">
+            </div>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <!-- Menu Wrapper with the same robust animation class -->
+                <div class="fade-on-load">
+
+                    <a class="nav-link nav-link-blue" href="clinician-dashboard.html">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-link nav-link-blue" href="#">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Lista Pazienti</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <div id="content-wrapper" class="d-flex flex-column" style="background-color: #f6f8fa !important;">
+            
+        <div id="content">
+                    
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow-sm px-4">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <h1 class="h4 mb-0 text-gray-800">Lista Pazienti</h1>
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="topbar-divider d-none d-sm-block"></li>
+                        <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span id="userFullName" class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
+                                </span>
+
+                                  <!--<img id="userAvatar" class="img-profile rounded-circle" src="assets/sb-admin-2/img/undraw_profile.svg" alt="">-->
+                        
+                                <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
+                                    <!-- Updated class from 'border' to 'border border-primary' -->
+                                    <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border shadow-sm" style="border: 1px solid #0000FF !important;">
+                                        <i id="avatarSpinnerIcon1" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
+                                        <img id="profileAvatar1" 
+                                            class="img-fluid rounded-circle d-none" 
+                                            width="140" height="140" 
+                                            alt="Foto profilo"
+                                            style="object-fit: cover;">
+                                    </div>
+                                </div>
+
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            aria-labelledby="userDropdown">
+                            <!--<a class="dropdown-item" href="#">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Profile
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Settings
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Activity Log
+                            </a>-->
+                            <!--<div class="dropdown-divider"></div>
+                            <a class="btn btn-sm text-danger ml-2" id="logoutBtn" href="index.html" style="border: none;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="d-none d-md-inline ml-1">Logout</span>
+                            </a>-->
+
+                             <div class="dropdown-divider"></div>
+                             <a class="btn btn-sm text-danger ml-2 d-inline-flex align-items-center" id="logoutBtn" href="index.html" style="border: none;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="ml-2 font-weight-bold" style="font-size: 0.85rem;">Logout</span>
+                             </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content Container -->
+            <div class="container-fluid">
+                <div class="row">
+                   
+                    <!-- Left Column (50%) -->
+                    <div id="mainTable" class="col-lg-6 mb-4">
+                       <div class="card mb-4 shadow-sm h-100 flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0;">
+            
+                            <div class="card-header bg-white d-flex align-items-center justify-content-between py-2"  style="border-bottom: 0px solid #eaecf4; height: 45px;">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-users text-primary mr-2"></i>
+                                    <h6 class="m-0 font-weight-bold text-gray-800">Lista Pazienti</h6>
+                                </div>
+                                <div class="badge badge-primary badge-pill px-3 py-2">
+                                    <i class="fas fa-users mr-2"></i>
+                                    <span id="patientCount"><i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;"></i></span>
+                                </div>
+                            </div>
+
+                            <!-- The Spinner Container -->
+                            <div id="loadingSpinner">
+                                <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem; border-width: 0.4em;">
+                                    <span class="sr-only">Caricamento...</span>
+                                </div>
+                                <h5 class="mt-3 text-gray-600">Caricamento pazienti...</h5>
+                            </div>
+                           
+                            <div id="tableContainer" style="display: none;">
+                                <div class="card-body">
+
+                                    <!-- Main Container: Pure Flex, No Grid Interference -->
+                                    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 16px; width: 100%; margin-bottom: 1rem;">
+                                        
+                                        <!-- Left Side: Unified Search + Filter -->
+                                        <!-- Added margin-left: 30px to cleanly shift this whole box to the right -->
+                                        <div style="flex: 1; min-width: 200px; max-width: 380px; margin-left: 25px;">
+                                            <div class="shadow-sm input-group input-group-sm" style="flex-wrap: nowrap;">
+                                                
+                                                <!-- Search Icon -->
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-gray-100 border-light-custom">
+                                                        <i class="fas fa-search text-primary"></i>
+                                                    </span>
+                                                </div>
+                                            
+                                                <!-- Search Input -->
+                                                <input type="text" id="customSearchInput" class="form-control border-light-custom" placeholder="Cerca..." style="background-color: #fff; border-left: 0; min-width: 0;">
+
+                                                <!-- Filter Button -->
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-white border-light-custom dropdown-toggle" type="button" data-toggle="dropdown" aria-has-popup="true" aria-expanded="false" style="border-left: 0; margin-left: -1px;">
+                                                        <i class="fas fa-sliders-h"></i> 
+                                                        <span id="activeColumnLabel" class="d-none d-sm-inline ml-1">Tutte</span>
+                                                    </button>
+
+                                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" id="columnSelectorMenu">
+                                                        <a class="dropdown-item active d-flex align-items-center justify-content-between" href="#" data-column="all">Tutte le colonne</a>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="0">Nome</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="1">Cognome</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="2">Genere</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="3">Data di Nascita</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="4">Età Anagrafica</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="5">Data di Iscrizione</a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Right Side: Pagination Buttons -->
+                                        <!-- ADDED margin-left: auto; HERE TO PUSH IT TO THE RIGHT SIDE -->
+                                        <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: 218px; padding-right: 10px;">
+                                            <span id="currentPageLabel" class="small font-weight-bold text-gray-800" style="white-space: nowrap;">1 / 1</span>
+                                            <div class="shadow-sm btn-group">
+                                                <button type="button" id="prevPage" class="btn btn-white btn-sm border-light-custom" style="width: 35px; height: 31px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                                                    <i class="fas fa-chevron-left fa-xs"></i>
+                                                </button>
+                                                <button type="button" id="nextPage" class="btn btn-white btn-sm border-light-custom" style="width: 35px; height: 31px; border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: -1px;">
+                                                    <i class="fas fa-chevron-right fa-xs"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+
+                                    </div>
+
+                                    <div class="table-responsive ">
+                                        <table class="shadow-sm rounded table table-bordered table-hover" id="PatientdataTable" width="100%" cellspacing="0" style="font-size: 0.85rem;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Cognome</th>
+                                                    <th>Genere</th>
+                                                    <th>Data di Nascita</th>
+                                                    <th>Età Anagrafica</th>
+                                                    <th>Data di Iscrizione</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="PatientTableBody">
+                                                <!-- Data injected here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column (50%) -->
+                    <div class="col-lg-6 mb-4">
+                 
+                        <!-- Empty State: Added style="min-height: 400px;" (or h-100 if parent has height) to guarantee vertical canvas space -->
+                        <div id="emptyPatientCard" class="card shadow-sm h-100" style="border-radius: 12px; display: none; min-height: 450px;">
+                            <!-- flex-grow-1 forces the body to fill the card height, making justify-content-center actually push content to the absolute vertical center -->
+                            <div class="card-body d-flex flex-column h-100 align-items-center justify-content-center text-center flex-grow-1 py-5">
+                                <div class="mb-4">
+                                    <i class="fas fa-user-circle fa-5x text-gray-400"></i>
+                                </div>
+                                <h2 class="h3 font-weight-bold text-gray-600 mb-2">
+                                    Nessun Paziente Selezionato
+                                </h2>
+                                <p class="text-gray-600 mb-0 mx-auto" style="max-width: 280px;">
+                                    Seleziona un'anagrafica dalla tabella per visualizzare i dettagli clinici.
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Main Panel with pateint profile, therapies, and ccertificates -->
+                        <!--<div id="mainPanel" class="card shadow-sm h-100" style="border: 0px solid #eef2f6; border-radius: 0 0 12px 12px; overflow: hidden; display: none;">-->
+                        <div id="mainPanel" class="card mb-4 shadow-sm h-100 flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0; display: none;">
+                              
+                            <div class="card-header bg-white p-0">
+                               <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
+
+                                    <li class="nav-item flex-fill text-center">
+                                        <a class="nav-link active" id="azioni-tab" data-toggle="tab" href="#profilo" role="tab" 
+                                           style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                            <i class="fas fa-user-circle fa-lg"></i>
+                                            <span>Profilo Personale</span>
+                                        </a>
+                                    </li>
+                                  
+                                      <!-- Tab 3: NEW! Referti -->
+                                    <li class="nav-item flex-fill text-center">
+                                        <a class="nav-link" id="referti-tab" data-toggle="tab" href="#terapie" role="tab"
+                                        style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                            <i class="fas fa-file-medical-alt fa-lg"></i>
+                                            <span>Terapie</span>
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item flex-fill text-center">
+                                        <a class="nav-link" id="reazioni-tab" data-toggle="tab" href="#certificati" role="tab"
+                                           style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                            <i class="fas fa-notes-medical fa-lg"></i>
+                                            <span>Certificati</span>
+                                        </a>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+
+                            <!-- extra spacing for footer-->
+                            <!--<div style="height: 32px;"></div>-->
+                            <!-- extra spacing for footer-->
+                            
+                            <div  id="therapyTab" class="card-body">
+                                <div class="tab-content">
+                                    
+                                    <!-- first panel -->
+                                    <div class="tab-pane fade show active" id="profilo" role="tabpanel">
+                                         <div class="d-flex flex-column h-100">
+                                
+                                            <!-- TOP ROW: 20% Height -->
+                                            <div class="row m-0" style="min-height: 20%; flex-shrink: 0;">
+                                                <!-- Added d-flex and align-items-center to put image and text side-by-side -->
+                                                <div class="col-12 py-3 d-flex align-items-center">
+
+                                                    <div class="position-relative flex-shrink-0 mr-3" style="width: 80px; height: 80px;">
+                                                        <!-- Added a 3px solid custom blue border matching your previous styling style -->
+                                                        <img id="patientAvatar-1" src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                            class="img-fluid rounded-circle border shadow-sm p-1" 
+                                                            style="background-color: #fff; object-fit: cover; width: 100%; height: 100%; display: block; border: 1px solid #0000FF !important;">
+                                                    </div>
+
+                                                    <!-- Text Content Wrapper -->
+                                                    <div class="d-flex flex-column overflow-hidden">
+                                                      
+                                                        <h5 id="patientFullName_1" class="text-dark mb-2 font-weight-bold text-truncate" style="font-size: 2.0rem; line-height: 1.2;">
+                                                            <i class="fas fa-circle-notch fa-spin" style="font-size: 2.0rem; color: #343a40;"></i>           
+                                                        </h5>
+
+                                                        <!-- Badges Row -->
+                                                       <div class="d-flex flex-wrap" style="gap: 5px;">
+                                                            <!-- Active User Badge (Centered Layout) -->
+                                                            <span class="badge d-inline-flex align-items-center justify-content-center" 
+                                                                style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4e73df; color: #fff; font-weight: 600;">
+                                                                <i class="fas fa-check-circle mr-1 flex-shrink-0"></i>Utente Attivo
+                                                            </span>
+                                                            <!-- Patient Status Badge Wrapper (Centered Layout) -->
+                                                            <span id="patientMinorOrMajor_1" 
+                                                                class="badge d-inline-flex align-items-center justify-content-center" 
+                                                                style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%;">
+                                                                <i class="fas fa-circle-notch fa-spin flex-shrink-0" style="font-size: 0.85rem; color: #ffffff;"></i>       
+                                                            </span>
+                                                        </div>
+
+                                                        <!-- Subscription Date: Placed right under badges -->
+                                                        <div class="mt-2">
+                                                            <small  class="text-muted" style="font-size: 0.85rem;">
+                                                              <i class="far fa-calendar mr-1"></i> 
+                                                              <span id="patientSubDate_1"> 
+                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>  
+                                                                </span>   
+                                                            </small>
+                                                        </div>
+
+                                                   </div>
+                                                </div>
+                                            </div>
+                                    
+                                                <!-- Unified Info Card -->
+                                                <div class="shadow-sm rounded p-3 mt-3" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                                                    <!-- CARD HEADER -->
+                                                    <div class="d-flex align-items-center mb-3 pb-2 border-bottom" style="border-bottom-color: #dfdfdf !important;">
+                                                        <i class="fas fa-user-circle text-primary mr-2" style="font-size: 0.9rem;"></i>
+                                                        <h6 class="m-0 font-weight-bold text-muted" style="font-size: 0.9rem; letter-spacing: 1px;">
+                                                            Utente Corrente
+                                                        </h6>
+                                                    </div>
+                                                                                            
+                                                    <div class="card-body pt-0 pb-2 mt-n1">
+                                                        <div class="row align-items-center">
+                                                            <div class="col mr-2">
+
+                                                                <div class="row">
+                                                                    <!-- Column 1: Vital Stats -->
+                                                                    <div class="col-12 col-lg-4 border-right mb-3 mb-lg-0">
+                                                                  
+                                                                        <div class="mb-2">
+                                                                            <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Nome</span>
+                                                                            <div id="patientName_1" class="small font-weight-bold text-dark text-truncate">
+                                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #343a40;"></i> 
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="mb-2">
+                                                                            <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Cognome</span>
+                                                                            <div id="patientSurName_1" class="small font-weight-bold text-dark text-truncate">
+                                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #343a40;"></i> 
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <div class="mb-2">
+                                                                            <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Data di Nascita</span>
+                                                                            <div id="patientBDay_1" class="small font-weight-bold text-dark text-truncate">
+                                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #343a40;"></i> 
+                                                                            </div>
+                                                                        </div>
+                                                                   
+                                                                        <div class="mb-2">
+                                                                            <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Età Anagrafica</span>
+                                                                            <div id="patientAge_1" class="small font-weight-bold text-dark text-truncate">
+                                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #343a40;"></i> 
+                                                                            </div>
+                                                                        </div>
+                                                                   
+                                                                    </div>
+
+                                                                    <!-- Column 2: Location & Contact -->
+                                                                    <div class="col-md-4 border-right px-md-3">
+
+                                                                        <div class="mb-2">
+                                                                            <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Sesso</span>
+                                                                            <div id="patientGender_1" class="small font-weight-bold text-dark text-truncate">
+                                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #343a40;"></i> 
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="mb-2">
+                                                                            <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Regione</span>
+                                                                            <div id="patientRegion_1" class="small font-weight-bold text-dark text-truncate">
+                                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #343a40;"></i> 
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="mb-2 text-truncate">
+                                                                            <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Email</span>
+                                                                            <div id="patientEmail_1" class="small font-weight-bold text-dark text-truncate">
+                                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #343a40;"></i> 
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="text-truncate">
+                                                                            <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Data Consenso</span>
+                                                                            <div id="patientConsensus_1"class="small font-weight-bold text-dark text-truncate">
+                                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #343a40;"></i> 
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    <!-- Column 3: Legal & Consent -->
+                                                                        <div class="col-md-4 px-md-3">
+                                                                            <div class="mb-0">
+                                                                            
+                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">STATO GIURIDICO</span>
+                                                                             
+                            <div class="mb-2">                                                                                
+                                <span id="patientMinorOrMajor_1_1" 
+                                    class="badge badge-success px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
+                                    style="font-size: 0.65rem; letter-spacing: 0.5px;">
+                                    <span class="text-truncate text-white d-inline-block" style="max-width: 100%;">
+                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                    </span>
+                                </span>
+                            </div>
+
+                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">TERAPIA ASSEGNATA</span>
+
+                            <div class="mb-2">                                                                                
+                                <span id="quickrecaptherapies" 
+                                    class="badge  px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
+                                    style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                                    <span class="text-truncate text-white d-inline-block" style="max-width: 100%;">
+                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                    </span>
+                                </span>
+                            </div>
+
+                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">CERTIFICATI DISPONIBILI</span>
+
+                            <div class="mb-2">                                                                                
+                                <span id="quickrecapcertificates" 
+                                    class="badge badge-success px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
+                                    style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                                    <span class="text-truncate text-white d-inline-block" style="max-width: 100%;">
+                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                    </span>
+                                </span>
+                            </div>
+
+
+                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">GDPR</span>
+
+                            <div class="mb-2">                                                                                
+                                <span
+                                    class="badge badge-success px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
+                                    style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                                    <span class="text-truncate text-white d-inline-block" style="max-width: 100%;">
+                                        <i class="fas fa-check-circle fa-sm mr-1"></i>Accettato
+                                    </span>
+                                </span>
+                            </div>
+                                
+                                                                            </div>
+                                                                        <div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> <!-- first panel -->
+                                    
+                                    <!-- second panel -->
+                                    <div class="tab-pane fade" id="terapie" role="tabpanel">
+                                        <div class="d-flex flex-column h-100">
+                                
+                                            <!-- TOP ROW: 20% Height -->
+                                            <div class="row m-0" style="min-height: 20%; flex-shrink: 0;">
+                                                <!-- Added d-flex and align-items-center to put image and text side-by-side -->
+                                                <div class="col-12 py-3 d-flex align-items-center">
+
+                                                    <!-- Profile Image Container -->
+                                                    <div class="position-relative flex-shrink-0 mr-3" style="width: 80px; height: 80px;">
+                                                        <!-- Added a 3px solid custom blue border matching your previous styling style -->
+                                                        <img id="patientAvatar-2" src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                            class="img-fluid rounded-circle border shadow-sm p-1" 
+                                                            style="background-color: #fff; object-fit: cover; width: 100%; height: 100%; display: block; border: 1px solid #0000FF !important;">
+                                                    </div>
+
+                                                    <!-- Text Content Wrapper -->
+                                                    <div class="d-flex flex-column overflow-hidden">
+             
+                                                         <h5 id="patientFullName_2" class="text-dark mb-2 font-weight-bold text-truncate" style="font-size: 2.0rem; line-height: 1.2;">
+                                                            <i class="fas fa-circle-notch fa-spin" style="font-size: 2.0rem; color: #343a40;"></i>           
+                                                        </h5>
+
+                                                        <!-- Badges Row -->
+                                                        <!-- d-flex here allows badges to sit side-by-side if you want,or remove d-flex to keep them stacked -->
+                                                       <div class="d-flex flex-wrap" style="gap: 5px;">
+                                                            <!-- Active User Badge (Centered Layout) -->
+                                                            <span class="badge d-inline-flex align-items-center justify-content-center" 
+                                                                style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4e73df; color: #fff; font-weight: 600;">
+                                                                <i class="fas fa-check-circle mr-1 flex-shrink-0"></i>Utente Attivo
+                                                            </span>
+                                                            <!-- Patient Status Badge Wrapper (Centered Layout) -->
+                                                            <span id="patientMinorOrMajor_2" 
+                                                                class="badge d-inline-flex align-items-center justify-content-center" 
+                                                                style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%;">
+                                                                <i class="fas fa-circle-notch fa-spin flex-shrink-0" style="font-size: 0.85rem; color: #ffffff;"></i>       
+                                                            </span>
+                                                        </div>
+
+                                                         <!-- Subscription Date: Placed right under badges -->
+                                                        <div class="mt-2">
+                                                            <small  class="text-muted" style="font-size: 0.85rem;">
+                                                              <i class="far fa-calendar mr-1"></i> 
+                                                              <span id="patientSubDate_2"> 
+                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>  
+                                                                </span>   
+                                                            </small>
+                                                        </div>
+
+                                                   </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Unified Info Card -->
+                                            <div class="shadow-sm rounded p-3 mt-3" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                                      
+                                                <!-- CARD HEADER -->
+                                                <div class="d-flex align-items-center mb-3 pb-2 border-bottom" style="border-bottom-color: #dfdfdf  !important;">
+                                                    <i class="fas fa-file-medical-alt text-primary mr-2" style="font-size: 0.9rem;"></i>
+                                                    <h6 class="m-0 font-weight-bold text-muted" style="font-size: 0.9rem; letter-spacing: 1px;">
+                                                        Terapia Attualmente Osservata
+                                                    </h6>
+                                                </div>
+
+                                                <!-- Empty State: Notice we remove fixed height and use flex-grow -->
+                                                <div id="therapyEmptyMessage" 
+                                                    class="flex-grow-1 mb-4 mt-4 flex-column align-items-center justify-content-center text-center" 
+                                                    style="display: none;">
+                                                    <i class="fas fa-file-medical-alt text-muted mb-1" style="font-size: 1.5rem; opacity: 0.5;"></i>
+                                                    <p class="m-0 font-weight-bold text-muted" style="font-size: 1.5rem;">Nessuna terapia assegnata</p>
+                                                </div>
+                                                
+                                                <!-- DATA CONTAINER (Your original code wrapped) -->
+                                                <div id="therapyDataContainer">
+                                                    <!-- ROW 1 -->
+                                                    <div class="row no-gutters mb-0 align-items-center">
+                                                        <!-- SECTION 1: Text Labels (Left) -->
+                                                        <div class="col-12" style="border-right-color: #fce8ed !important;">
+
+                                                            <!-- Reduced top padding (pt-0) and negative top margin (mt-n1) to move elements UP -->
+                                                            <div class="card-body pt-0 pb-2 mt-n1">
+                                                                <div class="row align-items-center">
+                                                                    
+                                                                    <!-- Left Side: Identity -->
+                                                                    <div class="col-lg-4 mb-2 mb-lg-0 border-right">
+                                                           
+                                                                        <div class="mb-1">
+                                                                            <!-- Reduced margin here too -->
+                                                                            <h5 id="therapyName" class="mb-1 m-0 font-weight-bold text-gray-800 text-uppercase text-truncate d-block w-100">
+                                                                                  <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                                                            </h5>
+                                                                                
+                                                                            <div class="mb-0">
+                                                                                <span id="therapyStatusBadge" class="badge badge-success px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
+                                                                                    style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                                    <i id="therapyStatusIcon" class="fas fa-hourglass-half fa-xs mr-2 flex-shrink-0"></i>
+                                                                                    <span id="therapyStatusText" class="text-truncate text-white">
+                                                                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                                                                    </span>
+                                                                                </span>
+                                                                            </div>
+
+                                                                        </div>
+                        
+                                                                        <!-- mt-2 instead of mt-3 for tighter vertical space -->
+                                                                        <div class="row no-gutters mt-2">
+                                                                            <div class="col-6">
+                                                                                <div class="text-xs font-weight-bold text-muted text-uppercase mb-0 text-truncate d-block w-100">Data Inizio</div>
+                                                                                <div id="startTherapyDate" class="mb-2 text-dark small font-weight-bold text-truncate d-block w-100">
+                                                                                    <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                                                                </div>
+                                                                                <div class="text-xs font-weight-bold text-muted text-uppercase mb-0 text-truncate d-block w-100">Data Fine</div>
+                                                                                <div id="endTherapyDate" class="text-dark small font-weight-bold text-truncate d-block w-100">
+                                                                                    <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+
+                                                                    <!-- Right Side: Progress -->
+                                                                    <div class="col-lg-8">
+                              
+                                                                        <!-- Reduced mb-3 to mb-1 -->
+                                                                        <!-- Main Container -->
+                                                                        <div class="row no-gutters">
+                                                                            <!-- SECTION 1: Avanzamento Terapia -->
+                                                                            <div class="col-12 mb-3">
+                                                                                <div class="d-flex justify-content-between align-items-end mb-1">
+                                                                                    <span class="text-sm font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Avanzamento Terapia</span>
+                                                                                    <!-- Ratio: We force this NOT to shrink or wrap -->
+                                                                                    <span id="percentage" class="h5 mb-0 font-weight-bold text-gray-800 flex-shrink-0" style="white-space: nowrap;">
+                                                                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.9rem; color: #343a40;"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div class="progress progress-sm mb-2">
+                                                                                    <div id="progressBar" class="progress-bar bg-primary" role="progressbar" style="width: 0%"></div>
+                                                                                </div>
+                                                                                <div id="percentageRatio" class="text-xs font-weight-bold text-muted text-uppercase mt-1 text-truncate d-block w-100" style="font-size: 0.75rem;">
+                                                                                    <i class="fas fa-circle-notch fa-spin" style="font-size: 0.9rem; color: #343a40;"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                            <!-- SECTION 2: Avanzamento Giorni -->
+                                                                            <div class="col-12">
+                                                                                <div class="d-flex justify-content-between align-items-end mb-1">
+                                                                                    <span class="text-sm font-weight-bold text-muted text-uppercase text-truncate d-block w-100">Avanzamento Giorni</span>
+                                                                                    <span id="percentage2" class="h5 mb-0 font-weight-bold text-gray-800 flex-shrink-0" style="white-space: nowrap;">
+                                                                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.9rem; color: #343a40;"></i>
+                                                                                    </span>
+                                                                                </div>
+                                                                                <div class="progress progress-sm">
+                                                                                    <div id="progressBar2" class="progress-bar bg-info" role="progressbar" style="width: 0%"></div>
+                                                                                </div>
+                                                                                <div id="percentageRatio2" class="text-xs font-weight-bold text-muted text-uppercase mt-1 text-truncate d-block w-100" style="font-size: 0.75rem;">
+                                                                                    <i class="fas fa-circle-notch fa-spin" style="font-size: 0.9rem; color: #343a40;"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                         </div>   
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                           <!-- Unified Info Card -->
+                                            <div class="shadow-sm rounded p-3 mt-3" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                                   
+                                                <!-- CARD HEADER -->
+                                                <div class="d-flex align-items-center mb-3 pb-2 border-bottom" style="border-bottom-color: #dfdfdf !important;">
+                                                    <i class="fas fa-cog text-primary mr-2" style="font-size: 0.9rem;"></i>
+                                                    <h6 class="m-0 font-weight-bold text-muted" style="font-size: 0.9rem; letter-spacing: 1px;">
+                                                        Azioni Disponibili
+                                                    </h6>
+                                                </div>
+
+                                                <!-- INNERMOST CONTENT DIV -->
+                                                <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
+            
+                                                    <!-- Button 1: View -->
+                                                    <a id="newTherapyBtn" href="#" class="inner-action-btn">
+                                                        <i class="fas fa-plus-circle text-primary"></i> Nuova Terapia
+                                                    </a>
+
+                                                    <!-- Button 2: New -->
+                                                    <a id="viewTherapyBtn" href="#" class="inner-action-btn">
+                                                        <i class="fas fa-eye text-success"></i> Accedi alla Terapia 
+                                                    </a>
+
+                                                    <!-- Button 4: Stop -->
+                                                    <a id="listTherapyBtn" href="#" class="inner-action-btn">
+                                                        <i class="fas fa-clock text-info"></i> Cronologia Terapie
+                                                    </a>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                
+                                    <!-- third panel -->
+                                    <div class="tab-pane fade" id="certificati" role="tabpanel">
+                                        <div class="d-flex flex-column h-100">
+                                
+                                            <!-- TOP ROW: 20% Height -->
+                                            <div class="row m-0" style="min-height: 20%; flex-shrink: 0;">
+                                                <!-- Added d-flex and align-items-center to put image and text side-by-side -->
+                                                <div class="col-12 py-3 d-flex align-items-center">
+
+                                                    <!-- Profile Image Container -->
+                                                    <div class="position-relative flex-shrink-0 mr-3" style="width: 80px; height: 80px;">
+                                                        <!-- Added a 3px solid custom blue border matching your previous styling style -->
+                                                        <img id="patientAvatar-3" src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                            class="img-fluid rounded-circle border shadow-sm p-1" 
+                                                            style="background-color: #fff; object-fit: cover; width: 100%; height: 100%; display: block; border: 1px solid #0000FF !important;">
+                                                    </div>
+
+                                                    <!-- Text Content Wrapper -->
+                                                    <!-- This div keeps the name and badges stacked vertically -->
+                                                    <div class="d-flex flex-column overflow-hidden">
+                                                        
+                                                        <h5 id="patientFullName_3" class="text-dark mb-2 font-weight-bold text-truncate" style="font-size: 2.0rem; line-height: 1.2;">
+                                                            <i class="fas fa-circle-notch fa-spin" style="font-size: 2.0rem; color: #343a40;"></i>           
+                                                        </h5>
+
+                                                        <!-- Badges Row -->
+                                                        <!-- d-flex here allows badges to sit side-by-side if you want,or remove d-flex to keep them stacked -->
+                                                       <div class="d-flex flex-wrap" style="gap: 5px;">
+                                                            <!-- Active User Badge (Centered Layout) -->
+                                                            <span class="badge d-inline-flex align-items-center justify-content-center" 
+                                                                style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4e73df; color: #fff; font-weight: 600;">
+                                                                <i class="fas fa-check-circle mr-1 flex-shrink-0"></i>Utente Attivo
+                                                            </span>
+                                                            <!-- Patient Status Badge Wrapper (Centered Layout) -->
+                                                            <span id="patientMinorOrMajor_3" 
+                                                                class="badge d-inline-flex align-items-center justify-content-center" 
+                                                                style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%;">
+                                                                <i class="fas fa-circle-notch fa-spin flex-shrink-0" style="font-size: 0.85rem; color: #ffffff;"></i>       
+                                                            </span>
+                                                        </div>
+
+                                                         <!-- Subscription Date: Placed right under badges -->
+                                                        <div class="mt-2">
+                                                            <small  class="text-muted" style="font-size: 0.85rem;">
+                                                              <i class="far fa-calendar mr-1"></i> 
+                                                              <span id="patientSubDate_3"> 
+                                                                <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>  
+                                                                </span>   
+                                                            </small>
+                                                        </div>
+
+                                                   </div>
+                                                </div>
+                                            </div>
+                                    
+                                            <!-- Unified Info Card -->
+                                            <div class="shadow-sm rounded p-3 mt-3" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+
+                                                <!-- CARD HEADER -->
+                                                <div class="d-flex align-items-center mb-3 pb-2 border-bottom" style="border-bottom-color: #dfdfdf !important;">
+                                                    <i class="fas fa-notes-medical text-primary mr-2" style="font-size: 0.9rem;"></i>
+                                                    <h6 class="m-0 font-weight-bold text-muted" style="font-size: 0.9rem; letter-spacing: 1px;">
+                                                        Ultimo Certificato Caricato
+                                                    </h6>
+                                                </div>
+
+                                                <!-- Empty State: Notice we remove fixed height and use flex-grow -->
+                                                <div id="certificateEmptyMessage" 
+                                                    class="flex-grow-1 mb-4 mt-4 flex-column align-items-center justify-content-center text-center" 
+                                                    style="display: none;">
+                                                    <i class="fas fa-notes-medical text-muted mb-1" style="font-size: 1.5rem; opacity: 0.5;"></i>
+                                                    <p class="m-0 font-weight-bold text-muted" style="font-size: 1.5rem;">Nessun certificato disponibile</p>
+                                                </div>
+
+                                                <!-- DATA CONTAINER (Your original code wrapped) -->
+                                                <div id="certificateDataContainer">
+                                                    <!-- ROW 1 -->
+                                                    <div class="row no-gutters mb-0 align-items-center">
+                                                        <!-- SECTION 1: Text Labels (Left) -->
+                                                        <div class="col-12" style="border-right-color: #fce8ed !important;">
+                                                            <!-- Reduced top padding (pt-0) and negative top margin (mt-n1) to move elements UP -->
+                                                            <div class="card-body pt-0 pb-2 mt-n1">
+                                                                <div class="row align-items-center">
+
+                                                                    <!-- Left Side: Identity -->
+                                                                    <div class="col-lg-4 mb-2 mb-lg-0 border-right">
+                                                                        <div class="mb-1">
+                                                                            <!-- Reduced margin here too -->
+                                                                       
+                                                                                <h5 id="certificateName" class="mb-1 m-0 font-weight-bold text-gray-800 text-uppercase text-truncate d-block w-100">
+                                                                                  <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                                                            </h5>
+                                                                        
+                                                                            <div class="mb-1">
+                                                                                <span id="certificateStatusBadge" class="badge badge-success px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
+                                                                                    style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                                                                                    <i id="certificateStatusIcon" class="fas fa-hourglass-half fa-xs mr-2 flex-shrink-0"></i>
+                                                                                    <span id="certificateStatusText" class="text-truncate text-white">
+                                                                                         <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                                                                    </span>
+                                                                                </span>
+                                                                            </div>
+                                                          
+                                                                        </div>
+                        
+                                                                        <!-- mt-2 instead of mt-3 for tighter vertical space -->
+                                                                        <div class="row no-gutters mt-2">
+                                                                            <div class="col-6">
+                                                                                <div class="text-xs font-weight-bold text-muted text-uppercase mb-0 text-truncate d-block w-100">Caricato il</div>
+                                                                                <div id="certificateStartDate" class="text-dark small font-weight-bold text-truncate d-block w-100">
+                                                                                    <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                    <!-- Right Side: Progress -->
+                                                                    <div class="col-lg-8">
+                                                                        <!-- Row for Title and Label -->
+                                                                        <div class="row no-gutters align-items-center mb-1">
+                                                                            <div class="col">
+                                                                                <!-- Main Header -->
+                                                                                <div class="text-s font-weight-bold text-muted text-uppercase mb-1 text-truncate d-block w-100">
+                                                                                    Ente Certificatore:
+                                                                                </div>
+                                                                               
+                                                                                <!-- New Text Label Underneath -->
+                                                                                <div id="certificateFacility" class="h6 mb-0 font-weight-bold text-gray-800 text-truncate d-block w-100">
+                                                                                    <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                             <!-- Unified Info Card -->
+                                            <div class="shadow-sm rounded p-3 mt-3" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                            
+                                                <!-- CARD HEADER -->
+                                                <div class="d-flex align-items-center mb-3 pb-2 border-bottom" style="border-bottom-color: #dfdfdf !important;">
+                                                    <i class="fas fa-cog text-primary mr-2" style="font-size: 0.9rem;"></i>
+                                                    <h6 class="m-0 font-weight-bold text-muted" style="font-size: 0.9rem; letter-spacing: 1px;">
+                                                        Azioni Disponibili
+                                                    </h6>
+                                                </div>
+
+                                                <!-- INNERMOST CONTENT DIV -->
+                                                <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
+            
+                                                    <!-- Button 1: View -->
+                                                    <a id="newCertificateBtn" href="#" class="inner-action-btn">
+                                                        <i class="fas fa-plus-circle text-primary"></i> Nuovo Certificato
+                                                    </a>
+
+                                                    <!-- Button 2: New -->
+                                                    <a id="viewCertificateBtn" href="#" class="inner-action-btn">
+                                                        <i class="fas fa-eye text-success"></i> Accedi al Certificato 
+                                                    </a>
+
+                                                    <!-- Button 4: Stop -->
+                                                    <a id="listCertificateBtn" href="#" class="inner-action-btn">
+                                                        <i class="fas fa-clock text-info"></i> Cronologia Certificati
+                                                    </a>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- /.row -->
+            </div> <!-- /.container-fluid -->
+       
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white border-top">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; MyAssessments.it 2025</span>
+                </div>
+            </div>
+        </footer>
+       
+        </div> <!-- /#content -->
+    </div> <!-- /#content-wrapper -->
+
+    </div><!--id wrapper-->
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>-->
+
+    <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
+
+    <!-- 2. DATATABLES SECOND -->
+    <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
+    <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
+    <!--<script src="assets/js/patients-pie.js"></script>-->
+    <script src="assets/js/patients-data.js"></script>
+
+    <script>
+
+        // Global state tracking variable (put this right above your executeSearch function)
+        let isSearching = false;
+
+    </script>
+
+     <script>
+
+            // A global tracker variable to protect against aggressive database render loops
+            let isAvatarStateLocked = false;
+
+            function updateUserAvatar(userGender) {
+                // If the loop tries to run a second time, immediately reject it to save performance
+                if (isAvatarStateLocked) return;
+                
+                const avatarImg1 = document.getElementById('profileAvatar1');
+                const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
+                const container1 = document.getElementById('avatarContainer1');
+
+                if (!avatarImg1 || !spinnerIcon1) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc1 = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-female.png';
+
+                } else if (userGender === 'Maschile') {
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-male.png';
+                }
+
+                // 2. Assign source asset
+                avatarImg1.src = targetSrc1;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon1.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg1.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container1) {
+                    container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+
+                // 4. Lock down state so external asynchronous loops cannot re-enable the loading indicators
+                isAvatarStateLocked = true;
+            }
+        
+        </script>
+
+    <script>
+
+        // Mute buttons according to therapy or certificate presence
+        function updateActionButtons(patient) {
+
+            // toggles between therapy/ certificate page when there is no available data
+
+            const therapyDataContainer = document.getElementById("therapyDataContainer");
+            const therapyEmptyMessage = document.getElementById("therapyEmptyMessage");
+            const hasTherapies = !!(patient.terapia && Object.keys(patient.terapia).length > 0);
+
+            if (hasTherapies) {
+                therapyDataContainer.style.display = "block";
+                therapyEmptyMessage.style.display = "none";
+            } else {
+                therapyDataContainer.style.display = "none";
+                therapyEmptyMessage.style.display = "flex"; // Flex enables the vertical centering
+            }
+            
+            const certificatiDataContainer = document.getElementById("certificateDataContainer");
+            const certificatiEmptyMessage = document.getElementById("certificateEmptyMessage");
+            const hasCertificates = !!(patient.certificati && patient.certificati.length > 0);
+            
+            if (hasCertificates) {
+                certificatiDataContainer.style.display = "block";
+                certificatiEmptyMessage.style.display = "none";
+            } else {
+                certificatiDataContainer.style.display = "none";
+                certificatiEmptyMessage.style.display = "flex"; // Flex enables the vertical centering
+            }
+
+            // mute buttons when therapies are not available
+            const newTherapyBtn  = $('#newTherapyBtn');
+            const viewTherapyBtn = $('#viewTherapyBtn');
+            const listTherapyBtn = $('#listTherapyBtn');
+
+            // always diable new therapy button
+            newTherapyBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-success');
+            if (hasTherapies) {
+               newTherapyBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
+            }
+            
+            if (hasTherapies) {
+                // ENABLED STATE
+                viewTherapyBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-success');
+                listTherapyBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-success');
+            } else {
+                // MUTED STATE
+                viewTherapyBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
+                listTherapyBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
+            }
+
+            // mute buttons when certifictees are not available
+            const viewCertificateBtn = $('#viewCertificateBtn');
+            const listCertificateBtn = $('#listCertificateBtn');
+
+            if (hasCertificates) {
+                // ENABLED STATE
+                viewCertificateBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-success');
+                listCertificateBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-success');
+            } else {
+                // MUTED STATE
+                viewCertificateBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
+                listCertificateBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
+            }
+
+        }
+
+        // update therapy status
+        function updateTherapyStatus(status) {
+            const badge = document.getElementById("therapyStatusBadge");
+            const text = document.getElementById("therapyStatusText");
+            const icon = document.getElementById("therapyStatusIcon");
+
+            // 1. Reset standard classes
+            badge.className = "badge px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill";
+            icon.className = "fas fa-xs mr-2 flex-shrink-0";
+
+            // 2. Map states to UI
+            switch (status) {
+                case 0:
+                    text.textContent = "Non Ancora Iniziata";
+                    badge.classList.add("bg-warning");
+                    icon.className = "fas fa-hourglass mr-2 text-white";
+                break;
+
+                case 1:
+                    text.textContent = "In Corso";
+                    badge.classList.add("bg-info");
+                    icon.className = "fas fa-clock mr-2 text-white";
+                break;
+
+                case 2:
+                    text.textContent = "Completata";
+                    badge.classList.add("badge-success");
+                    icon.classList.add("fa-check-circle");
+                break;
+
+                case 3:
+                    text.textContent = "Interrotta";
+                    badge.classList.add("bg-danger");
+                    icon.className = "fas fa-exclamation-triangle mr-2 text-white";
+                break;
+
+                case 4:
+                    text.textContent = "Scaduta";
+                    badge.classList.add("badge-secondary");
+                    icon.classList.add("fa-exclamation-triangle");
+                break;
+                    
+                default:
+                    text.textContent = "N/D";
+                    badge.classList.add("badge-secondary");
+                    icon.classList.add("fa-question");
+            }
+        }
+
+        // update therapy status
+        function updateCertificateStatus(status) {
+            const badge = document.getElementById("certificateStatusBadge");
+            const text = document.getElementById("certificateStatusText");
+            const icon = document.getElementById("certificateStatusIcon");
+
+            // 1. Reset standard classes
+            badge.className = "badge px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill";
+            icon.className = "fas fa-xs mr-2 flex-shrink-0";
+
+            // 2. Map states to UI
+            switch (status) {
+                case 0:
+                    text.textContent = "Leggera";
+                    badge.classList.add("bg-warning");
+                    icon.className = "fas fa-hourglass mr-2 text-white";
+                    break;
+
+                case 1:
+                    text.textContent = "Moderata";
+                    badge.classList.add("bg-success");
+                    icon.className = "fas fa-clock mr-2 text-white";
+                    break;
+
+                case 2:
+                    text.textContent = "Grave";
+                    badge.classList.add("badge-danger");
+                    icon.classList.add("fa-check-circle");
+                    break;
+                    
+                default:
+                    text.textContent = "N/D";
+                    badge.classList.add("badge-secondary");
+                    icon.classList.add("fa-question");
+            }
+        }
+
+    </script>
+
+    <script>
+
+        // Updates the age status badge of a patient with unified center alignments.
+        function updateAgeBadge(badgeElement, status) {
+            if (!badgeElement) return;
+
+            // d-inline-flex lets the container size itself strictly to the content string length
+            badgeElement.className = "badge text-white d-inline-flex align-items-center justify-content-center";
+            
+            // Design styles
+            badgeElement.style.borderRadius = "50px";
+            badgeElement.style.fontSize = "0.75rem";
+            badgeElement.style.padding = "4px 10px"; // Your precise custom padding
+            badgeElement.style.fontWeight = "600";
+            
+            // Safety boundaries (allows adapting to length, but caps at container edge)
+            badgeElement.style.maxWidth = "100%";
+
+            if (status === 1) {
+                // --- ADULT STATE (Green) ---
+                badgeElement.style.backgroundColor = "#4edf97";
+                badgeElement.innerHTML = `
+                    <i class="fas fa-user mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
+                    <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Maggiorenne</span>
+                `;
+            } else {
+                // --- MINOR STATE (Red) ---
+                badgeElement.style.backgroundColor = "#ff4d4d";
+                badgeElement.innerHTML = `
+                    <i class="fas fa-child mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
+                    <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Minorenne</span>
+                `;
+            }
+        }
+
+        // Function to update badge colors
+        function updateBadgeColor(badgeElement, hexColor) {
+            const badge = document.getElementById(badgeElement);
+            if (badge) {
+                badge.style.backgroundColor = hexColor;
+            }
+        }
+
+        // Updates the subscription date label with proper Italian gender agreement.
+        function updateSubscriptionDate(target, date, gender) {
+            const element = typeof target === "string" ? document.getElementById(target) : target;
+            if (!element) return;
+            const formattedDate = date;
+            const label = (gender === "Femminile") ? "Iscritta il" : "Iscritto il";
+            element.textContent = `${label} ${formattedDate}`;
+        }
+
+    </script>
+
+    <script type="module">
+
+        import { calculateAgeWithMonths } from "./assets/js/string_utils.js";
+      
+        $(document).ready(function() {
+
+            // Universal syntax that works on almost all versions of FontAwesome
+            $('#columnSelectorMenu .dropdown-item.active').append('<i class="fa fa-check fa-xs text-primary ml-2"></i>');
+
+            // Reference the table body
+            const tableBody = $('#PatientTableBody');
+
+            // Clear any existing content
+            tableBody.empty();
+
+            // Map your array data into HTML rows
+            window.patients.forEach(patient => {
+                const age=calculateAgeWithMonths(patient.data_di_nascita);
+                const row = `
+                    <tr>
+                        <td>${patient.nome}</td>
+                        <td>${patient.surname}</td>
+                        <td>${patient.genere}</td>
+                        <td>${patient.data_di_nascita}</td>
+                        <td>${age.years + " Anni"}</td>
+                        <td>${patient.dataIscrizione}</td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+
+            $('#PatientdataTable').DataTable({
+                "retrieve": true,    // FIX 1: Returns existing instance if already initialized
+                "destroy": true,     // FIX 2: Allows safe re-creation if settings change
+                "pageLength": 9,
+                "lengthChange": false,
+                "searching": true,
+                "info": true,
+                "paging": true,
+                "scrollCollapse": false,
+                "stateSave": false,
+                "autoWidth": false,
+                // YOUR CUSTOM LAYOUT
+                "dom": "tr", // Only the table. No 'f', no 'i', no 'p' here.
+
+            "language": {
+                    "sSearch": "", // FIX 3: Empty string here prevents the "Cerca:" label from breaking the search box alignment
+                    "sSearchPlaceholder": "Cerca in tutto...", // Default placeholder
+                    "sEmptyTable":     "Nessun dato disponibile nella tabella",
+                    "sInfo":           "Visualizzazione da _START_ a _END_ di _TOTAL_ elementi",
+                    "sInfoEmpty":      "Visualizzazione da 0 a 0 di 0 elementi",
+                    "sInfoFiltered":   "(filtrati da _MAX_ elementi totali)",
+                    "sLoadingRecords": "Caricamento...",
+                    "sProcessing":     "Elaborazione...",
+                    "sZeroRecords":    "La ricerca non ha portato alcun risultato.",
+                    "oPaginate": {
+                        "sFirst":      "Inizio",
+                        "sPrevious":   "Precedente",
+                        "sNext":       "Successivo",
+                        "sLast":       "Fine"
+                    }
+                },
+                "responsive": true,
+                "initComplete": function(settings, json) {
+                    // Adjust column sizing to fix layout issues caused by display:none
+                    var api = this.api();
+                    api.columns.adjust();
+
+                    setTimeout(function() {
+                        $('#loadingSpinner').fadeOut(200, function() {
+                            $('#tableContainer').fadeIn(400);
+                        });
+                    }, 1000);
+
+                    // Move the dropdown into the top row
+                    $('#dropdownTarget').appendTo('#customFilterPlaceholder').removeClass('d-none');
+                    this.api().columns.adjust();
+                }
+            });
+
+            // select search filter
+            $(document).ready(function() {
+                
+                // 1. Initialize the table
+                var table = $('#PatientdataTable').DataTable();
+                
+                // 2. Track the selected column (default is 'all')
+                let currentSearchColumn = 'all';
+
+                $('#columnSelectorMenu .dropdown-item').on('click', function(e) {
+                    
+                    e.preventDefault();
+                    currentSearchColumn = $(this).data('column');
+
+                    // Manage active styling background states
+                    $('#columnSelectorMenu .dropdown-item').removeClass('active');
+                    $(this).addClass('active');
+
+                    // Clean out any checkmark icons everywhere in the menu
+                    $('#columnSelectorMenu .dropdown-item i.fa-check').remove();
+                    
+                    // Extract the clean text label BEFORE we inject an icon tag into it
+                    let selectedText = $(this).text().trim();
+
+                    // Programmatically inject a fresh checkmark icon into THIS specific clicked option
+                    $(this).append('<i class="fas fa-check fa-xs text-primary ml-2"></i>');
+                    
+                    // Update the main layout button label text safely
+                    $('#activeColumnLabel').text(currentSearchColumn === 'all' ? 'Tutte' : selectedText);
+                    
+                });
+
+                // Handle typing in the input field
+                $('#customSearchInput').on('input', function() {
+                    isSearching = true; // Turn ON the search flag
+                    executeSearch();
+                    isSearching = false; // Turn OFF the search flag once drawing is done
+                });
+
+                // --- Update your PREV Button Click ---
+                $('#prevPage').on('click', function() {
+                    isSearching = true; // Block draw animations
+                    // Your actual pagination code goes here, for example:
+                    table.page('previous').draw('page'); 
+                    isSearching = false; // Release lock
+                });
+
+                // --- Update your NEXT Button Click ---
+                $('#nextPage').on('click', function() {
+                    isSearching = true; // Block draw animations
+                    // Your actual pagination code goes here, for example:
+                    table.page('next').draw('page'); 
+                    isSearching = false; // Release lock
+                });
+
+                // Clear search when user clicks a row
+                $('#PatientdataTable tbody').on('click', 'tr', function (e) {
+                    // 1. Prevent clearing if the user clicks an action button or icon inside the row
+                    if ($(e.target).closest('button, a, i').length) return;
+                    
+                    // 2. Clear the search input field
+                    $('#customSearchInput').val('');
+
+                    // 3. Reset the internal DataTable search state
+                    // We clear both the global search AND the individual column searches
+                    table.search('').columns().search('').draw();
+
+                    // 4. Sync your custom UI variables
+                    currentSearchColumn = 'all'; // Reset our tracking variable
+                    $('#activeColumnLabel').text('Tutte'); // Reset button label
+                    
+                    // 5. Update the dropdown visual state
+                    $('#columnSelectorMenu .dropdown-item').removeClass('active');
+                    $('#columnSelectorMenu .dropdown-item[data-column="all"]').addClass('active');
+                });
+
+                // The Search Function
+                function executeSearch() {
+                    let searchVal = $('#customSearchInput').val();
+                    // If 'all', search globally
+                    if (currentSearchColumn === 'all') {
+                        // search(value, regex, smart, caseInsenstive)
+                        table.search(searchVal, false, false, true).draw();
+                    } else {
+                        // Clear global search first, then target specific column
+                        table.search('')
+                            .column(currentSearchColumn)
+                            .search(searchVal, false, false, true)
+                            .draw();
+                    }
+                }
+              
+                // Intercept the logout click
+                $('#logoutBtn').on('click', function(e) {
+                    // 1. Prevent the immediate default redirect to index.html
+                    e.preventDefault(); 
+                    console.log("Logging out... clearing patient session data.");
+                    // 2. Clear your persistent storage item
+                    localStorage.removeItem('selectedPatientEmail');
+                    // 3. Manually trigger the redirect now that the data is wiped
+                    window.location.href = $(this).attr('href'); 
+                });
+                
+            });
+
+            // The Column Switch Logic
+            // This ensures that if the user changes the column, the search refreshes immediately
+            $('#searchColumn').on('change', function() {
+                $('#customSearchInput').trigger('keyup');
+            });
+
+            // navigation arrows
+            var table = $('#PatientdataTable').DataTable();
+
+            // Previous Page
+         //   $('#prevPage').on('click', function() {
+         //       table.page('previous').draw('page');
+         //   });
+
+            // Next Page
+       //     $('#nextPage').on('click', function() {
+       //         table.page('next').draw('page');
+       //     });
+
+            // Update the "1 / 1" Label dynamically
+            table.on('draw', function() {
+                var info = table.page.info();
+                // info.page + 1 because the index starts at 0
+                // info.pages is the total number of pages
+                var label = (info.pages > 0) ? (info.page + 1) + ' / ' + info.pages : '0 / 0';
+                $('#currentPageLabel').text(label);
+                // Optional: Disable buttons if there's no more paging possible
+                $('#prevPage').prop('disabled', info.page === 0);
+                $('#nextPage').prop('disabled', info.page >= info.pages - 1 || info.pages === 0);
+            });
+
+            // Trigger once on load to set initial label
+            table.draw();
+
+        });
+
+        $(document).ready(function() {
+            $("#sidebarToggleTop").on('click', function(e) {
+                e.preventDefault();
+                // 1. Toggle class on body (Standard SB Admin 2 behavior)
+                $("body").toggleClass("sidebar-toggled");
+                // 2. Toggle class on the sidebar itself
+                $(".sidebar").toggleClass("toggled");
+                // 3. Optional: if using DataTables, fix the header alignment on open
+                if ($.fn.DataTable.isDataTable('#dataTable')) {
+                    $('#dataTable').DataTable().columns.adjust();
+                }
+            });
+        });
+
+    </script>
+
+        <script type="module">
+
+            // ✅ Import string utils
+            import {
+                convertToItalianFormat,
+                calculateAgeWithMonths,
+                getDaysBetween,
+                getDaysSince,
+                getDaysFromCurrent
+            } from "./assets/js/string_utils.js";
+
+            // --- Aggiornamento UI ---
+            // Helper function to keep things sober and DRY (Don't Repeat Yourself)
+            const updateText = (id, text) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = text;
+            };
+
+            // NUMERIC STATE "CLASS" (ENUM) ---
+            const TherapyState = Object.freeze({
+                NOT_YET_STARTED: 0,
+                ON_COURSE:       1,
+                COMPLETED:       2
+            });
+
+            // populate pateint data
+            function populatePatientCards(patient) {
+            
+                const nome           = patient.nome;
+                const cognome        = patient.surname;
+                const fullName       = `${nome} ${cognome}`;
+                const gender         = patient.genere;
+                const bdate          = patient.data_di_nascita;
+                const subdate        = patient.dataIscrizione;
+                const region         = patient.regione;
+                const email          = patient.email;
+                const age            = calculateAgeWithMonths(bdate);
+                const minor_or_major = (age.years >= 18) ? 1 : 0;
+                const subDateItalianFormat = convertToItalianFormat(subdate);
+                const hasTherapies = !!(patient.terapia && Object.keys(patient.terapia).length > 0);
+                let agestr="";
+                if (age.months!=0)
+                    agestr = age.years + " Anni e " + age.months + " mesi";
+                else
+                    agestr = age.years + " Anni";
+                    
+            //    console.log("Selected Patient from Array:", patient);
+            //    console.log(nome);
+            //    console.log(cognome);
+            //    console.log(gender);
+            //    console.log(bdate);
+            //    console.log(age);
+            //    console.log(agestr);
+            //    console.log(subdate);
+            //    console.log(region);
+            //    console.log(email);
+
+                // update action buttons
+                updateActionButtons(patient);
+         
+                // first card patient profile
+                updateText("patientFullName_1", fullName);
+                updateAgeBadge(document.getElementById("patientMinorOrMajor_1"),minor_or_major);
+                updateSubscriptionDate(document.getElementById("patientSubDate_1"), subDateItalianFormat, gender);
+
+                // update first card
+                updateText("patientName_1", nome);
+                updateText("patientSurName_1", cognome);
+                updateText("patientBDay_1", convertToItalianFormat(bdate));
+                updateText("patientAge_1", agestr);
+                updateText("patientGender_1", gender);
+                updateText("patientRegion_1", region);
+                updateText("patientEmail_1", email);
+                updateText("patientConsensus_1", subDateItalianFormat);
+                updateAgeBadge(document.getElementById("patientMinorOrMajor_1_1"),minor_or_major);
+             
+                const patientavatarImg1 = document.getElementById('patientAvatar-1');
+                if (gender === 'Femminile') {
+                        patientavatarImg1.src = 'assets/img/registrazione/kid-female.png';
+                } else if (gender === 'Maschile') {
+                    patientavatarImg1.src = 'assets/img/registrazione/kid-male.png';
+                } 
+             
+                // second card patient profile
+                updateText("patientFullName_2", fullName);
+                updateAgeBadge(document.getElementById("patientMinorOrMajor_2"),minor_or_major);
+                updateSubscriptionDate(document.getElementById("patientSubDate_2"), subDateItalianFormat, gender);
+
+                // --- Codice per cambiare imagine di default nella navbar ---
+                const patientavatarImg2 = document.getElementById('patientAvatar-2');
+                if (gender === 'Femminile') {
+                        patientavatarImg2.src = 'assets/img/registrazione/kid-female.png';
+                } else if (gender === 'Maschile') {
+                    patientavatarImg2.src = 'assets/img/registrazione/kid-male.png';
+                } 
+                
+                const quickrecaptherapies = document.getElementById("quickrecaptherapies");
+                if (quickrecaptherapies) {
+                    // 1. Force layout properties to handle truncation limits
+                    quickrecaptherapies.className = "badge text-white d-inline-flex align-items-center justify-content-center";
+                    
+                    // 2. Design properties matching your badge style
+                    quickrecaptherapies.style.borderRadius = "50px";
+                    quickrecaptherapies.style.fontSize = "0.75rem";
+                    quickrecaptherapies.style.padding = "4px 10px";
+                    quickrecaptherapies.style.fontWeight = "600";
+                    quickrecaptherapies.style.backgroundColor = '#adb5bd';
+                    
+                    // 3. Safety guardrail to adapt to length but stop at container edge
+                    quickrecaptherapies.style.maxWidth = "100%";
+
+                    // 4. Inject structure keeping text isolated for the ellipsis math
+                    quickrecaptherapies.innerHTML = `
+                        <i class="fas fa-file-medical-alt mr-1 flex-shrink-0" style="font-size: 0.8rem;"></i> 
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Nessuna Terapia Assegnata</span>
+                    `;
+                }
+                
+                const quickrecapcertificates = document.getElementById("quickrecapcertificates");
+                if (quickrecapcertificates) {
+                    // 1. Force layout properties to handle centering and truncation limits
+                    quickrecapcertificates.className = "badge text-white d-inline-flex align-items-center justify-content-center";
+                    
+                    // 2. Consistent design styling
+                    quickrecapcertificates.style.borderRadius = "50px";
+                    quickrecapcertificates.style.fontSize = "0.65rem";
+                    quickrecapcertificates.style.padding = "4px 10px";
+                    quickrecapcertificates.style.fontWeight = "600";
+                    quickrecapcertificates.style.backgroundColor = '#adb5bd';
+                    
+                    // 3. Safety guardrail to stop at the edge of the container
+                    quickrecapcertificates.style.maxWidth = "100%";
+
+                    // 4. Structural HTML markup to protect the icon and isolate text for truncation
+                    quickrecapcertificates.innerHTML = `
+                        <i class="fas fa-notes-medical mr-1 flex-shrink-0" style="font-size: 0.8rem;"></i> 
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Nessun Certificato Disponibile</span>
+                    `;
+                }
+
+                if (hasTherapies) 
+                {
+                    
+                    const lastTherapy = patient.terapia;
+                
+                //    console.log(lastTherapy.nome);
+                //    console.log(lastTherapy.dataInizio);
+                //    console.log(lastTherapy.dataFine);
+                //    console.log(lastTherapy.posizioneCorrente);
+                //    console.log(lastTherapy.posizioniTotali);
+                //    console.log(lastTherapy.stato);
+                //    console.log(lastTherapy.interrotta);
+
+                    const posizioniTotali=lastTherapy.posizioniTotali;
+                    let posizioneCorrente=lastTherapy.posizioneCorrente;
+                    let posizionePercentuale = 0;
+                
+                    posizioneCorrente=-1;
+                    posizioneCorrente=20;
+
+                    lastTherapy.dataInizio="2026-06-01";
+                    lastTherapy.dataFine="2026-06-03";
+
+                    const totalDays = getDaysBetween(lastTherapy.dataInizio, lastTherapy.dataFine) + 1; 
+                    const currentday = getDaysSince(lastTherapy.dataInizio); 
+                    const leftDays = totalDays - currentday;
+                    const rawPercent = Math.floor((currentday * 100) / totalDays);
+                    const giorniPercentuale = Math.max(0, Math.min(100, rawPercent));
+                    const ratioTrascorsi = Math.max(0, Math.min(totalDays, currentday));
+                    
+                //    console.log("Giorni totali: ",totalDays);
+                //    console.log("Giorni passati: ",currentday);
+                //    console.log("Giorni rimanenti: ",leftDays);
+
+                    if ( posizioneCorrente>=0 && posizioneCorrente<=posizioniTotali-1)
+                        posizionePercentuale = Math.floor((posizioneCorrente * 100) / posizioniTotali);
+                    else if (posizioneCorrente == posizioniTotali)
+                        posizionePercentuale = 100;
+            
+                    if (posizioneCorrente === -1) {
+                        lastTherapy.stato = TherapyState.NOT_YET_STARTED;
+                    } 
+                    else if (posizioneCorrente >= 0 && posizioneCorrente <= posizioniTotali-1) {
+                        lastTherapy.stato=TherapyState.ON_COURSE;
+                    }
+                    else if (posizioneCorrente ===posizioniTotali) {
+                        lastTherapy.stato=TherapyState.COMPLETED;
+                    }
+
+                    // update therapy status ui elements
+                    updateTherapyStatus(lastTherapy.stato);
+                    
+                    // update timing ui elements
+                    const startDateId=document.getElementById("startTherapyDate");
+                    if ( startDateId)
+                        startDateId.textContent=convertToItalianFormat(lastTherapy.dataInizio);
+                    const endDateId=document.getElementById("endTherapyDate");
+                    if ( endDateId)
+                        endDateId.textContent=convertToItalianFormat(lastTherapy.dataFine);
+                    
+                    const therapyNameId = document.getElementById("therapyName");
+                    if (therapyNameId) 
+                        therapyNameId.textContent = lastTherapy.nome;
+
+                    const percentageRatioId = document.getElementById("percentageRatio");
+                    if (percentageRatioId)
+                        percentageRatioId.textContent = `Posizioni Completate:  ${posizioneCorrente} / ${posizioniTotali}`;
+
+                    const percentageId = document.getElementById("percentage");
+                    if (percentageId)
+                        percentageId.textContent = `${posizionePercentuale}%`;
+
+                    const progressBarId = document.getElementById("progressBar");
+                    if (progressBarId) {
+                        progressBarId.style.width = posizionePercentuale + "%";
+                        progressBarId.setAttribute("aria-valuenow", posizionePercentuale);
+                    }
+                    
+                    const percentageRatioId2 = document.getElementById("percentageRatio2");
+                    if (percentageRatioId2)
+                        percentageRatioId2.textContent =  `Giorni Trascorsi:  ${ratioTrascorsi} / ${totalDays}`;
+
+                    const percentageId2 = document.getElementById("percentage2");
+                    if (percentageId2)
+                        percentageId2.textContent = `${giorniPercentuale}%`;
+
+                    const progressBarId2 = document.getElementById("progressBar2");
+                    if (progressBarId2) {
+                        progressBarId2.style.width = giorniPercentuale + "%";
+                        progressBarId2.setAttribute("aria-valuenow", giorniPercentuale);
+                    }
+                                       
+                    const quickrecaptherapies = document.getElementById("quickrecaptherapies");
+                    if ( quickrecaptherapies){
+                        quickrecaptherapies.innerHTML = `
+                            <i class="fas fa-file-medical-alt mr-1 flex-shrink-0" style="font-size: 0.8rem;"></i> 
+                            <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">${patient.terapia.nome}</span>
+                            `;
+                        quickrecaptherapies.style.backgroundColor =  '#36b9cc';
+                    }
+ 
+                    // 1. Target the button via its ID
+                    const newTherapyBtn = document.getElementById('newTherapyBtn');
+                    if (newTherapyBtn) {
+                        newTherapyBtn.disabled = true;
+                    }
+                }
+              
+                // third card
+                updateText("patientFullName_3", fullName);
+                updateAgeBadge(document.getElementById("patientMinorOrMajor_3"),minor_or_major);
+                updateSubscriptionDate(document.getElementById("patientSubDate_3"), subDateItalianFormat, gender);
+
+                const patientavatarImg3 = document.getElementById('patientAvatar-3');
+                if (gender === 'Femminile') {
+                        patientavatarImg3.src = 'assets/img/registrazione/kid-female.png';
+                } else if (gender === 'Maschile') {
+                    patientavatarImg3.src = 'assets/img/registrazione/kid-male.png';
+                } 
+                
+                if (patient.certificati && patient.certificati.length > 0) {
+                    // The array EXISTS and has at least ONE item
+                    
+                    // .at(-1) starts counting from the end of the array
+                    const lastCertificate = patient.certificati.at(-1);
+
+                    const certificateNameId = document.getElementById("certificateName");
+                    if (certificateNameId) {
+                        certificateNameId.textContent = lastCertificate.nome;
+                    }
+
+                    updateCertificateStatus(lastCertificate.gravita);
+                    document.getElementById("certificateStartDate").textContent = convertToItalianFormat(lastCertificate.UploadDate);
+                    document.getElementById("certificateFacility").textContent = lastCertificate.ente;
+
+                    const quickrecapcertificates = document.getElementById("quickrecapcertificates");
+                    if (quickrecapcertificates){
+                        quickrecapcertificates.innerHTML = `
+                            <i class="fas fa-file-medical-alt mr-1 flex-shrink-0" style="font-size: 0.8rem;"></i> 
+                            <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Certificati: ${patient.certificati.length}</span>
+                            `;
+                        quickrecapcertificates.style.backgroundColor =  '#36b9cc';
+                    }
+                        
+                } else {
+                    // The array is either EMPTY ([]) or UNDEFINED
+                }
+                
+            }
+
+            // update patient number
+            const patients_number=window.patients.length;
+            updateText("patientCount", patients_number);
+            
+            // --- ready function ---
+            $(document).ready(function() {
+
+                // On Load: Check if there's a saved selection in the browser storage
+                let selectedPatientEmail = localStorage.getItem('selectedPatientEmail');
+
+                // FIX THE GLITCH: Force the correct panel layout immediately before anything else renders
+                if (selectedPatientEmail) {
+                    document.getElementById('mainPanel').style.display = 'block';
+                    document.getElementById('emptyPatientCard').style.display = 'none';
+                } else {
+                    document.getElementById('emptyPatientCard').style.display = 'block';
+                    document.getElementById('mainPanel').style.display = 'none';
+                }
+
+                // fill table
+                var table = $('#PatientdataTable').DataTable();
+
+                $('#PatientdataTable tbody').on('click', 'tr', function() {
+
+                    // smooth transition between patitents
+                    // and patient cards
+                    const emptyCard = document.getElementById('emptyPatientCard');
+                    const dataCard = document.getElementById('mainPanel');
+                    const dataContent = document.getElementById('therapyTab');
+
+                    // 1. Swap the cards (the shell is now solid)
+                    emptyCard.style.display = 'none';
+                    dataCard.style.display = 'block';
+
+                    // 3. Trigger animation on the INNER content only
+                    dataContent.classList.remove('content-fade-in');
+                    void dataContent.offsetWidth; // Trigger reflow
+                    dataContent.classList.add('content-fade-in');
+
+                    // populate card tabs
+                    var data = table.row(this).data();
+                    if (!data) return; // Safety check
+
+                    // Get the index out of the clicked row
+                    // .row(this).index() gives you the 0, 1, 2... position
+                    const rowIndex = table.row(this).index();
+
+                    // Pull from the patient array
+                    // Assuming 'patientsArray' is your global or scoped array of objects
+                    const patient = window.patients[rowIndex];
+
+                    if (patient) {
+                    
+                        // save patient email into local storage
+                        selectedPatientEmail  = patient.email;
+                        localStorage.setItem('selectedPatientEmail', selectedPatientEmail );
+                                            
+                        // Populate pateint cards
+                        populatePatientCards(patient);
+
+                        // 1. Remove the selection class from EVERY row in the entire table (all pages)
+                        table.rows().nodes().to$().removeClass('table-primary');
+
+                        // 2. Add the class only to the row you just clicked
+                        $(this).addClass('table-primary');
+                        
+                    }
+                    
+                });
+
+                // --- Connect the "Nuova Terapia" Button to Cross-Page Data Sync ---
+                $('#newTherapyBtn').on('click', function(event) {
+                    // Prevent the default anchor tag '#' jump behavior
+                    event.preventDefault();
+                    // Fetch the current selected patient's email directly from your storage engine
+                    const savedEmail = localStorage.getItem('selectedPatientEmail');
+
+                    if (!savedEmail || !window.patients) {
+                        alert("Attenzione: Seleziona un paziente dalla tabella prima di creare una nuova terapia!");
+                        return;
+                    }
+                    
+                    // Find the exact patient object within your global registry using the email string
+                    const activePatient = window.patients.find(p => p.email === savedEmail);
+
+                    if (activePatient) {
+                        //Serialize the entire structural object (with nested terapie and certificati) 
+                        // into sessionStorage for cross-page transmission
+                        const jsonPayload = JSON.stringify(activePatient);
+                        sessionStorage.setItem('activePatient', jsonPayload);
+
+                        // === DEBUGGING LOGS ===
+                        console.clear(); // Clears clutter from the console
+                        console.log("%c--- DEBUG: SERIALIZED JSON PATIENT PAYLOAD ---", "color: #4e73df; font-weight: bold; font-size: 12px;");
+                        console.log("Raw JSON String:\n", jsonPayload); 
+                        console.log("Structured Object Preview:", activePatient);
+                        console.log("%c----------------------------------------------", "color: #4e73df; font-weight: bold;");
+                        // ======================
+                        
+                        //Navigate cleanly to your exercise drop list page
+                      //  window.location.href = "exercise-dashboard.html";
+                    } else {
+                        alert("Errore: Impossibile trovare i dati del paziente selezionato.");
+                    }
+                });
+
+                // THE SIMPLER PERSISTENCE ENGINE (Handles page switches & re-evaluations)
+                // selected patient persists when user switches to other pages
+                table.on('draw', function() {
+
+                    // === THE FIX ===
+                    // If the draw event was caused by typing a search, STOP right here. 
+                    // Do not reload cards, do not trigger animations.
+                    if (isSearching) {
+                        // We still want to make sure the row highlight stays blue for the active patient
+                        const savedEmail = localStorage.getItem('selectedPatientEmail');
+                        table.rows({ page: 'current' }).every(function() {
+                            const rowPatient = window.patients[this.index()];
+                            if (rowPatient && rowPatient.email === savedEmail) {
+                                $(this.node()).addClass('table-primary');
+                            }
+                        });
+                        return; // Break out of the function early!
+                    }
+
+                    // Get the current truth from localStorage
+                    const savedEmail = localStorage.getItem('selectedPatientEmail');
+                    if (savedEmail && window.patients) {
+                        // Find the patient in the array using the unique email
+                        const activePatient = window.patients.find(p => p.email === savedEmail);
+                        if (activePatient) {
+                    
+                            // Keep the side cards populated with the correct patient data
+                            populatePatientCards(activePatient);
+                            
+                            // smooth transition between patitents
+                            // and patient cards
+                            const emptyCard = document.getElementById('emptyPatientCard');
+                            const dataCard = document.getElementById('mainPanel');
+                            const dataContent = document.getElementById('therapyTab');
+
+                            // 1. Swap the cards (the shell is now solid)
+                            emptyCard.style.display = 'none';
+                            dataCard.style.display = 'block';
+
+                            // 3. Trigger animation on the INNER content only
+                            dataContent.classList.remove('content-fade-in');
+                            void dataContent.offsetWidth; // Trigger reflow
+                            dataContent.classList.add('content-fade-in');
+
+                            // Loop through the visible rows on this specific page to re-apply the blue highlight
+                            table.rows({ page: 'current' }).every(function() {
+                                const rowPatient = window.patients[this.index()];
+                                if (rowPatient && rowPatient.email === savedEmail) {
+                                    $(this.node()).addClass('table-primary');
+                                }
+                            });
+                        }
+                    }
+                });
+
+                // 3. INITIAL RUN (If a user refreshes or reloads on this page)
+                if (selectedPatientEmail) {
+                    table.draw(false); // Forces the draw event above to run immediately without losing pagination position
+                }
+                
+            });
+        
+            // init supabase
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+            
+            // --- Supabase setup ---
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+            const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+                // --- Event Listeners 
+                document.addEventListener("DOMContentLoaded", async () => {
+                    
+                    // CHECK SESSIONE
+                    const { data: { session } } = await supabase.auth.getSession();
+                    
+                    if (!session?.user) {
+                        window.location.replace("index.html");
+                        return;
+                    }
+
+                    const user = session.user;
+
+                    // 2. AUTO LOGOUT HANDLER
+                    supabase.auth.onAuthStateChange((event, session) => {
+                        if (event === "SIGNED_OUT" || !session) {
+                        window.location.replace("index.html");
+                        }
+                    });
+
+                    // 3. DATI BASE USER (SOLO AUTH)
+                    const email = user.email;
+                    
+                    //console.log("Utente:", user);
+                    
+                    // 4. CARICA PROFILO DAL DATABASE 
+                    const { data: profile, error } = await supabase
+                        .from("Clinicals")
+                        .select("*")
+                        .eq("id", user.id)
+                        .single();
+
+                    if (error || !profile) {
+                        console.error("Errore caricamento profilo:", error);
+                        window.location.replace("index.html");
+                        return;
+                    }
+
+                    // 5. COSTRUZIONE DATI UI
+                    const name         = `${profile.name}`;
+                    const surname      = `${profile.surname}`;
+                    const fullNameNoPrefix = `${name} ${surname}`;
+                    const gender        = `${profile.genre}`;
+                        
+                    // --- Nome nella NavBar ---
+                    const userFullNameElement = document.getElementById("userFullName");
+                    if (userFullNameElement) {
+                        userFullNameElement.textContent = fullNameNoPrefix;
+                    }
+
+                    // update avatar in the navbar
+                    updateUserAvatar(gender);
+            
+            });
+
+    </script>
+
+    <script>
+
+    //SIDEBAR Race condition fix
+    $(document).ready(function() {
+        // We attach the listener to 'body' so it never "dies" 
+        // even if the navbar is re-rendered or the script finishes late.
+        $("body").on('click', '#sidebarToggleTop', function(e) {
+            e.preventDefault();
+            
+            // 1. Toggle classes
+            $("body").toggleClass("sidebar-toggled");
+            $(".sidebar").toggleClass("toggled");
+
+            // 2. Fix DataTables layout if it's visible
+            if ($.fn.DataTable.isDataTable('#PatientdataTable')) {
+                $('#PatientdataTable').DataTable().columns.adjust();
+            }
+            
+            // 3. Handle the 'overflow' issue we discussed for your dashboard layout
+            if ($("body").hasClass("sidebar-toggled")) {
+                // Optional: prevent background scrolling on mobile when menu is open
+                if (window.innerWidth < 768) {
+                    $("html, body").css("overflow", "hidden");
+                }
+            } else {
+                $("html, body").css("overflow", ""); 
+            }
+        });
+    });
+
+    </script>
+
+</body>
+</html>

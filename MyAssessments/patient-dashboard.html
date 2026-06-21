@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyAssessments</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">-->
+    <link href="assets/sb-admin-2/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+    <style>
+        /* Custom Overrides for the "Renaizant" look */
+        #accordionSidebar { background-color: rgb(17, 25, 131) !important; background-image: none !important; }
+        .sidebar-dark .nav-item .nav-link { color: rgba(255, 255, 255, 0.7); }
+        .sidebar-dark .nav-item.active .nav-link { color: #fff; font-weight: 700; border-left: 3px solid #e91e63; }
+        .bg-custom-gray { background-color: #f8f9fc; }
+        .card { border: none; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05); }
+        .progress-bar-orange { background-color: #ff9800; }
+        .org-footer { background: #3d2b46; border-radius: 8px; margin: 1rem; padding: 10px; }
+    </style>
+
+
+<style>
+/* Standard Desktop Layout */
+@media (min-width: 768px) {
+    .responsive-side-panel {
+        flex-basis: 300px;
+        flex-grow: 0;
+        min-width: 260px;
+    }
+}
+
+/* Fluid Mobile Layout when compressed or sidebar is open */
+@media (max-width: 767.98px) {
+    .responsive-side-panel {
+        width: 100%;
+        flex-basis: auto;
+        flex-grow: 1;
+        min-width: 0; /* Prevents layout blowout */
+        margin-bottom: 1.5rem; /* Cleaner separation if other cards stack under it */
+    }
+}
+</style>
+
+<style>
+/* === Basic Reset === */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+/*
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f8fafc;
+  color: #1e293b;
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+*/
+
+/* === Main Container Layout === */
+.lists-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  width: 100%;
+  max-width: 1050px;
+}
+
+.list-section-title {
+  width: 100%;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  margin-bottom: -15px;
+  padding-left: 15px;
+}
+
+.list-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+}
+
+/* === Read-Only Container Styling === */
+.list-container {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 28px 20px;
+  border-radius: 16px;
+  scroll-behavior: smooth;
+  min-height: 160px;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === Static Item Badge Elements === */
+.item {
+  flex: 0 0 auto;
+  width: 104px;
+  height: 104px;
+  position: relative;
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 6px;
+  cursor: pointer;
+  
+  outline: 3px solid transparent;
+  outline-offset: -3px; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+  
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              outline-color 0.3s ease;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* === Smooth Hover State === */
+.item:hover {
+  transform: translateY(-6px) scale(1.025);
+  outline-color: #cbd5e1; 
+  box-shadow: 0 12px 20px -5px rgba(0, 0, 0, 0.08);
+}
+
+/* === Selected / Clicked Active State === */
+.item.selected-active {
+  transform: translateY(-4px) scale(1.025);
+  outline-color: #4e73df; 
+  box-shadow: 0 15px 20px -5px rgba(78, 115, 223, 0.15), 
+              0 8px 8px -5px rgba(78, 115, 223, 0.08);
+}
+
+/* === Navigation Arrows === */
+.arrow {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid #e2e8f0;
+  background-color: #ffffff;
+  color: #475569;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+}
+
+.arrow-left { left: -22px; }
+.arrow-right { right: -22px; }
+
+.arrow:hover:not(.disabled) {
+  background-color: #4e73df;
+  color: #ffffff;
+  border-color: #4e73df;
+  box-shadow: 0 10px 15px -3px rgba(78,115,223,0.25);
+}
+.arrow.disabled { opacity: 0; pointer-events: none; }
+
+/* === Dynamic Icon Inspector Section === */
+.inspector-panel {
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02), 0 2px 4px -1px rgba(0,0,0,0.01);
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  position: relative;
+  min-height: 182px;
+}
+
+/* Content Wrapper completely drives the hardware-accelerated fade transition */
+.inspector-content-wrapper {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+  width: 100%;
+  opacity: 1;
+  transform: translateZ(0); /* Hardware Acceleration Trigger */
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Active CSS state class applied via script runtime loops */
+.inspector-content-wrapper.hidden-fade {
+  opacity: 0 !important;
+}
+
+.inspector-preview-box {
+  flex: 0 0 auto;
+  width: 120px;
+  height: 120px;
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#inspectorImg {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.inspector-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inspector-meta-tag {
+  align-self: flex-start;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  background-color: rgba(78, 115, 223, 0.1);
+  color: #4e73df;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.05em;
+}
+
+.inspector-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.inspector-description {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: #475569;
+}
+
+/* === Elegant Empty State Overlay Wrapper === */
+.inspector-empty-state {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+  color: #94a3b8;
+  opacity: 1;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.inspector-empty-icon {
+  font-size: 2.5rem;
+  background: #f1f5f9;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  border: 2px dashed #cbd5e1;
+}
+
+/* Custom Sleek Scrollbar */
+.list-container::-webkit-scrollbar { height: 5px; }
+.list-container::-webkit-scrollbar-track { background: transparent; }
+.list-container::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+.list-container:hover::-webkit-scrollbar-thumb { background: #94a3b8; }
+</style>
+
+    <style>
+
+        /* Force the body and wrapper to be exactly the screen height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevents the 'scrolling arrows' on the main body */
+        }
+
+        #wrapper {
+            height: 100vh;
+        }
+
+        #content-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #content {
+            flex: 1; /* This takes up all available space between topbar and footer */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Keeps the scrolling inside the cards, not the page */
+        }
+
+        /* Make the container fill the remaining space */
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0.5rem; /* This is your gap between cards and footer */
+        }
+
+        /* Ensure the row and columns fill the height */
+        .container-fluid > .row {
+            flex: 1;
+        }
+
+    </style>
+
+    <style>
+
+        @media (min-width: 768px) {
+            /* Force the sidebar to be visible and full-width on desktop */
+            .sidebar {
+                display: flex !important;
+                width: 14rem !important; /* Standard SB Admin 2 desktop width */
+                margin-left: 0 !important;
+                position: relative !important;
+                z-index: 1 !important;
+            }
+
+            /* Prevent the mobile 'toggled' class from shrinking it on desktop */
+            .sidebar.toggled {
+                width: 14rem !important;
+            }
+
+            /* Ensure the brand/logo area stays visible */
+            .sidebar .sidebar-brand .sidebar-brand-text {
+                display: inline !important;
+            }
+
+            /* Remove the blur effect if the window is resized to desktop */
+            #content-wrapper {
+                filter: none !important;
+                opacity: 1 !important;
+            }
+        }
+
+    </style>
+
+    <!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
+    <style>
+
+        @keyframes structuralFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .fade-on-load {
+            opacity: 0;
+            animation: structuralFadeIn 0.25s ease-in-out forwards;
+            animation-delay: 0.1s; /* Tiny delay to let fonts and responsive break points calculate first */
+        }
+        
+    </style>
+
+</head>
+
+<body id="page-top">
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-white sidebar sidebar-dark accordion" id="accordionSidebar">
+            <li class="sidebar-brand d-flex align-items-center justify-content-center">
+                <img src="assets/img/logo_new_light_3.png"
+                    class="img-fluid fade-on-load" 
+                    alt="logo" 
+                    style="width: 100%; height: auto; object-fit: contain;">
+            </li>
+            <li>
+                <hr class="sidebar-divider my-0">
+            </li>
+            <li class="nav-item">
+                <div class="fade-on-load">
+                    <a class="nav-link nav-link-blue" href="#">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- content-wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column" style="background-color: #f6f8fa!important;">
+            <!-- content -->
+            <div id="content">
+                
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow-sm px-4">
+                    
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <h1 class="h4 mb-0 text-gray-800">Dashboard Paziente</h1>
+
+                    <ul class="navbar-nav ml-auto">
+                        <li class="topbar-divider d-none d-sm-block"></li>
+                            <li class="nav-item dropdown no-arrow">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <span id="userFullName" class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                        </span>
+                                        <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
+                                            <!-- Added custom thickness and color matching the other containers -->
+                                            <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border shadow-sm" style="border: 1px solid #0000FF !important;">
+                                                <i id="avatarSpinnerIcon1" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
+                                                <img id="profileAvatar1" 
+                                                    src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                    class="img-fluid rounded-circle d-none" 
+                                                    width="140" height="140" 
+                                                    alt="Foto profilo"
+                                                    style="object-fit: cover;">
+                                            </div>
+                                        </div>
+                                </a>
+
+                            <ul class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <!--<a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>-->
+                                <li class="dropdown-divider"></li>
+                                <li>
+                                    <a class="btn btn-sm text-danger ml-2" id="logoutBtn" href="index.html" style="border: none;">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span class="d-none d-md-inline ml-1">Logout</span>
+                                    </a>
+                                </li>
+                            </ul>
+                      </li>
+                    </ul>
+                </nav>
+
+                <!-- container-fluid -->
+                <div class="container-fluid full-height-container">
+                    <!-- row -->
+                    <div class="row">
+
+                        <!-- muted h2 level just to stop the html valdiator to complain-->
+                        <h2 class="sr-only">muted h4</h2>
+                        <!-- muted h3 level just to stop the html valdiator to complain-->
+                        <h3 class="sr-only">muted h3</h3>
+                        <!-- muted h4 level just to stop the html valdiator to complain-->
+                        <h4 class="sr-only">muted h4</h4>
+                        <!-- muted h5 level just to stop the html valdiator to complain-->
+                        <h5 class="sr-only">muted h3</h5>
+                        
+                        <!-- col-xl-3 col-lg-4 -->
+                        <div class="col-xl-3 col-lg-4">
+                            <!-- card mb-4 shadow-sm text-center border-0 -->
+                           <!-- <div class="card shadow-sm mb-4 border-0" style="border-radius: 12px;">-->
+                            <div class="card mb-4 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0;">
+
+                                <!-- Card Header: Integrated & Clean -->
+                                <div class="card-header bg-white py-3 d-flex align-items-center" style="border-bottom: 0px solid #f8f9fc;">
+                                    <i class="fas fa-id-badge text-primary mr-2"></i>
+                                    <h6 class="m-0 font-weight-bold text-dark">Profilo Paziente</h6>
+                                </div>
+
+                                <!-- card-body: Increased padding for verticality -->
+                                <div class="card-body px-4 pb-5 pt-4">
+                                    <!-- Profile Section -->
+                                    <div class="text-center mb-3">
+                               
+                                        <div class="position-relative d-inline-block mb-3" style="width: 140px; height: 140px;">
+                                            <div id="avatarContainer0" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border shadow-sm" style="border: 2px solid #0000FF !important;">
+                                                <i id="avatarSpinnerIcon0" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
+                                                <img id="profileAvatar0" 
+                                                    src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                    class="img-fluid rounded-circle d-none" 
+                                                    width="140"
+                                                    height="140" 
+                                                    alt="Foto profilo"
+                                                    style="object-fit: cover;">
+                                            </div>
+                                        </div>
+
+                                        <!-- Added w-100, text-center, text-nowrap, text-truncate, and min-width constraint -->
+                                        <h5 id="userAvatarName" class="text-dark mb-2 font-weight-bold w-100 text-center text-nowrap text-truncate" style="min-width: 0;">
+                                            <i class="fas fa-circle-notch fa-spin text-muted"></i>
+                                             <span class="sr-only">Caricamento...</span>
+                                        </h5>
+                               
+                                        <!-- Fixed the syntax error on justify-content inside the style attribute -->
+                                        <div class="mb-3 d-flex justify-content-center text-center w-100" style="min-width: 0;">
+                                            <span class="badge mx-auto text-nowrap text-truncate" style="
+                                                border-radius: 50px; 
+                                                font-size: 0.75rem; 
+                                                padding: 5px 15px; 
+                                                background-color: #4e73df;
+                                                color: #fff; 
+                                                border: none; 
+                                                font-weight: 600;
+                                                display: inline-flex;
+                                                align-items: center;
+                                                justify-content: center;
+                                                max-width: 100%;
+                                                min-width: 0;">
+                                                <i class="fas fa-check-circle mr-1" style="flex-shrink: 0;"></i> 
+                                                <span class="text-truncate">Utente Verificato</span>
+                                            </span>
+                                        </div>
+
+                                         <div class="mt-2 mb-3 d-flex align-items-center justify-content-center w-100 text-nowrap mx-auto" style="min-width: 0; line-height: 1;">
+                                            <small class="text-muted d-flex align-items-center m-0 p-0 mr-1" style="font-size: 0.75rem; flex-shrink: 0;">
+                                                <i class="far fa-calendar mr-1"></i>Iscritto il
+                                            </small>
+                                            <span id="userSubDate" class="text-muted small d-inline-block text-truncate m-0 p-0" style="font-size: 0.75rem; min-width: 0; vertical-align: middle;">
+                                                <i class="fas fa-circle-notch fa-spin text-muted"></i>
+                                            </span>
+                                         </div>
+
+                                    </div>  <!-- Profile Section -->
+                           
+                                    <!-- Information Stack (No Columns) -->
+                                    <div class="px-2">
+                                        <!-- Group: Personal Details -->
+                                        <div class="mb-1">
+
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
+                                                    <i class="fas fa-id-badge text-gray-400 fa-xs"></i>
+                                                </div>
+                                                <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
+                                                    <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Nome</span>
+                                                    <span id="userName" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
+                                                        <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
+                                                    </span> 
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
+                                                    <i class="fas fa-envelope text-gray-400 fa-xs"></i>
+                                                </div>
+                                                <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
+                                                    <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Email</span>
+                                                    <span id="userEmail" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
+                                                        <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                              <div class="d-flex align-items-center mb-2">
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
+                                                    <i class="fas fa-calendar-day text-gray-400 fa-xs"></i>
+                                                </div>
+                                                <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
+                                                    <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Data di Nascita</span>
+                                                    <span id="userBirthDate" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
+                                                        <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                              <div class="d-flex align-items-center mb-2">
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
+                                                    <i class="fas fa-hourglass text-gray-400 fa-xs"></i>
+                                                </div>
+                                                <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
+                                                    <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Età Anagrafica</span>
+                                                    <span id="userAge" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
+                                                        <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-3" style="width: 35px; height: 35px;">
+                                                    <i class="fas fa-id-card text-gray-400 small"></i>
+                                                </div>
+                                                <div class="flex-fill border-bottom pb-2 w-100" style="min-width: 0;">
+                                                    <small class="text-muted d-block small font-weight-bold text-nowrap text-truncate mb-1">Stato Giuridico</small>
+                                                    <span id="userMinorOrMajor" class="badge text-nowrap text-truncate mb-1" style="
+                                                        border-radius: 50px; 
+                                                        font-size: 0.65rem; 
+                                                        padding: 4px 10px; 
+                                                        background-color: #4edf97; 
+                                                        color: #fff; 
+                                                        font-weight: 600;
+                                                        display: inline-block;
+                                                        max-width: 100%;
+                                                        vertical-align: middle;">
+                                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.65rem; color: #ffffff; flex-shrink: 0;"></i>      
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
+                                                    <i class="fas fa-map-marker-alt text-gray-400 fa-xs"></i>
+                                                </div>
+                                                <div class="flex-fill pb-1 w-100" style="min-width: 0;">
+                                                    <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Regione</span>
+                                                    <span id="userRegion" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
+                                                        <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                        </div> <!-- card-body: Increased padding for verticality -->
+
+                                    </div>  <!-- Information Stack (No Columns) -->
+                                </div> <!-- card-body: Increased padding for verticality -->
+
+                            </div> <!-- card mb-4 shadow-sm text-center border-0 -->
+                        </div><!-- col-xl-3 col-lg-4 -->
+
+                         <!-- col-->   
+                        <div class="col-xl-9 col-lg-8 d-flex flex-column">
+                            <!-- card -->
+                            <div class="card mb-4 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+
+                                <div class="card-header bg-white d-flex align-items-center py-2" style="border-bottom: 0px solid #eaecf4; height: 45px;">
+                                    <i class="fas fa-chart-line text-primary mr-2"></i> 
+                                    <h6 class="m-0 font-weight-bold text-dark mr-2">Terapia Corrente</h6>
+                                </div>
+                                
+                                <div class="card-body p-4 p-lg-4">
+                                    <div class="row align-items-start">
+                                        <!-- Right Column: Stats & Progress -->
+                                        <div class="col-lg-12 pl-lg-3">
+                                            <!-- Main Flex Layout Row (Stacks on mobile, displays side-by-side on desktop) -->
+                                            <div class="row no-gutters mb-2 d-flex flex-column flex-lg-row align-items-stretch" style="gap: 1rem;">
+                                        
+
+                                                 <!-- Left Side Column: Modern Responsive Container -->
+                                                <div class="shadow-sm rounded p-3 d-flex flex-column justify-content-between layout-side-panel responsive-side-panel" 
+                                                    style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                                                    <div class="d-flex flex-column align-items-center w-100">
+                                                        <!-- Centered Title Wrapper -->
+                                                        <div class="w-100 text-center">
+                                                            <h6 class="text-dark font-weight-bold mb-3" style="font-size: 0.95rem;">
+                                                                <i class="fas fa-chart-pie mr-1 text-primary" style="font-size: 0.8rem;"></i>POSIZIONI COMPLETATE
+                                                            </h6>
+                                                        </div>
+                                                        <!-- Centered Chart Container -->
+                                                        <div class="chart-container" style="position: relative; height: 240px; width: 240px; max-width: 100%; transition: transform 0.3s ease;">
+                                                            <canvas id="myPieChart"></canvas>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                 <!-- Right Column: Your Original Quick Stats & Callout (Takes up the remaining width on the right) -->
+                                                <div class="flex-grow-1 d-flex flex-column" style="gap: 1rem; flex-basis: 0; min-width: 0;">
+                                                    
+                                                    <!-- Modern Purchase Callout -->
+                                                    <div class="shadow-sm p-4 rounded-lg d-flex flex-column align-items-center justify-content-center flex-grow-1 text-center" style="background-color: #fafbfe; border: 1px solid #d1d9e6; gap: 1.25rem;">
+                                                       
+                                                        <div class="mb-0">
+                                                          
+                                                            <h5 class="text-dark font-weight-bold mb-2" style="font-size: 1.5rem;">
+                                                               Terapia Attualmente Osservata: ERICA-X01
+                                                            </h5>
+
+                                                            <!-- Changed mb-0 to mb-1 for a clean micro-separation right before the button -->
+                                                            <p class="text-muted mb-0 small">
+                                                                Continua la terapia cliccando sul tasto qui in basso.
+                                                            </p>
+                                                        </div>
+                                                        <!-- Button fits tightly right below the text block -->
+                                                        <a href="therapy-session.html" class="btn btn-primary shadow-none d-inline-flex align-items-center justify-content-center mt-0" style="font-size: clamp(0.75rem, 2.5vw, 0.85rem); padding: 0.5rem 1.25rem; border-radius: 8px;">
+                                                            <i class="fas fa-play-circle mr-2"></i>
+                                                            <span>Continua Terapia</span>
+                                                        </a>
+
+                                                    </div>
+
+                                                    <!-- muted h2 level just to stop the html valdiator to complain-->
+                                                    <h2 class="sr-only">muted h4</h2>
+                                                    <!-- muted h3 level just to stop the html valdiator to complain-->
+                                                    <h3 class="sr-only">muted h3</h3>
+                                                    <!-- muted h4 level just to stop the html valdiator to complain-->
+                                                    <h4 class="sr-only">muted h4</h4>
+                                                    <!-- muted h5 level just to stop the html valdiator to complain-->
+                                                    <h5 class="sr-only">muted h3</h5>
+
+                                                    <!-- Quick Stats Row -->
+                                                    <div class="w-100 d-flex flex-column flex-md-row justify-content-between style-gap" style="gap: 1rem;">
+
+                                                         <!-- Card 1: Totali -->
+                                                        <div class="shadow-sm flex-fill text-center p-4 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                                                            
+                                                            <div class="w-100 d-flex justify-content-center align-items-center mt-4">
+                                                                <div class="d-inline-flex align-items-center px-3 py-2" 
+                                                                    style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                                                                    <h6 class="m-0 font-weight-bold text-secondary d-flex align-items-center" 
+                                                                        style="font-size: 0.78rem; letter-spacing: 0.08em;">
+                                                                        <i class="fas fa-plus-circle text-primary mr-2" style="font-size: 0.85rem; opacity: 0.85;"></i>
+                                                                   POSIZIONI INIZIALI
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="d-flex align-items-center justify-content-center py-1">
+                                                                <h3 id="initialCredits" class="text-dark font-weight-bold mb-0" style="font-size: 1.85rem; letter-spacing: -0.02em;">
+                                                                    <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
+                                                                     <span class="sr-only">Caricamento...</span>
+                                                                </h3>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <!-- muted h2 level just to stop the html valdiator to complain-->
+                                                        <h2 class="sr-only">muted h4</h2>
+                                                        <!-- muted h3 level just to stop the html valdiator to complain-->
+                                                        <h3 class="sr-only">muted h3</h3>
+                                                        <!-- muted h4 level just to stop the html valdiator to complain-->
+                                                        <h4 class="sr-only">muted h4</h4>
+                                                        <!-- muted h5 level just to stop the html valdiator to complain-->
+                                                        <h5 class="sr-only">muted h3</h5>
+
+                                                        <!-- Card 2: Disponibili -->
+                                                        <div class="shadow-sm flex-fill text-center p-4 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                                                            <div class="w-100 d-flex justify-content-center align-items-center mt-4">
+                                                                <div class="d-inline-flex align-items-center px-3 py-2" 
+                                                                    style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                                                                    <h6 class="m-0 font-weight-bold text-secondary d-flex align-items-center" 
+                                                                        style="font-size: 0.78rem; letter-spacing: 0.08em;">
+                                                                        <i class="fas fa-arrow-alt-circle-up text-warning mr-2" style="font-size: 0.85rem; opacity: 0.85;"></i>
+                                                                    POSIZIONI RIMANENTI
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Main Metric Area: Larger, cleaner numeric font footprint -->
+                                                            <div class="d-flex align-items-center justify-content-center py-1">
+                                                                <h3 id="creditsRemaining" class="text-dark font-weight-bold mb-0" style="font-size: 1.85rem; letter-spacing: -0.02em;">
+                                                                    <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
+                                                                     <span class="sr-only">Caricamento...</span>
+                                                                </h3>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- muted h2 level just to stop the html valdiator to complain-->
+                                                        <h2 class="sr-only">muted h4</h2>
+                                                        <!-- muted h3 level just to stop the html valdiator to complain-->
+                                                        <h3 class="sr-only">muted h3</h3>
+                                                        <!-- muted h4 level just to stop the html valdiator to complain-->
+                                                        <h4 class="sr-only">muted h4</h4>
+                                                        <!-- muted h5 level just to stop the html valdiator to complain-->
+                                                        <h5 class="sr-only">muted h3</h5>
+
+                                                        <!-- Card 3: Utilizzati -->
+                                                        <div class="shadow-sm flex-fill text-center p-4 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
+                                                            <div class="w-100 d-flex justify-content-center align-items-center mt-4">
+                                                                <div class="d-inline-flex align-items-center px-3 py-2" 
+                                                                    style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                                                                    <h6 class="m-0 font-weight-bold text-secondary d-flex align-items-center" 
+                                                                        style="font-size: 0.78rem; letter-spacing: 0.08em;">
+                                                                        <i class="fas fa-arrow-alt-circle-down text-success mr-2" style="font-size: 0.85rem; opacity: 0.85;"></i>
+                                                                   POSIZIONI COMPLETATE
+                                                                    </h6>
+                                                                </div>
+                                                            </div>
+                                                            <!-- Main Metric Area: Larger, cleaner numeric font footprint -->
+                                                            <div class="d-flex align-items-center justify-content-center py-1">
+                                                                <h3 id="creditsUsed" class="text-dark font-weight-bold mb-0" style="font-size: 1.85rem; letter-spacing: -0.02em;">
+                                                                    <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
+                                                                     <span class="sr-only">Caricamento...</span>
+                                                                </h3>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+
+                                                   
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                 <!-- NEW SECTION: Further Information Block -->
+      
+                                 
+<div class="row mt-2">
+    <div class="col-lg-12 pl-lg-3">
+        <div class="shadow-sm p-4 rounded-lg" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-height: 100px;">
+
+            <div id="emptyTherapistView" class="card-body d-flex flex-column h-100 align-items-center justify-content-center text-center flex-grow-1 py-0">
+                <div class="mb-2">
+                    <i class="fas fa-user-circle fa-5x text-gray-400"></i>
+                </div>
+                <h2 class="h3 font-weight-bold text-gray-600 mb-2">
+                    Nessun Terapeuta Assegnato
+                </h2>
+                <p class="text-gray-600 mb-4 mx-auto" style="max-width: 480px;">
+                    Il tuo terapeuta ha rimosso il suo account.<br>
+                    Attualmente non è possibile procedere con le terapie pendenti.
+                </p>
+            </div>
+
+                <!-- muted h2 level just to stop the html valdiator to complain-->
+                <h2 class="sr-only">muted h4</h2>
+                <!-- muted h3 level just to stop the html valdiator to complain-->
+                <h3 class="sr-only">muted h3</h3>
+                <!-- muted h4 level just to stop the html valdiator to complain-->
+                <h4 class="sr-only">muted h4</h4>
+                <!-- muted h5 level just to stop the html valdiator to complain-->
+                <h5 class="sr-only">muted h3</h5>
+
+                <div id="assignedTherapistView" style="display: none;">
+                    <div class="d-flex flex-column align-items-center text-center w-100">
+
+                    <div class="position-relative d-inline-block mb-2" style="width: 80px; height: 80px; flex-shrink: 0;">
+                        <div id="avatarContainer2" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border shadow-sm" style="border: 2px solid #4e73df !important;">
+                            <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
+                            <img id="profileAvatar2" 
+                                src="assets/sb-admin-2/img/undraw_profile.svg"
+                                class="img-fluid rounded-circle d-none" 
+                                alt="Foto profilo"
+                                style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-baseline mb-3" style="gap: 0.5rem;">
+                        <h5 class="text-dark font-weight-bold m-0" style="font-size: 1.5rem;">
+                            Terapeuta Assegnato:
+                        </h5>
+
+                        <h5 id="therapistName" class="text-muted font-weight-bold m-0" style="font-size: 1.5rem;">
+                            <span class="text-muted font-weight-normal">
+                                <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
+                                <span class="sr-only">Caricamento...</span>
+                            </span>
+                        </h5>
+                    </div>
+
+                    
+                                                    <div class="d-flex justify-content-center w-100 mb-3">
+                                                        <div style="
+                                                            display: flex; 
+                                                            align-items: stretch; 
+                                                            width: 100%; 
+                                                            max-width: 700px; 
+                                                            height: 50px; 
+                                                            background-color: #f8f9fc; 
+                                                            border: 1px solid #d1d3e2; 
+                                                            border-radius: 6px; 
+                                                            overflow: hidden; 
+                                                        ">
+                                                            <div style="
+                                                                background-color: rgba(17,25,255);  
+                                                                width: 50px; 
+                                                                display: flex; 
+                                                                align-items: center; 
+                                                                justify-content: center; 
+                                                                flex-shrink: 0;
+                                                            ">
+                                                                <i class="fas fa-fingerprint text-white"></i>
+                                                            </div>
+
+                                                            <div id="clinicianSubDate" style="
+                                                                flex-grow: 1; 
+                                                                display: flex; 
+                                                                align-items: center; 
+                                                                justify-content: center; 
+                                                                color: #4e73df; 
+                                                                font-family: 'Courier New', monospace; 
+                                                                font-weight: 600; 
+                                                                /* Reduced font size: caps at 1.1rem instead of 1.8rem */
+                                                                font-size: clamp(0.85rem, 2.5vw, 1.1rem); 
+                                                                letter-spacing: 1px; 
+                                                                white-space: nowrap; 
+                                                                overflow: hidden; 
+                                                                padding: 0 15px;
+                                                            ">
+                                                                <i class="fas fa-circle-notch fa-spin text-muted"></i>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                    
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+
+
+                            </div> <!-- /card -->
+                        </div> <!-- card -->
+                    </div> <!-- row -->
+                </div> <!-- contentainer fluid -->
+            
+                <!-- Footer -->
+                <footer class="sticky-footer bg-white">
+                    <div class="container my-auto">
+                        <div class="copyright text-center my-auto">
+                            <span>Copyright &copy; MyAssessments.it 2025</span>
+                        </div>
+                    </div>
+                </footer>
+                <!-- End of Footer -->
+
+            </div><!-- content-wrapper -->
+        </div><!-- Wrapper -->
+
+        
+        <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+        <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <!--<script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.min.js"></script>-->
+        <!--<script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>-->
+        <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
+
+        <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+        <script src="assets/js/patients-pie.js"></script>
+
+        <script>
+                
+            // A global tracker variable to protect against aggressive database render loops
+            let isPatientAvatarStateLocked = false;
+            let isClinicianAvatarStateLocked = false;
+
+            function updateUserAvatar(userGender,avatarImg,spinnerIcon,container,islocked,femimg,maleimg) {
+                // If the loop tries to run a second time, immediately reject it to save performance
+                if (islocked) return;
+
+                if (!avatarImg || !spinnerIcon) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc = femimg;
+                } else if (userGender === 'Maschile') {
+                    targetSrc = maleimg;
+                }
+
+                // 2. Assign source asset
+                avatarImg.src = targetSrc;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container) {
+                    container.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+
+                // 4. Lock down state so external asynchronous loops cannot re-enable the loading indicators
+                islocked = true;
+            }
+
+        </script>
+
+        <script>
+
+            $(document).ready(function() {
+                // Intercept the Logout button click
+                $('#logoutBtn').on('click', function(e) {
+                    // 1. Stop the browser from immediately redirecting to index.html
+                    e.preventDefault();
+                    // 2. Run your application cleanup logic here
+                    console.log("Logging out... clearing patient session data.");
+                    // Clear your persistent patient storage so it doesn't hang around
+                    localStorage.removeItem('selectedPatientEmail');
+                    // If you need to clear all session tokens, you could do:
+                    // localStorage.clear(); 
+                    // 3. Manually trigger the redirect now that the data is wiped
+                    window.location.href = $(this).attr('href'); 
+                });
+            });
+
+        </script>
+
+        <script>
+
+            function renderTherapistPanel(regNum) {
+                // Supposing regNum <= 0, null, or undefined means there is no therapist assigned
+                if (!regNum || regNum <= 0) {
+                    $('#emptyTherapistView').addClass('d-flex').show();
+                    $('#assignedTherapistView').hide();
+                } else {
+                    // Therapist exists! Hide empty panel, show assigned component
+                    $('#emptyTherapistView').removeClass('d-flex').hide();
+                    $('#assignedTherapistView').show();
+                }
+            }
+
+        </script>
+
+        <!-- Main -->
+        <script type="module">
+        
+             // ✅ Import string utils
+             import {
+                formatName,
+                convertToItalianFormat,
+                extractDate,
+                calculateAgeWithMonths
+            } from "./assets/js/string_utils.js";
+
+           import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+          
+           const supabase = createClient(
+                "https://bjbnkqgyibadjlrcjqfs.supabase.co",
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8"
+            );
+
+            // --- Event Listeners 
+            document.addEventListener("DOMContentLoaded", async () => {
+                
+            // CHECK SESSIONE
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session?.user) {
+                console.log("no");
+                window.location.replace("index.html");
+                return;
+            }
+            
+            const user = session.user;
+
+            // AUTO LOGOUT HANDLER
+            supabase.auth.onAuthStateChange((event, session) => {
+                if (event === "SIGNED_OUT" || !session) {
+                window.location.replace("index.html");
+                console.log("No2");
+                }
+            });
+            
+            // DATI BASE USER (SOLO AUTH)
+            const email = user.email;
+            
+            // CARICA PROFILO DAL DATABASE 
+            const { data: profile, error } = await supabase
+                .from("Clients")
+                .select("*")
+                .eq("id", user.id)
+                .single();
+
+            if (error || !profile) {
+                console.error("Errore caricamento profilo:", error);
+                window.location.replace("index.html");
+                return;
+            }
+            
+            // COSTRUZIONE DATI UI
+            const name         = `${profile.name}`;
+            const surname      = `${profile.surname}`;
+            const birthDate    = profile.birth_date;
+            const genre        = profile.genre;
+            const region       = profile.region;
+            const clinical_id  = profile.clinical_id;
+            const regDate      = convertToItalianFormat(extractDate(profile.creation_date));
+            const age          = calculateAgeWithMonths(birthDate);
+            const minor_or_major = (age.years >= 18) ? 1 : 0;
+            const userId       = user.id;
+            const subType      = profile.sub_type;
+            const title        = formatName(surname,name);
+            const fullName = `${name} ${surname}`;
+
+            let totalCredits=200;
+            let usedCredits=40;
+
+        //    console.log(fullName);
+        //    console.log(birthDate);
+        //    console.log(genre);
+        //    console.log(region);
+        //    console.log(regDate);
+        //    console.log(age);
+        //    console.log(name);
+        //    console.log(surname);
+        //    console.log(userId);
+        //    console.log(totalCredits);
+        //    console.log(usedCredits);
+        //    console.log(subType);
+        //    console.log(email);
+
+            // --- Nome ---
+            const userNameElement = document.getElementById("userName");
+            if (userNameElement) {
+                userNameElement.textContent = fullName;
+            }
+                        
+            // --- Data di Nascita ---
+            const patientDivBirthDate = document.getElementById("userBirthDate");
+            if (patientDivBirthDate) {
+                patientDivBirthDate.textContent = convertToItalianFormat(birthDate);
+            }
+
+            // --- Data inizio abbonamento ---
+            const patientDivStartDate = document.getElementById("userSubDate");
+            if (patientDivStartDate) {
+                patientDivStartDate.textContent = regDate;
+            }
+
+            // --- Età ---
+            const patientDivAge = document.getElementById("userAge");
+            if (patientDivAge) {
+                if (age.months!=0)
+                    patientDivAge.textContent = age.years+ " Anni e " +age.months+ " mesi";
+                else
+                    patientDivAge.textContent = age.years+ " Anni";
+            }
+
+            // --- Regione ---
+            const clinicianDivRegione = document.getElementById("userRegion");
+            if (clinicianDivRegione) {
+                clinicianDivRegione.textContent = region;
+            }
+
+            // --- Nome nella NavBar ---
+            const userFullNameElement = document.getElementById("userFullName");
+            if (userFullNameElement) {
+                userFullNameElement.textContent = fullName;
+            }
+            
+            // --- Nome abbreviato ---
+            const patientAvatarName = document.getElementById("userAvatarName");
+            if (patientAvatarName) {
+                patientAvatarName.textContent = fullName;
+            }
+
+            // --- Minor or Major ---
+            const badgeElement=document.getElementById("userMinorOrMajor");
+
+            // --- Update minor or major badge --- 
+            if(badgeElement){
+                if (minor_or_major === 1) {
+                    // --- ADULT STATE (Green) ---
+                    badgeElement.style.backgroundColor = "#4edf97";
+                    badgeElement.innerHTML = `<i class="fas fa-user mr-1"></i> Maggiorenne`;
+                } else {
+                    // --- MINOR STATE (Red) ---
+                    badgeElement.style.backgroundColor = "#ff4d4d";
+                    badgeElement.innerHTML = `<i class="fas fa-child mr-1"></i> Minorenne`;
+                }
+            }
+
+            // --- Email ---
+            const patientDivEmail = document.getElementById("userEmail");
+            if (patientDivEmail) {
+                patientDivEmail.textContent = email;
+            }
+            
+            // --- Codice per cambiare imagine di default ---
+            updateUserAvatar(genre,
+                             document.getElementById('profileAvatar0'),
+                             document.getElementById('avatarSpinnerIcon0'),
+                             document.getElementById('avatarContainer0'),
+                             isPatientAvatarStateLocked,
+                             'assets/img/registrazione/kid-female.png',
+                             'assets/img/registrazione/kid-male.png');
+          
+            updateUserAvatar(genre,
+                             document.getElementById('profileAvatar1'),
+                             document.getElementById('avatarSpinnerIcon1'),
+                             document.getElementById('avatarContainer1'),
+                             isPatientAvatarStateLocked,
+                             'assets/img/registrazione/kid-female.png',
+                             'assets/img/registrazione/kid-male.png');
+           
+            // Richiama la funzione del grafico a torta
+            renderClinicianPieChart(totalCredits, usedCredits);
+
+            // Aggiorna legenda dinamica
+            const remainingCredits = Math.max(0, totalCredits - usedCredits);
+            const initialCreditsEl = document.getElementById("initialCredits");
+            const creditsRemainingEl = document.getElementById("creditsRemaining");
+            const creditsUsedEl = document.getElementById("creditsUsed");
+
+            if (creditsRemainingEl) creditsRemainingEl.textContent = `${remainingCredits}`;
+            if (creditsUsedEl) creditsUsedEl.textContent = `${usedCredits}`;
+            if (initialCreditsEl) initialCreditsEl.textContent= `${totalCredits}`;
+
+            if ( clinical_id)
+            {
+              //  console.log(clinical_id);
+
+                 // 1. Fetch patient data and auto-join the related Clinicals table
+                const { data: patient, error1 } = await supabase
+                .from('Clients')
+                    .select(`
+                        id,
+                        name,
+                        surname,
+                        clinical_id,
+                            Clinicals!clinical_id (
+                            name,
+                            surname,
+                            registration_number,
+                            genre,
+                            region,
+                            creation_date,
+                            birth_date
+                            )
+                    `)
+                    .eq('id', profile.id)
+                    .single(); // Gets a single object instead of an array
+
+                    // 2. Extract the nested clinician data safely
+                    if (patient && patient.Clinicals) {
+                    
+                        // This variable holds the entire clinician object:
+                        const clinicianData = patient.Clinicals; 
+                        
+                        // You can access the individual fields like this:
+                        const name = clinicianData.name;
+                        const surname = clinicianData.surname;
+                        const regNum = clinicianData.registration_number;
+                        const region = clinicianData.region;
+                        const genre = clinicianData.genre;
+                        const creation_date =  convertToItalianFormat(extractDate(clinicianData.creation_date));
+                        const birth_date = clinicianData.birth_date;
+                        const age = calculateAgeWithMonths(birthDate);
+
+                  //      console.log(clinicianData);
+
+                        // Clean professional prefix assignment based solely on genre
+                        const docPrefix = genre === "Femminile" ? "Dott.ssa" : "Dott.";
+                        const docFullName = `${docPrefix} ${surname} ${name}`.trim();
+
+                        updateUserAvatar(genre,
+                             document.getElementById('profileAvatar2'),
+                             document.getElementById('avatarSpinnerIcon2'),
+                             document.getElementById('avatarContainer2'),
+                             isClinicianAvatarStateLocked,
+                             'assets/img/registrazione/terapeuta-female.png',
+                             'assets/img/registrazione/terapeuta-male.png');
+
+                        const clinicianFullNameElement = document.getElementById("therapistName");
+                        if (clinicianFullNameElement) {
+                            clinicianFullNameElement.textContent = docFullName;
+                        }
+
+                      const clinicianSubDateElement = document.getElementById("clinicianSubDate");
+                        if (clinicianSubDateElement) {
+                           clinicianSubDateElement.textContent = `Numero di albo: ${regNum}, Regione: ${region}`;
+                        }
+
+                        // Therapist exists! Hide empty panel, show assigned component
+                        $('#emptyTherapistView').removeClass('d-flex').hide();
+                        $('#assignedTherapistView').show();
+                        
+                    }
+            }
+        });
+          
+
+        </script>
+</body>
+</html>

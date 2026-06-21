@@ -1,0 +1,274 @@
+
+    /* 1. Hide the scrolled logo by default */
+    .logo-scrolled {
+    display: none !important;
+    }
+
+    /* 2. When the body has the .scrolled class... */
+
+    /* Hide the default light logo */
+    body.scrolled .logo-default {
+    display: none !important;
+    }
+
+    /* Show the scrolled logo */
+    body.scrolled .logo-scrolled {
+    display: block !important;
+    }
+
+    /* Force the header to stay a single, slim row */
+    @media (max-width: 1199px) {
+        #header .container-fluid {
+            display: flex !important;
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            width: 100% !important;
+        }
+
+        /* KILL the menu's physical presence in the bar */
+        #navmenu {
+            order: 2;
+            flex-grow: 0 !important;
+        }
+
+        /* Force it to vanish */
+        #navmenu ul {
+            display: none !important; 
+        }
+
+        /* If the body has the active class, show the menu as an overlay */
+        .mobile-nav-active #navmenu ul {
+            display: block !important;
+            position: fixed !important;
+            inset: 60px 20px auto 20px !important;
+            background: #ffffff !important;
+            z-index: 9999 !important;
+            padding: 20px !important;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+            border-radius: 10px !important;
+        }
+
+        /* Ensure the logo stays left */
+        .logo {
+            order: 1 !important;
+        }
+
+        /* Ensure the buttons stay right */
+        .header-buttons, #header div[style*="flex"] {
+            order: 3 !important;
+        }
+    }
+
+    /* Remove any phantom borders or outlines on the logo */
+    #header .logo, 
+    #header .logo img,
+    #header .logo:focus,
+    #header .logo:active {
+        border: none !important;
+        outline: none !important;
+        text-decoration: none !important;
+        box-shadow: none !important;
+    }
+
+    /* Target the logo images inside the header */
+    /* Optional: Reduce padding around the logo to save even more space */
+    /* Reduces from 40px to 25px */
+    /* Keeps the aspect ratio perfect */
+
+    @media (max-width: 767px) {
+        #header .logo img {
+            height: 25px !important; 
+            width: auto;             
+            transition: 0.3s;       
+        }
+
+        #header .logo {
+            padding-left: 5px !important;
+        }
+    }
+
+    /* 1. Reset the header container */
+    @media (max-width: 1199px) {
+        #header .container-fluid {
+            position: relative !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 10px 15px !important;
+        }
+
+        /* 2. Force Logo to the left */
+        /* Pushes everything else to the right */
+        #header .logo {
+            margin-right: auto !important; 
+            display: flex !important;
+            align-items: center;
+        }
+
+        /* 3. Group the Hamburger and Button together on the right */
+        #navmenu {
+            order: 2 !important;
+            display: flex !important;
+            align-items: center;
+        }
+
+        /* Space between icon and Registrati button */
+        /* Ensures icon stays to the left of the button if they are in the same div */
+
+        .mobile-nav-toggle {
+            margin-right: 15px !important; 
+            font-size: 28px !important;
+            order: -1 !important;
+        }
+
+        /* 4. Fix for the 'Registrati' button container */
+        #header .header-buttons, 
+        #header div:last-child {
+            display: flex !important;
+            align-items: center !important;
+            margin-left: 0 !important;
+        }
+    }
+
+    /* This class is added to the body by the JS toggle */
+    /* Moves it below the header bar */
+    /* Keep it hidden */
+
+    @media (max-width: 1199px) {
+        #navmenu ul {
+            display: none; 
+            position: fixed !important;
+            top: 70px; 
+            left: 10%;
+            right: 10%;
+            width: 80%;
+            background: white;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            padding: 20px;
+            flex-direction: column;
+            z-index: 9999;
+        }
+        
+        .mobile-nav-active #navmenu ul {
+            display: flex !important;
+        }
+    }
+
+    /* Adjust this number to your preference */
+    /* Prevents the logo from getting squashed horizontally */
+
+    @media (max-width: 767px) {
+        #header .logo img {
+            height: 30px !important; 
+            min-width: 100px;        
+            width: auto;
+            object-fit: contain;
+        }
+    }
+
+    /* Make the hamburger icon a bit more "tappable" for thumbs */
+    /* Target the container holding the icon and button */
+    /* Precisely controls the space between icon and button */
+
+    @media (max-width: 1199px) {
+        #navmenu {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important; 
+            margin-left: 10px;
+        }
+
+        .mobile-nav-toggle {
+            padding: 5px;
+            font-size: 1.8rem !important; 
+            line-height: 0;
+        }
+    }
+
+    /* If the menu is open, make the header background solid white */
+    body.mobile-nav-active #header {
+        background: rgba(255, 255, 255, 0.98) !important;
+        box-shadow: 0px 2px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    /* 1. Reduce padding on the container so items can hit the edges */
+    @media (max-width: 480px) {
+    #header .container-fluid {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    /* 2. Shrink the "Registrati" button size */
+    .btn-primary {
+        padding: 6px 12px !important; 
+        font-size: 13px !important;   
+        white-space: nowrap;
+    }
+
+    /* 3. Tighten the space between the Hamburger and the Button */
+    #navmenu {
+        gap: 8px !important; 
+        margin-left: 5px !important;
+    }
+
+    /* 4. Ensure the logo doesn't take more than 35% of the screen */
+    #header .logo {
+        max-width: 35% !important;
+    }
+    
+}
+
+@media (max-width: 480px) {
+  .section-title {
+    /* Reduce the overall scale of the header section */
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .section-title h2 {
+    font-size: 1.5rem !important; /* Smaller Title */
+    display: inline-block;        /* Keeps lines relative to text size */
+  }
+
+  .section-title p {
+    font-size: 0.9rem !important;  /* Smaller Description */
+    line-height: 1.4 !important;
+  }
+}
+
+/* Container safety net */
+.info {
+    max-width: 100% !important;
+    padding: 10px !important;
+    overflow-x: hidden;
+}
+
+/* Fluid Title: Automatically shrinks on small screens */
+.responsive-h3 {
+    /* Minimum 1.25rem, Scales with width, Maximum 1.8rem */
+    font-size: clamp(1.25rem, 4.5vw, 1.8rem) !important;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    word-wrap: break-word;
+    color: #012970;
+}
+
+/* Fluid Paragraph: Keeps text readable but contained */
+.responsive-description {
+    font-size: clamp(0.9rem, 3.5vw, 1.05rem) !important;
+    line-height: 1.6 !important;
+    color: #444; /* Standard muted gray */
+    width: 100% !important;
+}
+
+/* Force block display for the span on mobile to create breathing room */
+@media (max-width: 767px) {
+    .responsive-description span {
+        display: block;
+        margin-top: 10px;
+    }
+}

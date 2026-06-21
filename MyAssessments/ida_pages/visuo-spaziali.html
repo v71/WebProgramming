@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>MyAssessments</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon.png?v=2">
+  <link rel="icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="shortcut icon" href="../assets/img/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+
+  <!-- Vendor CSS Files -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" rel="stylesheet" >
+  <link href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="../assets/css/main.css" rel="stylesheet">
+
+  <!-- =======================================================
+  * Template Name: Append
+  * Template URL: https://bootstrapmade.com/append-bootstrap-website-template/
+  * Updated: Aug 07 2024 with Bootstrap v5.3.3
+  * Author: BootstrapMade.com
+  * License: https://bootstrapmade.com/license/
+  ======================================================== -->
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  .pt-container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Inter', sans-serif;
+    color: #2a2a2a;
+    line-height: 1.8;
+  }
+
+  .pt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.7rem;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #0f0f0f;
+  }
+
+  .pt-meta {
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+
+  .pt-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.7rem;
+    margin-top: 50px;
+    margin-bottom: 15px;
+    color: #1e1e1e;
+    border-left: 4px solid #005bbb;
+    padding-left: 12px;
+  }
+
+  .pt-subtitle {
+    font-size: 1.15rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 35px;
+  }
+
+  .pt-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    background: #f4f7ff;
+    padding: 25px 30px;
+    border-left: 5px solid #005bbb;
+    margin: 40px 0;
+    color: #233;
+  }
+
+  .pt-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .pt-list li {
+    margin-bottom: .5rem;
+  }
+
+  .pt-highlight-box {
+    background: #fafafa;
+    border: 1px solid #e6e6e6;
+    padding: 20px 25px;
+    border-radius: 6px;
+    margin: 35px 0;
+  }
+
+  .pt-highlight-box strong {
+    color: #005bbb;
+  }
+  
+#funzioni-esecutive {
+  padding-bottom: 60px;
+}
+
+.pt-section-title {
+  margin-bottom: 30px;
+}
+
+.ef-item p {
+  text-align: center;
+}
+</style>
+
+<style>
+
+.section-title {
+  font-weight: 700;
+  color: #2c3e50;
+}
+</style>
+
+<style>
+
+/* TESTO GENERICO */
+.ef-item p {
+  text-align: center;
+}
+
+/* IMMAGINE */
+.ef-image {
+  border-radius: 12px;
+}
+
+/* GRID */
+.ef-grid {
+  display: grid;
+  /*grid-template-columns: repeat(2, 1fr);*/
+  gap: 20px;
+}
+
+/* CARD */
+.ef-card {
+  background: #bdbdfa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* TITOLO */
+.ef-card h5 {
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* TESTO */
+.ef-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ICONA */
+.ef-icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .ef-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+
+<style>
+
+/* Centrare l'immagine sotto il titolo */
+.title-image-container {
+    text-align: center; /* centra l'immagine orizzontalmente */
+    margin: 3rem 0;     /* spazio sopra e sotto */
+}
+
+.title-image {
+    max-width: 100%;   /* non supera la larghezza del container */
+    height: auto;      /* mantiene proporzioni */
+    border-radius: 10px; /* opzionale: bordi arrotondati come le card */
+    display: inline-block;
+}
+
+</style>
+
+<link href="../assets/mycss/style-shared.css" rel="stylesheet">
+
+<style>
+
+  /* --- Centering the Nav Menu --- */
+@media (min-width: 1200px) {
+    .header .container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between; /* Keeps logo left, menu center, CTA right */
+    }
+
+    .navmenu {
+        flex-grow: 1;
+        display: flex;
+        justify-content: center; /* This is the "magic" centering line */
+    }
+
+    .navmenu ul {
+        display: flex;
+        justify-content: center;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+/* Ensure mobile toggle doesn't break the layout */
+@media (max-width: 1199px) {
+    .navmenu {
+        /* On mobile, we usually want it to stay functional as a sidebar or dropdown */
+        display: block; 
+    }
+}
+</style>
+</head>
+
+<body class="services-details-page">
+
+  <!--inizio header-->
+  <header id="header" class="header d-flex align-items-center fixed-top">
+    <div class="container-fluid d-flex align-items-center justify-content-between">
+      
+      <!-- Logo -->
+      <a href="../index.html" class="logo d-flex align-items-center me-auto me-xl-0">
+        <img src="../assets/img/logo_new_light_1.png" alt="logo">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+      <ul>
+          <li><a href="../index.html#hero" class="active">Home</a></li>
+          <li><a href="../index.html#about">Mission</a></li>
+          <li><a href="../index.html#faq">FAQ</a></li>
+          <li><a href="../index.html#team">Team</a></li>
+          <li><a href="../index.html#contact">Contatti</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list" aria-label="Apri menu"></i>
+      </nav>
+
+    </div>
+  </header>
+  <!--fine header-->
+
+  <!--inizio main-->
+  <main id="main" class="main">
+  
+    <!-- About Section -->
+    <section id="funzioni-esecutive" class="pricing section light-background">
+      <div class="container" data-aos="fade-up">
+
+        <!-- Featured post -->
+        <div class="card shadow-sm card-equal">
+      
+        <img 
+            src="../assets/img/blog_2/funzioni_esecutive.jpg"
+            class="card-img-top post-card-img img-fluid"
+            alt="Screening DSA e ADHD"
+            loading="lazy">
+
+            <div class="card-body">
+              <article class="pt-container">
+
+              <h1 class="pt-title">Abilità Visuo-Spaziali</h1>
+               <p>Percezione, come il cervello interpreta il mondo.</p>
+                <div class="pt-meta text-start py-3" style="color: #888; font-size: 14px;">
+                  <div class="meta-top mb-3 d-flex gap-3 flex-wrap align-items-center">
+                    <!-- Autore con avatar -->
+                        <div class="d-flex align-items-center gap-2">
+                          <img src="../assets/img/blog_1/blog-author-1.jpg" alt="Avatar John Doe" class="rounded-circle" width="32" height="32">
+                        <span class="author-name">Dott.ssa Annalisa Panella</span>
+                        </div>
+                        <!-- Data con icona -->
+                        <div class="d-flex align-items-center gap-2">
+                            <i class="bi bi-clock me-1"></i>
+                            <time datetime="2022-01-01">21 Dicembre 2025</time>
+                        </div>
+                    </div>
+                  </div>
+
+                  <h2 class="pt-section-title">Processi percettivi visivi e spaziali: Come funzionano</h2>
+                  <p>
+                    La percezione è il processo attraverso cui il cervello organizza e 
+                    interpreta le informazioni provenienti dai sensi. Non si limita a 
+                    registrare gli stimoli, ma attribuisce loro significato, riconosce 
+                    schemi e costruisce una rappresentazione coerente della realtà. 
+                    Senza questo processo, le informazioni sensoriali resterebbero 
+                    semplici dati privi di senso.
+                    È fondamentale distinguere tra sensazione e percezione. La sensazione 
+                    riguarda la rilevazione degli stimoli fisici da parte degli organi di 
+                    senso, che li trasformano in segnali nervosi. La percezione, invece, 
+                    interviene successivamente, quando il cervello elabora questi segnali 
+                    interpretandoli alla luce dell’esperienza, del contesto e delle aspettative. 
+                    Ad esempio, gli occhi captano onde luminose, ma è il cervello che le 
+                    riconosce come il volto di una persona familiare.
+                    La percezione è un processo attivo, selettivo e costruttivo. Il cervello 
+                    filtra le informazioni disponibili, concentrandosi su quelle ritenute 
+                    più rilevanti o significative. Questo meccanismo spiega fenomeni come 
+                    la cecità da disattenzione, per cui alcuni cambiamenti possono passare 
+                    inosservati se non attirano la nostra attenzione. Inoltre, la mente tende 
+                    a colmare eventuali lacune, utilizzando le conoscenze già acquisite.
+                    Le diverse modalità sensoriali coinvolgono processi percettivi specifici
+                     ma interconnessi. La percezione visiva consente di riconoscere forme, 
+                     colori e movimenti; quella uditiva permette di distinguere suoni e 
+                     linguaggio; la percezione tattile fornisce informazioni su contatto, 
+                     temperatura e dolore; mentre la percezione spaziale aiuta a orientarsi e 
+                     a valutare distanze. L’integrazione di queste modalità rende possibile 
+                     un’esperienza unitaria e completa del mondo che ci circonda.
+                     Queste modalità percettive raramente operano in
+                    isolamento. Nella vita reale, il nostro cervello integra le
+                    informazioni provenienti da più sensi per creare
+                    un'esperienza percettiva coerente e ricca. Questa
+                    integrazione multisensoriale ci permette di compensare
+                    quando un senso è compromesso e arricchisce la nostra
+                    comprensione dell'ambiente.
+                  </p>
+
+                   <h2 class="pt-section-title">Tipi di Percezione</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Percezione visiva</h5>
+                              <p>
+                                Interpretazione delle informazioni visive:
+                                forme, colori, profondità, movimento.
+                                Riconoscimento di oggetti, volti e scene.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Percezione uditiva</h5>
+                              <p>
+                                Elaborazione e interpretazione dei
+                                suoni. Include il riconoscimento del
+                                parlato, della musica e la localizzazione
+                                spaziale delle fonti sonore.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Percezione tattile</h5>
+                              <p>
+                                Interpretazione delle informazioni sensoriali
+                                della pelle: texture, temperatura,
+                                pressione, dolore. Fondamentale per
+                                l'interazione fisica.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Percezione spaziale</h5>
+                              <p>
+                                Comprensione delle relazioni spaziali tra
+                                oggetti e noi stessi. Essenziale per la
+                                navigazione e la coordinazione motoria.
+                                </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <h2 class="pt-section-title">Percezione visiva e spaziale</h2>
+                  <p>
+                    La percezione visiva rappresenta una delle modalità percettive più 
+                    importanti e studiate, poiché per la maggior parte delle persone è 
+                    il principale mezzo di interazione con l’ambiente. Essa coinvolge 
+                    numerosi processi che lavorano in parallelo. Tra questi, il riconoscimento 
+                    degli oggetti ci consente di identificare ciò che ci circonda 
+                    indipendentemente dall’angolazione, dalla distanza o dalle condizioni 
+                    di luce. Questa abilità, nota come costanza percettiva, è essenziale 
+                    per muoverci e orientarci nel mondo in modo efficace.
+                    Un ruolo particolarmente rilevante è svolto dal riconoscimento dei 
+                    volti, supportato da specifiche aree cerebrali. Siamo in grado di 
+                    riconoscere rapidamente persone familiari anche dopo molto tempo e 
+                    di cogliere minime variazioni nelle espressioni facciali. Questa 
+                    capacità è fondamentale per le relazioni sociali e ha un importante 
+                    valore dal punto di vista evolutivo.
+                    La percezione spaziale, invece, permette di ricostruire un ambiente 
+                    tridimensionale a partire da informazioni visive bidimensionali. 
+                    Grazie a essa possiamo valutare distanze, orientarci nello spazio e 
+                    interagire con gli oggetti. L’orientamento spaziale ci aiuta inoltre a
+                    mantenere il senso della posizione, costruire mappe mentali e 
+                    muoverci anche in ambienti nuovi.
+                    Nella vita quotidiana, queste abilità si manifestano in azioni 
+                    semplici ma fondamentali: riconoscere prodotti sugli scaffali, 
+                    individuare un volto noto tra la folla, capire se un oggetto può 
+                    passare attraverso uno spazio ristretto o trovare la strada di 
+                    casa percorrendo un tragitto diverso dal solito.
+                  </p>
+
+                 <h2 class="pt-section-title">Quando la percezione fallisce</h2>
+
+                  <div class="ef-section container">
+                    <div class="row align-items-start">
+                      <div class="col-md-12">
+                        <div class="ef-grid">
+
+                          <div class="ef-card">
+                            <h5>Agnosia Visiva</h5>
+                            <p>
+                              Difficoltà nel riconoscere oggetti, volti o
+                              luoghi visivamente, nonostante si possano
+                              vedere chiaramente. Si possono riconoscere
+                              tramite il tatto o il suono.
+                              </p>
+                          </div>
+
+                          <div class="ef-card">
+                            <h5>Prosopagnosia</h5>
+                            <p>
+                              Incapacità specifica di riconoscere i volti,
+                              anche di persone molto familiari. Si devono
+                              usare altri indizi come la voce o il modo di
+                              camminare.
+                              </p>
+                          </div>
+
+                          <div class="ef-card">
+                            <h5>Negligenza Spaziale</h5>
+                            <p>
+                              Mancanza di attenzione a un lato dello
+                              spazio, tipicamente il sinistro. La persona
+                              può ignorare oggetti, cibo su un lato del
+                              piatto, o persino un lato del proprio corpo.
+                              </p>
+                          </div>
+
+                          <div class="ef-card">
+                            <h5>Allucinazioni</h5>
+                            <p>
+                              Percepire stimoli che non esistono
+                              realmente. Possono verificarsi in qualsiasi
+                              modalità sensoriale e hanno molteplici cause
+                              possibili.
+                              </p>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <h2 class="pt-section-title">Prassie: Coordinare i nostri movimenti</h2>
+                  <p>
+                    Le prassie sono la capacità di ideare, pianificare e realizzare movimenti 
+                    volontari complessi appresi nel tempo, finalizzati al raggiungimento di 
+                    uno scopo. Non riguardano solo la forza o la coordinazione motoria di base, 
+                    ma implicano l’abilità di organizzare e mettere in sequenza azioni apprese, 
+                    permettendoci di compiere gesti significativi, utilizzare strumenti e 
+                    svolgere attività quotidiane articolate.
+                    Questa funzione cognitiva dipende dall’attività integrata di diverse aree 
+                    cerebrali, in particolare dei lobi frontali e parietali, che trasformano 
+                    l’intenzione in azione. Il processo prassico comprende diverse fasi: la 
+                    formulazione dell’obiettivo (cosa fare), la pianificazione dei movimenti 
+                    necessari (come farlo) e l’esecuzione coordinata nella giusta sequenza.
+                    Le prassie si differenziano dai movimenti riflessi o automatici. Ad esempio, 
+                    reagire istintivamente a un oggetto che cade è un atto riflesso, mentre 
+                    utilizzare correttamente un utensile richiede conoscenze apprese e una precisa 
+                    organizzazione dei movimenti. Si tratta quindi di abilità che si sviluppano 
+                    con l’esperienza e la pratica.
+                    Gran parte delle azioni quotidiane si basa su prassie efficienti. Attività 
+                    apparentemente semplici, come vestirsi, scrivere o usare le posate, sono in 
+                    realtà il risultato di sequenze motorie complesse apprese nel tempo e 
+                    continuamente coordinate dal cervello.
+                  </p>
+
+                   <h2 class="pt-section-title">Tipi di Prassie</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Prassie Ideomotorie</h5>
+                              <p>
+                                Capacità di eseguire
+                                gesti semplici con
+                                significato, sia per
+                                imitazione che su
+                                comando verbale.
+                                Include gesti come
+                                salutare, fare cenni o
+                                gesti simbolici.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Prassie Ideatorie</h5>
+                              <p>
+                                 Capacità di
+                                 pianificare ed
+                                 eseguire sequenze di
+                                 azioni complesse che
+                                 coinvolgono più
+                                 passaggi e oggetti,
+                                 come preparare il
+                                 caffè o
+                                 impacchettare un
+                                 regalo.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Prassie Costruttive</h5>
+                              <p>
+                                Capacità di
+                                organizzare e
+                                assemblare elementi
+                                in configurazioni
+                                spaziali, come
+                                disegnare, costruire
+                                con i blocchi o fare
+                                puzzle.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Prassie del Vestire</h5>
+                              <p>
+                                Capacità specifica di
+                                indossare e togliere i
+                                vestiti in modo
+                                ordinato e
+                                appropriato,
+                                considerando la
+                                sequenza e
+                                l'orientamento
+                                corretto dei capi.
+                                </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                   <h2 class="pt-section-title">Abilità visuo-spaziali nella vita quotidiana</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Ideomotoria e ideativa</h5>
+                              <p>
+                                Lavarsi i denti, preparare un pasto, usare utensili, vestirsi.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Costruttiva e simbolica</h5>
+                              <p>
+                                Disegnare, costruire con i blocchi, fare puzzle, organizzare oggetti.
+                                </p>
+                              </p>
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <h2 class="pt-section-title">Quando le abilità visuo-spaziali falliscono</h2>
+                  <p>
+                    Le aprassie sono alterazioni nella capacità di eseguire
+                    movimenti volontari appresi, nonostante si abbiano la
+                    forza, la coordinazione e la comprensione necessarie. Non
+                    si tratta di debolezza muscolare o mancanza di
+                    comprensione, ma di una difficoltà specifica nella
+                    pianificazione e nell'esecuzione di movimenti mirati.
+                    Le aprassie possono derivare da danni cerebrali causati da
+                    ictus, traumi o malattie neurodegenerative. L'impatto
+                    sull'indipendenza può essere significativo, influenzando
+                    l'autocura e le attività quotidiane. La riabilitazione con
+                    terapia occupazionale può aiutare a sviluppare strategie
+                    compensatorie.
+                  </p>
+
+                  <h2 class="pt-section-title">Difficoltà Prassiche</h2>
+
+                    <div class="ef-section container">
+                      <div class="row align-items-start">
+                        <div class="col-md-12">
+                          <div class="ef-grid">
+
+                            <div class="ef-card">
+                              <h5>Segnali di Aprassia Ideomotoria</h5>
+                              <p>
+                                Difficoltà nell'eseguire gesti su comando o
+                                imitazione, come salutare o fare cenni. Può
+                                eseguire il movimento spontaneamente ma
+                                non su richiesta.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Segnali di Aprassia Ideatoria</h5>
+                              <p>
+                                 Problemi nell'esecuzione di sequenze di
+                                 azioni complesse. Può confondere l'ordine
+                                 dei passaggi o usare oggetti in modo errato.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Segnali di Aprassia Costruttiva</h5>
+                              <p>
+                                Difficoltà nel disegnare, copiare figure o
+                                assemblare oggetti. I disegni possono essere
+                                disorganizzati o spazialmente distorti.
+                                </p>
+                            </div>
+
+                            <div class="ef-card">
+                              <h5>Segnali di Aprassia dell'Abbigliamento</h5>
+                              <p>
+                                Problemi nell'indossare correttamente i
+                                vestiti, confondere l'ordine degli indumenti o
+                                difficoltà con l'orientamento spaziale durante
+                                il vestirsi.
+                                </p>
+                            </div>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                  <h2 class="pt-section-title">Conclusioni</h2>
+                  <p>
+                    Le abilità visuo-spaziali sono fondamentali per orientarci nell’ambiente, 
+                    comprendere le distanze e interagire in modo efficace con ciò che ci circonda. 
+                    Il loro deterioramento può manifestarsi con difficoltà nel riconoscere luoghi, 
+                    nel muoversi nello spazio o nel coordinare i movimenti, come accade in alcune 
+                    condizioni neurologiche o con l’invecchiamento. Tuttavia, è possibile intervenire 
+                    attraverso attività di stimolazione cognitiva, esercizi di orientamento, 
+                    riabilitazione neuropsicologica e il mantenimento di uno stile di vita attivo. 
+                    Preservare queste abilità significa favorire l’autonomia, la sicurezza e 
+                    una migliore qualità della vita.
+                  </p>
+
+
+                  <!-- Author box -->
+                  <footer class="pt-author mt-4 pt-4 border-top">
+
+                    <div class="d-flex align-items-start gap-3">
+                      <img src="../assets/img/blog_1/blog-author-1.jpg"
+                          alt="Dott.ssa Annalisa Panella"
+                          class="rounded-circle"
+                          width="56" height="56">
+
+                      <div>
+                        <h6 class="mb-1">Dott.ssa Annalisa Panella</h6>
+                        <p class="text-muted mb-1 small">
+                          Psicologa – Neuropsicologa dell’età evolutiva
+                        </p>
+                        <p class="mb-0 small">
+                          Si occupa di valutazione e potenziamento delle funzioni cognitive,
+                          DSA e ADHD, attraverso percorsi basati su evidenze scientifiche.
+                        </p>
+                      </div>
+                    
+                    </div>
+
+                  </footer>
+
+              </article>
+            </div>
+          </div>
+        </div>
+    </section><!-- /About Section -->
+
+  </main>
+  <!--fine main-->
+
+      <!--inizio footer-->
+    <footer id="footer" class="footer position-relative light-background">
+
+            <div class="container footer-top">
+             <div class="row gy-4">
+              <div class="col-lg-5 col-md-12 footer-about">
+                 <a href="../index.html" class="logo d-flex align-items-center">
+                  <img src="../assets/img/logo_new_light_1.png" alt="">
+                </a>
+
+                   <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center overflow-hidden">
+                    <div class="text-content mb-2 mb-md-0 ms-md-3 flex-grow-1 min-width-0">
+                      <!-- Removed <br> and added a max-width for better control -->
+                      <p class="text-muted small lh-sm mb-0" style="font-size: 0.85rem; max-width: 400px;">
+                        Tutti i testi, le testimonianze e i contenuti presenti sono protetti da copyright. 
+                        Vietata la riproduzione senza autorizzazione. Le immagini sono di pubblico dominio.
+                        <span class="d-block mt-1">
+                          <strong>Note:</strong> MyAssessments non si assume responsabilità per eventuali errori o omissioni nei contenuti pubblicati.
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                <!--<div class="social-links d-flex mt-4">
+                  <a href=""><i class="bi bi-twitter-x"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>-->
+
+              </div>
+
+              <div class="col-lg-2 col-6 footer-links">
+                <h4>Link Utili</h4>
+                <ul>
+                  <li><a href="../index.html#hero">Home</a></li>
+                  <li><a href="../index.html#about">Mission</a></li>
+                  <li><a href="../index.html#faq">FAQ</a></li>
+                  <li><a href="../index.html#team">Team</a></li>
+                  <li><a href="../index.html#testimonials">Testimonianze</a></li>
+                  <li><a href="../index.html#contact">Contatti</a></li>
+                </ul>
+              </div>
+              
+              <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+                <h4>Contattaci</h4>
+                <p>Via Scilla 37</p>
+                <p>Reggio Calabria</p>
+                <p>Italia</p>
+                <p class="mt-4"><strong>Phone:</strong> <span>+39 389-8355263</span></p>
+                <p><strong>Email:</strong> <span>mjwpan71@gmail.com</span></p>
+              </div>
+              
+             </div>
+            </div>
+
+            <div class="container copyright text-center mt-4">
+              <p>© <span>Copyright</span> <strong class="sitename">MyAssessments</strong> <span>All Rights Reserved.</span></p>
+              <div class="credits">
+                <!-- All the links in the footer should remain intact. -->
+                <!-- You can delete the links only if you've purchased the pro version. -->
+                <!-- Licensing information: https://bootstrapmade.com/license/ -->
+                <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
+                <!--Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> Distributed By <a href="https://themewagon.com">ThemeWagon</a>-->
+                <p>Designed by Dott.Ing V.Panella <br class="d-md-none"> 
+                  <span style="word-break: break-all;">mjwpan71@gmail.com</span>
+                </p>
+              </div>
+            </div>
+
+    </footer>
+    <!-- Fine Footer-->
+  
+  <!-- Scroll Top -->
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <!--<script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+  <!--<script src="assets/vendor/php-email-form/validate.js"></script>-->
+  <script src="../assets/vendor/aos/aos.js"></script>
+  <script src="../assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="../assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="../assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+  <script src="../assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+
+  <!-- Main JS File -->
+  <script src="../assets/js/main.js"></script>
+
+</body>
+
+</html>
