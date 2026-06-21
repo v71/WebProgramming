@@ -185,21 +185,21 @@
 
     </style>
 
-<style>
+    <style>
 
-    @media (max-width: 768px) {
-        .card-grid-container > .card {
-            flex: 0 0 100% !important; /* 1 card per row on mobile */
+        @media (max-width: 768px) {
+            .card-grid-container > .card {
+                flex: 0 0 100% !important; /* 1 card per row on mobile */
+            }
         }
-    }
 
-    @media (min-width: 769px) and (max-width: 1199px) {
-        .card-grid-container > .card {
-            flex: 0 0 calc(50% - 10px) !important; /* 2 cards per row on tablet */
+        @media (min-width: 769px) and (max-width: 1199px) {
+            .card-grid-container > .card {
+                flex: 0 0 calc(50% - 10px) !important; /* 2 cards per row on tablet */
+            }
         }
-    }
 
-</style>
+    </style>
 
     <style>
 
@@ -320,17 +320,103 @@
 
     </style>
 
-<style>
+    <style>
 
-    /* Disable the browser's attempt to adjust scroll position when content grows/shrinks */
-html {
-    overflow-anchor: none;
-}
-/* Ensure the tab content area is always at least the height of the screen minus your header */
-.tab-content {
-    min-height: calc(100vh - 200px); /* Adjust 200px to match your header/navbar height */
-}
-</style>
+            /* Disable the browser's attempt to adjust scroll position when content grows/shrinks */
+        html {
+            overflow-anchor: none;
+        }
+        /* Ensure the tab content area is always at least the height of the screen minus your header */
+        .tab-content {
+            min-height: calc(100vh - 200px); /* Adjust 200px to match your header/navbar height */
+        }
+
+    </style>
+
+    <style>
+
+        /* The default card state */
+        .card-grid-item {
+            border: 2px solid transparent; /* Keeps the size constant */
+            transition: border-color 0.2s ease;
+        }
+
+        /* The highlighted state */
+        .card-grid-item.selected {
+            border-color: #4e73df; /* Your primary blue color */
+        }
+
+    </style>
+
+
+    <style>
+
+        /* Ensure the border exists from the start so adding it doesn't shift the layout */
+        .card {
+            border: 2px solid transparent !important; /* Use !important if Bootstrap is overriding */
+            transition: all 0.2s ease-in-out;
+        }
+        /*
+        .card.selected {
+            border: 2px solid #4e73df !important;
+        }
+        */
+
+    </style>
+
+    <style>
+
+        /* Ensure the card can act as a container for absolute positioning */
+        .card-grid-container .card {
+            position: relative; /* <-- CRUCIAL */
+        }
+
+        /* The style for the large, large, overlay checkmark */
+        .selection-overlay-icon {
+            display: none; /* Hide by default */
+            position: absolute;
+            top: 15px; /* Adjust as needed */
+            right: 15px; /* Adjust as needed */
+            font-size: 30px; /* Make it nice and large! */
+            color: #ffffff; /* Bootstrap Green */
+            background-color: rgb(0,200,0); /* White background for visibility */
+            border-radius: 50%; /* Make the background round */
+            width: 50px; /* Container size */
+            height: 50px; /* Container size */
+            display: flex; /* Centers the icon */
+            align-items: center; /* Centers the icon */
+            justify-content: center; /* Centers the icon */
+            z-index: 10; /* Ensure it stays above everything, including hover states */
+            opacity: 0; /* Smooth transition start */
+            transition: all 0.2s ease; /* Smooth fade in/out */
+        }
+
+        /* Only show the checkmark WHEN THE CARD IS SELECTED */
+        .card.selected .selection-overlay-icon {
+            display: flex; /* Reveal */
+            opacity: 1; /* Fade in */
+        }
+
+        /* Ensure that when the checkmark is present, hover interactions on the 
+        CHECKMARK itself don't trigger unwanted behavior */
+        .selection-overlay-icon:hover {
+            pointer-events: none; 
+        }
+
+        /* The card should NOT have a blue border by default */
+        .card {
+            transition: all 0.2s ease;
+            border: 2px solid transparent !important; /* Keep transparent */
+        }
+
+        /* Ensure the overlay icon shows up */
+        .card.selected .selection-overlay-icon {
+            display: flex;
+            opacity: 1;
+        }
+
+    </style>
+
 <!---------------------------------------------------------------------------->
 
 </head>
@@ -546,16 +632,16 @@ html {
                 <div class="card-header bg-white p-0">
                     <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
                         <li class="nav-item flex-fill text-center">
-                            <a class="nav-link active" id="tutti-tab" data-toggle="tab" href="#tutti" role="tab">Tutti</a>
+                            <a class="nav-link active" id="terapia-1-tab" data-toggle="tab" href="#tutti" role="tab">Terapia 1</a>
                         </li>
                         <li class="nav-item flex-fill text-center">
-                            <a class="nav-link" id="azioni-tab" data-toggle="tab" href="#profilo" role="tab">Profilo Personale</a>
+                            <a class="nav-link" id="terapia-2-tab" data-toggle="tab" href="#profilo" role="tab">Terapia 2</a>
                         </li>
                         <li class="nav-item flex-fill text-center">
-                            <a class="nav-link" id="referti-tab" data-toggle="tab" href="#terapie" role="tab">Terapie</a>
+                            <a class="nav-link" id="terapia-3-tab" data-toggle="tab" href="#terapie" role="tab">Terapia 3</a>
                         </li>
                         <li class="nav-item flex-fill text-center">
-                            <a class="nav-link" id="reazioni-tab" data-toggle="tab" href="#certificati" role="tab">Certificati</a>
+                            <a class="nav-link" id="terapia-4-tab" data-toggle="tab" href="#certificati" role="tab">Terapia 4</a>
                         </li>
                     </ul>
                 </div>
@@ -777,7 +863,7 @@ html {
                 },
             ];
 
-
+                /*
             function populateGrid(containerSelector, dataArray) {
                 const container = document.querySelector(containerSelector);
                 if (!container) return; // Exit if the tab isn't found
@@ -805,7 +891,6 @@ html {
                                         data-item='${JSON.stringify(item).replace(/'/g, "&quot;")}'>
                                         <i class="fas fa-plus-circle text-success"></i> Aggiungi
                                     </a>
-     
 
                                 </div>
                             </div>
@@ -813,7 +898,61 @@ html {
                     `;
                 });
             }
+        */
+
+
+        function populateGrid(containerSelector, dataArray) {
+    const container = document.querySelector(containerSelector);
+    if (!container) return; 
+
+    container.innerHTML = ''; 
+
+    dataArray.forEach(item => {
+        // Safe check for selectedProtocols list
+        const currentList = (typeof selectedProtocols !== 'undefined') ? selectedProtocols : [];
+        const isSelected = currentList.some(p => p.title === item.title);
         
+        // Use the standard card classes but add 'selected' conditionally
+        const cardClass = `card shadow-sm border-0 h-100 ${isSelected ? 'selected' : ''}`;
+        
+        // Define button text, state, and styles based on selection
+        const btnText = isSelected ? '<i class="fas fa-check-circle text-success"></i> Aggiunto' : '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
+        const btnStyle = isSelected ? 'pointer-events: none; opacity: 0.6;' : '';
+
+        // We combine the standard image element with our new checkmark overlay element
+        container.innerHTML += `
+            <div class="${cardClass}" style="flex: 0 0 calc(33.333% - 14px); border-radius: 12px; overflow: hidden; margin-bottom: 20px;">
+                
+                <div class="selection-overlay-icon">
+                    <i class="fas fa-check"></i>
+                </div>
+                <div style="height: 140px; overflow: hidden; border-radius: 12px 12px 0 0;">
+                    <img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                </div>
+                
+                <div class="card-body p-4">
+                    <h5 class="card-title text-dark mb-2">${item.title}</h5>
+                    <div class="mb-2">
+                        <span class="badge badge-success rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">${item.badge}</span>
+                    </div>
+                    <p class="card-text text-muted mb-3" style="font-size: 0.9rem;">${item.description}</p>
+                    
+                    <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
+                        <a href="#" class="inner-action-btn demo-btn"><i class="fas fa-play text-primary"></i> Demo</a>
+                        <a href="#" 
+                           class="inner-action-btn add-btn" 
+                           onclick="event.preventDefault(); handleCardClick(this)"
+                           style="${btnStyle}"
+                           data-item='${JSON.stringify(item).replace(/'/g, "&quot;")}'>
+                           ${btnText}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+}
+
         </script>
 
 
@@ -1028,6 +1167,7 @@ function resetGridButton(title) {
 // Global array to store selections
 let selectedProtocols = [];
 
+/*
 // add card
 function handleCardClick(buttonElement) {
     const item = JSON.parse(buttonElement.getAttribute('data-item'));
@@ -1042,9 +1182,31 @@ function handleCardClick(buttonElement) {
     buttonElement.style.pointerEvents = 'none';
     buttonElement.style.opacity = '0.6';
 }
+*/
+
+
+function handleCardClick(buttonElement) {
+    const item = JSON.parse(buttonElement.getAttribute('data-item'));
+    
+    // Add logic for global list (ensure scope is correct)
+    const currentList = (typeof selectedProtocols !== 'undefined') ? selectedProtocols : [];
+    if (currentList.some(p => p.title === item.title)) return;
+    currentList.push(item);
+    
+    updateSelectionHeader();
+
+    // 1. Highlight the card INSTANTLY
+    const card = buttonElement.closest('.card');
+    card.classList.add('selected'); // This is what triggers the checkmark CSS rule
+
+    // 2. Disable the specific 'Aggiungi' button
+    buttonElement.innerHTML = '<i class="fas fa-check-circle text-success"></i> Aggiunto';
+    buttonElement.style.pointerEvents = 'none';
+    buttonElement.style.opacity = '0.6';
+}
 
 // remove card
-
+/*
 function removeProtocol(title) {
     // 1. Remove from array using the title
     selectedProtocols = selectedProtocols.filter(p => p.title !== title);
@@ -1055,6 +1217,33 @@ function removeProtocol(title) {
     // 3. Reset the button in the main grid
     resetGridButton(title);
 
+}
+*/
+
+function removeProtocol(title) {
+    // 1. Remove from array
+    selectedProtocols = selectedProtocols.filter(p => p.title !== title);
+    
+    // 2. Update the UI (the removal header)
+    updateSelectionHeader();
+
+    // 3. Find the card in the grid and remove the class
+    // We loop through all cards to find the match by title
+    document.querySelectorAll('.card').forEach(card => {
+        const titleElement = card.querySelector('.card-title');
+        if (titleElement && titleElement.innerText === title) {
+            // Remove the class - THIS IS WHAT HIDES THE CHECKMARK
+            card.classList.remove('selected');
+            
+            // Re-enable the 'Aggiungi' button logic
+            const addBtn = card.querySelector('.add-btn');
+            if (addBtn) {
+                addBtn.style.pointerEvents = 'auto';
+                addBtn.style.opacity = '1';
+                addBtn.innerHTML = '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
+            }
+        }
+    });
 }
 
 </script>
