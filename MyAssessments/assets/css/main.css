@@ -150,7 +150,8 @@
                   }
                  
                   .card-hover:hover {
-                    transform: scale(1.03); /* ingrandimento leggero */
+                    /*transform: scale(1.03);*/ /* ingrandimento leggero */
+                    transform: translateY(-5px);
                     border: 2px solid rgb(0,0,255); /* bordo blu */
                   }
 
