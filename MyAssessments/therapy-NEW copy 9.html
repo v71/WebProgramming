@@ -513,26 +513,29 @@
     </style>
     
 <style>
+/*
+    #sb-sortable-list {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: flex-start;
+        min-height: 166px; 
+        border-radius: 8px;
+        padding: 10px;
+    }*/
 
-#sb-sortable-list {
+    #sb-sortable-list {
     display: flex;
-    flex-direction: row;
-    gap: 10px; /* Use gap instead of margins on cards if possible */
+    flex-wrap: nowrap;
+    /* CHANGE THIS from flex-start to center */
+    align-items: center; 
+    min-height: 166px; 
+    border-radius: 8px;
+    padding: 10px;
 }
 
-.sb-draggable-item {
-    /* REMOVE any 'transform: ...' or 'transition: ...' here */
-    position: relative;
-    /* Ensure the card has a fixed width, NOT 'flex: 1' */
-    width: 200px; 
-    flex-shrink: 0;
-}
 
 </style>
 
-<style>
-    
-</style>
 <!---------------------------------------------------------------------------->
 
 </head>
@@ -712,7 +715,6 @@
     </div>
 </div>
 
-
 <!-- ----------------------------------------------------------------------------------------- -->
 
 <div class="container-fluid full-height-container">
@@ -724,54 +726,8 @@
                     <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Elementi selezionati 2</h6>
                 </div>
-
                 <div id="selection-header-1" class="card-body p-3">
                     <div id="sb-sortable-list" class="sb-horizontal-scroll-container">
-                                
-                                <!--<div class="card sb-draggable-item border-left-primary shadow-sm overflow-hidden">
-                                    <div class="drag-handle">
-                                        <i class="fas fa-grip-horizontal"></i>
-                                    </div>
-                                    <div class="card-body py-3">
-                                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Task 01</div>
-                                        <div class="h6 mb-1 font-weight-bold text-gray-800 text-wrap">Design Database</div>
-                                        <p class="text-muted text-wrap small mb-0">Map out SQL schema architectures and define relations.</p>
-                                    </div>
-                                </div>
-
-                                <div class="card sb-draggable-item border-left-success shadow-sm overflow-hidden">
-                                    <div class="drag-handle">
-                                        <i class="fas fa-grip-horizontal"></i>
-                                    </div>
-                                    <div class="card-body py-3">
-                                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Task 02</div>
-                                        <div class="h6 mb-1 font-weight-bold text-gray-800 text-wrap">API Integration</div>
-                                        <p class="text-muted text-wrap small mb-0">Connect endpoint hooks with the client state manager.</p>
-                                    </div>
-                                </div>
-
-                                <div class="card sb-draggable-item border-left-warning shadow-sm overflow-hidden">
-                                    <div class="drag-handle">
-                                        <i class="fas fa-grip-horizontal"></i>
-                                    </div>
-                                    <div class="card-body py-3">
-                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Task 03</div>
-                                        <div class="h6 mb-1 font-weight-bold text-gray-800 text-wrap">UI Refactoring</div>
-                                        <p class="text-muted text-wrap small mb-0">Audit responsive grid layouts and clean CSS rules.</p>
-                                    </div>
-                                </div>
-
-                                <div class="card sb-draggable-item border-left-danger shadow-sm overflow-hidden">
-                                    <div class="drag-handle">
-                                        <i class="fas fa-grip-horizontal"></i>
-                                    </div>
-                                    <div class="card-body py-3">
-                                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Task 04</div>
-                                        <div class="h6 mb-1 font-weight-bold text-gray-800 text-wrap">Unit Testing</div>
-                                        <p class="text-muted text-wrap small mb-0">Write isolated assertions for edge case coverage blocks.</p>
-                                    </div>
-                                </div>-->
-
                     </div>
                 </div>
             </div>
@@ -872,7 +828,12 @@
         <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
-        <!--<script>
+        <script>
+            // Global array to store selections
+            let selectedProtocols = [];
+        </script>
+
+        <script>
                 $(document).ready(function() {
                     var listContainer = document.getElementById('sb-sortable-list');
 
@@ -903,11 +864,16 @@
 
                             onEnd: function(evt) {
                                 console.log("Reordered from position index " + evt.oldIndex + " to " + evt.newIndex);
-                            }
+                                    const item = selectedProtocols.splice(evt.oldIndex, 1)[0];
+                                    selectedProtocols.splice(evt.newIndex, 0, item);
+                                    
+                                    // Optional: Log to verify the array is now matching the UI
+                                    console.log("Array updated to match DOM:", selectedProtocols.map(p => p.title));
+                                }
                         });
                     }
                 });
-        </script>-->
+        </script>
 
         <script>
 
@@ -1117,19 +1083,11 @@
                                     ${btnText}
                                 </a>
 
-                                <!--<a href="#" class="inner-action-btn trash-btn"
-                                     onclick="event.preventDefault(); removeProtocol('${item.title}')">
-                                    <i class="fas fa-play text-danger"></i> Rimuovi</a>-->
-
-                                  <!--<a href="#" class="inner-action-btn trash-btn"
-                                     onclick="event.preventDefault(); removeProtocol(this,'${item.title}')">
-                                    <i class="fas fa-play text-danger"></i> Rimuovi</a>-->
-
                                     <a href="#" class="inner-action-btn trash-btn ${isSelected ? '' : 'btn-muted'}"
                                         onclick="event.preventDefault(); removeProtocol(this, '${item.title}')">
                                         <i class="fas fa-trash text-danger"></i> Rimuovi
                                     </a>
-                                        
+                                      
 
                             </div>
 
@@ -1143,11 +1101,7 @@
 
         <!-- Main -->
         <script type="module">
-
-            // Global variable to hold the Sortable instance
-            let sortableInstance = null;
-
-
+        
              // ✅ Import string utils
              import {
                 formatName,
@@ -1166,55 +1120,6 @@
             // --- Event Listeners 
             document.addEventListener("DOMContentLoaded", async () => {
             
-            // create sortablejs
-            const listContainer = document.getElementById('sb-sortable-list');
-                if (listContainer) {
-                        /*
-                    sortableInstance = new Sortable(listContainer, {
-                        handle: '.drag-handle',
-                        animation: 150,
-                        // Add this to prevent the "detaching" issue
-                        onEnd: function (evt) {
-                            // Optional: Update your 'selectedProtocols' array 
-                            // based on the new DOM order here
-                        }
-                    });
-                        */
-                       /*
-                    sortableInstance = new Sortable(listContainer, {
-                            handle: '.drag-handle',
-                            animation: 150,
-                            // 1. Reduce the delay for mobile
-                            delay: 0, 
-                            // 2. Increase the threshold so it doesn't trigger drag on accidental micro-swipes
-                            // This makes the "grab" feel much more responsive
-                            touchStartThreshold: 5, 
-                            // 3. Ensure scrolling still works on mobile
-                            forceFallback: false // Keep it false for better mobile performance
-                        });
-                        */
-                       sortableInstance = new Sortable(listContainer, {
-                            direction: 'horizontal',    
-                            animation: 200,
-                            // Route mobile mechanics to the top grip block specifically
-                            handle: '.drag-handle',
-                            ghostClass: 'sb-sortable-ghost',
-                            chosenClass: 'sb-sortable-chosen',
-                            fallbackClass: 'sb-sortable-fallback',
-                            // Fallback virtualization bypasses native browser mobile bugs completely
-                            forceFallback: false, // Keep it false for better mobile performance
-                            fallbackTolerance: 1, // Start calculating drag changes instantly upon single pixel shifts
-                            // Since handle completely separates panning from dragging, we can safely set delay to 0!
-                            delay: 0,                   
-                            delayOnTouchOnly: false,
-                            scroll: true,
-                            bubbleScroll: true,
-                            scrollSensitivity: 40,
-                            scrollSpeed: 10
-                        });
-                  
-                }
-
                 // CHECK SESSIONE
                 const { data: { session } } = await supabase.auth.getSession();
 
@@ -1350,90 +1255,106 @@
 <script>
 
 
-function updateSelectionHeader() {
-    
+function updateSelectionHeader_old() {
     const list = document.getElementById('sb-sortable-list');
-
+    
     // Check if the list is empty
     if (selectedProtocols.length === 0) {
         list.innerHTML = `
-            <div class="d-flex align-items-center justify-content-center w-100" style="height: 80px; color: #858796;">
+            
+            <!--<div class="d-flex align-items-center justify-content-center w-100" style="height: 80px; color: #858796;">
                 <h5 class="mb-0"><i class="fas fa-info-circle mr-2"></i>Nessuna card selezionata</h5>
+            </div>-->
+
+            <div class="card-body d-flex flex-column h-100 align-items-center justify-content-center text-center w-100">
+                <h2 class="h3 font-weight-bold text-gray-600 mb-0">
+                    Nessuna Card Selezionato
+                </h2>
             </div>
+
         `;
     } else {
+        // If there are items, map them as usual
+        list.innerHTML = selectedProtocols.map(p => `
+            <div class="card sb-draggable-item shadow-sm overflow-hidden">
+                <div class="drag-handle">
+                    <i class="fas fa-grip-horizontal"></i>
+                </div>
+                <div class="position-relative" style="height: 80px; overflow: hidden; border-radius: 8px 8px 0 0;">
+                    <img src="${p.image}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="remove-btn text-white bg-danger" 
+                        style="position: absolute; top: 5px; right: 5px; cursor: pointer; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.8;"
+                        onclick="removeProtocol(null,'${p.title.replace(/'/g, "\\'")}')">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="card-body p-2">
+                    <h6 class="card-title font-weight-bold mb-0" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        ${p.title}
+                    </h6>
+                </div>
+            </div>
        
-          list.innerHTML = selectedProtocols.map(p => `
-                                    <div class="card sb-draggable-item border-left-primary shadow-sm overflow-hidden">
-                                        <div class="drag-handle">
-                                            <i class="fas fa-grip-horizontal"></i>
-                                        </div>
-                                        <div class="position-relative" style="height: 80px; overflow: hidden; border-radius: 8px 8px 0 0;">
-                                            <img src="${p.image}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
-                                            <div class="remove-btn text-white bg-dark" 
-                                                style="position: absolute; top: 5px; right: 5px; cursor: pointer; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.8;"
-                                                onclick="removeProtocol(null,'${p.title.replace(/'/g, "\\'")}')">
-                                                <i class="fas fa-times"></i>
-                                            </div>
-                                        </div>
-                                        <div class="card-body p-2">
-                                            <h6 class="card-title font-weight-bold mb-0" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                                ${p.title}
-                                            </h6>
-                                        </div>
-                                    </div>
-                                 `).join('');
-        }
-
-    // Re-create the instance and STORE IT BACK in the global variable
-        /*
-    sortableInstance = new Sortable(list, {
-        handle: '.drag-handle',
-        animation: 150
-    });
-    */
-   
-    sortableInstance = new Sortable(list, {
-        direction: 'horizontal',   
-        animation: 200,
-
-        // Route mobile mechanics to the top grip block specifically
-        handle: '.drag-handle',
-
-        ghostClass: 'sb-sortable-ghost',
-        chosenClass: 'sb-sortable-chosen',
-        fallbackClass: 'sb-sortable-fallback',
-        
-        // Fallback virtualization bypasses native browser mobile bugs completely
-        forceFallback: false,        
-        fallbackTolerance: 1, // Start calculating drag changes instantly upon single pixel shifts
-                           
-        // Since handle completely separates panning from dragging, we can safely set delay to 0!
-        delay: 0,                   
-        delayOnTouchOnly: false,
-        scroll: true,
-        bubbleScroll: true,
-        scrollSensitivity: 40,
-        scrollSpeed: 10
-
-    });
-
+        `).join('');
+    }
 }
 
-// Global array to store selections
-let selectedProtocols = [];
+
+function updateSelectionHeader() {
+    const list = document.getElementById('sb-sortable-list');
+    
+    if (selectedProtocols.length === 0) {
+        list.innerHTML = `
+            
+            <!--<div class="d-flex w-100 align-items-center justify-content-center text-center">
+                <h2 class="h3 font-weight-bold text-gray-600">
+                    Nessun Gioco Selezionato
+                </h2>
+            </div>-->
+
+              <div class="card-body d-flex flex-column h-100 align-items-center justify-content-center text-center w-100">
+                <h3 class="font-weight-bold text-gray-600">
+                    Nessuna Card Selezionata
+                </h3>
+                <p>Clicca su una card per assegnarla alla lista</p>
+            </div>
+
+        `;
+    } else {
+        list.innerHTML = selectedProtocols.map(p => `
+            <div class="card sb-draggable-item shadow-sm overflow-hidden" style="border: 1px solid rgb(0, 0, 255) !important; border-radius: 8px !important;">
+                <div class="drag-handle">
+                    <i class="fas fa-grip-horizontal"></i>
+                </div>
+                <div class="position-relative" style="height: 80px; overflow: hidden; border-radius: 5px 5px 0 0;">
+                    <img src="${p.image}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="remove-btn text-white bg-danger" 
+                        style="position: absolute; top: 5px; right: 5px; cursor: pointer; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.8;"
+                        onclick="removeProtocol(null,'${p.title.replace(/'/g, "\\'")}')">
+                        <i class="fas fa-times"></i>
+                    </div>
+                </div>
+                <div class="card-body p-2">
+                    <h6 class="card-title font-weight-bold mb-0" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        ${p.title}
+                    </h6>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
 
 // Triggered when "Aggiungi" is clicked
 function handleCardClick(addBtn) {
-    
     // 1. Logic to add to your array
     const item = JSON.parse(addBtn.getAttribute('data-item'));
     if (!selectedProtocols.some(p => p.title === item.title)) {
         selectedProtocols.push(item);
     }
-    
+
     updateSelectionHeader();
-    
+
      // 1. Highlight the card INSTANTLY
     const card = addBtn.closest('.card');
     card.classList.add('selected'); // This is what triggers the checkmark CSS rule
@@ -1451,7 +1372,6 @@ function handleCardClick(addBtn) {
 }
 
 function removeProtocol(trashBtn, title) {
-    
     // 1. Remove from array
     selectedProtocols = selectedProtocols.filter(p => p.title !== title);
 
@@ -1489,7 +1409,6 @@ function removeProtocol(trashBtn, title) {
     // By calling this last, the list re-renders once, 
     // without the grid being manipulated immediately before or after.
     updateSelectionHeader();
-    
 }
 
 </script>
