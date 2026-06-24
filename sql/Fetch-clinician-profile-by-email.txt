@@ -1,0 +1,30 @@
+-- 1. Wipe out the old parameters entirely
+DROP FUNCTION IF EXISTS public.get_clinician_profile_by_email(text);
+
+-- 2. Build the secure cross-schema aggregate framework
+CREATE OR REPLACE FUNCTION public.get_clinician_profile_by_email(input_email TEXT)
+RETURNS TABLE (
+    id UUID,
+    name TEXT,
+    surname TEXT,
+    genre TEXT,
+    registration_number TEXT
+) 
+LANGUAGE plpgsql
+SECURITY DEFINER -- 🚀 Essential: Gives the function root permissions to read auth.users safely
+SET search_path = public
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        c.id,                 -- The clinician's unique primary key
+        c.name,               -- ⚠️ Adjust to your exact "Clinicals" column names
+        c.surname,            -- ⚠️ Adjust to your exact "Clinicals" column names
+        c.genre,              -- ⚠️ Adjust to your exact "Clinicals" column names
+        c.registration_number -- ⚠️ Adjust to your exact "Clinicals" column names
+    FROM auth.users au
+    INNER JOIN public."Clinicals" c ON c.id = au.id -- Assuming 'id' is your foreign key relationship
+    WHERE LOWER(au.email) = LOWER(TRIM(input_email))
+    LIMIT 1;
+END;
+$$;

@@ -1,0 +1,2 @@
+select * from "Admins";
+select count(*) from "Clinicals";

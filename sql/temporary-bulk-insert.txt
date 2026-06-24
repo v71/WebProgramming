@@ -1,0 +1,5 @@
+CREATE POLICY "Temporary_bulk_insert"
+ON public."Clients"
+FOR INSERT
+TO authenticated
+WITH CHECK (true);
