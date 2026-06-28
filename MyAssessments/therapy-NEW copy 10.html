@@ -908,6 +908,9 @@
         <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
         <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
+        
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>        
+        
         <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
@@ -1528,7 +1531,7 @@
 
 </script>
 
-<script>
+<!--<script>
 
     // 1. Initialize Pie Chart
     var pieCtx = document.getElementById("myPieChart").getContext('2d');
@@ -1548,6 +1551,86 @@
         cutoutPercentage: 0,
         legend: { display: false }
     }
+    });
+
+</script>-->
+
+<!--<script>
+
+    // 1. Initialize Pie Chart
+var pieCtx = document.getElementById("myPieChart").getContext('2d');
+
+var myPieChart = new Chart(pieCtx, {
+    type: 'doughnut',
+    // Register the plugin here so it applies to this chart
+    plugins: [ChartDataLabels], 
+    data: {
+        labels: [], 
+        datasets: [{
+            data: [],
+            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+            borderWidth: 0
+        }],
+    },
+    options: {
+        maintainAspectRatio: false,
+        cutoutPercentage: 0,
+        legend: { display: false },
+        // Configure the plugin options
+        plugins: {
+            datalabels: {
+                color: '#fff',
+                font: {
+                    weight: 'bold',
+                    size: 12
+                },
+                formatter: (value, ctx) => {
+                    let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                    // Prevent division by zero if chart is empty
+                    if (sum === 0) return ""; 
+                    let percentage = (value * 100 / sum).toFixed(0) + "%";
+                    // Only show text if the percentage is significant enough to fit
+                    return percentage !== "0%" ? percentage : "";
+                }
+            }
+        }
+    }
+});
+</script>-->
+
+<script>
+
+        // 1. Initialize Pie Chart
+        var pieCtx = document.getElementById("myPieChart").getContext('2d');
+
+        var myPieChart = new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [], 
+            datasets: [{
+                data: [],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+                borderWidth: 0
+            }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutoutPercentage: 0,
+            legend: { display: false },
+            // Chart.js v2 way to configure the plugin
+            plugins: {
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 12 },
+                    formatter: function(value, context) {
+                        var dataset = context.chart.data.datasets[0];
+                        var sum = dataset.data.reduce(function(a, b) { return a + b; }, 0);
+                        var percentage = (value * 100 / sum).toFixed(0) + "%";
+                        return percentage !== "0%" ? percentage : "";
+                    }
+                }
+            }
+        }
     });
 
 </script>
