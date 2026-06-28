@@ -740,7 +740,7 @@
             <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
                 
                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                    <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Lista Elementi Disponibili</h6>
                 </div>
 
@@ -800,7 +800,7 @@
             <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
 
                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                    <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Elementi selezionati</h6>
                 </div>
                 <div id="selection-header-1" class="card-body p-3">
@@ -822,39 +822,45 @@
             <div class="card mb-3 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
 
                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
-                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Distribuzione</h6>
+                    <i class="fas fa-chart-pie text-primary mr-2" style="flex-shrink: 0;"></i>
+                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Distribuzione Percentuale</h6>
                 </div>
 
                 <div class="card-body text-center">
-                    <div class="chart-pie pt-0 pb-2">
+                    <div class="chart-pie pt-0 pb-2" style="position: relative;">
                         <canvas id="myPieChart"></canvas>
+                            <div id="noDataMessagePieChart" 
+                                class="text-gray-600"
+                                style="position: absolute; 
+                                        top: 40%; 
+                                        width: 100%; 
+                                        font-size: 1.25rem; 
+                                        font-weight: 600; 
+                                        display: none; 
+                                        text-align: center;">
+                                Nessun dato disponibile
+                            </div>
                     </div>
-               
                     <div id="customLegend" class="mt-3 text-center small mb-1">
-                        <span class="mr-2"><i class="fas fa-circle text-primary"></i> Cat A</span>
-                        <span class="mr-2"><i class="fas fa-circle text-success"></i> Cat B</span>
-                        <span class="mr-2"><i class="fas fa-circle text-info"></i> Cat C</span>
                     </div>
-                    
-                    <p>Distribuzione percentuale delle categorie selezionate.</p>
-
+                    <p id="chartDescription">Distribuzione percentuale delle categorie selezionate.</p>
                 </div>
+
             </div>
 
         </div>
 
         <div class="col-lg-4 d-flex">
             <div class="card mb-3 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
-
                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                    <i class="fas fa-tachometer-alt text-primary mr-2" style="flex-shrink: 0;"></i>
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Statistiche</h6>
                 </div>
-
                 <div class="card-body">
+                    <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="myRadarChart"></canvas>
+                    </div>
                 </div>
-
             </div>
         </div>
 
@@ -862,7 +868,7 @@
             <div class="card mb-3 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
 
                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                    <i class="fas fa-cog text-primary mr-2" style="flex-shrink: 0;"></i>
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Azioni</h6>
                 </div>
 
@@ -908,9 +914,7 @@
         <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
         <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
-        
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>        
-        
         <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
@@ -1496,6 +1500,7 @@
 
     }
 
+    /*
     function updateDashboard() {
         // Recalculate totals from your array
         const counts = selectedProtocols.reduce((acc, curr) => {
@@ -1528,34 +1533,95 @@
             </span>
         `).join('');
     }
+*/
+/*
+function updateDashboard() {
+    const counts = selectedProtocols.reduce((acc, curr) => {
+        acc[curr.category] = (acc[curr.category] || 0) + 1;
+        return acc;
+    }, {});
+ 
+    const labels = Object.keys(counts);
+    const dataValues = Object.values(counts);
+    const legendContainer = document.getElementById('customLegend');
+    const canvas = document.getElementById("myPieChart");
+    const message = document.getElementById("noDataMessage");
+
+    // Check if we have data to display
+    if (labels.length === 0) {
+        canvas.style.display = 'none';
+        legendContainer.style.display = 'none';
+        message.style.display = 'block'; // Show the "No Data" message
+        return; 
+    }
+
+    // Data exists: Show everything, hide the message
+    canvas.style.display = 'block';
+    legendContainer.style.display = 'block';
+    message.style.display = 'none';
+
+    // Update chart
+    const backgroundColors = labels.map(label => categoryColorMap[label] || '#858796');
+    myPieChart.data.labels = labels;
+    myPieChart.data.datasets[0].data = dataValues;
+    myPieChart.data.datasets[0].backgroundColor = backgroundColors;
+    myPieChart.update();
+
+    // Update legend
+    legendContainer.innerHTML = labels.map((label, index) => `
+        <span class="mr-2">
+            <i class="fas fa-circle" style="color: ${backgroundColors[index]}"></i> ${label}
+        </span>
+    `).join('');
+}
+*/
+
+function updateDashboard() {
+    const counts = selectedProtocols.reduce((acc, curr) => {
+        acc[curr.category] = (acc[curr.category] || 0) + 1;
+        return acc;
+    }, {});
+
+    const labels = Object.keys(counts);
+    const dataValues = Object.values(counts);
+    
+    const canvas = document.getElementById("myPieChart");
+    const legendContainer = document.getElementById('customLegend');
+    const message = document.getElementById("noDataMessagePieChart");
+    const description = document.getElementById("chartDescription");
+
+    // Check if data is empty
+    if (labels.length === 0) {
+        canvas.style.display = 'none';
+        legendContainer.style.display = 'none';
+        description.style.display = 'none'; // Hide the description too
+        message.style.display = 'block';
+        return; 
+    }
+
+    // Data exists: Show everything
+    canvas.style.display = 'block';
+    legendContainer.style.display = 'block';
+    description.style.display = 'block'; // Show the description
+    message.style.display = 'none';
+
+    // Update chart and legend...
+    const backgroundColors = labels.map(label => categoryColorMap[label] || '#858796');
+    myPieChart.data.labels = labels;
+    myPieChart.data.datasets[0].data = dataValues;
+    myPieChart.data.datasets[0].backgroundColor = backgroundColors;
+    myPieChart.update();
+
+    legendContainer.innerHTML = labels.map((label, index) => `
+        <span class="mr-2">
+            <i class="fas fa-circle" style="color: ${backgroundColors[index]}"></i> ${label}
+        </span>
+    `).join('');
+}
 
 </script>
 
-<!--<script>
-
-    // 1. Initialize Pie Chart
-    var pieCtx = document.getElementById("myPieChart").getContext('2d');
-    // Initialize with empty data
-    var myPieChart = new Chart(pieCtx, {
-    type: 'doughnut',
-    data: {
-        labels: [], 
-        datasets: [{
-        data: [],
-        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'], // Add more colors if needed
-        borderWidth: 0
-        }],
-    },
-    options: {
-        maintainAspectRatio: false,
-        cutoutPercentage: 0,
-        legend: { display: false }
-    }
-    });
-
-</script>-->
-
-<!--<script>
+<script>
 
     // 1. Initialize Pie Chart
 var pieCtx = document.getElementById("myPieChart").getContext('2d');
@@ -1582,7 +1648,7 @@ var myPieChart = new Chart(pieCtx, {
                 color: '#fff',
                 font: {
                     weight: 'bold',
-                    size: 12
+                    size: 18
                 },
                 formatter: (value, ctx) => {
                     let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
@@ -1596,42 +1662,8 @@ var myPieChart = new Chart(pieCtx, {
         }
     }
 });
-</script>-->
 
-<script>
-
-        // 1. Initialize Pie Chart
-        var pieCtx = document.getElementById("myPieChart").getContext('2d');
-
-        var myPieChart = new Chart(pieCtx, {
-        type: 'doughnut',
-        data: {
-            labels: [], 
-            datasets: [{
-                data: [],
-                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
-                borderWidth: 0
-            }],
-        },
-        options: {
-            maintainAspectRatio: false,
-            cutoutPercentage: 0,
-            legend: { display: false },
-            // Chart.js v2 way to configure the plugin
-            plugins: {
-                datalabels: {
-                    color: '#fff',
-                    font: { weight: 'bold', size: 12 },
-                    formatter: function(value, context) {
-                        var dataset = context.chart.data.datasets[0];
-                        var sum = dataset.data.reduce(function(a, b) { return a + b; }, 0);
-                        var percentage = (value * 100 / sum).toFixed(0) + "%";
-                        return percentage !== "0%" ? percentage : "";
-                    }
-                }
-            }
-        }
-    });
+updateDashboard() ;
 
 </script>
 
