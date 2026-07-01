@@ -747,16 +747,16 @@
                 <div class="card-header bg-white p-0">
                     <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
                         <li class="nav-item flex-fill text-center">
-                            <a class="nav-link active" id="terapia-1-tab" data-toggle="tab" href="#tutti" role="tab">Terapia 1</a>
+                            <a class="nav-link active" id="cat-1-tab" data-toggle="tab" href="#cat1" role="tab">Dislessia</a>
                         </li>
                         <li class="nav-item flex-fill text-center">
-                            <a class="nav-link" id="terapia-2-tab" data-toggle="tab" href="#profilo" role="tab">Terapia 2</a>
+                            <a class="nav-link" id="cat-2-tab" data-toggle="tab" href="#cat2" role="tab">Disgrafia</a>
                         </li>
                         <li class="nav-item flex-fill text-center">
-                            <a class="nav-link" id="terapia-3-tab" data-toggle="tab" href="#terapie" role="tab">Terapia 3</a>
+                            <a class="nav-link" id="cat-3-tab" data-toggle="tab" href="#cat3" role="tab">Discalculia</a>
                         </li>
                         <li class="nav-item flex-fill text-center">
-                            <a class="nav-link" id="terapia-4-tab" data-toggle="tab" href="#certificati" role="tab">Terapia 4</a>
+                            <a class="nav-link" id="cat-4-tab" data-toggle="tab" href="#cat4" role="tab">Disortografia</a>
                         </li>
                     </ul>
                 </div>
@@ -764,22 +764,22 @@
                 <div class="card-body">
                     <div class="tab-content">
 
-                        <div class="tab-pane fade show active" id="tutti" role="tabpanel">
+                        <div class="tab-pane fade show active" id="cat1" role="tabpanel">
                             <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                             </div>
                         </div>
 
-                        <div class="tab-pane fade" id="profilo" role="tabpanel">
+                        <div class="tab-pane fade" id="cat2" role="tabpanel">
                           <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                             </div>
                         </div>
                        
-                        <div class="tab-pane fade" id="terapie" role="tabpanel">
+                        <div class="tab-pane fade" id="cat3" role="tabpanel">
                             <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                             </div>
                         </div>
                        
-                        <div class="tab-pane fade" id="certificati" role="tabpanel">
+                        <div class="tab-pane fade" id="cat4" role="tabpanel">
                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                             </div>
                         </div>
@@ -821,7 +821,7 @@
         <div class="col-lg-4 d-flex">
             <div class="card mb-3 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
 
-                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                <div class="card-header bg-white py-3 d-flex align-items-center w-100 mb-4" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
                     <i class="fas fa-chart-pie text-primary mr-2" style="flex-shrink: 0;"></i>
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Distribuzione Percentuale</h6>
                 </div>
@@ -841,9 +841,8 @@
                                 Nessun dato disponibile
                             </div>
                     </div>
-                    <div id="customLegend" class="mt-3 text-center small mb-1">
+                    <div id="customLegend" class="mt-4 text-center small">
                     </div>
-                    <p id="chartDescription">Distribuzione percentuale delle categorie selezionate.</p>
                 </div>
 
             </div>
@@ -859,11 +858,24 @@
                 <div class="card-body">
                     <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
                         <canvas id="myRadarChart"></canvas>
+                        <div id="noRadarDataMessage" 
+                        class="text-gray-600" 
+                        style="position: absolute; 
+                               top: 40%; 
+                               width: 100%; 
+                               font-size: 1.25rem; 
+                               font-weight: 600; 
+                               display: none; 
+                               text-align: center;">
+                        Nessun dato disponibile
+                        </div>
+                    </div>
+                    <div id="radarLegend" class="mt-4 text-center small">
                     </div>
                 </div>
             </div>
         </div>
-
+        
         <div class="col-lg-4 d-flex">
             <div class="card mb-3 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
 
@@ -918,21 +930,141 @@
         <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
-        <script>
-            // Global array to store selections
-            let selectedProtocols = [];
+            <script>
 
-            const categoryColorMap = {
-                'Categoria1': '#1cc88a', // Success
-                'Categoria2': '#4e73df', // Primary
-                'Categoria3': '#f6c23e', // Warning
-                'Categoria4': '#e74a3b', // Danger
-                'Categoria5': '#36b9cc'  // Info
-            };
+                // Global array to store selections
+                let selectedProtocols = [];
+
+                const categoryColorMap = {
+                    'Dislessia': '#1cc88a', // Success
+                    'Disgrafia': '#4e73df', // Primary
+                    'Discalculia': '#f6c23e', // Warning
+                    'Disortografia': '#e74a3b'  // Danger
+                };
+
+                const DislessiaData = [
+                {
+                    title: "TerapiaA 1",
+                    category: "Dislessia",
+                    badge: "Dislessia",
+                    badgeColor: "badge-success", // Classe Bootstrap per il verde
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaA 2",
+                    category: "Dislessia",
+                    badge: "Dislessia",
+                    badgeColor: "badge-success", // Classe Bootstrap per il verde
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaA 3",
+                    category: "Dislessia",
+                    badge: "Dislessia",
+                    badgeColor: "badge-success", // Classe Bootstrap per il verde
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaA 4",
+                    category: "Dislessia",
+                    badge: "Dislessia",
+                    badgeColor: "badge-success", // Classe Bootstrap per il verde
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+            ];
+
+            const DisgrafiaData = [
+                {
+                    title: "TerapiaB 1",
+                    category: "Disgrafia",
+                    badge: "Disgrafia",
+                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaB 2",
+                    category: "Disgrafia",
+                    badge: "Disgrafia",
+                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaB 3",
+                    category: "Disgrafia",
+                    badge: "Disgrafia",
+                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaB 4",
+                    category: "Disgrafia",
+                    badge: "Disgrafia",
+                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+
+            ];
+
+            const DiscalculiaData = [
+                {
+                    title: "TerapiaC 1",
+                    category: "Discalculia",
+                    badge: "Discalculia",
+                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaC 2",
+                    category: "Discalculia",
+                    badge: "Discalculia",
+                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaC 3",
+                    category: "Discalculia",
+                    badge: "Discalculia",
+                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+
+            ];
+
+            const DisortografiaData = [
+                {
+                    title: "TerapiaD 1",
+                    category: "Disortografia",
+                    badge: "Disortografia",
+                    badgeColor: "badge-danger", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "TerapiaD 2",
+                    category: "Disortografia",
+                    badge: "Disortografia",
+                    badgeColor: "badge-danger", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                
+            ];
 
         </script>
 
         <script>
+            
                 $(document).ready(function() {
                     var listContainer = document.getElementById('sb-sortable-list');
 
@@ -972,6 +1104,7 @@
                         });
                     }
                 });
+
         </script>
 
         <script>
@@ -1041,124 +1174,6 @@
 
         <script>
 
-            const tuttiData = [
-                {
-                    title: "A 1",
-                    category: "Categoria1",
-                    badge: "Success badge",
-                    badgeColor: "badge-success", // Classe Bootstrap per il verde
-                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "A 2",
-                    category: "Categoria1",
-                    badge: "Active",
-                    badgeColor: "badge-success", // Classe Bootstrap per il verde
-                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "A 3",
-                    category: "Categoria1",
-                    badge: "Warning",
-                    badgeColor: "badge-success", // Classe Bootstrap per il verde
-                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "A 4",
-                    category: "Categoria1",
-                    badge: "Danger",
-                    badgeColor: "badge-success", // Classe Bootstrap per il verde
-                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
-                    image: "assets/img/place-holder.jpg"
-                },
-            ];
-
-            const tuttiData1 = [
-                {
-                    title: "B 1",
-                    category: "Categoria2",
-                    badge: "Success badge",
-                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
-                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "B 2",
-                    category: "Categoria2",
-                    badge: "Active",
-                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
-                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "B 3",
-                    category: "Categoria2",
-                    badge: "Success badge",
-                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
-                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "B 4",
-                    category: "Categoria2",
-                    badge: "Active",
-                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
-                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
-                    image: "assets/img/place-holder.jpg"
-                },
-
-            ];
-
-            const tuttiData2 = [
-                {
-                    title: "C 1",
-                    category: "Categoria3",
-                    badge: "Success badge",
-                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
-                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "C 2",
-                    category: "Categoria3",
-                    badge: "Active",
-                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
-                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "C 3",
-                    category: "Categoria3",
-                    badge: "Active",
-                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
-                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
-                    image: "assets/img/place-holder.jpg"
-                },
-
-            ];
-
-            const tuttiData3 = [
-                {
-                    title: "D 1",
-                    category: "Categoria4",
-                    badge: "Success badge",
-                    badgeColor: "badge-danger", // Classe Bootstrap per il blu
-                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                {
-                    title: "D 2",
-                    category: "Categoria4",
-                    badge: "Success badge",
-                    badgeColor: "badge-danger", // Classe Bootstrap per il blu
-                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
-                    image: "assets/img/place-holder.jpg"
-                },
-                
-            ];
 
         /* populate grid */
         function populateGrid(containerSelector, dataArray) {
@@ -1352,9 +1367,9 @@
    document.addEventListener('DOMContentLoaded', () => {
     
     // Initial load
-    populateGrid('#tutti .card-grid-container', tuttiData);
+    populateGrid('#cat1 .card-grid-container', DislessiaData);
     
-    document.querySelector('#tutti .card-grid-container').dataset.loaded = "true";
+    document.querySelector('#cat1 .card-grid-container').dataset.loaded = "true";
 
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
@@ -1364,12 +1379,12 @@
         // Check if this container has our custom 'loaded' attribute
         if (container && container.dataset.loaded !== "true") {
 
-            if (target === '#profilo') {
-                populateGrid(target + ' .card-grid-container', tuttiData1);
-            } else if (target === '#terapie') {
-                populateGrid(target + ' .card-grid-container', tuttiData2);
-            } else if (target === '#certificati') {
-                populateGrid(target + ' .card-grid-container', tuttiData3);
+            if (target === '#cat2') {
+                populateGrid(target + ' .card-grid-container', DisgrafiaData);
+            } else if (target === '#cat3') {
+                populateGrid(target + ' .card-grid-container', DiscalculiaData);
+            } else if (target === '#cat4') {
+                populateGrid(target + ' .card-grid-container', DisortografiaData);
             }
             // Mark as loaded
             container.dataset.loaded = "true";
@@ -1381,6 +1396,7 @@
 
 <script>
 
+    // Update selection header
     function updateSelectionHeader() {
         const list = document.getElementById('sb-sortable-list');
         
@@ -1455,9 +1471,10 @@
             trashBtn.classList.remove('btn-muted');
         }
 
-        updateDashboard();
+        updateStatistics();
     }
 
+    // remove protocol
     function removeProtocol(trashBtn, title) {
         // 1. Remove from array
         selectedProtocols = selectedProtocols.filter(p => p.title !== title);
@@ -1496,13 +1513,15 @@
         updateSelectionHeader();
 
         // update dasbboard
-        updateDashboard();
+        updateStatistics();
 
     }
 
-    /*
+</script>
+
+<script>
+
     function updateDashboard() {
-        // Recalculate totals from your array
         const counts = selectedProtocols.reduce((acc, curr) => {
             acc[curr.category] = (acc[curr.category] || 0) + 1;
             return acc;
@@ -1510,160 +1529,212 @@
 
         const labels = Object.keys(counts);
         const dataValues = Object.values(counts);
-
-        // Update Custom Legend
-        const legendContainer = document.getElementById('customLegend');
-        // const colors = ['#1cc88a', '#4e73df', '#36b9cc', '#f6c23e', '#e74a3b'];
         
-        // console.log("Current Labels:", labels);
-        // console.log("Keys in Map:", Object.keys(categoryColorMap));
+        const canvas = document.getElementById("myPieChart");
+        const legendContainer = document.getElementById('customLegend');
+        const message = document.getElementById("noDataMessagePieChart");
+      //  const description = document.getElementById("chartDescription");
 
-        // If the category isn't in the map, default to '#858796' (gray-500)
+        // Check if data is empty
+        if (labels.length === 0) {
+            canvas.style.display = 'none';
+            legendContainer.style.display = 'none';
+            message.style.display = 'block';
+            return; 
+        }
+
+        // Data exists: Show everything
+        canvas.style.display = 'block';
+        legendContainer.style.display = 'block';
+        message.style.display = 'none';
+
+        // Update chart and legend...
         const backgroundColors = labels.map(label => categoryColorMap[label] || '#858796');
-
-        // Update the chart instance
         myPieChart.data.labels = labels;
         myPieChart.data.datasets[0].data = dataValues;
         myPieChart.data.datasets[0].backgroundColor = backgroundColors;
         myPieChart.update();
-        
+
         legendContainer.innerHTML = labels.map((label, index) => `
             <span class="mr-2">
                 <i class="fas fa-circle" style="color: ${backgroundColors[index]}"></i> ${label}
             </span>
         `).join('');
     }
-*/
-/*
-function updateDashboard() {
-    const counts = selectedProtocols.reduce((acc, curr) => {
-        acc[curr.category] = (acc[curr.category] || 0) + 1;
-        return acc;
-    }, {});
- 
-    const labels = Object.keys(counts);
-    const dataValues = Object.values(counts);
-    const legendContainer = document.getElementById('customLegend');
-    const canvas = document.getElementById("myPieChart");
-    const message = document.getElementById("noDataMessage");
-
-    // Check if we have data to display
-    if (labels.length === 0) {
-        canvas.style.display = 'none';
-        legendContainer.style.display = 'none';
-        message.style.display = 'block'; // Show the "No Data" message
-        return; 
-    }
-
-    // Data exists: Show everything, hide the message
-    canvas.style.display = 'block';
-    legendContainer.style.display = 'block';
-    message.style.display = 'none';
-
-    // Update chart
-    const backgroundColors = labels.map(label => categoryColorMap[label] || '#858796');
-    myPieChart.data.labels = labels;
-    myPieChart.data.datasets[0].data = dataValues;
-    myPieChart.data.datasets[0].backgroundColor = backgroundColors;
-    myPieChart.update();
-
-    // Update legend
-    legendContainer.innerHTML = labels.map((label, index) => `
-        <span class="mr-2">
-            <i class="fas fa-circle" style="color: ${backgroundColors[index]}"></i> ${label}
-        </span>
-    `).join('');
-}
-*/
-
-function updateDashboard() {
-    const counts = selectedProtocols.reduce((acc, curr) => {
-        acc[curr.category] = (acc[curr.category] || 0) + 1;
-        return acc;
-    }, {});
-
-    const labels = Object.keys(counts);
-    const dataValues = Object.values(counts);
-    
-    const canvas = document.getElementById("myPieChart");
-    const legendContainer = document.getElementById('customLegend');
-    const message = document.getElementById("noDataMessagePieChart");
-    const description = document.getElementById("chartDescription");
-
-    // Check if data is empty
-    if (labels.length === 0) {
-        canvas.style.display = 'none';
-        legendContainer.style.display = 'none';
-        description.style.display = 'none'; // Hide the description too
-        message.style.display = 'block';
-        return; 
-    }
-
-    // Data exists: Show everything
-    canvas.style.display = 'block';
-    legendContainer.style.display = 'block';
-    description.style.display = 'block'; // Show the description
-    message.style.display = 'none';
-
-    // Update chart and legend...
-    const backgroundColors = labels.map(label => categoryColorMap[label] || '#858796');
-    myPieChart.data.labels = labels;
-    myPieChart.data.datasets[0].data = dataValues;
-    myPieChart.data.datasets[0].backgroundColor = backgroundColors;
-    myPieChart.update();
-
-    legendContainer.innerHTML = labels.map((label, index) => `
-        <span class="mr-2">
-            <i class="fas fa-circle" style="color: ${backgroundColors[index]}"></i> ${label}
-        </span>
-    `).join('');
-}
 
 </script>
 
 <script>
 
-    // 1. Initialize Pie Chart
-var pieCtx = document.getElementById("myPieChart").getContext('2d');
+    // update radar chart
+    function updateRadarChart(currentData, referenceData) {
+        const canvas = document.getElementById("myRadarChart");
+        const message = document.getElementById("noRadarDataMessage");
+        const legendContainer = document.getElementById("radarLegend");
 
-var myPieChart = new Chart(pieCtx, {
-    type: 'doughnut',
-    // Register the plugin here so it applies to this chart
-    plugins: [ChartDataLabels], 
-    data: {
-        labels: [], 
-        datasets: [{
-            data: [],
-            backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
-            borderWidth: 0
-        }],
-    },
-    options: {
-        maintainAspectRatio: false,
-        cutoutPercentage: 0,
-        legend: { display: false },
-        // Configure the plugin options
-        plugins: {
-            datalabels: {
-                color: '#fff',
-                font: {
-                    weight: 'bold',
-                    size: 18
-                },
-                formatter: (value, ctx) => {
-                    let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-                    // Prevent division by zero if chart is empty
-                    if (sum === 0) return ""; 
-                    let percentage = (value * 100 / sum).toFixed(0) + "%";
-                    // Only show text if the percentage is significant enough to fit
-                    return percentage !== "0%" ? percentage : "";
+        if (!currentData || currentData.length === 0) {
+            canvas.style.display = 'none';
+            legendContainer.style.display = 'none';
+            message.style.display = 'block';
+            return;
+        }
+
+        canvas.style.display = 'block';
+        legendContainer.style.display = 'block';
+        message.style.display = 'none';
+
+        // Update data
+        myRadarChart.data.datasets[0].data = referenceData;
+        myRadarChart.data.datasets[1].data = currentData;
+        myRadarChart.update();
+
+        // Render Custom Legend
+        legendContainer.innerHTML = `
+            <span class="mr-3">
+                <i class="fas fa-circle" style="color: #858796;"></i> Dati di riferimento
+            </span>
+            <span class="mr-3">
+                <i class="fas fa-circle" style="color: #4e73df;"></i> Dati attuali
+            </span>
+        `;
+    }
+
+    // update statistics
+    function updateStatistics() {
+
+            updateDashboard();
+
+            // 1. Extract the categories
+//            const activeCategories = selectedProtocols.map(protocol => protocol.category);
+
+            // Extract list: ["Categoria1", "Categoria2", "Categoria1", ...]
+            const categories = selectedProtocols.map(p => p.category);
+
+            // Count occurrences: { Categoria1: 2, Categoria2: 1 }
+            const counts = categories.reduce((acc, cat) => {
+                acc[cat] = (acc[cat] || 0) + 1;
+                return acc;
+            }, {});
+
+            console.log("Category counts:", counts);
+
+
+
+            // Debugging: Log it to confirm
+//            console.log("Extracted Categories:", activeCategories);
+            
+            // Define the labels to match the order of your data
+            const metrics = ['Dislessia', 'Disgrafia', 'Discalculia', 'Disortografia'];
+
+            // Your "Reference" baseline (always the same)
+            const referenceData = [0.2, 0.1, 0.3, 0.1];
+
+            // Your dynamic data (this would change based on your selected protocols)
+            const currentData = [0.3, 0.1, 0.3, 0.2];
+
+            // 1. Update the chart labels (very important to keep them in sync!)
+            myRadarChart.data.labels = metrics;
+
+            // 2. Call your function
+            updateRadarChart(currentData, referenceData);
+
+    }
+
+    // 1. Initialize Pie Chart
+    var pieCtx = document.getElementById("myPieChart").getContext('2d');
+
+    var myPieChart = new Chart(pieCtx, {
+        type: 'doughnut',
+        // Register the plugin here so it applies to this chart
+        plugins: [ChartDataLabels], 
+        data: {
+            labels: [], 
+            datasets: [{
+                data: [],
+                backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e'],
+                borderWidth: 0
+            }],
+        },
+        options: {
+            maintainAspectRatio: false,
+            cutoutPercentage: 0,
+            legend: { display: false },
+            // Configure the plugin options
+            plugins: {
+                datalabels: {
+                    color: '#fff',
+                    font: {
+                        weight: 'bold',
+                        size: 18
+                    },
+                    formatter: (value, ctx) => {
+                        let sum = ctx.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        // Prevent division by zero if chart is empty
+                        if (sum === 0) return ""; 
+                        let percentage = (value * 100 / sum).toFixed(0) + "%";
+                        // Only show text if the percentage is significant enough to fit
+                        return percentage !== "0%" ? percentage : "";
+                    }
                 }
             }
         }
-    }
-});
+    });
 
-updateDashboard() ;
+    // 2. Initialize Spider Chart
+    var radarCtx = document.getElementById("myRadarChart").getContext('2d');
+
+    var myRadarChart = new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Reference',
+                data: [0, 0, 0, 0, 0],
+                backgroundColor: 'rgba(133, 135, 150, 0.1)',
+                borderColor: '#858796',
+                borderDash: [5, 5],
+                borderWidth: 2,
+                pointRadius: 0
+            }, {
+                label: 'Current Data',
+                data: [0, 0, 0, 0, 0],
+                backgroundColor: 'rgba(78, 115, 223, 0.2)',
+                borderColor: '#4e73df',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            // This covers Chart.js v2
+            legend: {
+                display: false 
+            },
+            // This covers Chart.js v3/v4
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: true,
+                    mode: 'index', // Shows all values for the category at once
+                    intersect: false
+                },
+                datalabels: {
+                    display: false // Turns off the labels written on the chart face
+                }
+            },
+            // Handles Scale differences
+            scale: {
+                ticks: { beginAtZero: true, max: 1 } // v2 syntax
+            },
+            scales: {
+                r: { beginAtZero: true, suggestedMax: 1 } // v3/v4 syntax
+            }
+        }
+    });
+
+    updateStatistics() ;
 
 </script>
 
