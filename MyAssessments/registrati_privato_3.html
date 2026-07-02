@@ -864,13 +864,6 @@
         // create supabase client
       import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
     
-      /*
-      const supabase = createClient(
-            "https://bjbnkqgyibadjlrcjqfs.supabase.co",
-            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8"
-        );
-*/
-
         const supabase = createClient(
             "https://bjbnkqgyibadjlrcjqfs.supabase.co",
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8",
@@ -965,32 +958,31 @@
             });
           return;
         }
+
         console.log(validation.email);
 
-          /////////////////////////////////////////////////////////////////
+        // Execute the secure data aggregate fetch
+        const result = await fetchClinicianProfile(validation.email);
+        if (result.error || !result.data) {
+            completeLoadingBar();
+            submitBtn.disabled = false;
+            submitBtn.style.pointerEvents = "auto";
+            showError("❌ Questa Email non appartiene a nessun terapeuta, stai per essere reindirizzato verso l'home page in", () => {
+            window.location.href = window.location.origin + "/index.html";
+          });
+          return;
+        }
 
-          // Execute the secure data aggregate fetch
-          const result = await fetchClinicianProfile(validation.email);
-          if (result.error || !result.data) {
-              completeLoadingBar();
-              submitBtn.disabled = false;
-              submitBtn.style.pointerEvents = "auto";
-              showError("❌ Questa Email non appartiene a nessun terapeuta, stai per essere reindirizzato verso l'home page in", () => {
-              window.location.href = window.location.origin + "/index.html";
-            });
-            return;
-          }
+        // get clinician data
+        const clinician = result.data;
+        //  console.log("Verified Clinician Details:", clinician);
+        //console.log(clinician.id);
 
-          // get clinician data
-          const clinician = result.data;
-          //  console.log("Verified Clinician Details:", clinician);
-          //console.log(clinician.id);
-
-         /////////////////////////////////////////////////////////////////
-
-        //61a758ac-d6c6-44e7-89c3-fd5f473311dc
-
-         // create metadata struct
+        /////////////////////////////////////////////////////////////////
+        // create metadata struct
+        // now the patient is linked to the clinician via the clinician.id
+        // ********************* READ CLINICIAN ID HERE *********************
+        
         const metadata = 
         {
           name:                normalizeItalianName(document.getElementById("nome").value.trim()),
@@ -1077,14 +1069,6 @@
             
       });
     });
- 
- 
- 
- 
- 
- 
- 
- 
  
  </script>
 

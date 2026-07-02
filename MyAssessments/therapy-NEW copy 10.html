@@ -581,7 +581,7 @@
                 
                 <!-- Menu Wrapper with the same robust animation class -->
                 <div class="fade-on-load">
-                    <a class="nav-link nav-link-blue" href="#">
+                    <a class="nav-link nav-link-blue" href="clinician-dashboard.html">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Dashboard</span>
                     </a>
@@ -939,7 +939,7 @@
                     'Dislessia': '#1cc88a', // Success
                     'Disgrafia': '#4e73df', // Primary
                     'Discalculia': '#f6c23e', // Warning
-                    'Disortografia': '#e74a3b'  // Danger
+                    'Disortografia': '#36b9cc'  // Danger
                 };
 
                 const DislessiaData = [
@@ -1046,7 +1046,7 @@
                     title: "TerapiaD 1",
                     category: "Disortografia",
                     badge: "Disortografia",
-                    badgeColor: "badge-danger", // Classe Bootstrap per il blu
+                    badgeColor: "badge-info", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg"
                 },
@@ -1054,7 +1054,7 @@
                     title: "TerapiaD 2",
                     category: "Disortografia",
                     badge: "Disortografia",
-                    badgeColor: "badge-danger", // Classe Bootstrap per il blu
+                    badgeColor: "badge-info", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg"
                 },
@@ -1584,15 +1584,17 @@
         message.style.display = 'none';
 
         // Update data
-        myRadarChart.data.datasets[0].data = referenceData;
-        myRadarChart.data.datasets[1].data = currentData;
+        myRadarChart.data.datasets[0].data = currentData;
+        // I DO NOT WANT REFERENCE DATA
+        //myRadarChart.data.datasets[1].data = referenceData;
         myRadarChart.update();
 
         // Render Custom Legend
+        // *************************** I HAVE DISABLED THE REFERENCE DATA ***************************  
         legendContainer.innerHTML = `
-            <span class="mr-3">
+            <!--<span class="mr-3">
                 <i class="fas fa-circle" style="color: #858796;"></i> Dati di riferimento
-            </span>
+            </span>-->
             <span class="mr-3">
                 <i class="fas fa-circle" style="color: #4e73df;"></i> Dati attuali
             </span>
@@ -1600,43 +1602,80 @@
     }
 
     // update statistics
-    function updateStatistics() {
+    function updateStatistics() 
+    {
 
-            updateDashboard();
+        updateDashboard();
 
-            // 1. Extract the categories
-//            const activeCategories = selectedProtocols.map(protocol => protocol.category);
+        const canvas = document.getElementById('myRadarChart');
+        const noDataMsg = document.getElementById('noRadarDataMessage');
+        const legendContainer = document.getElementById("radarLegend");
 
-            // Extract list: ["Categoria1", "Categoria2", "Categoria1", ...]
-            const categories = selectedProtocols.map(p => p.category);
+        // 1. Check if there is data to display
+        if (!selectedProtocols || selectedProtocols.length === 0) {
+            canvas.style.display = 'none';      // Hide chart
+            legendContainer.style.display = 'none'; // Hide legend
+            noDataMsg.style.display = 'block';  // Show message
+            return;                             // Stop execution
+        }
+        
+        // 2. Data exists: Show chart and hide message
+        canvas.style.display = 'block';
+        legendContainer.style.display = 'block';
+        noDataMsg.style.display = 'none';
+        
+        // Extract the categories
+        const categories = selectedProtocols.map(p => p.category);
 
-            // Count occurrences: { Categoria1: 2, Categoria2: 1 }
-            const counts = categories.reduce((acc, cat) => {
-                acc[cat] = (acc[cat] || 0) + 1;
-                return acc;
-            }, {});
+        // Count occurrences: { Categoria1: 2, Categoria2: 1 }
+        const counts = categories.reduce((acc, cat) => {
+            acc[cat] = (acc[cat] || 0) + 1;
+            return acc;
+        }, {});
 
-            console.log("Category counts:", counts);
+            // 1. Check if the object has any keys
+        const countKeys = Object.keys(counts);
 
+        if (countKeys.length > 0) 
+        {
 
+         //   console.log("Category counts:", counts);
+         //   console.log("Terapie contenute in Dislessia: ",DislessiaData.length);
+         //   console.log("Terapie contenute in Disgrafia: ",DisgrafiaData.length);
+         //   console.log("Terapie contenute in Discalculia: ",DiscalculiaData.length);
+         //   console.log("Terapie contenute in Disortografia: ",DisortografiaData.length);
 
-            // Debugging: Log it to confirm
-//            console.log("Extracted Categories:", activeCategories);
+            // 2. Use || 0 to handle cases where a specific category doesn't exist in the object yet
+            let DislessiaPercentage     = (counts['Dislessia'] /DislessiaData.length) || 0;
+            let DisgrafiaPercentage     = (counts['Disgrafia']/DisgrafiaData.length) || 0;
+            let DiscalculiaPercentage   = (counts['Discalculia']/DiscalculiaData.length) || 0;
+            let DisortografiaPercentage = (counts['Disortografia']/DisortografiaData.length) || 0;
+
+            console.log("Counts:", DislessiaPercentage, DisgrafiaPercentage, DiscalculiaPercentage,DisortografiaPercentage );
             
             // Define the labels to match the order of your data
             const metrics = ['Dislessia', 'Disgrafia', 'Discalculia', 'Disortografia'];
 
             // Your "Reference" baseline (always the same)
-            const referenceData = [0.2, 0.1, 0.3, 0.1];
+            // CURRENTLY REFERENCE DATA IS NOT USED
+            // SEE THE FUNCTION  updateRadarChart
+            //const referenceData = [0.2, 0.1, 0.3, 0.1];
+            const referenceData = [];
 
             // Your dynamic data (this would change based on your selected protocols)
-            const currentData = [0.3, 0.1, 0.3, 0.2];
+            const currentData = [DislessiaPercentage, DisgrafiaPercentage, DiscalculiaPercentage,  DisortografiaPercentage];
 
             // 1. Update the chart labels (very important to keep them in sync!)
             myRadarChart.data.labels = metrics;
 
             // 2. Call your function
             updateRadarChart(currentData, referenceData);
+
+        } 
+        else 
+        {
+                //console.log("No protocols selected yet.");
+        }
 
     }
 
@@ -1682,12 +1721,14 @@
 
     // 2. Initialize Spider Chart
     var radarCtx = document.getElementById("myRadarChart").getContext('2d');
-
+    
     var myRadarChart = new Chart(radarCtx, {
         type: 'radar',
         data: {
             labels: [],
-            datasets: [{
+            datasets: [
+            /*    
+            {
                 label: 'Reference',
                 data: [0, 0, 0, 0, 0],
                 backgroundColor: 'rgba(133, 135, 150, 0.1)',
@@ -1695,7 +1736,8 @@
                 borderDash: [5, 5],
                 borderWidth: 2,
                 pointRadius: 0
-            }, {
+            }, */
+            {
                 label: 'Current Data',
                 data: [0, 0, 0, 0, 0],
                 backgroundColor: 'rgba(78, 115, 223, 0.2)',
@@ -1703,7 +1745,41 @@
                 borderWidth: 2
             }]
         },
+        
         options: {
+
+// This is for Chart.js v2
+    tooltips: {
+ 
+        enabled: true,
+            mode: 'index',
+            intersect: true,
+            displayColors: false, // <--- Add this line here
+            callbacks: {
+                title: function() {
+                    return 'Categorie Selezionate:';
+                },
+                label: function(tooltipItem, data) {
+                    const labels = data.labels;
+                    const values = data.datasets[0].data;
+
+                    // Filter, format, and map the categories
+                    const activeTerapies = labels
+                        .map((label, i) => ({ label, value: values[i] }))
+                        .filter(item => item.value > 0)
+                        .map(item => {
+                            // Use .toFixed(2) to restrict to two decimal places
+                            const formattedValue = typeof item.value === 'number' ? item.value.toFixed(2) : item.value;
+                            return `${item.label}: ${formattedValue}`;
+                        });
+
+                    // If nothing is greater than 0, return a fallback message
+                    return activeTerapies.length > 0 ? activeTerapies : 'Nessuna terapia attiva';
+                }
+
+            }
+    },
+
             responsive: true,
             maintainAspectRatio: false,
             // This covers Chart.js v2
