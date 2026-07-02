@@ -1601,6 +1601,7 @@
         `;
     }
 
+
     // update statistics
     function updateStatistics() 
     {
@@ -1652,7 +1653,30 @@
             let DisortografiaPercentage = (counts['Disortografia']/DisortografiaData.length) || 0;
 
             console.log("Counts:", DislessiaPercentage, DisgrafiaPercentage, DiscalculiaPercentage,DisortografiaPercentage );
+
             
+            let c1 = DislessiaPercentage;
+            let c2 = DisgrafiaPercentage;
+            let c3 = DiscalculiaPercentage;
+            let c4 = DisortografiaPercentage;
+
+            /*
+            let a=c2/c1 || 0;
+            let b=c3/c1 || 0;
+            let c=c4/c1 || 0;
+
+            let d=c3/c2 || 0;
+            let e=c4/c2 || 0;
+
+            let f=c4/c3 || 0;
+
+            console.log(a,b,c,d,e,f);
+            */
+
+            // Usage
+            const percentages = { Dislessia: c1, Disgrafia: c2, Discalculia: c3, Disortografia: c4 };
+
+
             // Define the labels to match the order of your data
             const metrics = ['Dislessia', 'Disgrafia', 'Discalculia', 'Disortografia'];
 
@@ -1748,37 +1772,37 @@
         
         options: {
 
-// This is for Chart.js v2
-    tooltips: {
- 
-        enabled: true,
-            mode: 'index',
-            intersect: true,
-            displayColors: false, // <--- Add this line here
-            callbacks: {
-                title: function() {
-                    return 'Categorie Selezionate:';
-                },
-                label: function(tooltipItem, data) {
-                    const labels = data.labels;
-                    const values = data.datasets[0].data;
+        // This is for Chart.js v2
+            tooltips: {
+        
+                enabled: true,
+                    mode: 'index',
+                    intersect: true,
+                    displayColors: false, // <--- Add this line here
+                    callbacks: {
+                        title: function() {
+                            return 'Categorie Selezionate:';
+                        },
+                        label: function(tooltipItem, data) {
+                            const labels = data.labels;
+                            const values = data.datasets[0].data;
 
-                    // Filter, format, and map the categories
-                    const activeTerapies = labels
-                        .map((label, i) => ({ label, value: values[i] }))
-                        .filter(item => item.value > 0)
-                        .map(item => {
-                            // Use .toFixed(2) to restrict to two decimal places
-                            const formattedValue = typeof item.value === 'number' ? item.value.toFixed(2) : item.value;
-                            return `${item.label}: ${formattedValue}`;
-                        });
+                            // Filter, format, and map the categories
+                            const activeTerapies = labels
+                                .map((label, i) => ({ label, value: values[i] }))
+                                .filter(item => item.value > 0)
+                                .map(item => {
+                                    // Use .toFixed(2) to restrict to two decimal places
+                                    const formattedValue = typeof item.value === 'number' ? item.value.toFixed(2) : item.value;
+                                    return `${item.label}: ${formattedValue}`;
+                                });
 
-                    // If nothing is greater than 0, return a fallback message
-                    return activeTerapies.length > 0 ? activeTerapies : 'Nessuna terapia attiva';
-                }
+                            // If nothing is greater than 0, return a fallback message
+                            return activeTerapies.length > 0 ? activeTerapies : 'Nessuna terapia attiva';
+                        }
 
-            }
-    },
+                    }
+            },
 
             responsive: true,
             maintainAspectRatio: false,
