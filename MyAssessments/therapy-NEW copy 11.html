@@ -544,10 +544,10 @@
 
 
 #therapy-name {
-    border-left: 4px solid #4e73df; /* Matches the blue-primary theme */
     background-color: #f8f9fc;      /* Very subtle light background */
     border-radius: 8px 8px 8px 8px;     /* Rounded right side only */
 }
+
 </style>
 
 <!---------------------------------------------------------------------------->
@@ -741,7 +741,7 @@
                 </div>
 
                 <div id="therapy-name" class="card-body p-3 mb-4 d-flex flex-column mx-4" 
-                    style="border-top: 1px solid #f8f9fc; gap: 20px; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
+                    style="border: 1px solid #889cd8; gap: 20px; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
                     
                     <div class="d-flex flex-column" style="width: 100%;">
                         <h3 class="font-weight-bold text-gray-600 m-0" style="font-size: 1.75rem; word-wrap: break-word;">
@@ -757,11 +757,10 @@
                             <i class="fas fa-trash text-danger mr-2"></i> Svuota
                         </a>-->
 
-                        <a href="#" class="inner-action-btn" data-toggle="modal" data-target="#confirmClearModal" 
+                       <a href="#" id="svuota-btn" class="inner-action-btn" data-toggle="modal" data-target="#confirmClearModal" 
                             style="height: 45px; padding: 0 25px; font-size: 0.85rem;">
                             <i class="fas fa-trash text-danger mr-2"></i> Svuota
                         </a>
-
 
                     </div>
                 </div>
@@ -869,24 +868,47 @@
     </div><!-- Wrapper -->
 
 
-    <!-- MODAL FOR ASKING USER IF HE REALLY WANTS TO CLESAR THE SELECTEDPROTOCOLS ARRAY-->
+    <style>
+        /* Make the modal feel 'outside' the normal UI flow */
+.modal-system-alert {
+    background-color: #1e293b !important; /* Dark Slate Blue/Gray */
+    border-radius: 16px !important;
+    padding: 10px;
+}
+
+/* Optional: Make the backdrop darker to focus all attention */
+.modal-backdrop.show {
+    opacity: 0.85 !important;
+    background-color: #0f172a !important;
+}
+
+/* Custom styling for buttons to match the dark theme */
+.btn-outline-light {
+    border-color: rgba(255,255,255,0.2) !important;
+    color: #fff !important;
+}
+
+.btn-outline-light:hover {
+    background-color: rgba(255,255,255,0.1) !important;
+}
+    </style>
+
     <div class="modal fade" id="confirmClearModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content border-0 shadow">
+            <div class="modal-content border-0 shadow-lg modal-system-alert">
             <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title font-weight-bold">Conferma operazione</h5>
+                <h5 class="modal-title font-weight-bold text-white">Attenzione</h5>
             </div>
-            <div class="modal-body">
-                Sei sicuro di voler svuotare la lista? Tutti i protocolli selezionati verranno rimossi.
+            <div class="modal-body text-white-50">
+                Questa operazione è irreversibile. Confermi di voler svuotare l'intero elenco dei protocolli?
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Annulla</button>
-                <button type="button" class="btn btn-danger" onclick="confirmRemoveAll()">Svuota tutto</button>
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annulla</button>
+                <button type="button" class="btn btn-light text-danger font-weight-bold" onclick="confirmRemoveAll()">Conferma Svuota</button>
             </div>
             </div>
         </div>
     </div>
-
 
         <!--<script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
         <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -1417,6 +1439,8 @@
                 </div>
             `).join('');
         }
+
+        updateSvuotaButtonState();
     }
 
     function handleCardClick(addBtn) {
@@ -1518,8 +1542,28 @@
         updateSelectionHeader();
         
         console.log("All protocols cleared.");
-}
+    }
 
+
+    function updateSvuotaButtonState() {
+
+        const svuotaBtn = document.getElementById('svuota-btn');
+        if (!svuotaBtn) return;
+
+        if (selectedProtocols.length === 0) {
+            // Disable: visually muted and unclickable
+            svuotaBtn.classList.add('disabled');
+            svuotaBtn.style.pointerEvents = 'none'; // Prevents clicks
+            svuotaBtn.style.opacity = '0.5';        // Visual cue that it's inactive
+            svuotaBtn.removeAttribute('data-toggle'); // Removes the trigger
+        } else {
+            // Enable
+            svuotaBtn.classList.remove('disabled');
+            svuotaBtn.style.pointerEvents = 'auto';
+            svuotaBtn.style.opacity = '1';
+            svuotaBtn.setAttribute('data-toggle', 'modal');
+        }
+    }
 
 </script>
 
