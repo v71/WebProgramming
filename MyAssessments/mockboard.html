@@ -1169,12 +1169,12 @@
             
                                                     <!-- Button 1: View -->
                                                     <a id="newTherapyBtn" href="#" class="inner-action-btn">
-                                                        <i class="fas fa-plus-circle text-primary"></i> Nuova Terapia
+                                                        <i class="fas fa-plus-circle text-success"></i> Nuova Terapia
                                                     </a>
 
                                                     <!-- Button 2: New -->
                                                     <a id="viewTherapyBtn" href="#" class="inner-action-btn">
-                                                        <i class="fas fa-eye text-success"></i> Accedi alla Terapia 
+                                                        <i class="fas fa-eye text-primary"></i> Accedi alla Terapia 
                                                     </a>
 
                                                     <!-- Button 4: Stop -->
@@ -1494,8 +1494,8 @@
             
             if (hasTherapies) {
                 // ENABLED STATE
-                viewTherapyBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-success');
-                listTherapyBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-success');
+                viewTherapyBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-primary');
+                listTherapyBtn.removeClass('disabled opacity-50').css('pointer-events', 'auto').find('i').removeClass('text-muted').addClass('text-info');
             } else {
                 // MUTED STATE
                 viewTherapyBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
