@@ -1505,11 +1505,33 @@
     }
 
     function confirmRemoveAll() {
+        /*
+        // 1. Move focus to the body or a persistent container
+        document.body.focus();
+
         // 1. Perform the clearing logic (your existing function)
         removeAllProtocols();
-        
+
         // 2. Close the modal programmatically
         $('#confirmClearModal').modal('hide');
+        */
+
+        console.log("removal confirmed");
+
+        // 1. Explicitly remove focus from the button that triggered the event
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+        }
+
+        // 1. Perform the clearing logic (your existing function)
+        removeAllProtocols();
+
+        // 2. Move focus to the body to be safe
+        document.body.focus();
+
+        // 3. Close the modal
+        $('#confirmClearModal').modal('hide');
+        
     }
 
     function removeAllProtocols() 

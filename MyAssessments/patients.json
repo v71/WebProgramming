@@ -1,5 +1,49 @@
 [
   {
+    "nome": "Alessandro",
+    "surname": "Greco",
+    "data_di_nascita": "2020-12-25",
+    "eta": 5,
+    "genere": "Maschile",
+    "regione": "Emilia-Romagna",
+    "dataIscrizione": "2025-11-01",
+    "email": "AlessandroGreco@gmail.com",
+    "terapia": {
+      "nome": "CINGHIATE-T0",
+      "dataInizio": "2026-01-01",
+      "dataFine": "2026-06-04",
+      "posizioneCorrente": -1,
+      "posizioniTotali": 30,
+      "stato": 0,
+      "interrotta": 0
+    },
+    "cronologia_terapie": [
+      {
+        "Scuola":"Primaria-secondo-grado",
+        "Classe_String":"Prima",
+        "Classe_Numeric":1,
+        "Codice_Fascicolo":"Retest-A"
+        
+
+      }
+
+    ],
+    "certificati": [
+      {
+        "nome": "Neurodivergenza",
+        "UploadDate": "2026-01-10",
+        "gravita": 0,
+        "ente": "ASL"
+      },
+      {
+        "nome": "ADHD",
+        "UploadDate": "2026-02-15",
+        "gravita": 1,
+        "ente": "privato"
+      }
+    ]
+  },
+  {
     "nome": "Mannaggino",
     "surname": "Antonino",
     "data_di_nascita": "2019-06-15",
@@ -89,40 +133,6 @@
     "terapia": {},
     "cronologia_terapie": [],
     "certificati": []
-  },
-  {
-    "nome": "Alessandro",
-    "surname": "Greco",
-    "data_di_nascita": "2020-12-25",
-    "eta": 5,
-    "genere": "Maschile",
-    "regione": "Emilia-Romagna",
-    "dataIscrizione": "2025-11-01",
-    "email": "AlessandroGreco@gmail.com",
-    "terapia": {
-      "nome": "CINGHIATE-T0",
-      "dataInizio": "2026-01-01",
-      "dataFine": "2026-06-04",
-      "posizioneCorrente": -1,
-      "posizioniTotali": 30,
-      "stato": 0,
-      "interrotta": 0
-    },
-    "cronologia_terapie": [],
-    "certificati": [
-      {
-        "nome": "Neurodivergenza",
-        "UploadDate": "2026-01-10",
-        "gravita": 0,
-        "ente": "ASL"
-      },
-      {
-        "nome": "ADHD",
-        "UploadDate": "2026-02-15",
-        "gravita": 1,
-        "ente": "privato"
-      }
-    ]
   },
   {
     "nome": "Chiara",
