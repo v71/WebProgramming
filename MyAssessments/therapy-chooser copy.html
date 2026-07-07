@@ -642,7 +642,7 @@
                                     </span>
                                     <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
                                         <!-- Updated class from 'border' to 'border border-primary' -->
-                                        <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border shadow-sm" style="border: 1px solid #0000FF !important;">
+                                        <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 1px solid #0000FF !important;">
                                             <i id="avatarSpinnerIcon1" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
                                             <img id="profileAvatar1" 
                                                 class="img-fluid rounded-circle d-none" 
@@ -764,17 +764,16 @@
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Terapia</h6>
                 </div>
 
-                <div id="therapy-name" class="card-body p-3 mb-4 d-flex flex-column mx-4" 
-                    style="background-color: #f0f4ff;border-left: 4px solid #889cd8; gap: 20px; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
-                    
+                <div  id="therapy-name" class="rounded p-3 p-3 mb-4 d-flex flex-column mx-4" 
+                    style="gap: 20px; background-color: #fafbfe; border: 1px solid #d1d9e6; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
+                                              
                     <div class="d-flex flex-column" style="width: 100%;">
-                        <h3 class="font-weight-bold text-gray-600 m-0" 
-                            style="font-size: 1.75rem; word-wrap: break-word; padding: 10px 15px; border-radius: 4px;">
+                        <h3 class="font-weight-bold text-gray-600 m-0" style="font-size: 1.75rem; word-wrap: break-word;">
                             Terapia T1 Cinghiate
                         </h3>
                     </div>
 
-                    <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
+                   <!--<div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
                         <a href="#" id="assegna-btn" class="inner-action-btn" 
                             onclick="validateForm(); return false;" 
                             style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
@@ -784,9 +783,10 @@
                             style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
                             <i class="fas fa-trash text-danger mr-2"></i> Svuota
                         </a>
-                    </div>
-                </div>
+                    </div>-->
 
+                </div>
+                
                  
             </div>
         </div>
@@ -802,9 +802,8 @@
                 
                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
                     <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
-                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Fascicoli di Screening</h6>
+                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Fascicolo di Screening</h6>
                 </div>
-
 
             <!-- About Section -->
 
@@ -970,13 +969,13 @@
                             </div>
 
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                 &le; 24s
+                                 &le; 2.4s
                             </div>
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                25s - 34s
+                                2.5s - 3.4s
                             </div>
                             <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                 &ge; 35
+                                 &ge; 3.5
                             </div>
                         </div>
                         
@@ -1012,9 +1011,20 @@
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 Errori Ortografici Totali
                             </div>
-                            <div id="PROVA_B_DETTATO_ORTOGRAFICO" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                Valore
+                   
+                            <div class="col p-2 border-right d-flex align-items-center justify-content-center">
+                                <input id="prova_b_1" type="number" 
+                                                       class="form-control text-center" 
+                                                       placeholder="0 - 73" 
+                                                       min="0" 
+                                                       step="1",
+                                                       max="73" 
+                                                       required 
+                                                       style="width: 80px; font-size: 0.85rem;"
+                                                       aria-label="Valore"
+                                                       name="valore_input">
                             </div>
+
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                  0 - 4
                             </div>
@@ -1058,9 +1068,20 @@
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 Risposte Corrette
                             </div>
-                            <div id="PROVA_C_LETTURA_E_COMPRENSIONE_DEL_TESTO1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                               Valore
+
+                             <div class="col p-2 border-right d-flex align-items-center justify-content-center">
+                                <input id="prova_c_1" type="number" 
+                                                       class="form-control text-center" 
+                                                       placeholder="0 - 3" 
+                                                       min="0" 
+                                                       step="1",
+                                                       max="3" 
+                                                       required 
+                                                       style="width: 80px; font-size: 0.85rem;"
+                                                       aria-label="Valore"
+                                                       name="valore_input">
                             </div>
+
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                3 Risposte
                             </div>
@@ -1085,23 +1106,46 @@
                        
                         <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                               <span class="badge-co">CO ( 0 errori )</span>
+                                PARAMETRO RILEVATO
                             </div>
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                <span class="badge-rii">RII ( &ge;1 errore )</span>
+                                DATO GREZZO
+                            </div>
+                            <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                               <span class="badge-co">CO</span>
+                            </div>
+                            <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                               <span class="badge-rii">RII</span>
                             </div>
                         </div>
 
                         <!-- Data Row (5 Columns, Editable) -->
-                       <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                            <div id="PROVA_D_CALCOLO_E_COGNIZIONE_NUMERICA1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                Valore
+                        <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
+                            <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                Risposte Corrette
                             </div>
-                            <div id="PROVA_D_CALCOLO_E_COGNIZIONE_NUMERICA2" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                Valore
+
+                             <div class="col p-2 border-right d-flex align-items-center justify-content-center">
+                                <input id="prova_d_1" type="number" 
+                                                       class="form-control text-center" 
+                                                       placeholder="0 - 4" 
+                                                       min="0" 
+                                                       step="1",
+                                                       max="4" 
+                                                       required 
+                                                       style="width: 80px; font-size: 0.85rem;"
+                                                       aria-label="Valore"
+                                                       name="valore_input">
+                            </div>
+
+                            <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                               0 Errori
+                            </div>
+                            <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                               &ge; 1 Errore
                             </div>
                         </div>
-                        
+
                     </div>
 
                     <h5 class="mb-3" style="font-size: 1.0rem; font-weight:600">2. Calcolo Mentale Rapido e Frazioni</h5>
@@ -1132,9 +1176,20 @@
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                Fatti Numerici / Calcolo Rapido
                             </div>
-                            <div id="PROVA_D_CALCOLO_E_COGNIZIONE_NUMERICA3" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                Valore
+                 
+                            <div class="col p-2 border-right d-flex align-items-center justify-content-center">
+                                <input id="prova_d_2" type="number" 
+                                                       class="form-control text-center" 
+                                                       placeholder="0 - 4" 
+                                                       min="0" 
+                                                       step="1",
+                                                       max="4" 
+                                                       required 
+                                                       style="width: 80px; font-size: 0.85rem;"
+                                                       aria-label="Valore"
+                                                       name="valore_input">
                             </div>
+
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 4
                             </div>
@@ -1150,9 +1205,24 @@
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 Grandezza Frazionaria
                             </div>
-                            <div id="PROVA_D_CALCOLO_E_COGNIZIONE_NUMERICA4" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                            
+                            <!--<div id="PROVA_D_CALCOLO_E_COGNIZIONE_NUMERICA4" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 Valore
+                            </div>-->
+
+                            <div class="col p-2 border-right d-flex align-items-center justify-content-center">
+                                <input id="prova_d_3" type="number" 
+                                                       class="form-control text-center" 
+                                                       placeholder="0 - 2" 
+                                                       min="0" 
+                                                       step="1",
+                                                       max="2" 
+                                                       required 
+                                                       style="width: 80px; font-size: 0.85rem;"
+                                                       aria-label="Valore"
+                                                       name="valore_input">
                             </div>
+
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                  2
                             </div>
@@ -1206,9 +1276,20 @@
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 Errori di Precisione
                             </div>
-                            <div id="PROVA_E_DECISIONE_LESSICALE_ORTOGRAFICA1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                Valore
+                            
+                            <div class="col p-2 border-right d-flex align-items-center justify-content-center">
+                            <input id="prova_e_1" type="number" 
+                                                    class="form-control text-center" 
+                                                    placeholder="0 - 6" 
+                                                    min="0" 
+                                                    step="1",
+                                                    max="6" 
+                                                    required 
+                                                    style="width: 80px; font-size: 0.85rem;"
+                                                    aria-label="Valore"
+                                                    name="valore_input">
                             </div>
+
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 0
                             </div>
@@ -1253,9 +1334,20 @@
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 Capacità Working Memory
                             </div>
-                            <div id="PROVA_F_MEMORIA_DI_LAVORO1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                               Valore
+                            
+                            <div class="col p-2 border-right d-flex align-items-center justify-content-center">
+                            <input id="prova_f_1" type="number" 
+                                                    class="form-control text-center" 
+                                                    placeholder="0 - 4" 
+                                                    min="0" 
+                                                    step="1",
+                                                    max="4" 
+                                                    required 
+                                                    style="width: 80px; font-size: 0.85rem;"
+                                                    aria-label="Valore"
+                                                    name="valore_input">
                             </div>
+
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 &ge; 4
                             </div>
@@ -1290,31 +1382,46 @@
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                 Isolamento dei Dati Rilevanti
                             </div>
-                            <div id="PROVA_G_PROBLEM_SOLVING_ARITMETICO_GUIDATO1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                <select id="CoRiiSelect1">
-                                    <optgroup>
-                                        <option>CO</option>
-                                        <option>RII</option>
-                                    </optgroup>
+
+                            <div id="prova_g_1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                <select id="CoRiiSelect1" class="form-control" required>
+                                    <option value="" disabled selected>Seleziona...</option>
+                                    <option value="CO">CO</option>
+                                    <option value="RII">RII</option>
                                 </select>
                             </div>
+
                         </div>
                         <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
                             <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                               Risoluzione e Algoritmo
+                            Risoluzione e Algoritmo
                             </div>
 
-                            <div id="PROVA_G_PROBLEM_SOLVING_ARITMETICO_GUIDATO2" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                <select id="CoRiiSelect2">
-                                    <optgroup>
-                                        <option>CO</option>
-                                        <option>RII</option>
-                                    </optgroup>
+                            <div id="prova_g_2" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                <select id="CoRiiSelect2" class="form-control" required>
+                                    <option value="" disabled selected>Seleziona...</option>
+                                    <option value="CO">CO</option>
+                                    <option value="RII">RII</option>
                                 </select>
                             </div>
 
                         </div>
 
+                    </div>
+
+                    <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
+                    </h2>
+
+                    <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
+                        <a href="#" id="assegna-btn" class="inner-action-btn" 
+                            onclick="validateForm(); return false;" 
+                            style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
+                            <i class="fas fa-plus-circle text-success mr-2"></i> Assegna
+                        </a>
+                        <a href="#" id="svuota-btn" class="inner-action-btn" data-toggle="modal" data-target="#confirmClearModal" 
+                            style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
+                            <i class="fas fa-trash text-danger mr-2"></i> Svuota
+                        </a>
                     </div>
 
                 </article>
@@ -1590,13 +1697,40 @@
 
             // 1. Define your data structure
             const protocolData = {
+                data:{
+                    evaluationDate: ""
+                },
                 education: {
-                    value: "2ª classe Scuola Primaria",   
-                    level: "Scuola Primaria"              
+                    value: "",   
+                    level: ""              
                 },
                 prova_a:{
-                    accuratezza: "-1",
-                    velocita: "-1"
+                    accuratezza: "",
+                    velocita: ""
+                },
+                prova_b:{
+                    errori_ortografici_totali: ""
+                },
+                prova_c:{
+                    lettura_e_comprensione_del_testo: ""
+                },
+                prova_d:{
+                    dettato_di_numeri: "",
+                    fatti_numerici_calcolo_rapido: "",
+                    grandezza_frazionaria: ""
+                },
+                prova_e:
+                {
+                    errori_di_decisione:""
+                },
+                prova_f:
+                {
+                    capacità_working_memory:""
+                },
+                prova_g:
+                {
+                    isolamento_dei_dati_rilevanti:"",
+                    risoluzione_e_algoritmo:""
                 }
             };
 
@@ -1618,24 +1752,6 @@
         </script>
 
         <script>
-      
-            document.addEventListener('DOMContentLoaded', function() {
-                // Initialize all selects with the same class or by ID
-                const elements = ['CoRiiSelect1', 'CoRiiSelect2'];
-                
-                elements.forEach(id => {
-                    new Choices(document.getElementById(id), {
-                        searchEnabled: false,
-                        itemSelectText: '',
-                        position: 'auto', // 'auto' will flip the menu upward if there's no space below
-                        shouldSort: false
-                    });
-                });
-            });
-
-        </script>
-
-        <script>
 
             function confirmRemoveAll()
             {
@@ -1645,6 +1761,43 @@
                 if (document.activeElement instanceof HTMLElement) {
                     document.activeElement.blur();
                 }
+
+                // 1. Clear all standard inputs (text, date, number, etc.)
+                const allInputs = document.querySelectorAll('input');
+                allInputs.forEach(input => {
+                    // Reset value
+                    input.value = '';
+                    // Reset border styles (in case you added red borders for errors)
+                    input.style.borderColor = '';
+                });
+
+                // 2. Reset all selects to the first option (the "Seleziona..." one)
+                const allSelects = document.querySelectorAll('select');
+                allSelects.forEach(select => {
+                    select.selectedIndex = 0; 
+                    select.style.borderColor = '';
+                });
+
+                // 3. Reset your data struct if you use one
+                if (typeof protocolData !== 'undefined') {
+                    // Reset your object fields here
+
+                    protocolData.data.evaluationDate = "";
+                    protocolData.education = "";
+                    protocolData.prova_a.accuratezza = "";
+                    protocolData.prova_a.velocita = "";
+                    protocolData.prova_b.errori_ortografici_totali = "";
+                    protocolData.prova_c.lettura_e_comprensione_del_testo = "";
+                    protocolData.prova_d.dettato_di_numeri = "";
+                    protocolData.prova_d.fatti_numerici_calcolo_rapido= "";
+                    protocolData.prova_d.grandezza_frazionaria= "";
+                    protocolData.prova_e.errori_di_decisione = "";
+                    protocolData.prova_f.capacità_working_memory= "";
+                    protocolData.prova_g.isolamento_dei_dati_rilevanti="";
+                    protocolData.prova_g.risoluzione_e_algoritmo="";
+                }
+
+                console.log("All elements cleared.");
 
                 // 2. Move focus to the body to be safe
                 document.body.focus();
@@ -1659,70 +1812,108 @@
 
         <script>
 
-            function validateDate() {
-
-                // 1. Validate the Date input
+            function validateForm()
+            {
+                // Date check
                 const dateInput = document.getElementById('clinicalDate');
-
-                console.log(dateInput);
-                
-                if (!dateInput.checkValidity()) {
+               
+                 if (!dateInput.checkValidity()) {
                     dateInput.reportValidity(); // This triggers the native browser popup
                     return false;
                 }
-                
-                console.log("Checking Date valid:", dateInput.checkValidity());
-
-                // 3. If everything is valid, save to struct
-            //    protocolData.evaluationDate = dateInput.value;
-            //    protocolData.testValues.valore1 = parseFloat(numericInput.value);
-
-                console.log("Form valid. Data saved:", protocolData);
-                
-                return true;
-            }
-
-            function validateForm()
-            {
-              
-                if (!validateDate()) 
-                    return; // Stop here if date is invalid
 
                 // read Classe Scolastica
                 const selectElement = document.getElementById('scuolaSelect');
                 const selectedOption = selectElement.options[selectElement.selectedIndex];
                 const schoolData = {
-                    value: selectedOption.value,          // e.g., "2ª classe Scuola Primaria"
+                    value: selectedOption.value,           // e.g., "2ª classe Scuola Primaria"
                     group: selectedOption.parentNode.label // e.g., "Scuola Primaria"
                 };
-                if (!schoolData.value) {
-                    alert("Per favore, seleziona una scuola.");
-                    return;
-                }
-                
+               
                 // read PROVA A: LETTURA DI NON-PAROLE
                 const input1 = document.getElementById('prova_a_1');
-                const input2 = document.getElementById('prova_a_2');
-                
                 if (!input1.checkValidity()) {
                     input1.reportValidity(); // This triggers the browser's built-in alert
                     return false;
                 }
 
-                // We trim() the value to ensure no accidental whitespace is saved
+                const input2 = document.getElementById('prova_a_2');
                 if (!input2.checkValidity()) {
                     input2.reportValidity(); // This triggers the browser's built-in alert
                     return false;
                 }
-                
+ 
+                const input3 = document.getElementById('prova_b_1');
+                if (!input3.checkValidity()) {
+                    input3.reportValidity(); // This triggers the browser's built-in alert
+                    return false;
+                }
+ 
+                const input4 = document.getElementById('prova_c_1');
+                if (!input4.checkValidity()) {
+                    input4.reportValidity(); // This triggers the browser's built-in alert
+                    return false;
+                }
+ 
+                const input5 = document.getElementById('prova_d_1');
+                if (!input5.checkValidity()) {
+                    input5.reportValidity(); // This triggers the browser's built-in alert
+                    return false;
+                }
+ 
+                const input6 = document.getElementById('prova_d_2');
+                if (!input6.checkValidity()) {
+                    input6.reportValidity(); // This triggers the browser's built-in alert
+                    return false;
+                }
+ 
+                const input7 = document.getElementById('prova_d_3');
+                if (!input7.checkValidity()) {
+                    input7.reportValidity(); // This triggers the browser's built-in alert
+                    return false;
+                }
+
+                const input8 = document.getElementById('prova_e_1');
+                if (!input8.checkValidity()) {
+                    input8.reportValidity(); // This triggers the browser's built-in alert
+                    return false;
+                }
+
+                const input9 = document.getElementById('prova_f_1');
+                if (!input9.checkValidity()) {
+                    input9.reportValidity(); // This triggers the browser's built-in alert
+                    return false;
+                }
+
+                const select1 = document.getElementById('CoRiiSelect1');
+                if (!select1.checkValidity()) {
+                    select1.reportValidity();
+                    return false;
+                }
+
+                const select2 = document.getElementById('CoRiiSelect2');
+                if (!select2.checkValidity()) {
+                    select2.reportValidity();
+                    return false;
+                }
+
                 // Store as a float with 1 decimal place
                 
+                protocolData.data.evaluationDate = document.getElementById('clinicalDate').value;
                 protocolData.education = schoolData;
                 protocolData.prova_a.accuratezza = input1.value.trim();
                 protocolData.prova_a.velocita = parseFloat(input2.value).toFixed(1);
-
+                protocolData.prova_b.errori_ortografici_totali = input3.value.trim();
+                protocolData.prova_c.lettura_e_comprensione_del_testo = input4.value.trim();
+                protocolData.prova_d.dettato_di_numeri = input5.value.trim();
+                protocolData.prova_d.fatti_numerici_calcolo_rapido= input6.value.trim();
+                protocolData.prova_d.grandezza_frazionaria= input7.value.trim();
+                protocolData.prova_e.errori_di_decisione = input8.value.trim();
+                protocolData.prova_f.capacità_working_memory= input9.value.trim();
+                protocolData.prova_g.isolamento_dei_dati_rilevanti=select1.value;
+                protocolData.prova_g.risoluzione_e_algoritmo=select2.value;
                 
-                console.log("Data captured for submission:", protocolData);
+                console.log(protocolData);
 
             }
 
