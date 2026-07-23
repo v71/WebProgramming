@@ -1404,8 +1404,21 @@
 
         // Global state tracking variable (put this right above your executeSearch function)
         let isSearching = false;
-           
+
     </script>
+
+     <script type="module">
+
+             // init supabase
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+            
+            // --- Supabase setup ---
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+            window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+    </script>
+       
 
      <script>
 
@@ -1685,10 +1698,83 @@ function populatePatientTable(patients) {
 }
 
 </script>
+    
+<script>
+
+    async function fetchClientsByClinician(supabaseClient, clinicianId) {
+        const { data: clients, error } = await supabaseClient
+            .from('Clients')
+            .select('*')
+            .eq('clinical_id', clinicianId);
+
+        if (error) {
+            console.error('Error fetching clients:', error);
+            return [];
+        }
+
+        return clients;
+    }
+
+</script>
+
+<script>
+
+        async function getClinicianPatients() {
+            const { data: { session } } = await window.supabase.auth.getSession();
+
+            if (!session?.user) {
+                window.location.replace("index.html");
+                return;
+            }
+
+            const user = session.user;
+
+            // 2. AUTO LOGOUT HANDLER (Added window.)
+            window.supabase.auth.onAuthStateChange((event, session) => {
+                if (event === "SIGNED_OUT" || !session) {
+                    window.location.replace("index.html");
+                }
+            });
+
+            // 4. CARICA PROFILO DAL DATABASE (Added window.)
+            const { data: profile, error } = await window.supabase
+                .from("Clinicals")
+                .select("*")
+                .eq("id", user.id)
+                .single();
+
+            if (error || !profile) {
+                console.error("Errore caricamento profilo:", error);
+                window.location.replace("index.html");
+                return;
+            }
+
+            const clinicianId = profile.id; 
+            console.log(clinicianId);
+
+            // 5. CARICA PAZIENTI (Added window. and fixed fetcherror check)
+            const { data: clients, error: fetcherror } = await window.supabase
+                .from('Clients')
+                .select('*')
+                .eq('clinical_id', clinicianId);
+
+            if (fetcherror) {
+                console.error('Error fetching clients:', fetcherror);
+                window.location.replace("index.html");
+                return;
+            }
+
+            console.log(clients);
+            return clients; // Don't forget to return the data so your table can use it!
+        }
+        
+</script>
+
+
     <script type="module">
-        
+            
         import { calculateAgeWithMonths } from "./assets/js/string_utils.js";
-        
+
         // ********************* READ PATIENT DATA HERE *********************
         $(document).ready(function() {
 
@@ -1700,7 +1786,14 @@ function populatePatientTable(patients) {
 
             // Clear any existing content
             tableBody.empty();
-            
+
+        //   const patients = getClinicianPatients();
+
+            // update patient number
+            const patients_number=window.patients.length;
+            const el = document.getElementById("patientCount");
+            if (el) el.textContent = patients_number;
+
             // Map your array data into HTML rows
             window.patients.forEach(patient => {
                 const age=calculateAgeWithMonths(patient.data_di_nascita);
@@ -1750,6 +1843,7 @@ function populatePatientTable(patients) {
                 },
                 "responsive": true,
                 "initComplete": function(settings, json) {
+                    
                     // Adjust column sizing to fix layout issues caused by display:none
                     var api = this.api();
                     api.columns.adjust();
@@ -1759,12 +1853,12 @@ function populatePatientTable(patients) {
                             $('#tableContainer').fadeIn(400);
                         });
                     }, 1000);
-
+                    
                     // Move the dropdown into the top row
                     $('#dropdownTarget').appendTo('#customFilterPlaceholder').removeClass('d-none');
                     this.api().columns.adjust();
                 }
-
+                
             });
             
             // 1. Initialize the table
@@ -1795,7 +1889,7 @@ function populatePatientTable(patients) {
                 $('#activeColumnLabel').text(currentSearchColumn === 'all' ? 'Tutte' : selectedText);
                 
             });
-
+                    
             // Handle typing in the input field
             $('#customSearchInput').on('input', function() {
                 isSearching = true; // Turn ON the search flag
@@ -1829,7 +1923,7 @@ function populatePatientTable(patients) {
 
                 // 3. Reset the internal DataTable search state
                 // We clear both the global search AND the individual column searches
-                table.search('').columns().search('').draw();
+                table.search('').columns().search('').draw('page');
 
                 // 4. Sync your custom UI variables
                 currentSearchColumn = 'all'; // Reset our tracking variable
@@ -1874,16 +1968,6 @@ function populatePatientTable(patients) {
             // navigation arrows
             var table = $('#PatientdataTable').DataTable();
 
-            // Previous Page
-         //   $('#prevPage').on('click', function() {
-         //       table.page('previous').draw('page');
-         //   });
-
-            // Next Page
-       //     $('#nextPage').on('click', function() {
-       //         table.page('next').draw('page');
-       //     });
-
             // Update the "1 / 1" Label dynamically
             table.on('draw', function() {
                 var info = table.page.info();
@@ -1895,7 +1979,7 @@ function populatePatientTable(patients) {
                 $('#prevPage').prop('disabled', info.page === 0);
                 $('#nextPage').prop('disabled', info.page >= info.pages - 1 || info.pages === 0);
             });
-
+            
             // Trigger once on load to set initial label
             table.draw();
 
@@ -1913,24 +1997,6 @@ function populatePatientTable(patients) {
         });
         
     </script>
-
-<script>
-
-    async function fetchClientsByClinician(supabaseClient, clinicianId) {
-        const { data: clients, error } = await supabaseClient
-            .from('Clients')
-            .select('*')
-            .eq('clinical_id', clinicianId);
-
-        if (error) {
-            console.error('Error fetching clients:', error);
-            return [];
-        }
-
-        return clients;
-    }
-
-</script>
 
         <script type="module">
 
@@ -2223,12 +2289,14 @@ function populatePatientTable(patients) {
             }
 
             // update patient number
-            const patients_number=window.patients.length;
-            updateText("patientCount", patients_number);
-            
+         //   const patients_number=window.patients.length;
+         //   const el = document.getElementById("patientCount");
+         //   if (el) el.textContent = patients_number;
+
             // --- ready function ---
             $(document).ready(function() {
 
+                /*
                 // On Load: Check if there's a saved selection in the browser storage
                 let selectedPatientEmail = localStorage.getItem('selectedPatientEmail');
 
@@ -2240,6 +2308,10 @@ function populatePatientTable(patients) {
                     document.getElementById('emptyPatientCard').style.display = 'block';
                     document.getElementById('mainPanel').style.display = 'none';
                 }
+                */
+                let selectedPatientEmail = null;
+                document.getElementById('emptyPatientCard').style.display = 'block';
+                document.getElementById('mainPanel').style.display = 'none';
                 
                 // fill table
                 var table = $('#PatientdataTable').DataTable();
@@ -2389,7 +2461,7 @@ function populatePatientTable(patients) {
                 }
                 
             });
-        
+        /*
             // init supabase
             import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
             
@@ -2397,7 +2469,7 @@ function populatePatientTable(patients) {
             const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
             const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
             const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            
+       */     
             // --- Event Listeners 
             document.addEventListener("DOMContentLoaded", async () => {
                     
@@ -2419,9 +2491,9 @@ function populatePatientTable(patients) {
                     });
 
                     // 3. DATI BASE USER (SOLO AUTH)
-                    const email = user.email;
+                 //   const email = user.email;
                     
-                    //console.log("Utente:", user);
+       //             console.log("Utente:", user);
                     
                     // 4. CARICA PROFILO DAL DATABASE 
                     const { data: profile, error } = await supabase
@@ -2437,10 +2509,10 @@ function populatePatientTable(patients) {
                     }
 
                     // 5. COSTRUZIONE DATI UI
-                    const name         = `${profile.name}`;
-                    const surname      = `${profile.surname}`;
+                    const name             = `${profile.name}`;
+                    const surname          = `${profile.surname}`;
                     const fullNameNoPrefix = `${name} ${surname}`;
-                    const gender        = `${profile.genre}`;
+                    const gender           = `${profile.genre}`;
                         
                     // --- Nome nella NavBar ---
                     const userFullNameElement = document.getElementById("userFullName");
@@ -2449,8 +2521,8 @@ function populatePatientTable(patients) {
                     }
 
                     // EXTRACT THE ID HERE
-                    const clinicianId = profile.id; 
-                    const myClients = await fetchClientsByClinician(supabase, clinicianId);
+                //    const clinicianId = profile.id; 
+                //    const myClients = await fetchClientsByClinician(supabase, clinicianId);
 
                     //  console.log("Clinician ID retrieved:", clinicianId);
                     //  console.log(myClients);
@@ -2458,9 +2530,7 @@ function populatePatientTable(patients) {
                     // update avatar in the navbar
                     updateUserAvatar(gender);
 
-
             });
-
             
     </script>
 

@@ -1206,9 +1206,11 @@ body {
             if (creditsUsedEl) creditsUsedEl.textContent = `${usedCredits}`;
             if (initialCreditsEl) initialCreditsEl.textContent= `${totalCredits}`;
 
-            if ( clinical_id)
+             //console.log(clinical_id);
+
+            if (clinical_id)
             {
-              //  console.log(clinical_id);
+          //     console.log(clinical_id);
 
                  // 1. Fetch patient data and auto-join the related Clinicals table
                 const { data: patient, error1 } = await supabase

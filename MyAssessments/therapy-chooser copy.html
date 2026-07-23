@@ -759,33 +759,27 @@
     <div class="row">
         <div class="col-xl-12 col-lg-12 d-flex">
             <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
+                
+                
                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
                     <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
-                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Terapia</h6>
+                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Inserisci il Nome del Fascicolo</h6>
                 </div>
 
-                <div  id="therapy-name" class="rounded p-3 p-3 mb-4 d-flex flex-column mx-4" 
+                <div id="therapy-name" class="rounded p-3 mb-4 d-flex flex-column mx-4" 
+                    style="gap: 20px; background-color: transparent; border: none; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
+                    <input type="text" id="therapyInput" class="form-control" placeholder="Inserisci il nome della terapia..." 
+                        style="border: none !important; background-color: transparent; font-size: 1.5rem; height: 60px; padding: 12px 20px;">
+                </div>
+                                
+                <!--<div  id="therapy-name" class="rounded p-3 p-3 mb-4 d-flex flex-column mx-4" 
                     style="gap: 20px; background-color: #fafbfe; border: 1px solid #d1d9e6; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
-                                              
                     <div class="d-flex flex-column" style="width: 100%;">
-                        <h3 class="font-weight-bold text-gray-600 m-0" style="font-size: 1.75rem; word-wrap: break-word;">
-                            Terapia T1 Cinghiate
-                        </h3>
+
+                        <input type="text" id="therapyInput" class="form-control" placeholder="Inserisci il nome della terapia..." style="border: none; background-color: #ffffff; font-size: 1.1rem; padding: 12px 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+
                     </div>
-
-                   <!--<div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
-                        <a href="#" id="assegna-btn" class="inner-action-btn" 
-                            onclick="validateForm(); return false;" 
-                            style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
-                            <i class="fas fa-plus-circle text-success mr-2"></i> Assegna
-                        </a>
-                        <a href="#" id="svuota-btn" class="inner-action-btn" data-toggle="modal" data-target="#confirmClearModal" 
-                            style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
-                            <i class="fas fa-trash text-danger mr-2"></i> Svuota
-                        </a>
-                    </div>-->
-
-                </div>
+                </div>-->
                 
                  
             </div>
@@ -800,16 +794,16 @@
         <div class="col-xl-12 col-lg-12 d-flex">
             <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
                 
-                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                <!--<div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
                     <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Fascicolo di Screening</h6>
-                </div>
+                </div>-->
 
             <!-- About Section -->
 
             <div class="card-body">
                 <article class="pt-container" style="text-align: center;">
-                    <h1 class="pt-title" style="margin-bottom: 20px;">FASCICOLO SCREENING DSA — TEST A</h1>
+                    <h1 class="pt-title" style="margin-bottom: 20px;">FASCICOLO SCREENING DSA</h1>
                     
                     <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
                         PROTOCOLLO CLINICO CON CUT-OFF NORMATIVI INTEGRATI (CONSENSUS CONFERENCE)
@@ -1206,10 +1200,6 @@
                                 Grandezza Frazionaria
                             </div>
                             
-                            <!--<div id="PROVA_D_CALCOLO_E_COGNIZIONE_NUMERICA4" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                Valore
-                            </div>-->
-
                             <div class="col p-2 border-right d-flex align-items-center justify-content-center">
                                 <input id="prova_d_3" type="number" 
                                                        class="form-control text-center" 

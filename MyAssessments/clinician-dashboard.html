@@ -164,7 +164,7 @@
                         <span>Dashboard</span>
                     </a>
 
-                    <a class="nav-link nav-link-blue" href="mockboard.html">
+                    <a class="nav-link nav-link-blue" href="mockboard_3.html">
                         <i class="fas fa-fw fa-users"></i>
                         <span>Lista Pazienti</span>
                     </a>
@@ -968,7 +968,7 @@
                 // DATI BASE USER (SOLO AUTH)
                 const email = user.email;
                 
-                console.log("Utente:", user);
+             //   console.log("Utente:", user);
                 
                 // CARICA PROFILO DAL DATABASE 
                 const { data: profile, error } = await supabase
@@ -996,8 +996,7 @@
                 let totalCredits   = profile.total_credits;
                 let usedCredits    = profile.used_credits;
                 const subType      = profile.sub_type;
-                let   prefix = genre === "Femminile" ? "Dott.ssa" : "Dott.";
-
+                let prefix = genre === "Femminile" ? "Dott.ssa" : "Dott.";
                 const title = prefix + " " +formatName(surname,name);
                 const fullNameNoPrefix = `${name} ${surname}`;
                 const fullName = `${prefix} ${name} ${surname}`;
@@ -1005,8 +1004,12 @@
                 totalCredits=200;
                 usedCredits=40;
                 
-               const totalPerc = Math.round((totalCredits-usedCredits)*100/totalCredits);
-               const usedPerc=100-totalPerc;
+                const totalPerc = Math.round((totalCredits-usedCredits)*100/totalCredits);
+                const usedPerc=100-totalPerc;
+
+                const clinicianId = profile.id; 
+
+                console.log(clinicianId);
 
                /*
                console.log(totalCredits);
