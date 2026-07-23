@@ -1511,9 +1511,9 @@
 
                                                                     <div class="col-12 mb-2 mb-lg-0 mr-2">
                                                                     
-                                                                        <div class="mb-3 mt-4">
+                                                                        <div class="mb-3 mt-3">
                                                                             <span class="text-xs font-weight-bold text-muted text-uppercase text-truncate d-block w-100" style="font-size: 1.0rem">
-                                                                                <i class="fas fa-user mr-2" style="font-size: 0.8rem; color: #4e73df;"></i>Nome Fascicolo di Screening DSA
+                                                                                Titolo del Fascicolo di Screening DSA
                                                                             </span>
                                                                             <div id="assessmentName" class="small font-weight-bold text-dark text-truncate" style="font-size: 1.1rem">
                                                                             </div>
@@ -1523,7 +1523,6 @@
                                                                             <div class="col-6">
                                                                                 <div class="text-xs font-weight-bold text-muted text-uppercase mb-0 text-truncate d-block w-100">Caricato il</div>
                                                                                 <div id="assessmentStartDate" class="text-dark small font-weight-bold text-truncate d-block w-100">
-                                                                                    <i class="fas fa-circle-notch fa-spin" style="font-size: 0.85rem; color: #343a40;"></i>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
@@ -1739,20 +1738,20 @@
                 viewCertificateBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
                 listCertificateBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
             }
-
+            */
             // toggles 'assessments' page when there is no available data
 
             const assessmentsDataContainer = document.getElementById("assessmentsDataContainer");
             const assessmentsEmptyMessage = document.getElementById("assessmentsEmptyMessage");
             const hasAssessments = !!(patient.assessments && patient.assessments.length > 0);
 
-           // if (hasAssessments) {
+            if (hasAssessments) {
                 assessmentsDataContainer.style.display = "block";
                 assessmentsEmptyMessage.style.display = "none";
-//            } else {
-//                assessmentsDataContainer.style.display = "none";
-//                assessmentsEmptyMessage.style.display = "flex"; // Flex enables the vertical centering
-//            }
+            } else {
+                assessmentsDataContainer.style.display = "none";
+                assessmentsEmptyMessage.style.display = "flex"; // Flex enables the vertical centering
+            }
             
             // mute buttons when certifictees are not available
             const viewAssessmentsBtn = $('#viewAssessmentsBtn');
@@ -1767,7 +1766,7 @@
                 viewAssessmentsBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
                 listAssessmentsBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
             }
-            */
+            
         }
 
     </script>
@@ -2117,7 +2116,6 @@
                 if (assessmentStartDateId) {
                     assessmentStartDateId.textContent = "xxx";
                 }
-
 
                 // third card 'certificati'
                 updateText("patientFullName_3", fullName);

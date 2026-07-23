@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Mock Data Manager</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; padding: 30px; }
+    pre { background: #1e1e1e; color: #00ff66; padding: 15px; border-radius: 8px; max-height: 400px; overflow-y: auto; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2 class="mb-4">Gestione Dati Locali (Mock JSON)</h2>
+  
+  <!-- Controls -->
+  <div class="card p-4 mb-4 shadow-sm">
+    <div class="d-flex gap-2 flex-wrap">
+      <button onclick="seedInitialData()" class="btn btn-primary">Inizializza con Dati Fake (3 Categorie)</button>
+      <button onclick="addFakeAssessment()" class="btn btn-success">+ Aggiungi Nuova Valutazione in Cima</button>
+
+      <button onclick="clearData()" class="btn btn-outline-danger ms-auto">Cancella Tutto</button>
+    </div>
+  </div>
+
+  <!-- JSON Output Viewer -->
+  <div class="card p-4 shadow-sm">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h5 class="m-0">Contenuto Corrente del JSON (`localStorage`):</h5>
+      <span id="itemCount" class="badge bg-secondary">0 Valutazioni</span>
+    </div>
+    <pre id="jsonViewer">{}</pre>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'patientRecord';
+
+  // Helper to load data
+  function loadData() {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : { Assessments: [], Certificates: [], Therapies: [] };
+  }
+
+  // Helper to save data and update display
+  function saveData(data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data, null, 2));
+    render();
+  }
+
+  // Update JSON pre view
+  function render() {
+    const data = loadData();
+    document.getElementById('jsonViewer').textContent = JSON.stringify(data, null, 2);
+    document.getElementById('itemCount').textContent = `${data.Assessments ? data.Assessments.length : 0} Valutazioni`;
+  }
+
+  // 1. Inizializza la struttura completa con dati di prova
+  function seedInitialData() {
+    const fakeInitial = {
+      Assessments: [
+        generateFakeAssessmentStruct("Valutazione Iniziale DSA", "2026-01-15"),
+        generateFakeAssessmentStruct("Screening Precedente", "2025-10-10")
+      ],
+      Certificates: [
+        { id: "CERT-001", title: "Certificato Medico Integrativo", issueDate: "2026-02-01" },
+        { id: "CERT-002", title: "Attestazione Diagnostica", issueDate: "2025-11-20" }
+      ],
+      Therapies: [
+        { id: "TH-101", name: "Ciclo Logopedia Prima dell'Anno Scolastico", frequency: "2/settimana" },
+        { id: "TH-102", name: "Potenziamento Esecutivo", frequency: "1/settimana" }
+      ]
+    };
+    saveData(fakeInitial);
+  }
+
+  // 2. Genera e aggiunge una nuova valutazione in cima (Index 0)
+  function addFakeAssessment() {
+    const data = loadData();
+    const randomId = Math.floor(Math.random() * 900) + 100;
+    const today = new Date().toISOString().split('T')[0];
+
+    const newAssessment = generateFakeAssessmentStruct(`Terapia di Test #${randomId}`, today);
+    
+    // Unshift per inserire in cima
+    if (!data.Assessments) data.Assessments = [];
+    data.Assessments.unshift(newAssessment);
+
+    saveData(data);
+  }
+
+  // Helper: Genera la struttura esatta dei tuoi campi di valutazione
+  function generateFakeAssessmentStruct(title, date) {
+    return {
+      timestamp: new Date().toISOString(),
+      title: { text: title },
+      data: { evaluationDate: date },
+      education: "Scuola Primaria - Classe 3A",
+      prova_a: { accuratezza: `${Math.floor(Math.random() * 10)} errori`, velocita: (Math.random() * 2 + 1).toFixed(1) },
+      prova_b: { errori_ortografici_totali: `${Math.floor(Math.random() * 5)}` },
+      prova_c: { lettura_e_comprensione_del_testo: "Adeguata" },
+      prova_d: {
+        dettato_di_numeri: "Corretto",
+        fatti_numerici_calcolo_rapido: "8/10",
+        grandezza_frazionaria: "Non valutata"
+      },
+      prova_e: { errori_di_decisione: "2" },
+      prova_f: { capacità_working_memory: "Nella norma" },
+      prova_g: {
+        isolamento_dei_dati_rilevanti: "Sufficiente",
+        risoluzione_e_algoritmo: "Corretto"
+      }
+    };
+  }
+
+  // 3. Pulisce il localStorage
+  function clearData() {
+    localStorage.removeItem(STORAGE_KEY);
+    render();
+  }
+
+  // Initial load on page open
+  render();
+</script>
+
+</body>
+</html>

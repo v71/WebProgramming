@@ -760,7 +760,6 @@
         <div class="col-xl-12 col-lg-12 d-flex">
             <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
                 
-                
                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
                     <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
                     <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Inserisci il Nome del Fascicolo</h6>
@@ -768,19 +767,9 @@
 
                 <div id="therapy-name" class="rounded p-3 mb-4 d-flex flex-column mx-4" 
                     style="gap: 20px; background-color: transparent; border: none; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
-                    <input type="text" id="therapyInput" class="form-control" placeholder="Inserisci il nome della terapia..." 
+                    <input type="text" id="therapyInput" class="form-control" placeholder="Inserisci il nome della terapia..." required
                         style="border: none !important; background-color: transparent; font-size: 1.5rem; height: 60px; padding: 12px 20px;">
                 </div>
-                                
-                <!--<div  id="therapy-name" class="rounded p-3 p-3 mb-4 d-flex flex-column mx-4" 
-                    style="gap: 20px; background-color: #fafbfe; border: 1px solid #d1d9e6; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
-                    <div class="d-flex flex-column" style="width: 100%;">
-
-                        <input type="text" id="therapyInput" class="form-control" placeholder="Inserisci il nome della terapia..." style="border: none; background-color: #ffffff; font-size: 1.1rem; padding: 12px 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
-
-                    </div>
-                </div>-->
-                
                  
             </div>
         </div>
@@ -1687,6 +1676,9 @@
 
             // 1. Define your data structure
             const protocolData = {
+                title:{
+                    text: ""
+                },
                 data:{
                     evaluationDate: ""
                 },
@@ -1799,14 +1791,19 @@
 
         </script>
 
-
         <script>
 
             function validateForm()
             {
+                // title check
+                const titleInput = document.getElementById('therapyInput');
+                if (!titleInput.checkValidity() || !titleInput.value.trim()) {
+                    titleInput.reportValidity(); // Displays the native browser warning popup
+                    return;
+                }
+
                 // Date check
                 const dateInput = document.getElementById('clinicalDate');
-               
                  if (!dateInput.checkValidity()) {
                     dateInput.reportValidity(); // This triggers the native browser popup
                     return false;
@@ -1889,6 +1886,7 @@
 
                 // Store as a float with 1 decimal place
                 
+                protocolData.title.text=document.getElementById('therapyInput').value.trim();
                 protocolData.data.evaluationDate = document.getElementById('clinicalDate').value;
                 protocolData.education = schoolData;
                 protocolData.prova_a.accuratezza = input1.value.trim();
