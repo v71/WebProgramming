@@ -263,9 +263,10 @@
                     <div class="row">
                     
                         <!-- col-xl-3 col-lg-4 -->
-                        <div class="col-xl-3 col-lg-4">
-                             <div class="card mb-3 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0;">
-      
+                        <div class="col-xl-3 col-lg-4 d-flex flex-column">
+                        <!--<div class="card mb-3 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px;">-->
+                             <div class="card mb-3 shadow-sm h-100 d-flex flex-column" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+
                                 <!-- Added w-100 and style="min-width: 0;" to allow flex container constraints -->
                                 <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
                                     <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
@@ -276,7 +277,7 @@
                                 <div class="card-body px-4 pb-5 pt-4">
 
                                     <!-- Profile Section -->
-                                    <div class="text-center mb-3">
+                                    <div class="text-center mb-2">
 
                                         <div class="position-relative d-inline-block mb-3" style="width: 140px; height: 140px;">
                                             <div id="avatarContainer" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 2px solid #0000FF !important;">
@@ -316,7 +317,7 @@
                                             </span>
                                         </div>
 
-                                        <div class="mt-2 mb-4 d-flex align-items-center justify-content-center w-100 text-nowrap mx-auto" style="min-width: 0; line-height: 1;">
+                                        <div class="mb-4 d-flex align-items-center justify-content-center w-100 text-nowrap mx-auto" style="min-width: 0; line-height: 1;">
                                             <small class="text-muted d-flex align-items-center m-0 p-0 mr-1" style="font-size: 0.75rem; flex-shrink: 0;">
                                                 <i class="far fa-calendar mr-1"></i>Iscritto il
                                             </small>
@@ -335,79 +336,100 @@
                                 <div class="px-2">
 
                                     <!-- Group: Personal Details -->
-                                    <div class="mb-1">
+                                    <div class="mb-4">
 
-                                        <div class="d-flex align-items-center mb-2">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
-                                                <i class="fas fa-id-badge text-gray-400 fa-xs"></i>
-                                            </div>
-                                            <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
-                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Nome</span>
-                                                <span id="userName" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
+                                        <!--<div class="d-flex align-items-center mb-2">
+                                            <div class="flex-fill pb-1 w-100" style="min-width: 0;">
+                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate" style="font-size: 0.7rem; letter-spacing: 0.3px;">NOME</span>
+                                                <span id="userName"class="border-bottom text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
                                                     <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
                                                 </span> 
                                             </div>
+                                        </div>-->
+
+
+                                        <div class="mb-2 mt-3">
+                                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">NOME</span>
+                                            <div id="userName" class="border-bottom small font-weight-bold text-primary text-truncate">
+                                            </div>
                                         </div>
 
-                                        <div class="d-flex align-items-center mb-2">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
-                                                <i class="fas fa-envelope text-gray-400 fa-xs"></i>
-                                            </div>
+
+                                        <!--<div class="d-flex align-items-center mb-2">
                                             <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
-                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Email</span>
+                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate" style="font-size: 0.7rem; letter-spacing: 0.3px;">EMAIL</span>
                                                 <span id="userEmail" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
                                                     <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
                                                 </span>
                                             </div>
+                                        </div>-->
+
+                                        <div class="mb-2 mt-3">
+                                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">EMAIL</span>
+                                            <div id="userEmail" class="border-bottom small font-weight-bold text-primary text-truncate">
+                                            </div>
                                         </div>
 
-                                        <div class="d-flex align-items-center mb-2">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
-                                                <i class="fas fa-id-card text-gray-400 fa-xs"></i>
-                                            </div>
+                                        <!--<div class="d-flex align-items-center mb-2">
                                             <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
-                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Numero Albo</span>
+                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate" style="font-size: 0.7rem; letter-spacing: 0.3px;">NUMERO ALBO</span>
                                                 <span id="userRegNum" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
                                                     <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
                                                 </span>
                                             </div>
+                                        </div>-->
+
+                                        <div class="mb-2 mt-3">
+                                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">NUMERO ALBO</span>
+                                            <div id="userRegNum" class="border-bottom small font-weight-bold text-primary text-truncate">
+                                            </div>
                                         </div>
 
-                                        <div class="d-flex align-items-center mb-2">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
-                                                <i class="fas fa-calendar-day text-gray-400 fa-xs"></i>
-                                            </div>
+                                        <!--<div class="d-flex align-items-center mb-2">
                                             <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
-                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Data di Nascita</span>
+                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate" style="font-size: 0.7rem; letter-spacing: 0.3px;">DATA DI NASCITA</span>
                                                 <span id="userBirthDate" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
                                                     <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
                                                 </span>
                                             </div>
+                                        </div>-->
+
+                                        <div class="mb-2 mt-3">
+                                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">DATA DI NASCITA</span>
+                                            <div id="userBirthDate" class="border-bottom small font-weight-bold text-primary text-truncate">
+                                            </div>
                                         </div>
 
-                                        <div class="d-flex align-items-center mb-2">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
-                                                <i class="fas fa-hourglass text-gray-400 fa-xs"></i>
-                                            </div>
+                                        <!--<div class="d-flex align-items-center mb-2">
                                             <div class="flex-fill border-bottom pb-1 w-100" style="min-width: 0;">
-                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Età Anagrafica</span>
+                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate" style="font-size: 0.7rem; letter-spacing: 0.3px;">ETA' ANAGRAFICA</span>
                                                 <span id="userAge" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
                                                     <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
                                                 </span>
                                             </div>
+                                        </div>-->
+
+                                        <div class="mb-2 mt-3">
+                                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">ETA' ANAGRAFICA</span>
+                                            <div id="userAge" class="border-bottom small font-weight-bold text-primary text-truncate">
+                                            </div>
                                         </div>
 
-                                        <div class="d-flex align-items-center mb-2">
-                                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mr-2" style="width: 28px; height: 28px; flex-shrink: 0;">
-                                                <i class="fas fa-location-dot text-gray-400 fa-xs"></i>
-                                            </div>
+                                        <!--<div class="d-flex align-items-center mb-2">
                                             <div class="flex-fill pb-1 w-100" style="min-width: 0;">
-                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.3px;">Regione</span>
+                                                <span class="text-muted d-block font-weight-bold text-nowrap text-truncate" style="font-size: 0.7rem; letter-spacing: 0.3px;">REGIONE</span>
                                                 <span id="userRegion" class="text-primary font-weight-bold d-inline-block w-100 text-truncate small" style="min-width: 0;">
                                                     <i class="fas fa-circle-notch fa-spin text-muted fa-xs"></i>
                                                 </span>
                                             </div>
+                                        </div>-->
+
+                                        <div class="mt-3">
+                                            <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">REGIONE</span>
+                                            <div id="userRegion" class="border-bottom small font-weight-bold text-primary text-truncate">
+                                            </div>
                                         </div>
+
 
                                     </div>
                                 </div>
@@ -420,7 +442,8 @@
                     <div class="col-xl-9 col-lg-8 d-flex flex-column">
                         
                         <!-- card -->
-                        <div class="card mb-4 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0;">
+                        <!--<div class="card mb-4 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0;">-->
+                        <div class="card mb-3 shadow-sm h-100 d-flex flex-column" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px;">
 
                             <div class="card-header bg-white d-flex align-items-center py-2" style="border-bottom: 0px solid #eaecf4; height: 45px;">
                                 <i class="fas fa-sliders text-primary mr-2"></i> 
@@ -468,18 +491,97 @@
                                                         </p>
                                                     </div>
                                                     <!-- Button Placed Underneath -->
-                                                    <a href="pricing.html" 
-                                                    class="btn btn-outline-primary shadow-none d-inline-flex align-items-center justify-content-center flex-shrink-0" 
-                                                    style="font-size: clamp(0.75rem, 2.5vw, 0.85rem); padding: 0.5rem 1rem; height: fit-content; max-width: 100%;">
-                                                        <i class="fas fa-plus-circle mr-2"></i>
-                                                        <span>Acquista Crediti</span>
+                                                   <a href="pricing.html" 
+                                                    class="btn btn-outline-primary shadow-none d-inline-flex align-items-center justify-content-center" 
+                                                    style="font-size: clamp(0.7rem, 2.5vw, 0.85rem); padding: 0.5rem 0.75rem; height: fit-content; max-width: 100%; min-width: 0;">
+                                                        <i class="fas fa-plus-circle mr-2" style="flex-shrink: 0;"></i>
+                                                        <span class="text-truncate" style="min-width: 0;">Acquista Crediti</span>
                                                     </a>
+
                                                 </div>
 
-                                                <!-- Quick Stats Row -->
-                                                <div class="w-100 d-flex flex-column flex-md-row justify-content-between style-gap" style="gap: 1rem;">
 
-                                                   <!-- Card 1: Totali -->
+<!-- Quick Stats Row: CSS Grid with 100px auto-fit threshold -->
+<div class="pr-3 pr-md-0" style="
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
+    gap: 0.75rem; 
+    width: 100%;
+">
+
+    <!-- Card 1: Totali -->
+    <div class="text-center p-2 p-sm-3 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-width: 0;">
+        <div class="w-100 d-flex justify-content-center align-items-center">
+            <div class="d-inline-flex align-items-center px-2 py-1" 
+                 style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; max-width: 100%;">
+                <h6 class="m-0 font-weight-bold text-secondary d-flex align-items-center text-nowrap" 
+                    style="font-size: 0.72rem; letter-spacing: 0.05em; overflow: hidden; text-overflow: ellipsis;">
+                    <i class="fas fa-plus-circle text-primary mr-1" style="font-size: 0.8rem; flex-shrink: 0;"></i>
+                    CREDITI INIZIALI
+                </h6>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center py-1 mt-1">
+            <h3 id="initialCredits" class="text-dark font-weight-bold mb-0" style="font-size: 1.5rem; letter-spacing: -0.02em;">
+                <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
+                <span class="sr-only">Caricamento...</span>
+            </h3>
+        </div>
+    </div>
+
+    <!-- Hidden accessibility headers -->
+    <h4 class="sr-only">Statistiche Crediti</h4>
+    <h5 class="sr-only">Dettaglio Rimanenti e Utilizzati</h5>
+
+    <!-- Card 2: Disponibili -->
+    <div class="text-center p-2 p-sm-3 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-width: 0;">
+        <div class="w-100 d-flex justify-content-center align-items-center">
+            <div class="d-inline-flex align-items-center px-2 py-1" 
+                 style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; max-width: 100%;">
+                <h6 class="m-0 font-weight-bold text-secondary d-flex align-items-center text-nowrap" 
+                    style="font-size: 0.72rem; letter-spacing: 0.05em; overflow: hidden; text-overflow: ellipsis;">
+                    <i class="fas fa-arrow-alt-circle-up text-success mr-1" style="font-size: 0.8rem; flex-shrink: 0;"></i>
+                    CREDITI RIMANENTI
+                </h6>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center py-1 mt-1">
+            <h3 id="creditsRemaining" class="text-dark font-weight-bold mb-0" style="font-size: 1.5rem; letter-spacing: -0.02em;">
+                <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
+                <span class="sr-only">Caricamento...</span>
+            </h3>
+        </div>
+    </div>
+
+    <!-- Card 3: Utilizzati -->
+    <div class="text-center p-2 p-sm-3 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-width: 0;">
+        <div class="w-100 d-flex justify-content-center align-items-center">
+            <div class="d-inline-flex align-items-center px-2 py-1" 
+                 style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; max-width: 100%;">
+                <h6 class="m-0 font-weight-bold text-secondary d-flex align-items-center text-nowrap" 
+                    style="font-size: 0.72rem; letter-spacing: 0.05em; overflow: hidden; text-overflow: ellipsis;">
+                    <i class="fas fa-arrow-alt-circle-down text-warning mr-1" style="font-size: 0.8rem; flex-shrink: 0;"></i>
+                    CREDITI UTILIZZATI
+                </h6>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center justify-content-center py-1 mt-1">
+            <h3 id="creditsUsed" class="text-dark font-weight-bold mb-0" style="font-size: 1.5rem; letter-spacing: -0.02em;">
+                <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
+                <span class="sr-only">Caricamento...</span>
+            </h3>
+        </div>
+    </div>
+
+</div>
+
+                                                
+                                                <!-- Quick Stats Row -->
+                                                <!--<div class="w-100 d-flex flex-column flex-md-row justify-content-between style-gap" style="gap: 1rem;">
+
                                                     <div class="flex-fill text-center p-4 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
 
                                                        <div class="w-100 d-flex justify-content-center align-items-center mt-4">
@@ -493,7 +595,6 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- Main Metric Area: Larger, cleaner numeric font footprint -->
                                                         <div class="d-flex align-items-center justify-content-center py-1">
                                                             <h3 id="initialCredits" class="text-dark font-weight-bold mb-0" style="font-size: 1.85rem; letter-spacing: -0.02em;">
                                                                 <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
@@ -503,12 +604,9 @@
 
                                                     </div>
 
-                                                    <!-- muted h2 level just to stop the html valdiator to complain-->
                                                     <h4 class="sr-only">muted h4</h4>
-                                                    <!-- muted h3 level just to stop the html valdiator to complain-->
                                                     <h5 class="sr-only">muted h3</h5>
                                                     
-                                                    <!-- Card 2: Disponibili -->
                                                     <div class="flex-fill text-center p-4 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
                                                         
                                                         <div class="w-100 d-flex justify-content-center align-items-center mt-4">
@@ -522,7 +620,6 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- Main Metric Area with Percentage/Status Badge integration -->
                                                         <div class="d-flex align-items-center justify-content-center py-1" style="gap: 0.6rem;">
                                                             <h3 id="creditsRemaining" class="text-dark font-weight-bold mb-0" style="font-size: 1.85rem; letter-spacing: -0.02em;">
                                                                 <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
@@ -531,12 +628,9 @@
                                                         </div>
                                                     </div>
 
-                                                    <!-- muted h2 level just to stop the html valdiator to complain-->
                                                     <h4 class="sr-only">muted h4</h4>
-                                                    <!-- muted h3 level just to stop the html valdiator to complain-->
                                                     <h5 class="sr-only">muted h3</h5>
 
-                                                    <!-- Card 3: Utilizzati -->
                                                     <div class="flex-fill text-center p-4 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6;">
                                                          
                                                         <div class="w-100 d-flex justify-content-center align-items-center mt-4">
@@ -550,7 +644,6 @@
                                                             </div>
                                                         </div>
 
-                                                        <!-- Main Metric Area with Percentage/Status Badge integration -->
                                                         <div class="d-flex align-items-center justify-content-center py-1" style="gap: 0.6rem;">
                                                             <h3 id="creditsUsed" class="text-dark font-weight-bold mb-0" style="font-size: 1.85rem; letter-spacing: -0.02em;">
                                                                 <i class="fas fa-circle-notch fa-spin fa-xs text-muted" style="opacity: 0.5;"></i>
@@ -559,7 +652,7 @@
                                                         </div>
                                                     </div>
 
-                                                </div>
+                                                </div>-->
 
                                             </div>
                                                                             

@@ -704,7 +704,7 @@
                             <!-- Profile Image Container -->
                             <div class="position-relative flex-shrink-0 mr-3" style="width: 80px; height: 80px;">
                                 <!-- Added a 3px solid custom blue border matching your previous styling style -->
-                                <img id="patientAvatar-2" src="assets/sb-admin-2/img/undraw_profile.svg"
+                                <img id="patientAvatar" src="assets/sb-admin-2/img/undraw_profile.svg"
                                     class="img-fluid rounded-circle border shadow-sm p-1" 
                                     style="background-color: #fff; object-fit: cover; width: 100%; height: 100%; display: block; border: 1px solid #0000FF !important;">
                             </div>
@@ -712,8 +712,8 @@
                             <!-- Text Content Wrapper -->
                             <div class="d-flex flex-column overflow-hidden">
              
-                                <h5 id="patientFullName_2" class="text-dark mb-2 font-weight-bold text-truncate" style="font-size: 2.0rem; line-height: 1.2;">
-                                    Davide cleopadre           
+                                <h5 id="patientFullName" class="text-dark mb-2 font-weight-bold text-truncate" style="font-size: 2.0rem; line-height: 1.2;">
+                                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
                                 </h5>
 
                                 <!-- Badges Row -->
@@ -725,10 +725,10 @@
                                         <i class="fas fa-check-circle mr-1 flex-shrink-0"></i>Utente Attivo
                                     </span>
                                     <!-- Patient Status Badge Wrapper (Centered Layout) -->
-                                    <span id="patientMinorOrMajor_2" 
+                                    <span id="patientMinorOrMajor" 
                                         class="badge d-inline-flex align-items-center justify-content-center" 
                                         style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%;">
-                                        ciao       
+                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;"></i>
                                     </span>
                                 </div>
 
@@ -736,8 +736,8 @@
                                 <div class="mt-2 ">
                                     <small  class="text-muted" style="font-size: 0.85rem;">
                                         <i class="far fa-calendar mr-1"></i> 
-                                        <span id="patientSubDate_2"> 
-                                        1-1-2026
+                                        <span id="patientSubDate"> 
+                                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.85rem;"></i>
                                         </span>   
                                     </small>
                                 </div>
@@ -819,7 +819,7 @@
 
                         <div class="row border m-0">
                            
-                            <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" style="font-weight: 600;font-size: 1.0rem;  color:#7b80a7">
+                            <div id="formPatientName" class="col-4 p-2 border-right d-flex align-items-center justify-content-center" style="font-weight: 600;font-size: 1.0rem;  color:#7b80a7">
                                 Davide Cleopadre
                             </div>
 
@@ -856,7 +856,6 @@
                                     </div>
                                 </div>
                             </div>
-
                           
                             <script>
                                 function injectCurrentDate() {
@@ -1282,7 +1281,6 @@
 
                     </div>
 
-                       
                     <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
                        PROVA F: MEMORIA DI LAVORO (DIGIT SPAN INVERSO)
                     </h2>
@@ -1391,7 +1389,7 @@
                     <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
                     </h2>
 
-                    <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
+                    <!--<div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
                         <a href="#" id="assegna-btn" class="inner-action-btn" 
                             onclick="validateForm(); return false;" 
                             style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
@@ -1401,7 +1399,29 @@
                             style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
                             <i class="fas fa-trash text-danger mr-2"></i> Svuota
                         </a>
+                    </div>-->
+
+                    <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
+                        <!-- Save Button -->
+                        <button type="button" 
+                                id="assegna-btn" 
+                                class="inner-action-btn" 
+                                onclick="submitAssessment()" 
+                                style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
+                            <i class="fas fa-plus-circle text-success mr-2"></i> Assegna
+                        </button>
+
+                        <!-- Clear Button (Triggers Bootstrap Modal) -->
+                        <button type="button" 
+                                id="svuota-btn" 
+                                class="inner-action-btn" 
+                                data-toggle="modal" 
+                                data-target="#confirmClearModal" 
+                                style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
+                            <i class="fas fa-trash text-danger mr-2"></i> Svuota
+                        </button>
                     </div>
+
 
                 </article>
 
@@ -1529,8 +1549,88 @@
             }
         
         </script>
+       
+        <script>
+
+            // 1. Helper function to validate the patientId from localStorage
+            function getValidPatientId() {
+                const activeId = localStorage.getItem('activePatientId');
+                if (!activeId || activeId.trim() === '' || activeId === 'null' || activeId === 'undefined') {
+                    return null;
+                }
+                return activeId.trim();
+            }
+
+        </script>
 
         <script>
+
+            // Updates the age status badge of a patient with unified center alignments.
+            function updateAgeBadge(badgeElement, status) {
+                if (!badgeElement) return;
+
+                // d-inline-flex lets the container size itself strictly to the content string length
+                badgeElement.className = "badge text-white d-inline-flex align-items-center justify-content-center";
+                
+                // Design styles
+                badgeElement.style.borderRadius = "50px";
+                badgeElement.style.fontSize = "0.75rem";
+                badgeElement.style.padding = "4px 10px"; // Your precise custom padding
+                badgeElement.style.fontWeight = "600";
+                
+                // Safety boundaries (allows adapting to length, but caps at container edge)
+                badgeElement.style.maxWidth = "100%";
+
+                if (status === 1) {
+                    // --- ADULT STATE (Green) ---
+                    badgeElement.style.backgroundColor = "#4edf97";
+                    badgeElement.innerHTML = `
+                        <i class="fas fa-user mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Maggiorenne</span>
+                    `;
+                } else {
+                    // --- MINOR STATE (Red) ---
+                    badgeElement.style.backgroundColor = "#ff4d4d";
+                    badgeElement.innerHTML = `
+                        <i class="fas fa-child mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Minorenne</span>
+                    `;
+                }
+            }
+        
+            // Updates the subscription date label with proper Italian gender agreement.
+            function updateSubscriptionDate(target, date, gender) {
+                const element = typeof target === "string" ? document.getElementById(target) : target;
+                if (!element) return;
+                const formattedDate = date;
+                const label = (gender === "Femminile") ? "Iscritta il" : "Iscritto il";
+                element.textContent = `${label} ${formattedDate}`;
+            }
+            
+        </script>
+        
+        <script>
+
+            // Save partial progress
+            function saveDraftStep(stepName, stepData) {
+                let draft = JSON.parse(sessionStorage.getItem('currentAssessmentDraft') || '{}');
+                draft[stepName] = stepData;
+                sessionStorage.setItem('currentAssessmentDraft', JSON.stringify(draft));
+            }
+
+            // Retrieve accumulated draft when saving to Supabase
+            function getDraftForSaving() {
+                return JSON.parse(sessionStorage.getItem('currentAssessmentDraft') || '{}');
+            }
+
+            // Clear draft after successful Supabase save
+            function clearDraft() {
+                sessionStorage.removeItem('currentAssessmentDraft');
+            }
+
+        </script>
+
+         <script>
 
             $(document).ready(function() {
                 // Intercept the Logout button click
@@ -1540,9 +1640,8 @@
                     // 2. Run your application cleanup logic here
                     console.log("Logging out... clearing patient session data.");
                     // Clear your persistent patient storage so it doesn't hang around
-                    localStorage.removeItem('selectedPatientEmail');
                     // If you need to clear all session tokens, you could do:
-                    // localStorage.clear(); 
+                    localStorage.clear(); 
                     // 3. Manually trigger the redirect now that the data is wiped
                     window.location.href = $(this).attr('href'); 
                 });
@@ -1595,7 +1694,7 @@
                 // DATI BASE USER (SOLO AUTH)
                 const email = user.email;
                 
-             //   console.log("Utente:", user);
+            //    console.log("Utente:", user);
 
                 // CARICA PROFILO DAL DATABASE 
                 const { data: profile, error } = await supabase
@@ -1611,112 +1710,93 @@
                 }
 
                 // COSTRUZIONE DATI UI
-                const name         = `${profile.name}`;
-                const surname      = `${profile.surname}`;
-                const birthDate    = profile.birth_date;
-                const genre        = profile.genre;
-                const region       = profile.region;
-                const regNum       = profile.registration_number;
-                const regDate      = convertToItalianFormat(extractDate(profile.creation_date));
-                const age          = calculateAgeWithMonths(birthDate);
-                const userId       = user.id;
-                let totalCredits   = profile.total_credits;
-                let usedCredits    = profile.used_credits;
-                const subType      = profile.sub_type;
-                let prefix       = "";
-                if ( subType===1){
-                    prefix = genre === "Femminile" ? "Dott.ssa" : "Dott.";
-                } else if( subType===2) {
-                    prefix = genre === "Femminile" ? "Sig.ra" : "Sig.";
-                } else if( subType===3) {
-                    prefix = genre === "Femminile" ? "Prof.ssa" : "Prof.";
-                }
-                const title = prefix + " " +formatName(surname,name);
+                const name             = `${profile.name}`;
+                const surname          = `${profile.surname}`;
+                const genre            = profile.genre;
                 const fullNameNoPrefix = `${name} ${surname}`;
-                const fullName = `${prefix} ${name} ${surname}`;
-
-                totalCredits=200;
-                usedCredits=40;
-                
-               const totalPerc = Math.round((totalCredits-usedCredits)*100/totalCredits);
-               const usedPerc=100-totalPerc;
-/*
-               console.log(totalCredits);
-               console.log(usedCredits);
-               console.log(totalPerc+"%");
-               console.log(usedPerc+"%");
-               console.log(fullName);
-               console.log(birthDate);
-               console.log(genre);
-               console.log(region);
-               console.log(regDate);
-               console.log(age);
-               console.log(name);
-               console.log(surname);
-               console.log(userId);
-               console.log(totalCredits);
-               console.log(usedCredits);
-               console.log(subType);
-               console.log(email);
-*/
+              
                 // --- Nome nella NavBar ---
                 const userFullNameElement = document.getElementById("userFullName");
                 if (userFullNameElement) {
                     userFullNameElement.textContent = fullNameNoPrefix;
                 }
-              
+        
                 // update avatar in the navbar
-                updateUserAvatar(genre);
+                if (typeof updateUserAvatar === 'function') {
+                   updateUserAvatar(genre);
+                }
+
+                // ---  RECUPERO DATI PAZIENTE DA SUPABASE ---
+
+                const activePatientId = getValidPatientId();
+
+                if (!activePatientId) {
+                    alert("Nessun paziente selezionato. Ritorno alla lista...");
+               //     window.location.replace("patient-directory.html"); // Cambia con la tua pagina lista pazienti
+                    return;
+                }
+                
+            //    console.log(activePatientId);
+        
+                try {
                     
+                    // Esegui la query per il paziente attivo
+                    const { data: patientData, error: patientError } = await supabase
+                        .from("Clients") // <-- Sostituisci con il nome esatto della tua tabella pazienti
+                        .select("*")
+                        .eq("id", activePatientId)
+                        .single();
+
+                    if (patientError || !patientData) {
+                        console.error("Errore durante il recupero del paziente:", patientError);
+                      //  alert("Impossibile trovare i dati del paziente selezionato.");
+                        return;
+                    }
+                    
+                //    console.log("Dati Paziente Recuperati con successo:", patientData);
+
+                    const name = patientData.name;
+                    const surname = patientData.surname;
+                    const gender = patientData.genre;
+                    const fullNameNoPrefix = `${name} ${surname}`;
+                    const bdate = patientData.birth_date;
+                    const age = calculateAgeWithMonths(bdate);
+                    const minor_or_major = (age.years >= 18) ? 1 : 0;
+                    const subdate = patientData.consent_date;
+                    const subDateItalianFormat = subdate ? new Date(subdate).toLocaleDateString('it-IT') : '';
+           
+                //    console.log(name);
+                //    console.log(surname);
+                //    console.log(genre);
+                //    console.log(fullNameNoPrefix);
+                //    console.log(bdate);
+                //    console.log(minor_or_major);
+                //    console.log(age);
+
+                    //patientFullName
+                    const patientFullNameId = document.getElementById("patientFullName");
+                    patientFullNameId.textContent = fullNameNoPrefix;
+                    // patient age badge
+                    updateAgeBadge(document.getElementById("patientMinorOrMajor"),minor_or_major);
+                    updateSubscriptionDate(document.getElementById("patientSubDate"), subDateItalianFormat, gender);
+                    // patient avatar
+                    const patientavatarImg1 = document.getElementById("patientAvatar");
+                    if (gender === 'Femminile') {
+                            patientavatarImg1.src = 'assets/img/registrazione/kid-female.png';
+                    } else if (gender === 'Maschile') {
+                        patientavatarImg1.src = 'assets/img/registrazione/kid-male.png';
+                    } 
+                    const formPatientNameId= document.getElementById("formPatientName");
+                    formPatientNameId.textContent= fullNameNoPrefix;
+                    
+
+                } catch (err) {
+                    console.error("Eccezione durante il recupero dati paziente:", err.message);
+                }
+
             });
 
         </script>
-
-        <script>
-
-            // 1. Define your data structure
-            const protocolData = {
-                title:{
-                    text: ""
-                },
-                data:{
-                    evaluationDate: ""
-                },
-                education: {
-                    value: "",   
-                    level: ""              
-                },
-                prova_a:{
-                    accuratezza: "",
-                    velocita: ""
-                },
-                prova_b:{
-                    errori_ortografici_totali: ""
-                },
-                prova_c:{
-                    lettura_e_comprensione_del_testo: ""
-                },
-                prova_d:{
-                    dettato_di_numeri: "",
-                    fatti_numerici_calcolo_rapido: "",
-                    grandezza_frazionaria: ""
-                },
-                prova_e:
-                {
-                    errori_di_decisione:""
-                },
-                prova_f:
-                {
-                    capacità_working_memory:""
-                },
-                prova_g:
-                {
-                    isolamento_dei_dati_rilevanti:"",
-                    risoluzione_e_algoritmo:""
-                }
-            };
-
-       </script>
 
         <script>
 
@@ -1760,25 +1840,6 @@
                     select.style.borderColor = '';
                 });
 
-                // 3. Reset your data struct if you use one
-                if (typeof protocolData !== 'undefined') {
-                    // Reset your object fields here
-
-                    protocolData.data.evaluationDate = "";
-                    protocolData.education = "";
-                    protocolData.prova_a.accuratezza = "";
-                    protocolData.prova_a.velocita = "";
-                    protocolData.prova_b.errori_ortografici_totali = "";
-                    protocolData.prova_c.lettura_e_comprensione_del_testo = "";
-                    protocolData.prova_d.dettato_di_numeri = "";
-                    protocolData.prova_d.fatti_numerici_calcolo_rapido= "";
-                    protocolData.prova_d.grandezza_frazionaria= "";
-                    protocolData.prova_e.errori_di_decisione = "";
-                    protocolData.prova_f.capacità_working_memory= "";
-                    protocolData.prova_g.isolamento_dei_dati_rilevanti="";
-                    protocolData.prova_g.risoluzione_e_algoritmo="";
-                }
-
                 console.log("All elements cleared.");
 
                 // 2. Move focus to the body to be safe
@@ -1793,82 +1854,87 @@
 
         <script>
 
-            function validateForm()
-            {
-                // title check
+            function validateForm() {
+
+                // Title check
                 const titleInput = document.getElementById('therapyInput');
                 if (!titleInput.checkValidity() || !titleInput.value.trim()) {
                     titleInput.reportValidity(); // Displays the native browser warning popup
-                    return;
+                    return false; // FIX: Return false instead of undefined
                 }
 
                 // Date check
                 const dateInput = document.getElementById('clinicalDate');
-                 if (!dateInput.checkValidity()) {
-                    dateInput.reportValidity(); // This triggers the native browser popup
+                if (!dateInput.checkValidity()) {
+                    dateInput.reportValidity();
                     return false;
                 }
 
-                // read Classe Scolastica
+                // School select check & read
                 const selectElement = document.getElementById('scuolaSelect');
+                if (!selectElement.checkValidity()) { // FIX: Added check before reading options
+                    selectElement.reportValidity();
+                    return false;
+                }
+                
                 const selectedOption = selectElement.options[selectElement.selectedIndex];
                 const schoolData = {
-                    value: selectedOption.value,           // e.g., "2ª classe Scuola Primaria"
-                    group: selectedOption.parentNode.label // e.g., "Scuola Primaria"
+                    value: selectedOption.value,
+                    group: selectedOption.parentNode.label || ''
                 };
-               
-                // read PROVA A: LETTURA DI NON-PAROLE
+
+                // Read & validate PROVA inputs
                 const input1 = document.getElementById('prova_a_1');
                 if (!input1.checkValidity()) {
-                    input1.reportValidity(); // This triggers the browser's built-in alert
+                    input1.reportValidity();
                     return false;
                 }
 
                 const input2 = document.getElementById('prova_a_2');
                 if (!input2.checkValidity()) {
-                    input2.reportValidity(); // This triggers the browser's built-in alert
+                    input2.reportValidity();
                     return false;
                 }
- 
+
                 const input3 = document.getElementById('prova_b_1');
                 if (!input3.checkValidity()) {
-                    input3.reportValidity(); // This triggers the browser's built-in alert
+                    input3.reportValidity();
                     return false;
                 }
- 
+
                 const input4 = document.getElementById('prova_c_1');
                 if (!input4.checkValidity()) {
-                    input4.reportValidity(); // This triggers the browser's built-in alert
+                    input4.reportValidity();
                     return false;
                 }
- 
+
                 const input5 = document.getElementById('prova_d_1');
                 if (!input5.checkValidity()) {
-                    input5.reportValidity(); // This triggers the browser's built-in alert
+                    input5.reportValidity();
                     return false;
                 }
- 
+
                 const input6 = document.getElementById('prova_d_2');
                 if (!input6.checkValidity()) {
-                    input6.reportValidity(); // This triggers the browser's built-in alert
+                    input6.reportValidity();
                     return false;
                 }
- 
+
                 const input7 = document.getElementById('prova_d_3');
                 if (!input7.checkValidity()) {
-                    input7.reportValidity(); // This triggers the browser's built-in alert
+                    input7.reportValidity();
                     return false;
                 }
 
                 const input8 = document.getElementById('prova_e_1');
                 if (!input8.checkValidity()) {
-                    input8.reportValidity(); // This triggers the browser's built-in alert
+                    input8.reportValidity();
                     return false;
                 }
 
                 const input9 = document.getElementById('prova_f_1');
                 if (!input9.checkValidity()) {
-                    input9.reportValidity(); // This triggers the browser's built-in alert
+                    input9.reportValidity();
                     return false;
                 }
 
@@ -1884,25 +1950,85 @@
                     return false;
                 }
 
-                // Store as a float with 1 decimal place
-                
-                protocolData.title.text=document.getElementById('therapyInput').value.trim();
-                protocolData.data.evaluationDate = document.getElementById('clinicalDate').value;
-                protocolData.education = schoolData;
-                protocolData.prova_a.accuratezza = input1.value.trim();
-                protocolData.prova_a.velocita = parseFloat(input2.value).toFixed(1);
-                protocolData.prova_b.errori_ortografici_totali = input3.value.trim();
-                protocolData.prova_c.lettura_e_comprensione_del_testo = input4.value.trim();
-                protocolData.prova_d.dettato_di_numeri = input5.value.trim();
-                protocolData.prova_d.fatti_numerici_calcolo_rapido= input6.value.trim();
-                protocolData.prova_d.grandezza_frazionaria= input7.value.trim();
-                protocolData.prova_e.errori_di_decisione = input8.value.trim();
-                protocolData.prova_f.capacità_working_memory= input9.value.trim();
-                protocolData.prova_g.isolamento_dei_dati_rilevanti=select1.value;
-                protocolData.prova_g.risoluzione_e_algoritmo=select2.value;
-                
-                console.log(protocolData);
+                // 5. Build fresh protocol payload
+                const newAssessment = {
+                    timestamp: new Date().toISOString(),
+                    title: { text: titleInput.value.trim() },
+                    data: { evaluationDate: dateInput.value },
+                    education: schoolData,
+                    prova_a: { 
+                        accuratezza: input1.value.trim(), 
+                        velocita: parseFloat(input2.value).toFixed(1) 
+                    },
+                    prova_b: { errori_ortografici_totali: input3.value.trim() },
+                    prova_c: { lettura_e_comprensione_del_testo: input4.value.trim() },
+                    prova_d: {
+                        dettato_di_numeri: input5.value.trim(),
+                        fatti_numerici_calcolo_rapido: input6.value.trim(),
+                        grandezza_frazionaria: input7.value.trim()
+                    },
+                    prova_e: { errori_di_decisione: input8.value.trim() },
+                    prova_f: { capacità_working_memory: input9.value.trim() },
+                    prova_g: {
+                        isolamento_dei_dati_rilevanti: select1.value,
+                        risoluzione_e_algoritmo: select2.value
+                    }
+                };
 
+                console.log("Assessment Payload Ready:", newAssessment);
+                return newAssessment;
+            }
+
+            // 2. Direct Save Handler (Async)
+            async function submitAssessment() {
+                
+                // Step A: Validate and build assessment payload
+                const newAssessment = validateForm();
+                if (!newAssessment) return; // Validation failed, browser popup shown, abort.
+                
+                // Step B: Get active patient ID
+                const activePatientId = localStorage.getItem('activePatientId');
+                if (!activePatientId) {
+                    alert("Nessun paziente attivo trovato!");
+                    return;
+                }
+
+                try {
+                    /*
+                    // Step C: Fetch existing patient activity column
+                    const { data: patient, error: fetchError } = await supabase
+                        .from("Clients")
+                        .select("activity")
+                        .eq("id", activePatientId)
+                        .single();
+
+                    if (fetchError) throw fetchError;
+
+                    // Step D: Prepare updated structure
+                    let currentActivity = patient.activity || { Assessments: [], Certificates: [], Therapies: [] };
+                    if (!currentActivity.Assessments) currentActivity.Assessments = [];
+
+                    // Prepend new assessment to top of array
+                    currentActivity.Assessments.unshift(newAssessment);
+
+                    // Step E: Save back to Supabase
+                    const { error: updateError } = await supabase
+                        .from("Clients")
+                        .update({ activity: currentActivity })
+                        .eq("id", activePatientId);
+
+                    if (updateError) throw updateError;
+
+                    alert("Valutazione salvata con successo!");
+                    window.location.href = "patient-profile.html";
+*/
+                } catch (err) {
+                    /*
+                    console.error("Errore durante il salvataggio:", err);
+                    alert("Errore durante il salvataggio dei dati.");
+                    */
+                }
+                    
             }
 
         </script>
