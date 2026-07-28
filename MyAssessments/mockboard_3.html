@@ -932,7 +932,7 @@
                 <!-- Column 2: Location & Contact -->
                 <div class="col-md-4 px-md-3 mt-3">
 
-                    <div class="mb-2">
+                    <!--<div class="mb-2">
                         <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">ASSESSMENTS CARICATI</span>
                         <span id="quickrecapassessments" 
                             class="badge badge-success px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
@@ -940,9 +940,14 @@
                             <span class="text-truncate text-white d-inline-block" style="max-width: 100%;">
                             </span>
                       </span>
-                    </div>
+                    </div>-->
 
                     <div class="mb-2">
+                        <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">ASSESSMENTS CARICATI</span>
+                        <span id="quickrecapassessments"></span>
+                    </div>
+
+                    <!--<div class="mb-2">
                         <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">CERTIFICATI CARICATI</span>
                         <span id="quickrecapcertificates" 
                             class="badge badge-success px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
@@ -950,9 +955,14 @@
                             <span class="text-truncate text-white d-inline-block" style="max-width: 100%;">
                             </span>
                       </span>
-                    </div>
+                    </div>-->
 
                     <div class="mb-2">
+                        <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">CERTIFICATI CARICATI</span>
+                        <span id="quickrecapcertificates"></span>
+                    </div>
+
+                    <!--<div class="mb-2">
                          <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">TERAPIE ASSEGNATE</span>
                          <span id="quickrecaptherapies" 
                             class="badge  px-3 py-1 d-inline-flex align-items-center mw-100 rounded-pill" 
@@ -960,6 +970,11 @@
                             <span class="text-truncate text-white d-inline-block" style="max-width: 100%;">
                             </span>
                         </span>
+                    </div>-->
+
+                      <div class="mb-2">
+                        <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">TERAPIE ASSEGNATE</span>
+                        <span id="quickrecaptherapies"></span>
                     </div>
 
                 </div>
@@ -1589,7 +1604,7 @@
             }
 
             const clinicianId = profile.id; 
-            console.log(clinicianId);
+       //     console.log(clinicianId);
 
             // 5. CARICA PAZIENTI (Added window. and fixed fetcherror check)
             const { data: clients, error: fetcherror } = await window.supabase
@@ -1654,13 +1669,17 @@
     <script>
 
         // Mute buttons according to therapy or certificate presence
-        function updateActionButtons(patient) {
-/*
+        function updateActionButtons(assessmentsSize,certificatesSize,therapiesSize) {
+
+        //    console.log(`Assessments: ${assessmentsSize}`);
+        //    console.log(`Certificates: ${certificatesSize}`);
+        //    console.log(`Therapies: ${therapiesSize}`);
+
             // toggles 'terapia' page when there is no available data
 
             const therapyDataContainer = document.getElementById("therapyDataContainer");
             const therapyEmptyMessage = document.getElementById("therapyEmptyMessage");
-            const hasTherapies = !!(patient.terapia && Object.keys(patient.terapia).length > 0);
+            const hasTherapies = therapiesSize > 0;
 
             if (hasTherapies) {
                 therapyDataContainer.style.display = "block";
@@ -1695,7 +1714,7 @@
 
             const certificatiDataContainer = document.getElementById("certificateDataContainer");
             const certificatiEmptyMessage = document.getElementById("certificateEmptyMessage");
-            const hasCertificates = !!(patient.certificati && patient.certificati.length > 0);
+            const hasCertificates = certificatesSize > 0;
             
             if (hasCertificates) {
                 certificatiDataContainer.style.display = "block";
@@ -1718,12 +1737,12 @@
                 viewCertificateBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
                 listCertificateBtn.addClass('disabled opacity-50').css('pointer-events', 'none').find('i').removeClass('text-success').addClass('text-muted');
             }
-            */
-            // toggles 'assessments' page when there is no available data
 
+            // toggles 'assessments' page when there is no available data
+            
             const assessmentsDataContainer = document.getElementById("assessmentsDataContainer");
             const assessmentsEmptyMessage = document.getElementById("assessmentsEmptyMessage");
-            const hasAssessments = !!(patient.assessments && patient.assessments.length > 0);
+            const hasAssessments = assessmentsSize > 0;
 
             if (hasAssessments) {
                 assessmentsDataContainer.style.display = "block";
@@ -1895,59 +1914,6 @@
 
     </script>
 
-    <!--<script>
-
-        async function getClinicianPatients() {
-            const { data: { session } } = await window.supabase.auth.getSession();
-
-            if (!session?.user) {
-                window.location.replace("index.html");
-                return;
-            }
-
-            const user = session.user;
-
-            // 2. AUTO LOGOUT HANDLER (Added window.)
-            window.supabase.auth.onAuthStateChange((event, session) => {
-                if (event === "SIGNED_OUT" || !session) {
-                    window.location.replace("index.html");
-                }
-            });
-
-            // 4. CARICA PROFILO DAL DATABASE (Added window.)
-            const { data: profile, error } = await window.supabase
-                .from("Clinicals")
-                .select("*")
-                .eq("id", user.id)
-                .single();
-
-            if (error || !profile) {
-                console.error("Errore caricamento profilo:", error);
-                window.location.replace("index.html");
-                return;
-            }
-
-            const clinicianId = profile.id; 
-            console.log(clinicianId);
-
-            // 5. CARICA PAZIENTI (Added window. and fixed fetcherror check)
-            const { data: clients, error: fetcherror } = await window.supabase
-                .from('Clients')
-                .select('*')
-                .eq('clinical_id', clinicianId);
-
-            if (fetcherror) {
-                console.error('Error fetching clients:', fetcherror);
-                window.location.replace("index.html");
-                return;
-            }
-
-            console.log(clients);
-            return clients; // Don't forget to return the data so your table can use it!
-        }
-        
-    </script>-->
-    
     <script>
 
         function handleNewAssessment(event) {
@@ -1957,9 +1923,9 @@
                 alert("Seleziona prima un paziente!");
                 return;
             }
-            console.log(activePatientId);
+           // console.log(activePatientId);
             // Redirect to new assessment page
-            //window.location.href = 'new-assessment.html';
+            window.location.href = 'assessment_chooser.html';
         }
 
     </script>
@@ -2003,8 +1969,46 @@
                     agestr = age.years + " Anni";
                 const subDateItalianFormat = subdate ? new Date(subdate).toLocaleDateString('it-IT') : '';
                 const italian_birth_date=convertToItalianFormat(bdate);
-                 // update action buttons
-                updateActionButtons(patient);
+
+                // get patient activity json
+                let activity = patient?.activity;
+                // Safe at every single level!
+                const count = patient?.activity?.Assessments?.length || 0;
+                // 1. Ensure it's parsed as an object if it came through as a string
+                if (typeof activity === 'string') {
+                    try {
+                        activity = JSON.parse(activity);
+                    } catch (e) {
+                        activity = {};
+                    }
+                }
+
+        //     console.log(activity);
+                
+                // 2. Safely get the sizes (defaults to 0 if the key/array doesn't exist yet)
+                const assessmentsSize = activity?.Assessments?.length || 0;
+                const certificatesSize = activity?.Certificates?.length || 0;
+                const therapiesSize   = activity?.Therapies?.length || 0;
+
+                // 2. Grab the first element of the Assessments array safely
+                const latestAssessment = activity?.Assessments?.[0];
+
+                // 3. Extract title and timestamp if the assessment exists
+                const latestTitle = typeof latestAssessment?.title === 'object' 
+                    ? latestAssessment?.title?.text 
+                    : (latestAssessment?.title || 'Senza Titolo');
+                const latestTimestampRaw = latestAssessment?.timestamp || null;
+                const latestTimestamp = latestTimestampRaw ? new Date(latestTimestampRaw).toLocaleDateString('it-IT') : '';
+
+           //     console.log("Latest Title:", latestTitle);
+           //     console.log("Latest Timestamp:", latestTimestamp);
+
+                //    console.log(`Assessments: ${assessmentsSize}`);
+                //    console.log(`Certificates: ${certificatesSize}`);
+                //    console.log(`Therapies: ${therapiesSize}`);
+
+                // update action buttons
+                updateActionButtons(assessmentsSize,certificatesSize,therapiesSize);
 
                 // first card patient profile
                 updateText("patientFullName_1", fullName);
@@ -2052,6 +2056,7 @@
                         <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Nessuna Terapia Assegnata</span>
                     `;
                 }
+
                 const quickrecapcertificates = document.getElementById("quickrecapcertificates");
                 if (quickrecapcertificates) {
                     // 1. Force layout properties to handle centering and truncation limits
@@ -2073,7 +2078,7 @@
                         <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Nessun Certificato Caricato</span>
                     `;
                 }
-
+                
                 const quickrecapassessments = document.getElementById("quickrecapassessments");
                 if (quickrecapassessments) {
                     // 1. Force layout properties to handle centering and truncation limits
@@ -2084,19 +2089,25 @@
                     quickrecapassessments.style.fontSize = "0.65rem";
                     quickrecapassessments.style.padding = "4px 10px";
                     quickrecapassessments.style.fontWeight = "600";
-                    quickrecapassessments.style.backgroundColor = '#adb5bd';
-                    
-                    // 3. Safety guardrail to stop at the edge of the container
                     quickrecapassessments.style.maxWidth = "100%";
 
-                    // 4. Structural HTML markup to protect the icon and isolate text for truncation
+                    // 3. Dynamic content & color based on assessment count
+                    const hasAssessments = assessmentsSize > 0;
+                    
+                    // Pluralization / copy formatting
+                    const badgeText = hasAssessments 
+                        ? `${assessmentsSize} ${assessmentsSize === 1 ? 'Assessment' : 'Assessments'}` 
+                        : "Nessun Assessment Caricato";
+
+                    // Dynamic background color (e.g., Primary blue/green when data exists, neutral gray when empty)
+                    quickrecapassessments.style.backgroundColor = hasAssessments ? "#0d6efd" : "#adb5bd";
+
+                    // 4. Render HTML markup
                     quickrecapassessments.innerHTML = `
                         <i class="fas fa-layer-group mr-1 flex-shrink-0" style="font-size: 0.8rem;"></i> 
-                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Nessun Assessment Caricato</span>
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">${badgeText}</span>
                     `;
                 }
-
-                
 
                 // second card 'assessments'
                 updateText("patientFullName_4", fullName);
@@ -2110,11 +2121,11 @@
                 } 
                 const assessmentsNameId = document.getElementById("assessmentName");
                 if (assessmentsNameId) {
-                    assessmentsNameId.textContent = "cioa";
+                    assessmentsNameId.textContent = latestTitle;
                 }
                 const assessmentStartDateId = document.getElementById("assessmentStartDate");
                 if (assessmentStartDateId) {
-                    assessmentStartDateId.textContent = "xxx";
+                    assessmentStartDateId.textContent = latestTimestamp;
                 }
 
                 // third card 'certificati'
@@ -2169,7 +2180,7 @@
                         // Assign directly to the global variable
                         window.patients2 = clients || [];
                         
-                        console.log("Global patients array populated:", window.patients2);
+                     //   console.log("Global patients array populated:", window.patients2);
                         
                         // update patient number
                         const patients_number=window.patients2.length;

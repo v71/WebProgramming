@@ -1505,6 +1505,18 @@
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>        
         <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
 
+     <script type="module">
+
+             // init supabase
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+            
+            // --- Supabase setup ---
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+            window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+    </script>
+
         <script>
 
             // A global tracker variable to protect against aggressive database render loops
@@ -1663,9 +1675,9 @@
            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
            
            // --- Supabase setup ---
-           const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
-           const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
-           const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        //   const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+        //   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+        //   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
             // --- Event Listeners 
             document.addEventListener("DOMContentLoaded", async () => {
@@ -1675,7 +1687,7 @@
                 document.getElementById('clinicalDate').setAttribute('max', today);
 
                 // CHECK SESSIONE
-                const { data: { session } } = await supabase.auth.getSession();
+                const { data: { session } } = await window.supabase.auth.getSession();
 
                 if (!session?.user) {
                     window.location.replace("index.html");
@@ -1685,7 +1697,7 @@
                  const user = session.user;
 
                 // AUTO LOGOUT HANDLER
-                supabase.auth.onAuthStateChange((event, session) => {
+                window.supabase.auth.onAuthStateChange((event, session) => {
                     if (event === "SIGNED_OUT" || !session) {
                     window.location.replace("index.html");
                     }
@@ -1697,7 +1709,7 @@
             //    console.log("Utente:", user);
 
                 // CARICA PROFILO DAL DATABASE 
-                const { data: profile, error } = await supabase
+                const { data: profile, error } = await window.supabase
                     .from("Clinicals")
                     .select("*")
                     .eq("id", user.id)
@@ -1741,7 +1753,7 @@
                 try {
                     
                     // Esegui la query per il paziente attivo
-                    const { data: patientData, error: patientError } = await supabase
+                    const { data: patientData, error: patientError } = await window.supabase
                         .from("Clients") // <-- Sostituisci con il nome esatto della tua tabella pazienti
                         .select("*")
                         .eq("id", activePatientId)
@@ -1985,7 +1997,7 @@
                 // Step A: Validate and build assessment payload
                 const newAssessment = validateForm();
                 if (!newAssessment) return; // Validation failed, browser popup shown, abort.
-                
+
                 // Step B: Get active patient ID
                 const activePatientId = localStorage.getItem('activePatientId');
                 if (!activePatientId) {
@@ -1994,9 +2006,11 @@
                 }
 
                 try {
-                    /*
+                    // Use consistent Supabase client reference
+                    const supabaseClient = window.supabase;
+
                     // Step C: Fetch existing patient activity column
-                    const { data: patient, error: fetchError } = await supabase
+                    const { data: patient, error: fetchError } = await supabaseClient
                         .from("Clients")
                         .select("activity")
                         .eq("id", activePatientId)
@@ -2004,31 +2018,35 @@
 
                     if (fetchError) throw fetchError;
 
-                    // Step D: Prepare updated structure
-                    let currentActivity = patient.activity || { Assessments: [], Certificates: [], Therapies: [] };
-                    if (!currentActivity.Assessments) currentActivity.Assessments = [];
+                    // Step D: Prepare updated structure safely
+                    // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
+                    let currentActivity = patient?.activity 
+                        ? JSON.parse(JSON.stringify(patient.activity)) 
+                        : { Assessments: [], Certificates: [], Therapies: [] };
+
+                    if (!Array.isArray(currentActivity.Assessments)) {
+                        currentActivity.Assessments = [];
+                    }
 
                     // Prepend new assessment to top of array
                     currentActivity.Assessments.unshift(newAssessment);
 
-                    // Step E: Save back to Supabase
-                    const { error: updateError } = await supabase
+                    // Step E: Save back to Supabase (using supabaseClient)
+                    const { data,error: updateError } = await supabaseClient
                         .from("Clients")
                         .update({ activity: currentActivity })
-                        .eq("id", activePatientId);
+                        .eq("id", activePatientId)
+                        .select(); // <--- Adding .select() returns the updated row to verify
+                
+                        console.log("Updated row result:", data);
 
                     if (updateError) throw updateError;
 
-                    alert("Valutazione salvata con successo!");
-                    window.location.href = "patient-profile.html";
-*/
+                    console.log("Saved successfully!");
+
                 } catch (err) {
-                    /*
                     console.error("Errore durante il salvataggio:", err);
-                    alert("Errore durante il salvataggio dei dati.");
-                    */
                 }
-                    
             }
 
         </script>
