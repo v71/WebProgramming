@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyAssessments</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+
+    <!-- CSS in <head> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+
+    <style>
+        /* Custom Overrides for the "Renaizant" look */
+        #accordionSidebar { background-color: rgb(17, 25, 131) !important; background-image: none !important; }
+        .sidebar-dark .nav-item .nav-link { color: rgba(255, 255, 255, 0.7); }
+        .sidebar-dark .nav-item.active .nav-link { color: #fff; font-weight: 700; border-left: 3px solid #e91e63; }
+        .bg-custom-gray { background-color: #f8f9fc; }
+        .card { border: none; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05); }
+        .progress-bar-orange { background-color: #ff9800; }
+        .org-footer { background: #3d2b46; border-radius: 8px; margin: 1rem; padding: 10px; }
+    </style>
+
+    <style>
+
+        /* Standard Desktop Layout */
+        @media (min-width: 768px) {
+            .responsive-side-panel {
+                flex-basis: 300px;
+                flex-grow: 0;
+                min-width: 260px;
+            }
+        }
+
+        /* Fluid Mobile Layout when compressed or sidebar is open */
+        @media (max-width: 767.98px) {
+            .responsive-side-panel {
+                width: 100%;
+                flex-basis: auto;
+                flex-grow: 1;
+                min-width: 0; /* Prevents layout blowout */
+                margin-bottom: 1.5rem; /* Cleaner separation if other cards stack under it */
+            }
+        }
+
+    </style>
+    
+    <style>
+
+        /* Force the body and wrapper to be exactly the screen height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevents the 'scrolling arrows' on the main body */
+        }
+
+        #wrapper {
+            height: 100vh;
+        }
+
+        #content-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #content {
+            flex: 1; /* This takes up all available space between topbar and footer */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Keeps the scrolling inside the cards, not the page */
+        }
+
+         /* Make the container fill the remaining space */
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-top: 0.5rem;    /* Balanced spacing at the top */
+            padding-bottom: 0.5rem; /* Identical spacing at the bottom */
+        }
+
+        /* Ensure the row and columns fill the height */
+        .container-fluid > .row {
+            flex: 1;
+        }
+
+    </style>
+
+<style>
+
+@media (min-width: 768px) {
+    /* Force the sidebar to be visible and full-width on desktop */
+    .sidebar {
+        display: flex !important;
+        width: 14rem !important; /* Standard SB Admin 2 desktop width */
+        margin-left: 0 !important;
+        position: relative !important;
+        z-index: 1 !important;
+    }
+
+    /* Prevent the mobile 'toggled' class from shrinking it on desktop */
+    .sidebar.toggled {
+        width: 14rem !important;
+    }
+
+    /* Ensure the brand/logo area stays visible */
+    .sidebar .sidebar-brand .sidebar-brand-text {
+        display: inline !important;
+    }
+
+    /* Remove the blur effect if the window is resized to desktop */
+    #content-wrapper {
+        filter: none !important;
+        opacity: 1 !important;
+    }
+}
+
+</style>
+
+    <style>
+        
+        /* 1. Navigation Styling */
+        .modern-pills .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .modern-pills .nav-link.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: transparent;
+        }
+
+        /* 2. Spaced Button Styling */
+        .spaced-action-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            text-decoration: none !important;
+            background: #ffffff;
+            border: 1px solid #f1f5f9; /* Subtle border */
+            border-radius: 12px; /* Rounded corners */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .spaced-action-item:hover {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+            transform: translateX(4px); /* Subtle slide effect */
+        }
+
+        .action-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* 3. Small Modern Icons */
+        .icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Soft Colors */
+        .bg-blue-soft { background-color: #eff6ff; }
+        .bg-red-soft { background-color: #fef2f2; }
+        .bg-purple-soft { background-color: #f5f3ff; }
+        .bg-green-soft { background-color: #ecfdf5; }
+        .text-purple { color: #8b5cf6; }
+        
+        .ms-auto { margin-left: auto; }
+
+    </style>
+
+    <style>
+
+        @media (max-width: 768px) {
+            .card-grid-container > .card {
+                flex: 0 0 100% !important; /* 1 card per row on mobile */
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1199px) {
+            .card-grid-container > .card {
+                flex: 0 0 calc(50% - 10px) !important; /* 2 cards per row on tablet */
+            }
+        }
+
+    </style>
+
+    <style>
+
+        /* Disable the browser's attempt to adjust scroll position when content grows/shrinks */
+        html {
+            overflow-anchor: none;
+        }
+        /* Ensure the tab content area is always at least the height of the screen minus your header */
+        .tab-content {
+            min-height: calc(100vh - 200px); /* Adjust 200px to match your header/navbar height */
+        }
+
+    </style>
+
+
+    <style>
+        
+        #therapy-name {
+            background-color: #f8f9fc;      /* Very subtle light background */
+            border-radius: 8px 8px 8px 8px;     /* Rounded right side only */
+        }
+
+    </style>
+
+    <style>
+
+        .inner-action-btn {
+            flex: 1;
+            min-width: 100px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #d1e9ff;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            text-decoration: none !important;
+            cursor: pointer;
+            color: #4a4a4a;
+        }
+
+        .inner-action-btn:hover {
+            background-color: #ffffff;
+            border-color: #4e73df;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .inner-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .inner-action-btn i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        
+        /* The 'Muted' state for your custom button */
+        .inner-action-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;    /* Physically prevents clicking */
+            cursor: not-allowed;
+            filter: grayscale(1);    /* Optional: makes the green icon look grey */
+            text-decoration: none;
+        }
+
+    </style>
+
+    <style>
+
+        .btn-muted {
+            opacity: 0.3 !important;
+            pointer-events: none !important; /* Disables clicking */
+            cursor: default !important;
+        }
+
+    </style>
+
+<!-- Google Fonts -->
+
+<style>
+  .pt-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 50px 20px;
+    font-family: 'Inter', sans-serif;
+    color: #2a2a2a;
+    line-height: 1.8;
+  }
+
+  .pt-title {
+    font-size: 2.0rem;
+    font-weight: 600;
+    line-height: 1.25;
+    margin-bottom: 10px;
+    color: #0f0f0f;
+  }
+
+  .pt-meta {
+    font-size: 0.92rem;
+    color: #666;
+    margin-bottom: 35px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 15px;
+  }
+
+  .pt-section-title {
+    font-size: 1.0rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #4ba37f;
+  }
+
+  .pt-subtitle {
+    font-size: 1.15rem;
+    color: #555;
+    line-height: 1.5;
+    margin-bottom: 35px;
+  }
+
+  .pt-quote {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    background: #f4f7ff;
+    padding: 25px 30px;
+    border-left: 5px solid #005bbb;
+    margin: 40px 0;
+    color: #233;
+  }
+
+  .pt-list {
+    list-style: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .pt-list li {
+    margin-bottom: .5rem;
+  }
+
+  .pt-highlight-box {
+    background: #fafafa;
+    border: 1px solid #e6e6e6;
+    padding: 20px 25px;
+    border-radius: 6px;
+    margin: 35px 0;
+  }
+
+  .pt-highlight-box strong {
+    color: #005bbb;
+  }
+  
+#funzioni-esecutive {
+  padding-bottom: 60px;
+}
+
+.pt-section-title {
+  margin-bottom: 30px;
+}
+
+.ef-item p {
+  text-align: center;
+}
+</style>
+
+<style>
+
+.section-title {
+  font-weight: 700;
+  color: #2c3e50;
+}
+</style>
+
+<style>
+
+/* TESTO GENERICO */
+.ef-item p {
+  text-align: center;
+}
+
+/* IMMAGINE */
+.ef-image {
+  border-radius: 12px;
+}
+
+/* GRID */
+.ef-grid {
+  display: grid;
+  /*grid-template-columns: repeat(2, 1fr);*/
+  gap: 20px;
+}
+
+/* CARD */
+.ef-card {
+  background: #bdbdfa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+  min-height: 160px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* TITOLO */
+.ef-card h5 {
+  font-weight: 700;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* TESTO */
+.ef-card p {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+/* ICONA */
+.ef-icon {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .ef-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+
+
+<style>
+
+
+.note-box {
+    background-color: #f0f7f4; /* Light, soft background color */
+    border-left: 5px solid #4fce55; /* Thicker, darker left border */
+    padding: 15px 20px;
+    border-radius: 4px;
+    color: #2e7d32; /* Darker text for readability */
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0px 0;
+}
+
+/* Shared styling for all badges */
+.note-box span[class^="badge-"] {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 700;
+    margin: 0 4px;
+    font-size: 0.9em;
+}
+
+/* Specific colors for each category */
+.badge-co {
+    background-color: #d1e7dd; /* Light Green */
+    color: #0f5132;
+}
+
+.badge-ra {
+    background-color: #fff3cd; /* Light Yellow/Orange */
+    color: #856404;
+}
+
+.badge-rii {
+    background-color: #f8d7da; /* Light Red */
+    color: #842029;
+}
+</style>
+
+<style>
+
+    /* Custom focus state for your date input */
+    #clinicalDate:focus {
+        border-color: #86b7fe; /* A standard light blue */
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* The soft blue glow */
+    }
+
+    /* Optional: Match the button's focus state if desired */
+    .btn-outline-secondary:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+</style>
+
+
+<style>
+
+/* Force the dropdown list to be wider than the select input */
+.choices__list--dropdown {
+    min-width: 350px; /* Adjust this value to fit your longest string */
+    z-index: 1050;    /* Ensures it sits on top of other grid elements */
+}
+
+/* Optional: Clean up the appearance to match your grid */
+.choices__inner {
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+</style>
+
+<style>
+
+    .badge-co {
+    background-color: #d1e7dd; /* Light Green */
+    color: #0f5132;
+    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
+    border-radius: 30px;       /* This creates the pill shape */
+    font-size: 0.75rem;        /* Slightly smaller to look proportional */
+    font-weight: bold;
+    display: inline-block;     /* Essential for padding to work correctly on a span */
+}
+
+.badge-ra {
+    background-color: #fff3cd; /* Light Yellow/Orange */
+    color: #856404;
+    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
+    border-radius: 30px;       /* This creates the pill shape */
+    font-size: 0.75rem;        /* Slightly smaller to look proportional */
+    font-weight: bold;
+    display: inline-block;     /* Essential for padding to work correctly on a span */
+}
+
+.badge-rii {
+    background-color: #f8d7da; /* Light Red */
+    color: #842029;
+    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
+    border-radius: 30px;       /* This creates the pill shape */
+    font-size: 0.75rem;        /* Slightly smaller to look proportional */
+    font-weight: bold;
+    display: inline-block;     /* Essential for padding to work correctly on a span */
+}
+
+</style>
+
+<style>
+.no-spinner {
+    /* Standard property (future-proof) */
+    appearance: textfield;
+    
+    /* Vendor-specific fallback for Firefox */
+    -moz-appearance: textfield;
+}
+
+/* Remove arrows for Chrome, Safari, and Edge */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+</style>
+
+
+    <style>
+
+        /* Force the table to stop expanding beyond its container */
+        #PatientdataTable {
+            width: 100% !important;
+            margin: 0 !important;
+            table-layout: fixed; /* This forces columns to fit within the 100% */
+            word-wrap: break-word;
+        }
+
+        /* Allow text to wrap so columns can shrink */
+        #PatientdataTable td, #PatientdataTable th {
+            white-space: normal !important;
+            vertical-align: middle;
+        }
+
+        /* Add internal breathing room to cells */
+        #PatientdataTable th, 
+        #PatientdataTable td {
+            padding: 12px 15px !important; /* Adjust these numbers to your liking */
+            vertical-align: middle;
+        }
+
+        /* Ensure the table isn't touching the card edges */
+        .dataTables_wrapper {
+            padding: 10px;
+        }
+
+        /* Add space between the Search bar/Length menu and the actual table */
+        .dataTables_filter, .dataTables_length {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_info, .dataTables_paginate {
+            margin-top: 15px;
+        }
+
+</style>
+
+<style>
+
+    /* 4. Fix Pagination alignment */
+    .dataTables_paginate {
+        float: right;
+        margin-top: 1rem;
+    }
+
+    /* Consolidated DataTables Info Text (e.g., "Showing 1 to 10 of 50") */
+    .dataTables_info {
+        padding-top: 0.5rem !important; /* Balanced spacing */
+        font-size: 0.8rem;
+        color: #858796;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Prevents text from breaking the layout if container shrinks */
+    }
+
+    /* 2. Search Bar Alignment: Modern Flexbox approach */
+    .dataTables_filter {
+        display: flex;
+        justify-content: flex-end; /* Replaces float: right */
+        align-items: center;      /* Centers the "Search:" label with the input box */
+        gap: 0.5rem;               /* Optional: adds a clean gap between label and input */
+        margin-top: 4px;
+    }
+
+    /* 3. Standardized Search Input: Bootstrap look with fixed width */
+    .dataTables_filter input {
+        width: 200px !important; 
+        border: 1px solid #d1d3e2;
+        border-radius: 0.35rem;
+        padding: 0.3rem 0.75rem;
+        margin-left: 0.5rem !important; /* Keep the gap so the label doesn't touch the box */
+        margin-right: 0 !important;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    /* Optional: Add a blue glow on focus to match Bootstrap's behavior */
+    .dataTables_filter input:focus {
+        border-color: #bac8f3;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+
+</style>
+
+<style>
+
+    /* 2. Force the Dropdown width to match */
+    #searchColumn {
+        width: 200px !important; /* Must match the input width above */
+    }
+
+    /* 3. Ensure the container doesn't add extra padding */
+    #customFilterPlaceholder {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /* 6. Clean up the table headers */
+    #AssessmentDataTable  thead th {
+        background-color: #f8f9fc;
+        border-bottom: 2px solid #e3e6f0;
+        color: #4e73df;
+    }
+
+    /* Center text in both header and body cells */
+    #AssessmentDataTable  th, 
+    #AssessmentDataTable  td {
+        text-align: center;
+        vertical-align: middle !important; /* Also keeps text centered vertically */
+    }
+
+    /* Target the cells directly to force the cursor change */
+    #AssessmentDataTable  tbody tr td {
+        cursor: pointer !important;
+    }
+
+    /* Force the hover color on the cells */
+    #AssessmentDataTable tbody tr:hover td {
+        background-color: #f8f9fc !important; 
+        color: #4e73df !important; /* Optional: changes text color to blue on hover */
+    }
+
+    #searchColumn {
+        font-weight: 800;
+        color: #4e73df; /* SB Admin 2 Primary Blue */
+    }
+
+</style>
+
+<style>
+
+    /* Standardize the top border of the header cells */
+    .table thead th {
+        border-bottom: none !important; /* Slightly thicker but matches SB Admin style */
+        border-top: none !important;
+    } 
+
+    /* 1. Remove the forced scrollbar but keep the table inside the card */
+    .table-responsive {
+        overflow-x: hidden !important; 
+        padding: 1rem;
+    }
+
+    /* Apply this to the wrapper around your table */
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto !important; /* Forces the scrollbar back */
+        -webkit-overflow-scrolling: touch; /* High-performance scrolling for mobile */
+        border: none; /* Removes any double borders */
+    }
+
+</style>
+
+<style>
+
+    #loadingSpinner {
+        /* Adjust min-height to match the space your 5-row table usually takes */
+        min-height: 450px; 
+        display: flex;
+        flex-direction: column; /* Stack spinner and text vertically */
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
+        background-color: #fff; /* Match the card background */
+    }
+
+    /* Make the spinner "thickness" look proportional to the new size */
+    .spinner-border {
+        border-width: 0.5rem; 
+    }
+
+</style>
+
+<style>
+
+    @media (max-width: 768px) {
+        /* Force the table, rows, and cells to behave like a table */
+        .table-responsive table, 
+        .table-responsive thead, 
+        .table-responsive tbody, 
+        .table-responsive th, 
+        .table-responsive td, 
+        .table-responsive tr {
+            display: table !important; /* Overrides 'block' or 'flex' */
+            width: auto !important;
+        }
+        
+        .table-responsive tr {
+            display: table-row !important;
+        }
+        
+        .table-responsive td, 
+        .table-responsive th {
+            display: table-cell !important;
+            /* Prevent text from wrapping so the cell width stays fixed */
+            white-space: nowrap !important; 
+            padding: 10px 15px !important;
+        }
+    }
+
+    /* Force table layout to remain consistent */
+    .table-responsive table {
+        table-layout: auto !important; /* Let content dictate width */
+        border-collapse: collapse !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Ensure Header and Body cells have the exact same sizing rules */
+    .table-responsive th,
+    .table-responsive td {
+        width: auto !important;
+        min-width: 120px; /* Adjust this based on your longest data piece */
+        box-sizing: border-box !important;
+    }
+
+    /* Fix for DataTables that use a separate scroll-head div */
+    .dataTables_scrollHeadInner, 
+    .dataTables_scrollHeadInner table {
+        width: 100% !important;
+        padding-right: 0 !important;
+    }
+
+</style>
+
+<style>
+
+    @media (min-width: 768px) {
+        .sidebar {
+            display: flex !important;
+            width: 14rem !important; 
+            margin-left: 0 !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+
+        .sidebar.toggled {
+            width: 14rem !important;
+        }
+
+        .sidebar .sidebar-brand .sidebar-brand-text {
+            display: inline !important;
+        }
+
+        #content-wrapper {
+            filter: none !important;
+            opacity: 1 !important;
+        }
+    }
+
+</style>
+
+<style>
+
+.content-fade-in {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style>
+
+<style>
+
+/* Custom border to match SB Admin 2 table borders exactly (#e3e6f0) */
+.border-light-custom {
+    border: 1px solid #d1d3e2 !important;
+}
+
+/* Ensure the input-group-text and the input share the same border color */
+.input-group-sm > .input-group-prepend > .input-group-text {
+    border-right: none !important; /* Prevents double border between icon and input */
+    border-color: #d1d3e2 !important;
+}
+
+.input-group-sm > .form-control {
+    border-left: none !important; /* Prevents double border */
+}
+
+/* Optional: Slight focus effect that matches SB Admin 2 primary theme */
+#customSearchInput:focus, #searchColumn:focus {
+    border-color: #bac8f3 !important;
+    box-shadow: none !important;
+    outline: 0;
+}
+
+.btn-white:disabled {
+    background-color: #eaecf4 !important; /* Light gray */
+    color: #d1d3e2 !important;
+    cursor: not-allowed;
+    border-color: #d1d3e2 !important;
+}
+</style>
+
+<!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
+<style>
+    @keyframes structuralFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .fade-on-load {
+        opacity: 0;
+        animation: structuralFadeIn 0.25s ease-in-out forwards;
+        animation-delay: 0.1s; /* Tiny delay to let fonts and responsive break points calculate first */
+    }
+</style>
+
+<style>
+/* When the menu item is active (blue background), make the checkmark white */
+#columnSelectorMenu .dropdown-item.active .fa-check {
+    color: #ffffff !important;
+}
+</style>
+
+<style>
+
+    /* Remove sorting arrow background icons for non-sortable columns */
+table.dataTable thead th.sorting_disabled::before,
+table.dataTable thead th.sorting_disabled::after {
+    display: none !important;
+}
+
+/* Optional: Reset cursor and padding so it doesn't look clickable */
+table.dataTable thead th.sorting_disabled {
+    cursor: default !important;
+    padding-right: 0.75rem !important; /* Removes padding space reserved for arrows */
+}
+</style>
+
+
+</head>
+
+<body id="page-top">
+    <!-- Wrapper -->
+    <div id="wrapper">
+
+       <!-- Sidebar -->
+        <ul class="navbar-nav bg-white sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand (Wrapped in a li element) -->
+            <li class="nav-item">
+                <div class="sidebar-brand d-flex align-items-center justify-content-center">
+                    <!-- The custom class enforces the animation timeline natively -->
+                    <img src="assets/img/logo_new_light_3.png"
+                        class="img-fluid fade-on-load" 
+                        alt="logo" 
+                        style="width: 100%; height: auto; object-fit: contain;">
+                </div>
+            </li>
+            
+            <!-- Divider (Wrapped inside an li element) -->
+            <li class="nav-item">
+                <hr class="sidebar-divider my-0">
+            </li>
+            
+            <!-- Nav Items -->
+            <li class="nav-item fade-on-load">
+                <a class="nav-link nav-link-blue" href="clinician-dashboard.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+            <li class="nav-item fade-on-load">
+                <a class="nav-link nav-link-blue" href="mockboard.html">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Lista Pazienti</span>
+                </a>
+            </li>
+
+        </ul>
+        <!-- End of Sidebar -->
+        
+        <!-- content-wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column" style="background-color: #f6f8fa !important;">
+            <!-- content -->
+            <div id="content">
+                
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-3 static-top shadow-sm px-4">
+                    
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <h1 class="h4 mb-0 text-gray-800">Dashboard Clinico</h1>
+
+                    <ul class="navbar-nav ml-auto">
+                        <li class="topbar-divider d-none d-sm-block"></li>
+                            <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <span id="userFullName" class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                        <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
+                                    </span>
+                                   <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
+                                        <div id="avatarContainer1" 
+                                            class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                                            style="border: 1px solid #0000FF !important;"
+                                            role="img" 
+                                            aria-label="Contenitore foto profilo">
+                                            <i id="avatarSpinnerIcon1" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
+                                            <img id="profileAvatar1" 
+                                                src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                class="img-fluid rounded-circle d-none" 
+                                                width="140" 
+                                                height="140" 
+                                                alt="Foto profilo"
+                                                style="object-fit: cover;">
+                                        </div>
+                                    </div>
+
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <!--<a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Settings
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Activity Log
+                                </a>-->
+                                <!--<div class="dropdown-divider"></div>
+                                <a class="btn btn-sm text-danger ml-2" id="logoutBtn" href="index.html" style="border: none;">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span class="d-none d-md-inline ml-1">Logout</span>
+                                </a>-->
+
+                                <div class="dropdown-divider"></div>
+                                    <a class="btn btn-sm text-danger ml-2 d-inline-flex align-items-center" id="logoutBtn" href="index.html" style="border: none;">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span class="ml-2 font-weight-bold" style="font-size: 0.85rem;">Logout</span>
+                                    </a>
+
+                            </div>
+                        </li>
+                    </ul>
+                </nav>
+
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xl-12 col-lg-12">
+            
+<!-- Outer Container: Added style="gap: 12px;" -->
+<div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
+
+    <!-- FIRST SECTION (20% height minus half the gap) -->
+    <div class="card shadow-sm" style="height: calc(20% - 24px); border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+        
+        <div class="card-header bg-white py-2 px-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+            <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+            <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
+        </div>
+
+        <div class="card-body p-2 px-3 d-flex align-items-center overflow-hidden">
+            <div class="d-flex align-items-center w-100 mb-2">
+
+                <!-- Compacted Avatar (48px) -->
+                <div class="position-relative d-inline-block mr-3" style="width: 60px; height: 60px; flex-shrink: 0;">
+                    <div id="avatarContainer2" 
+                        class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                        style="border: 1px solid #0000FF !important;"
+                        role="img" 
+                        aria-label="Contenitore foto profilo">
+                        <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
+                        <img id="profileAvatar2" 
+                            src="assets/sb-admin-2/img/undraw_profile.svg"
+                            class="img-fluid rounded-circle d-none" 
+                            width="60" 
+                            height="60" 
+                            alt="Foto profilo"
+                            style="object-fit: cover;">
+                    </div>
+                </div>
+
+                <!-- Text Content Wrapper -->
+                <div class="d-flex flex-column overflow-hidden flex-grow-1">
+                    <div class="d-flex align-items-center flex-wrap" style="gap: 8px;">
+                        <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.25rem; line-height: 1.2;">
+                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
+                        </h5>
+
+                        <!-- Badges Inline -->
+                        <span class="badge d-inline-flex align-items-center justify-content-center" 
+                            style="border-radius: 50px; font-size: 0.75rem; padding: 4px 8px; background-color: #4e73df; color: #fff; font-weight: 600;">
+                            <i class="fas fa-check-circle mr-1 flex-shrink-0"></i>Utente Attivo
+                        </span>
+                        <span id="patientMinorOrMajor" 
+                            class="badge d-inline-flex align-items-center justify-content-center" 
+                            style="border-radius: 50px; font-size: 0.75rem; padding: 4px 8px; background-color: #4edf97; color: #fff; font-weight: 600;">
+                            <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;"></i>
+                        </span>
+                    </div>
+
+                    <!-- Subscription Date -->
+                    <div class="mt-1">
+                        <small class="text-muted" style="font-size: 0.8rem;">
+                            <i class="far fa-calendar mr-1"></i> 
+                            <span id="patientSubDate"> 
+                                <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.8rem;"></i>
+                            </span>   
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- SECOND SECTION (80% height minus half the gap) -->
+    <div class="card shadow-sm" style="height: calc(80% - 24px); border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+        <div class="card-body p-3 overflow-auto">
+            <!-- Place your main tab content or tables here -->
+
+
+            
+        </div>
+    </div>
+
+</div>
+
+
+                            
+
+            </div>
+        </div>
+    </div>
+
+</div> <!-- content -->
+
+           <!-- Footer -->
+            <footer class="sticky-footer bg-white border-top">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; MyAssessments.it 2025</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div><!-- content-wrapper -->
+    </div><!-- Wrapper -->
+
+        <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>        
+        <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
+
+        
+    <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
+    <!--<script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>-->
+    
+     <script type="module">
+
+             // init supabase
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+            
+            // --- Supabase setup ---
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+            window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            // Make the variable globally available from the start
+            window.assessments = [];
+
+    </script>
+
+        <script>
+
+            function updateClinicianAvatar(userGender) {
+                
+                const avatarImg1 = document.getElementById('profileAvatar1');
+                const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
+                const container1 = document.getElementById('avatarContainer1');
+
+                if (!avatarImg1 || !spinnerIcon1) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc  = 'assets/sb-admin-2/img/undraw_profile.svg';
+                let targetSrc1 = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc  = 'assets/img/registrazione/terapeuta-female.png';
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-female.png';
+
+                } else if (userGender === 'Maschile') {
+                    targetSrc  = 'assets/img/registrazione/terapeuta-male.png';
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-male.png';
+                }
+
+                // 2. Assign source asset
+                avatarImg1.src = targetSrc1;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon1.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg1.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container1) {
+                    container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+                
+            }
+
+            function updateUserAvatar(userGender) {
+
+                const avatarImg1 = document.getElementById('profileAvatar2');
+                const spinnerIcon1 = document.getElementById('avatarSpinnerIcon2');
+                const container1 = document.getElementById('avatarContainer2');
+
+                if (!avatarImg1 || !spinnerIcon1) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc  = 'assets/sb-admin-2/img/undraw_profile.svg';
+                let targetSrc1 = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc  = 'assets/img/registrazione/kid-female.png';
+                    targetSrc1 = 'assets/img/registrazione/kid-female.png';
+
+                } else if (userGender === 'Maschile') {
+                    targetSrc  = 'assets/img/registrazione/kid-male.png';
+                    targetSrc1 = 'assets/img/registrazione/kid-male.png';
+                }
+
+                // 2. Assign source asset
+                avatarImg1.src = targetSrc1;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon1.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg1.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container1) {
+                    container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+                
+            }
+
+        </script>
+       
+        <script>
+
+            // 1. Helper function to validate the patientId from localStorage
+            function getValidPatientId() {
+                const activeId = localStorage.getItem('activePatientId');
+                if (!activeId || activeId.trim() === '' || activeId === 'null' || activeId === 'undefined') {
+                    return null;
+                }
+                return activeId.trim();
+            }
+
+        </script>
+
+        <script>
+
+            // Updates the age status badge of a patient with unified center alignments.
+            function updateAgeBadge(badgeElement, status) {
+                if (!badgeElement) return;
+
+                // d-inline-flex lets the container size itself strictly to the content string length
+                badgeElement.className = "badge text-white d-inline-flex align-items-center justify-content-center";
+                
+                // Design styles
+                badgeElement.style.borderRadius = "50px";
+                badgeElement.style.fontSize = "0.75rem";
+                badgeElement.style.padding = "4px 10px"; // Your precise custom padding
+                badgeElement.style.fontWeight = "600";
+                
+                // Safety boundaries (allows adapting to length, but caps at container edge)
+                badgeElement.style.maxWidth = "100%";
+
+                if (status === 1) {
+                    // --- ADULT STATE (Green) ---
+                    badgeElement.style.backgroundColor = "#4edf97";
+                    badgeElement.innerHTML = `
+                        <i class="fas fa-user mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Maggiorenne</span>
+                    `;
+                } else {
+                    // --- MINOR STATE (Red) ---
+                    badgeElement.style.backgroundColor = "#ff4d4d";
+                    badgeElement.innerHTML = `
+                        <i class="fas fa-child mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Minorenne</span>
+                    `;
+                }
+            }
+        
+            // Updates the subscription date label with proper Italian gender agreement.
+            function updateSubscriptionDate(target, date, gender) {
+                const element = typeof target === "string" ? document.getElementById(target) : target;
+                if (!element) return;
+                const formattedDate = date;
+                const label = (gender === "Femminile") ? "Iscritta il" : "Iscritto il";
+                element.textContent = `${label} ${formattedDate}`;
+            }
+            
+        </script>
+        
+
+         <script>
+
+            $(document).ready(function() {
+                // Intercept the Logout button click
+                $('#logoutBtn').on('click', function(e) {
+                    // 1. Stop the browser from immediately redirecting to index.html
+                    e.preventDefault();
+                    // 2. Run your application cleanup logic here
+                    console.log("Logging out... clearing patient session data.");
+                    // Clear your persistent patient storage so it doesn't hang around
+                    // If you need to clear all session tokens, you could do:
+                    localStorage.clear(); 
+                    // 3. Manually trigger the redirect now that the data is wiped
+                    window.location.href = $(this).attr('href'); 
+                });
+            });
+
+        </script>
+
+        <!-- Main -->
+        <script type="module">
+        
+             // ✅ Import string utils
+             import {
+                formatName,
+                convertToItalianFormat,
+                extractDate,
+                calculateAgeWithMonths
+            } from "./assets/js/string_utils.js";
+
+           import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+           
+           // --- Supabase setup ---
+        //   const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+        //   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+        //   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+            // --- Event Listeners 
+            document.addEventListener("DOMContentLoaded", async () => {
+       
+                // CHECK SESSIONE
+                const { data: { session } } = await window.supabase.auth.getSession();
+
+                if (!session?.user) {
+                    window.location.replace("index.html");
+                    return;
+                }
+                
+                 const user = session.user;
+
+                // AUTO LOGOUT HANDLER
+                window.supabase.auth.onAuthStateChange((event, session) => {
+                    if (event === "SIGNED_OUT" || !session) {
+                    window.location.replace("index.html");
+                    }
+                });
+
+                // DATI BASE USER (SOLO AUTH)
+                const email = user.email;
+                
+            //    console.log("Utente:", user);
+
+                // CARICA PROFILO DAL DATABASE 
+                const { data: profile, error } = await window.supabase
+                    .from("Clinicals")
+                    .select("*")
+                    .eq("id", user.id)
+                    .single();
+
+                if (error || !profile) {
+                    console.error("Errore caricamento profilo:", error);
+                    window.location.replace("index.html");
+                    return;
+                }
+
+                // COSTRUZIONE DATI UI
+                const name             = `${profile.name}`;
+                const surname          = `${profile.surname}`;
+                const genre            = profile.genre;
+                const fullNameNoPrefix = `${name} ${surname}`;
+              
+                // --- Nome nella NavBar ---
+                const userFullNameElement = document.getElementById("userFullName");
+                if (userFullNameElement) {
+                    userFullNameElement.textContent = fullNameNoPrefix;
+                }
+        
+                updateClinicianAvatar(genre);
+
+                // ---  RECUPERO DATI PAZIENTE DA SUPABASE ---
+
+                const activePatientId = getValidPatientId();
+
+                if (!activePatientId) {
+                    alert("Nessun paziente selezionato. Ritorno alla lista...");
+               //     window.location.replace("patient-directory.html"); // Cambia con la tua pagina lista pazienti
+                    return;
+                }
+                
+            //    console.log(activePatientId);
+        
+                try {
+                   
+                    // Esegui la query per il paziente attivo
+                    const { data: patientData, error: patientError } = await window.supabase
+                        .from("Clients") // <-- Sostituisci con il nome esatto della tua tabella pazienti
+                        .select("*")
+                        .eq("id", activePatientId)
+                        .single();
+                        
+                    if (patientError || !patientData) {
+                        console.error("Errore durante il recupero del paziente:", patientError);
+                      //  alert("Impossibile trovare i dati del paziente selezionato.");
+                        return;
+                    }
+                    
+                //    console.log("Dati Paziente Recuperati con successo:", patientData);
+
+                    const name = patientData.name;
+                    const surname = patientData.surname;
+                    const gender = patientData.genre;
+                    const fullNameNoPrefix = `${name} ${surname}`;
+                    const bdate = patientData.birth_date;
+                    const age = calculateAgeWithMonths(bdate);
+                    const minor_or_major = (age.years >= 18) ? 1 : 0;
+                    const subdate = patientData.consent_date;
+                    const subDateItalianFormat = subdate ? new Date(subdate).toLocaleDateString('it-IT') : '';
+           
+                //    console.log(name);
+                //    console.log(surname);
+                //    console.log(genre);
+                //    console.log(fullNameNoPrefix);
+                //    console.log(bdate);
+                //    console.log(minor_or_major);
+                //    console.log(age);
+
+                
+                    //patientFullName
+                    const patientFullNameId = document.getElementById("patientFullName");
+                    patientFullNameId.textContent = fullNameNoPrefix;
+                    
+                    // patient age badge
+                    updateAgeBadge(document.getElementById("patientMinorOrMajor"),minor_or_major);
+                    updateSubscriptionDate(document.getElementById("patientSubDate"), subDateItalianFormat, gender);
+                    updateUserAvatar(gender);
+
+
+            } catch (err) {
+                    console.error("Eccezione durante il recupero dati paziente:", err.message);
+                }
+
+            });
+
+        </script>
+
+       
+    <!-- JS before </body> -->
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+
+</body>
+</html>

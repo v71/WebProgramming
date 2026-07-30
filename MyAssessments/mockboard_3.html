@@ -904,7 +904,7 @@
                 <div class="col-md-4 px-md-3 mt-3">
 
                     <div class="mb-2 text-truncate">
-                        <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">SESSO</span>
+                        <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">GENERE</span>
                         <div id="patientGender_1" class="border-bottom small font-weight-bold text-primary text-truncate">
                         </div>
                     </div>
@@ -2100,7 +2100,7 @@
                         : "Nessun Assessment Caricato";
 
                     // Dynamic background color (e.g., Primary blue/green when data exists, neutral gray when empty)
-                    quickrecapassessments.style.backgroundColor = hasAssessments ? "#0d6efd" : "#adb5bd";
+                    quickrecapassessments.style.backgroundColor = hasAssessments ? "#4e73df" : "#adb5bd";
 
                     // 4. Render HTML markup
                     quickrecapassessments.innerHTML = `
@@ -2188,7 +2188,7 @@
                         if (el) el.textContent = patients_number;
 
                         // Universal syntax that works on almost all versions of FontAwesome
-                        $('#columnSelectorMenu .dropdown-item.active').append('<i class="fa fa-check fa-xs text-primary ml-2"></i>');
+                        $('#columnSelectorMenu.dropdown-item.active').append('<i class="fa fa-check fa-xs text-primary ml-2"></i>');
 
                         // Now build your table UI right here...
                         const tableBody = $('#PatientTableBody');

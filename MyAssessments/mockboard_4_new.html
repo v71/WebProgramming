@@ -1,0 +1,1123 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>MyAssessments</title>
+    
+        <!-- Custom fonts for this template -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="assets/sb-admin-2/css/sb-admin-2.min.css" rel="stylesheet">
+        <!-- Custom styles for this page -->
+        <link href="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom Overrides for the "Renaizant" look */
+        #accordionSidebar { background-color: rgb(17, 25, 131) !important; background-image: none !important; }
+        .sidebar-dark .nav-item .nav-link { color: rgba(255, 255, 255, 0.7); }
+        .sidebar-dark .nav-item.active .nav-link { color: #fff; font-weight: 700; border-left: 3px solid #e91e63; }
+        .bg-custom-gray { background-color: #f8f9fc; }
+        .card { border: none; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05); }
+        .progress-bar-orange { background-color: #ff9800; }
+        .org-footer { background: #3d2b46; border-radius: 8px; margin: 1rem; padding: 10px; }
+    </style>
+
+    <style>
+
+        /* Ensures the button doesn't look weird on mobile vs desktop */
+
+        @media (min-width: 768px) {
+            .btn-md-inline {
+                width: auto !important;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+
+    </style>
+
+    <style>
+
+        /* Force the body and wrapper to be exactly the screen height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevents the 'scrolling arrows' on the main body */
+        }
+
+        #wrapper {
+            height: 100vh;
+        }
+
+        #content-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #content {
+            flex: 1; /* This takes up all available space between topbar and footer */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Keeps the scrolling inside the cards, not the page */
+        }
+
+        /* Make the container fill the remaining space */
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0.5rem; /* This is your gap between cards and footer */
+        }
+
+        /* Ensure the row and columns fill the height */
+        .container-fluid > .row {
+            flex: 1;
+        }
+
+    </style>
+
+    <style>
+        
+        /* 1. Navigation Styling */
+        .modern-pills .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .modern-pills .nav-link.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: transparent;
+        }
+
+        /* 2. Spaced Button Styling */
+        .spaced-action-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            text-decoration: none !important;
+            background: #ffffff;
+            border: 1px solid #f1f5f9; /* Subtle border */
+            border-radius: 12px; /* Rounded corners */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .spaced-action-item:hover {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+            transform: translateX(4px); /* Subtle slide effect */
+        }
+
+        .action-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* 3. Small Modern Icons */
+        .icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Soft Colors */
+        .bg-blue-soft { background-color: #eff6ff; }
+        .bg-red-soft { background-color: #fef2f2; }
+        .bg-purple-soft { background-color: #f5f3ff; }
+        .bg-green-soft { background-color: #ecfdf5; }
+        .text-purple { color: #8b5cf6; }
+        
+        .ms-auto { margin-left: auto; }
+
+    </style>
+
+    <style>
+
+        .inner-action-btn {
+            flex: 1;
+            min-width: 100px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #d1e9ff;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            text-decoration: none !important;
+            cursor: pointer;
+            color: #4a4a4a;
+        }
+
+        .inner-action-btn:hover {
+            background-color: #ffffff;
+            border-color: #4e73df;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .inner-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .inner-action-btn i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        
+        /* The 'Muted' state for your custom button */
+        .inner-action-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;    /* Physically prevents clicking */
+            cursor: not-allowed;
+            filter: grayscale(1);    /* Optional: makes the green icon look grey */
+            text-decoration: none;
+        }
+
+    </style>
+
+
+
+
+<style>
+
+    #loadingSpinner {
+        /* Adjust min-height to match the space your 5-row table usually takes */
+        min-height: 450px; 
+        display: flex;
+        flex-direction: column; /* Stack spinner and text vertically */
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
+        background-color: #fff; /* Match the card background */
+    }
+
+    /* Make the spinner "thickness" look proportional to the new size */
+    .spinner-border {
+        border-width: 0.5rem; 
+    }
+
+</style>
+
+<style>
+
+    @media (min-width: 768px) {
+        .sidebar {
+            display: flex !important;
+            width: 14rem !important; 
+            margin-left: 0 !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+
+        .sidebar.toggled {
+            width: 14rem !important;
+        }
+
+        .sidebar .sidebar-brand .sidebar-brand-text {
+            display: inline !important;
+        }
+
+        #content-wrapper {
+            filter: none !important;
+            opacity: 1 !important;
+        }
+    }
+
+</style>
+
+<style>
+
+.content-fade-in {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style>
+
+<!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
+<style>
+    @keyframes structuralFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .fade-on-load {
+        opacity: 0;
+        animation: structuralFadeIn 0.25s ease-in-out forwards;
+        animation-delay: 0.1s; /* Tiny delay to let fonts and responsive break points calculate first */
+    }
+</style>
+
+ <!-- CSS Fade Transition for Table Only -->
+  <style>
+    #tableResponsiveContainer {
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+    }
+    #tableResponsiveContainer.table-fade-out {
+      opacity: 0;
+    }
+  </style>
+
+
+<!-- CSS Fade Transition Only -->
+  <style>
+    #tableResponsiveContainer {
+      opacity: 1;
+      transition: opacity 0.2s ease-in-out;
+    }
+    #tableResponsiveContainer.table-fade-out {
+      opacity: 0;
+    }
+  </style>
+
+  </style>
+
+<body id="page-top">
+    <!--id wrapper-->
+    <div id="wrapper"> 
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-white sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <div class="sidebar-brand d-flex align-items-center justify-content-center">
+                <!-- The custom class enforces the animation timeline natively -->
+                <img src="assets/img/logo_new_light_3.png"
+                    class="img-fluid fade-on-load" 
+                    alt="logo" 
+                    style="width: 100%; height: auto; object-fit: contain;">
+            </div>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <!-- Menu Wrapper with the same robust animation class -->
+                <div class="fade-on-load">
+
+                    <a class="nav-link nav-link-blue" href="clinician-dashboard.html">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-link nav-link-blue" href="#">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Lista Pazienti</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <div id="content-wrapper" class="d-flex flex-column" style="background-color: #f6f8fa !important;">
+            
+        <div id="content">
+                    
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow-sm px-4">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <h1 class="h4 mb-0 text-gray-800">Lista Pazienti</h1>
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="topbar-divider d-none d-sm-block"></li>
+                        <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span id="userFullName" class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
+                                </span>
+
+                                  <!--<img id="userAvatar" class="img-profile rounded-circle" src="assets/sb-admin-2/img/undraw_profile.svg" alt="">-->
+                        
+                                <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
+                                    <!-- Updated class from 'border' to 'border border-primary' -->
+                                    <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 1px solid #0000FF !important;">
+                                        <i id="avatarSpinnerIcon1" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
+                                        <img id="profileAvatar1" 
+                                            class="img-fluid rounded-circle d-none" 
+                                            width="140" height="140" 
+                                            alt="Foto profilo"
+                                            style="object-fit: cover;">
+                                    </div>
+                                </div>
+
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            aria-labelledby="userDropdown">
+                            <!--<a class="dropdown-item" href="#">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Profile
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Settings
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Activity Log
+                            </a>-->
+                            <!--<div class="dropdown-divider"></div>
+                            <a class="btn btn-sm text-danger ml-2" id="logoutBtn" href="index.html" style="border: none;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="d-none d-md-inline ml-1">Logout</span>
+                            </a>-->
+
+                             <div class="dropdown-divider"></div>
+                             <a class="btn btn-sm text-danger ml-2 d-inline-flex align-items-center" id="logoutBtn" href="index.html" style="border: none;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="ml-2 font-weight-bold" style="font-size: 0.85rem;">Logout</span>
+                             </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            
+
+
+
+            <!-- Main Content Container -->
+<div class="container-fluid">
+  
+  <div class="row">
+    <!-- Left Column (50%) -->
+    <div id="mainTable" class="col-lg-12 mb-4">
+      <div id="tableCardContainer" class="card mb-4 shadow-sm h-100 flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0;">
+
+        <div class="card-header bg-white d-flex align-items-center justify-content-between py-2" style="border-bottom: 0px solid #eaecf4; height: 45px;">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-users text-primary mr-2"></i>
+            <!-- Pre-rendered count: 12 -->
+            <h6 class="m-0 font-weight-bold text-gray-800">Lista Pazienti (<span id="totalUsersCount">12</span>)</h6>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <!-- Responsive Table Wrapper -->
+          <div class="table-responsive" id="tableResponsiveContainer">
+            <table class="table table-bordered text-nowrap" id="userTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th style="width: 50px;">#</th>
+                  <th>User</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Joined Date</th>
+                  <th class="text-center" style="width: 100px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="tableBody">
+                <!-- Rows 1-5 (Visible on load) -->
+                <tr>
+                  <td class="align-middle">1</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-primary text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>JD</b></div>
+                      <div><div class="font-weight-bold">Jane Doe</div><div class="small text-gray-500">jane.doe@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Administrator</td>
+                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
+                  <td class="align-middle">Jan 12, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="align-middle">2</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-info text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>AS</b></div>
+                      <div><div class="font-weight-bold">Alex Smith</div><div class="small text-gray-500">alex.smith@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Editor</td>
+                  <td class="align-middle"><span class="badge badge-warning text-white px-2 py-1">Pending</span></td>
+                  <td class="align-middle">Feb 04, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="align-middle">3</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-secondary text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>MJ</b></div>
+                      <div><div class="font-weight-bold">Michael Johnson</div><div class="small text-gray-500">m.johnson@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Subscriber</td>
+                  <td class="align-middle"><span class="badge badge-danger px-2 py-1">Inactive</span></td>
+                  <td class="align-middle">Mar 19, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="align-middle">4</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-success text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>EW</b></div>
+                      <div><div class="font-weight-bold">Emma Watson</div><div class="small text-gray-500">emma.w@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Author</td>
+                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
+                  <td class="align-middle">Apr 02, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="align-middle">5</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-dark text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>DB</b></div>
+                      <div><div class="font-weight-bold">David Brown</div><div class="small text-gray-500">david.b@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Moderator</td>
+                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
+                  <td class="align-middle">May 11, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <!-- Rows 6-12 (Hidden inline to prevent initial shift) -->
+                <tr style="display: none;">
+                  <td class="align-middle">6</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-warning text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>SL</b></div>
+                      <div><div class="font-weight-bold">Sarah Lee</div><div class="small text-gray-500">sarah.lee@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Editor</td>
+                  <td class="align-middle"><span class="badge badge-warning text-white px-2 py-1">Pending</span></td>
+                  <td class="align-middle">May 28, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td class="align-middle">7</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-danger text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>CR</b></div>
+                      <div><div class="font-weight-bold">Carlos Rossi</div><div class="small text-gray-500">carlos.r@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Subscriber</td>
+                  <td class="align-middle"><span class="badge badge-danger px-2 py-1">Inactive</span></td>
+                  <td class="align-middle">Jun 01, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td class="align-middle">8</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-primary text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>LM</b></div>
+                      <div><div class="font-weight-bold">Laura Miller</div><div class="small text-gray-500">laura.m@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Administrator</td>
+                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
+                  <td class="align-middle">Jun 15, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td class="align-middle">9</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-info text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>TW</b></div>
+                      <div><div class="font-weight-bold">Tom Wilson</div><div class="small text-gray-500">tom.w@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Author</td>
+                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
+                  <td class="align-middle">Jul 02, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td class="align-middle">10</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-secondary text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>NK</b></div>
+                      <div><div class="font-weight-bold">Nina Kapoor</div><div class="small text-gray-500">nina.k@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Editor</td>
+                  <td class="align-middle"><span class="badge badge-warning text-white px-2 py-1">Pending</span></td>
+                  <td class="align-middle">Jul 10, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td class="align-middle">11</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-success text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>OG</b></div>
+                      <div><div class="font-weight-bold">Oliver Green</div><div class="small text-gray-500">oliver.g@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Subscriber</td>
+                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
+                  <td class="align-middle">Jul 20, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                <tr style="display: none;">
+                  <td class="align-middle">12</td>
+                  <td class="align-middle">
+                    <div class="d-flex align-items-center">
+                      <div class="icon-circle bg-dark text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>PS</b></div>
+                      <div><div class="font-weight-bold">Peter Parker</div><div class="small text-gray-500">peter.p@example.com</div></div>
+                    </div>
+                  </td>
+                  <td class="align-middle">Moderator</td>
+                  <td class="align-middle"><span class="badge badge-danger px-2 py-1">Inactive</span></td>
+                  <td class="align-middle">Jul 28, 2026</td>
+                  <td class="text-center align-middle">
+                    <div class="d-inline-flex">
+                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
+                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination Footer Controls (Pre-rendered Page 1 state) -->
+          <div class="row align-items-center mt-3">
+            <div class="col-sm-12 col-md-5">
+              <div class="text-muted small" id="paginationInfo">
+                Showing 1 to 5 of 12 entries
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-7">
+              <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm justify-content-md-end justify-content-center mb-0" id="paginationControls">
+                  <li class="page-item disabled"><a class="page-link" href="#" data-page="0">Previous</a></li>
+                  <li class="page-item active"><a class="page-link" href="#" data-page="1">1</a></li>
+                  <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+                  <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+                  <li class="page-item"><a class="page-link" href="#" data-page="2">Next</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div> <!-- /.row -->
+
+</div> <!-- /.container-fluid -->
+            
+       
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white border-top">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; MyAssessments.it 2025</span>
+                </div>
+            </div>
+        </footer>
+       
+        </div> <!-- /#content -->
+    </div> <!-- /#content-wrapper -->
+
+    </div><!--id wrapper-->
+
+
+    <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
+    <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
+    
+    <script>
+
+    </script>
+
+     <script type="module">
+
+             // init supabase
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+            
+            // --- Supabase setup ---
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+            window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // Make the variable globally available from the start
+            window.patients2 = [];
+            
+    </script>
+
+    
+     <script>
+
+            // A global tracker variable to protect against aggressive database render loops
+
+            function updateUserAvatar(userGender) {
+                
+                const avatarImg1 = document.getElementById('profileAvatar1');
+                const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
+                const container1 = document.getElementById('avatarContainer1');
+
+                if (!avatarImg1 || !spinnerIcon1) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc1 = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-female.png';
+                } else if (userGender === 'Maschile') {
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-male.png';
+                }
+
+                // 2. Assign source asset
+                avatarImg1.src = targetSrc1;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon1.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg1.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container1) {
+                    container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+
+            }
+        
+        </script>
+
+
+<script type="module">
+    import {
+        convertToItalianFormat,
+        calculateAgeWithMonths
+    } from "./assets/js/string_utils.js";
+
+    $(document).ready(function() {
+        (async () => {
+            try {
+                // 1. Auth & Profile Check
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) {
+                    window.location.replace("index.html");
+                    return;
+                }
+
+                const { data: profile } = await window.supabase
+                    .from("Clinicals")
+                    .select("id")
+                    .eq("id", user.id)
+                    .single();
+
+                if (!profile) return;
+
+                // 2. Fetch Clients
+                const { data: clients } = await window.supabase
+                    .from('Clients')
+                    .select('*')
+                    .eq('clinical_id', profile.id);
+
+                window.patients2 = clients || [];
+
+                console.log(window.patients2);
+                /*
+                window.patients2.forEach(patient => {
+                    const name = patient.name || '';
+                    const surname = patient.surname || '';
+                    const genre = patient.genre || '';
+                    const birth_date = patient.birth_date;
+                    const consent_date = patient.consent_date;
+                    const region = patient.region || '';
+                    const age = calculateAgeWithMonths(birth_date);
+                    const readableDate = consent_date ? new Date(consent_date).toLocaleDateString('it-IT') : '';
+                    const italian_birth_date = convertToItalianFormat(birth_date);
+                    const minor_or_major = (age.years >= 18) ? "Maggiorenne" : "Minorenne";
+                    const patientId = patient.id;
+                    const avatarPath = (genre === 'Femminile') 
+                        ? 'assets/img/registrazione/kid-female.png' 
+                        : 'assets/img/registrazione/kid-male.png';
+
+                   const icon = `
+                        <img src="${avatarPath}" 
+                            class="rounded-circle border patient-avatar" 
+                            width="60" 
+                            height="60" 
+                            alt="Avatar" 
+                            style="border: 1px solid #0000FF !important; cursor: pointer; object-fit: cover; transition: transform 0.15s ease;" 
+                            data-patient-id="${patientId}"
+                            title="Clicca per aprire la scheda di ${name} ${surname}"
+                            data-toggle="tooltip" 
+                            data-placement="top" />
+                    `;
+
+                });
+                */
+
+                // Sidebar Toggle Handler
+                $("#sidebarToggleTop").on('click', function(e) {
+                    e.preventDefault();
+                    $("body").toggleClass("sidebar-toggled");
+                    $(".sidebar").toggleClass("toggled");
+                    table.columns.adjust();
+                });
+
+                // Logout Handler
+                $('#logoutBtn').on('click', function(e) {
+                    e.preventDefault(); 
+                    localStorage.clear();
+                    window.location.href = $(this).attr('href'); 
+                });
+                
+            } catch (err) {
+                console.error("Error loading patients:", err);
+            }
+        })();
+    });
+</script>
+
+
+<!-- Table Pagination Script -->
+  <!--<script>
+    $(document).ready(function() {
+      const rowsPerPage = 7; // <--- You can now change this freely!
+      const $tableContainer = $('#tableResponsiveContainer');
+      const $rows = $('#tableBody tr');
+      const totalRows = $rows.length;
+      let totalPages = Math.ceil(totalRows / rowsPerPage);
+      let currentPage = 1;
+
+      $('#totalUsersCount').text(totalRows);
+
+      function displayPage(page) {
+        currentPage = page;
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        $tableContainer.addClass('table-fade-out');
+
+        setTimeout(function() {
+          $rows.hide();
+          $rows.slice(start, end).show();
+
+          const showingStart = totalRows === 0 ? 0 : start + 1;
+          const showingEnd = Math.min(end, totalRows);
+          $('#paginationInfo').text(`Showing ${showingStart} to ${showingEnd} of ${totalRows} entries`);
+
+          renderPagination();
+
+          $tableContainer.removeClass('table-fade-out');
+        }, 200);
+      }
+
+      function renderPagination() {
+        totalPages = Math.ceil(totalRows / rowsPerPage);
+        let paginationHTML = '';
+
+        const prevDisabled = currentPage === 1 ? 'disabled' : '';
+        paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+
+        for (let i = 1; i <= totalPages; i++) {
+          const activeClass = i === currentPage ? 'active' : '';
+          paginationHTML += `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+        }
+
+        const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+        paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+
+        $('#paginationControls').html(paginationHTML);
+      }
+
+      $(document).on('click', '#paginationControls a', function(e) {
+        e.preventDefault();
+        const targetPage = parseInt($(this).attr('data-page'));
+        
+        if (targetPage >= 1 && targetPage <= totalPages && targetPage !== currentPage) {
+          displayPage(targetPage);
+        }
+      });
+
+      // Synchronize visible rows & pagination immediately with the current rowsPerPage setting
+      $rows.hide();
+      $rows.slice(0, rowsPerPage).show();
+      $('#paginationInfo').text(`Showing 1 to ${Math.min(rowsPerPage, totalRows)} of ${totalRows} entries`);
+      renderPagination();
+    });
+  </script>-->
+
+
+  <!-- Table Pagination Script (Dynamic Vertical Fit) -->
+<script>
+  $(document).ready(function() {
+    const $tableContainer = $('#tableResponsiveContainer');
+    const $cardBody = $('#tableCardContainer .card-body');
+    const $rows = $('#tableBody tr');
+    const totalRows = $rows.length;
+    
+    let rowsPerPage = 5; // Default fallback
+    let totalPages = 1;
+    let currentPage = 1;
+
+    $('#totalUsersCount').text(totalRows);
+
+    // Calculate how many rows fit in the available vertical space
+    function calculateRowsPerPage() {
+      // Temporarily reveal a row to measure its rendered height accurately
+      $rows.first().show();
+      const rowHeight = $rows.first().outerHeight() || 53; // ~53px default bootstrap row height
+      
+      // Measure container components to determine remaining space for <tbody>
+      const cardBodyHeight = $cardBody.height();
+      const theadHeight = $('#userTable thead').outerHeight() || 40;
+      const paginationFooterHeight = $('#tableCardContainer .row.align-items-center').outerHeight() || 50;
+
+      // Available vertical space for tbody rows
+      const availableHeight = cardBodyHeight - theadHeight - paginationFooterHeight - 20; // 20px padding buffer
+
+      // Calculate max fitting rows (minimum 1)
+      const calculatedCount = Math.floor(availableHeight / rowHeight);
+      return Math.max(1, calculatedCount);
+    }
+
+    function displayPage(page, animate = true) {
+      currentPage = page;
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+
+      if (animate) {
+        $tableContainer.addClass('table-fade-out');
+        setTimeout(function() {
+          $rows.hide();
+          $rows.slice(start, end).show();
+
+          updateInfoAndPagination(start, end);
+          $tableContainer.removeClass('table-fade-out');
+        }, 200);
+      } else {
+        $rows.hide();
+        $rows.slice(start, end).show();
+        updateInfoAndPagination(start, end);
+      }
+    }
+
+    function updateInfoAndPagination(start, end) {
+      const showingStart = totalRows === 0 ? 0 : start + 1;
+      const showingEnd = Math.min(end, totalRows);
+      $('#paginationInfo').text(`Showing ${showingStart} to ${showingEnd} of ${totalRows} entries`);
+      renderPagination();
+    }
+
+    function renderPagination() {
+      totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
+      let paginationHTML = '';
+
+      const prevDisabled = currentPage === 1 ? 'disabled' : '';
+      paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+
+      for (let i = 1; i <= totalPages; i++) {
+        const activeClass = i === currentPage ? 'active' : '';
+        paginationHTML += `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+      }
+
+      const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+      paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+
+      $('#paginationControls').html(paginationHTML);
+    }
+
+    function recalculateLayout() {
+      rowsPerPage = calculateRowsPerPage();
+      totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      displayPage(currentPage, false);
+    }
+
+    $(document).on('click', '#paginationControls a', function(e) {
+      e.preventDefault();
+      const targetPage = parseInt($(this).attr('data-page'));
+      
+      if (targetPage >= 1 && targetPage <= totalPages && targetPage !== currentPage) {
+        displayPage(targetPage);
+      }
+    });
+
+    // Debounced resize handler so window resizing updates row capacity smoothly
+    let resizeTimer;
+    $(window).on('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(recalculateLayout, 150);
+    });
+
+    // Initial capacity calculation on page load
+    recalculateLayout();
+  });
+</script>
+
+        <script type="module">
+
+            // --- Event Listeners 
+            document.addEventListener("DOMContentLoaded", async () => {
+                    
+                    // CHECK SESSIONE
+                    const { data: { session } } = await supabase.auth.getSession();
+                    
+                    if (!session?.user) {
+                        window.location.replace("index.html");
+                        return;
+                    }
+
+                    const user = session.user;
+
+                    // 2. AUTO LOGOUT HANDLER
+                    supabase.auth.onAuthStateChange((event, session) => {
+                        if (event === "SIGNED_OUT" || !session) {
+                        window.location.replace("index.html");
+                        }
+                    });
+
+                    // 3. DATI BASE USER (SOLO AUTH)
+                    const email = user.email;
+                    
+                    // 4. CARICA PROFILO DAL DATABASE 
+                    const { data: profile, error } = await supabase
+                        .from("Clinicals")
+                        .select("*")
+                        .eq("id", user.id)
+                        .single();
+
+                    if (error || !profile) {
+                        console.error("Errore caricamento profilo:", error);
+                        window.location.replace("index.html");
+                        return;
+                    }
+
+                    // 5. COSTRUZIONE DATI UI
+                    const name             = `${profile.name}`;
+                    const surname          = `${profile.surname}`;
+                    const fullNameNoPrefix = `${name} ${surname}`;
+                    const gender           = `${profile.genre}`;
+                        
+                    // --- Nome nella NavBar ---
+                    const userFullNameElement = document.getElementById("userFullName");
+                    if (userFullNameElement) {
+                        userFullNameElement.textContent = fullNameNoPrefix;
+                    }
+
+                    // update avatar in the navbar
+                    updateUserAvatar(gender);
+
+                    localStorage.removeItem('activePatientId');
+
+            });
+
+    </script>
+
+    <script>
+
+    //SIDEBAR Race condition fix
+    $(document).ready(function() {
+        // We attach the listener to 'body' so it never "dies" 
+        // even if the navbar is re-rendered or the script finishes late.
+        $("body").on('click', '#sidebarToggleTop', function(e) {
+            e.preventDefault();
+            
+            // 1. Toggle classes
+            $("body").toggleClass("sidebar-toggled");
+            $(".sidebar").toggleClass("toggled");
+
+            // 2. Fix DataTables layout if it's visible
+            if ($.fn.DataTable.isDataTable('#PatientdataTable')) {
+                $('#PatientdataTable').DataTable().columns.adjust();
+            }
+            
+            // 3. Handle the 'overflow' issue we discussed for your dashboard layout
+            if ($("body").hasClass("sidebar-toggled")) {
+                // Optional: prevent background scrolling on mobile when menu is open
+                if (window.innerWidth < 768) {
+                    $("html, body").css("overflow", "hidden");
+                }
+            } else {
+                $("html, body").css("overflow", ""); 
+            }
+        });
+    });
+
+    </script>
+
+</body>
+</html>

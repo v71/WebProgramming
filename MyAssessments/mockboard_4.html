@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>MyAssessments</title>
+    
+        <!-- Custom fonts for this template -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+        <!-- Custom styles for this template -->
+        <link href="assets/sb-admin-2/css/sb-admin-2.min.css" rel="stylesheet">
+        <!-- Custom styles for this page -->
+        <link href="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom Overrides for the "Renaizant" look */
+        #accordionSidebar { background-color: rgb(17, 25, 131) !important; background-image: none !important; }
+        .sidebar-dark .nav-item .nav-link { color: rgba(255, 255, 255, 0.7); }
+        .sidebar-dark .nav-item.active .nav-link { color: #fff; font-weight: 700; border-left: 3px solid #e91e63; }
+        .bg-custom-gray { background-color: #f8f9fc; }
+        .card { border: none; box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.05); }
+        .progress-bar-orange { background-color: #ff9800; }
+        .org-footer { background: #3d2b46; border-radius: 8px; margin: 1rem; padding: 10px; }
+    </style>
+
+    <style>
+
+        /* Ensures the button doesn't look weird on mobile vs desktop */
+
+        @media (min-width: 768px) {
+            .btn-md-inline {
+                width: auto !important;
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+
+    </style>
+
+    <style>
+
+        /* Force the body and wrapper to be exactly the screen height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Prevents the 'scrolling arrows' on the main body */
+        }
+
+        #wrapper {
+            height: 100vh;
+        }
+
+        #content-wrapper {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #content {
+            flex: 1; /* This takes up all available space between topbar and footer */
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Keeps the scrolling inside the cards, not the page */
+        }
+
+        /* Make the container fill the remaining space */
+        .container-fluid {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 0.5rem; /* This is your gap between cards and footer */
+        }
+
+        /* Ensure the row and columns fill the height */
+        .container-fluid > .row {
+            flex: 1;
+        }
+
+    </style>
+
+    <style>
+        
+        /* 1. Navigation Styling */
+        .modern-pills .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .modern-pills .nav-link.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: transparent;
+        }
+
+        /* 2. Spaced Button Styling */
+        .spaced-action-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            text-decoration: none !important;
+            background: #ffffff;
+            border: 1px solid #f1f5f9; /* Subtle border */
+            border-radius: 12px; /* Rounded corners */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .spaced-action-item:hover {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+            transform: translateX(4px); /* Subtle slide effect */
+        }
+
+        .action-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* 3. Small Modern Icons */
+        .icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Soft Colors */
+        .bg-blue-soft { background-color: #eff6ff; }
+        .bg-red-soft { background-color: #fef2f2; }
+        .bg-purple-soft { background-color: #f5f3ff; }
+        .bg-green-soft { background-color: #ecfdf5; }
+        .text-purple { color: #8b5cf6; }
+        
+        .ms-auto { margin-left: auto; }
+
+    </style>
+
+    <style>
+
+        .inner-action-btn {
+            flex: 1;
+            min-width: 100px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #d1e9ff;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            text-decoration: none !important;
+            cursor: pointer;
+            color: #4a4a4a;
+        }
+
+        .inner-action-btn:hover {
+            background-color: #ffffff;
+            border-color: #4e73df;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .inner-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .inner-action-btn i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        
+        /* The 'Muted' state for your custom button */
+        .inner-action-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;    /* Physically prevents clicking */
+            cursor: not-allowed;
+            filter: grayscale(1);    /* Optional: makes the green icon look grey */
+            text-decoration: none;
+        }
+
+    </style>
+
+    <style>
+
+        /* Force the table to stop expanding beyond its container */
+        #PatientdataTable {
+            width: 100% !important;
+            margin: 0 !important;
+            table-layout: fixed; /* This forces columns to fit within the 100% */
+            word-wrap: break-word;
+        }
+
+        /* Allow text to wrap so columns can shrink */
+        #PatientdataTable td, #PatientdataTable th {
+            white-space: normal !important;
+            vertical-align: middle;
+        }
+
+        /* Add internal breathing room to cells */
+        #PatientdataTable th, 
+        #PatientdataTable td {
+            padding: 12px 15px !important; /* Adjust these numbers to your liking */
+            vertical-align: middle;
+        }
+
+        /* Ensure the table isn't touching the card edges */
+        .dataTables_wrapper {
+            padding: 10px;
+        }
+
+        /* Add space between the Search bar/Length menu and the actual table */
+        .dataTables_filter, .dataTables_length {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_info, .dataTables_paginate {
+            margin-top: 15px;
+        }
+
+</style>
+
+<style>
+
+    /* 4. Fix Pagination alignment */
+    .dataTables_paginate {
+        float: right;
+        margin-top: 1rem;
+    }
+
+    /* Consolidated DataTables Info Text (e.g., "Showing 1 to 10 of 50") */
+    .dataTables_info {
+        padding-top: 0.5rem !important; /* Balanced spacing */
+        font-size: 0.8rem;
+        color: #858796;
+        white-space: nowrap;
+        display: inline-block;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis; /* Prevents text from breaking the layout if container shrinks */
+    }
+
+    /* 2. Search Bar Alignment: Modern Flexbox approach */
+    .dataTables_filter {
+        display: flex;
+        justify-content: flex-end; /* Replaces float: right */
+        align-items: center;      /* Centers the "Search:" label with the input box */
+        gap: 0.5rem;               /* Optional: adds a clean gap between label and input */
+        margin-top: 4px;
+    }
+
+    /* 3. Standardized Search Input: Bootstrap look with fixed width */
+    .dataTables_filter input {
+        width: 200px !important; 
+        border: 1px solid #d1d3e2;
+        border-radius: 0.35rem;
+        padding: 0.3rem 0.75rem;
+        margin-left: 0.5rem !important; /* Keep the gap so the label doesn't touch the box */
+        margin-right: 0 !important;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    /* Optional: Add a blue glow on focus to match Bootstrap's behavior */
+    .dataTables_filter input:focus {
+        border-color: #bac8f3;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    }
+
+</style>
+
+<style>
+
+    /* 2. Force the Dropdown width to match */
+    #searchColumn {
+        width: 200px !important; /* Must match the input width above */
+    }
+
+    /* 3. Ensure the container doesn't add extra padding */
+    #customFilterPlaceholder {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /* 6. Clean up the table headers */
+    #PatientdataTable thead th {
+        background-color: #f8f9fc;
+        border-bottom: 2px solid #e3e6f0;
+        color: #4e73df;
+    }
+
+    /* Center text in both header and body cells */
+    #PatientdataTable th, 
+    #PatientdataTable td {
+        text-align: center;
+        vertical-align: middle !important; /* Also keeps text centered vertically */
+    }
+
+    /* Target the cells directly to force the cursor change */
+    #PatientdataTable tbody tr td {
+        cursor: pointer !important;
+    }
+
+    /* Force the hover color on the cells */
+    #PatientdataTable tbody tr:hover td {
+        background-color: #f8f9fc !important; 
+        color: #4e73df !important; /* Optional: changes text color to blue on hover */
+    }
+
+    #searchColumn {
+        font-weight: 800;
+        color: #4e73df; /* SB Admin 2 Primary Blue */
+    }
+
+</style>
+
+<style>
+
+    /* Standardize the top border of the header cells */
+    .table thead th {
+        border-bottom: none !important; /* Slightly thicker but matches SB Admin style */
+        border-top: none !important;
+    } 
+
+    /* 1. Remove the forced scrollbar but keep the table inside the card */
+    .table-responsive {
+        overflow-x: hidden !important; 
+        padding: 1rem;
+    }
+
+    /* Apply this to the wrapper around your table */
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto !important; /* Forces the scrollbar back */
+        -webkit-overflow-scrolling: touch; /* High-performance scrolling for mobile */
+        border: none; /* Removes any double borders */
+    }
+
+</style>
+
+<style>
+
+    #loadingSpinner {
+        /* Adjust min-height to match the space your 5-row table usually takes */
+        min-height: 450px; 
+        display: flex;
+        flex-direction: column; /* Stack spinner and text vertically */
+        justify-content: center; /* Center vertically */
+        align-items: center; /* Center horizontally */
+        background-color: #fff; /* Match the card background */
+    }
+
+    /* Make the spinner "thickness" look proportional to the new size */
+    .spinner-border {
+        border-width: 0.5rem; 
+    }
+
+</style>
+
+<style>
+
+    @media (max-width: 768px) {
+        /* Force the table, rows, and cells to behave like a table */
+        .table-responsive table, 
+        .table-responsive thead, 
+        .table-responsive tbody, 
+        .table-responsive th, 
+        .table-responsive td, 
+        .table-responsive tr {
+            display: table !important; /* Overrides 'block' or 'flex' */
+            width: auto !important;
+        }
+        
+        .table-responsive tr {
+            display: table-row !important;
+        }
+        
+        .table-responsive td, 
+        .table-responsive th {
+            display: table-cell !important;
+            /* Prevent text from wrapping so the cell width stays fixed */
+            white-space: nowrap !important; 
+            padding: 10px 15px !important;
+        }
+    }
+
+    /* Force table layout to remain consistent */
+    .table-responsive table {
+        table-layout: auto !important; /* Let content dictate width */
+        border-collapse: collapse !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+    }
+
+    /* Ensure Header and Body cells have the exact same sizing rules */
+    .table-responsive th,
+    .table-responsive td {
+        width: auto !important;
+        min-width: 120px; /* Adjust this based on your longest data piece */
+        box-sizing: border-box !important;
+    }
+
+    /* Fix for DataTables that use a separate scroll-head div */
+    .dataTables_scrollHeadInner, 
+    .dataTables_scrollHeadInner table {
+        width: 100% !important;
+        padding-right: 0 !important;
+    }
+
+</style>
+
+<style>
+
+    @media (min-width: 768px) {
+        .sidebar {
+            display: flex !important;
+            width: 14rem !important; 
+            margin-left: 0 !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+
+        .sidebar.toggled {
+            width: 14rem !important;
+        }
+
+        .sidebar .sidebar-brand .sidebar-brand-text {
+            display: inline !important;
+        }
+
+        #content-wrapper {
+            filter: none !important;
+            opacity: 1 !important;
+        }
+    }
+
+</style>
+
+<style>
+
+.content-fade-in {
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+</style>
+
+<style>
+
+/* Custom border to match SB Admin 2 table borders exactly (#e3e6f0) */
+.border-light-custom {
+    border: 1px solid #d1d3e2 !important;
+}
+
+/* Ensure the input-group-text and the input share the same border color */
+.input-group-sm > .input-group-prepend > .input-group-text {
+    border-right: none !important; /* Prevents double border between icon and input */
+    border-color: #d1d3e2 !important;
+}
+
+.input-group-sm > .form-control {
+    border-left: none !important; /* Prevents double border */
+}
+
+/* Optional: Slight focus effect that matches SB Admin 2 primary theme */
+#customSearchInput:focus, #searchColumn:focus {
+    border-color: #bac8f3 !important;
+    box-shadow: none !important;
+    outline: 0;
+}
+
+.btn-white:disabled {
+    background-color: #eaecf4 !important; /* Light gray */
+    color: #d1d3e2 !important;
+    cursor: not-allowed;
+    border-color: #d1d3e2 !important;
+}
+</style>
+
+<!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
+<style>
+    @keyframes structuralFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    .fade-on-load {
+        opacity: 0;
+        animation: structuralFadeIn 0.25s ease-in-out forwards;
+        animation-delay: 0.1s; /* Tiny delay to let fonts and responsive break points calculate first */
+    }
+</style>
+
+<style>
+/* When the menu item is active (blue background), make the checkmark white */
+#columnSelectorMenu .dropdown-item.active .fa-check {
+    color: #ffffff !important;
+}
+</style>
+
+<style>
+
+    /* Remove sorting arrow background icons for non-sortable columns */
+table.dataTable thead th.sorting_disabled::before,
+table.dataTable thead th.sorting_disabled::after {
+    display: none !important;
+}
+
+/* Optional: Reset cursor and padding so it doesn't look clickable */
+table.dataTable thead th.sorting_disabled {
+    cursor: default !important;
+    padding-right: 0.75rem !important; /* Removes padding space reserved for arrows */
+}
+</style>
+
+<body id="page-top">
+    <!--id wrapper-->
+    <div id="wrapper"> 
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-white sidebar sidebar-dark accordion" id="accordionSidebar">
+            <!-- Sidebar - Brand -->
+            <div class="sidebar-brand d-flex align-items-center justify-content-center">
+                <!-- The custom class enforces the animation timeline natively -->
+                <img src="assets/img/logo_new_light_3.png"
+                    class="img-fluid fade-on-load" 
+                    alt="logo" 
+                    style="width: 100%; height: auto; object-fit: contain;">
+            </div>
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item">
+                <!-- Menu Wrapper with the same robust animation class -->
+                <div class="fade-on-load">
+
+                    <a class="nav-link nav-link-blue" href="clinician-dashboard.html">
+                        <i class="fas fa-fw fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a class="nav-link nav-link-blue" href="#">
+                        <i class="fas fa-fw fa-users"></i>
+                        <span>Lista Pazienti</span>
+                    </a>
+                </div>
+            </li>
+        </ul>
+        <!-- End of Sidebar -->
+
+        <div id="content-wrapper" class="d-flex flex-column" style="background-color: #f6f8fa !important;">
+            
+        <div id="content">
+                    
+            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow-sm px-4">
+
+                <!-- Sidebar Toggle (Topbar) -->
+                <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                    <i class="fa fa-bars"></i>
+                </button>
+
+                <h1 class="h4 mb-0 text-gray-800">Lista Pazienti</h1>
+
+                <ul class="navbar-nav ml-auto">
+                    <li class="topbar-divider d-none d-sm-block"></li>
+                        <li class="nav-item dropdown no-arrow">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span id="userFullName" class="mr-2 d-none d-lg-inline text-gray-600 small">
+                                    <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
+                                </span>
+
+                                  <!--<img id="userAvatar" class="img-profile rounded-circle" src="assets/sb-admin-2/img/undraw_profile.svg" alt="">-->
+                        
+                                <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
+                                    <!-- Updated class from 'border' to 'border border-primary' -->
+                                    <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 1px solid #0000FF !important;">
+                                        <i id="avatarSpinnerIcon1" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
+                                        <img id="profileAvatar1" 
+                                            class="img-fluid rounded-circle d-none" 
+                                            width="140" height="140" 
+                                            alt="Foto profilo"
+                                            style="object-fit: cover;">
+                                    </div>
+                                </div>
+
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                            aria-labelledby="userDropdown">
+                            <!--<a class="dropdown-item" href="#">
+                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Profile
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Settings
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Activity Log
+                            </a>-->
+                            <!--<div class="dropdown-divider"></div>
+                            <a class="btn btn-sm text-danger ml-2" id="logoutBtn" href="index.html" style="border: none;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="d-none d-md-inline ml-1">Logout</span>
+                            </a>-->
+
+                             <div class="dropdown-divider"></div>
+                             <a class="btn btn-sm text-danger ml-2 d-inline-flex align-items-center" id="logoutBtn" href="index.html" style="border: none;">
+                                <i class="fas fa-sign-out-alt"></i>
+                                <span class="ml-2 font-weight-bold" style="font-size: 0.85rem;">Logout</span>
+                             </a>
+                        </div>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Main Content Container -->
+            <div class="container-fluid">
+                <div class="row">
+                   
+                    <!-- Left Column (50%) -->
+                    <div id="mainTable" class="col-lg-12 mb-4">
+                       <div class="card mb-4 shadow-sm h-100 flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0;">
+            
+                            <div class="card-header bg-white d-flex align-items-center justify-content-between py-2"  style="border-bottom: 0px solid #eaecf4; height: 45px;">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-users text-primary mr-2"></i>
+                                    <h6 class="m-0 font-weight-bold text-gray-800">Lista Pazienti</h6>
+                                </div>
+                                <div class="badge badge-primary badge-pill px-3 py-2">
+                                    <i class="fas fa-users mr-2"></i>
+                                    <span id="patientCount"><i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;"></i></span>
+                                </div>
+                            </div>
+
+                            <!-- The Spinner Container -->
+                            <div id="loadingSpinner">
+                                <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem; border-width: 0.4em;">
+                                    <span class="sr-only">Caricamento...</span>
+                                </div>
+                                <h5 class="mt-3 text-gray-600">Caricamento pazienti...</h5>
+                            </div>
+                           
+                            <div id="tableContainer" style="display: none;">
+                                <div class="card-body">
+
+                                    <!-- Main Container: Pure Flex, No Grid Interference -->
+                                    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 16px; width: 100%;">
+                                        
+                                        <!-- Left Side: Unified Search + Filter -->
+                                        <!-- Added margin-left: 30px to cleanly shift this whole box to the right -->
+                                        <div style="flex: 1; min-width: 200px; max-width: 380px; margin-left: 25px;">
+                                            <div class="input-group input-group-sm" style="flex-wrap: nowrap;">
+                                                
+                                                <!-- Search Icon -->
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text bg-gray-100 border-light-custom">
+                                                        <i class="fas fa-search text-primary"></i>
+                                                    </span>
+                                                </div>
+                                            
+                                                <!-- Search Input -->
+                                                <input type="text" id="customSearchInput" class="form-control border-light-custom" placeholder="Cerca..." style="background-color: #fff; border-left: 0; min-width: 0;">
+
+                                                <!-- Filter Button -->
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-white border-light-custom dropdown-toggle" type="button" data-toggle="dropdown" aria-has-popup="true" aria-expanded="false" style="border-left: 0; margin-left: -1px;">
+                                                        <i class="fas fa-sliders-h"></i> 
+                                                        <span id="activeColumnLabel" class="d-none d-sm-inline ml-1">Tutte</span>
+                                                    </button>
+
+                                                    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" id="columnSelectorMenu">
+                                                        <a class="dropdown-item active d-flex align-items-center justify-content-between" href="#" data-column="all">Tutte le colonne</a>
+                                                        <div class="dropdown-divider"></div>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="0">Nome</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="1">Cognome</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="2">Genere</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="3">Data di Nascita</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="4">Età Anagrafica</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="5">Stato Giuridico</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="6">Regione</a>
+                                                        <a class="dropdown-item d-flex align-items-center justify-content-between" href="#" data-column="7">Data di Iscrizione</a>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Right Side: Pagination Buttons -->
+                                        <!-- ADDED margin-left: auto; HERE TO PUSH IT TO THE RIGHT SIDE -->
+                                        <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0; margin-left: auto; padding-right: 26px;">
+                                            <span id="currentPageLabel" class="small font-weight-bold text-gray-800" style="white-space: nowrap;">1 / 1</span>
+                                            <div class="btn-group">
+                                                <button type="button" id="prevPage" class="btn btn-white btn-sm border-light-custom" style="width: 35px; height: 31px; border-top-right-radius: 0; border-bottom-right-radius: 0;">
+                                                    <i class="fas fa-chevron-left fa-xs"></i>
+                                                </button>
+                                                <button type="button" id="nextPage" class="btn btn-white btn-sm border-light-custom" style="width: 35px; height: 31px; border-top-left-radius: 0; border-bottom-left-radius: 0; margin-left: -1px;">
+                                                    <i class="fas fa-chevron-right fa-xs"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="table-responsive ">
+                                        <table class="rounded table table-bordered table-hover" id="PatientdataTable" width="100%" cellspacing="0" style="font-size: 0.85rem;">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <!-- Dedicated Icon Column Header -->
+                                                    <th style="width: 50px;" class="text-center">
+                                                        <i class="fas fa-user-circle text-primary" style="font-size: 1.3rem;"></i>
+                                                    </th>
+                                                    <th>Nome</th>
+                                                    <th>Cognome</th>
+                                                    <th>Genere</th>
+                                                    <th>Data di Nascita</th>
+                                                    <th>Età Anagrafica</th>
+                                                    <th>Stato Giuridico</th>
+                                                    <th>Regione</th>
+                                                    <th>Data di Iscrizione</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="PatientTableBody">
+                                                <!-- Data injected here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+
+                </div> <!-- /.row -->
+            </div> <!-- /.container-fluid -->
+       
+        <!-- Footer -->
+        <footer class="sticky-footer bg-white border-top">
+            <div class="container my-auto">
+                <div class="copyright text-center my-auto">
+                    <span>Copyright &copy; MyAssessments.it 2025</span>
+                </div>
+            </div>
+        </footer>
+       
+        </div> <!-- /#content -->
+    </div> <!-- /#content-wrapper -->
+
+    </div><!--id wrapper-->
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.1/js/bootstrap.bundle.min.js"></script>-->
+
+    <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
+
+    <!-- 2. DATATABLES SECOND -->
+    <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
+    <script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
+    <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
+    
+    <script>
+
+        // Global state tracking variable (put this right above your executeSearch function)
+        window.isSearching = false;
+       // window.selectedPatientEmail = null;
+     
+    </script>
+
+     <script type="module">
+
+             // init supabase
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+            
+            // --- Supabase setup ---
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+            window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            // Make the variable globally available from the start
+            window.patients2 = [];
+            
+    </script>
+
+    
+     <script>
+
+            // A global tracker variable to protect against aggressive database render loops
+//            let isAvatarStateLocked = false;
+
+            function updateUserAvatar(userGender) {
+                // If the loop tries to run a second time, immediately reject it to save performance
+              //  if (isAvatarStateLocked) return;
+                
+                const avatarImg1 = document.getElementById('profileAvatar1');
+                const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
+                const container1 = document.getElementById('avatarContainer1');
+
+                if (!avatarImg1 || !spinnerIcon1) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc1 = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-female.png';
+                } else if (userGender === 'Maschile') {
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-male.png';
+                }
+
+                // 2. Assign source asset
+                avatarImg1.src = targetSrc1;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon1.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg1.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container1) {
+                    container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+
+                // 4. Lock down state so external asynchronous loops cannot re-enable the loading indicators
+            //    isAvatarStateLocked = true;
+            }
+        
+        </script>
+
+
+<script type="module">
+    import {
+        convertToItalianFormat,
+        calculateAgeWithMonths
+    } from "./assets/js/string_utils.js";
+
+    $(document).ready(function() {
+        (async () => {
+            try {
+                // 1. Auth & Profile Check
+                const { data: { user } } = await window.supabase.auth.getUser();
+                if (!user) {
+                    window.location.replace("index.html");
+                    return;
+                }
+
+                const { data: profile } = await window.supabase
+                    .from("Clinicals")
+                    .select("id")
+                    .eq("id", user.id)
+                    .single();
+
+                if (!profile) return;
+
+                // 2. Fetch Clients
+                const { data: clients } = await window.supabase
+                    .from('Clients')
+                    .select('*')
+                    .eq('clinical_id', profile.id);
+
+                window.patients2 = clients || [];
+
+                // Update patient count UI
+                const el = document.getElementById("patientCount");
+                if (el) el.textContent = window.patients2.length;
+
+                // Dropdown indicator icon setup
+                $('#columnSelectorMenu .dropdown-item.active')
+                    .append('<i class="fa fa-check fa-xs text-primary ml-2"></i>');
+
+                // 3. Render Table HTML
+                const tableBody = $('#PatientTableBody');
+                tableBody.empty();
+
+                window.patients2.forEach(patient => {
+                    const name = patient.name || '';
+                    const surname = patient.surname || '';
+                    const genre = patient.genre || '';
+                    const birth_date = patient.birth_date;
+                    const consent_date = patient.consent_date;
+                    const region = patient.region || '';
+                    const age = calculateAgeWithMonths(birth_date);
+                    const readableDate = consent_date ? new Date(consent_date).toLocaleDateString('it-IT') : '';
+                    const italian_birth_date = convertToItalianFormat(birth_date);
+                    const minor_or_major = (age.years >= 18) ? "Maggiorenne" : "Minorenne";
+                    const patientId = patient.id;
+
+                    const avatarPath = (genre === 'Femminile') 
+                        ? 'assets/img/registrazione/kid-female.png' 
+                        : 'assets/img/registrazione/kid-male.png';
+
+                   const icon = `
+                        <img src="${avatarPath}" 
+                            class="rounded-circle border patient-avatar" 
+                            width="60" 
+                            height="60" 
+                            alt="Avatar" 
+                            style="border: 1px solid #0000FF !important; cursor: pointer; object-fit: cover; transition: transform 0.15s ease;" 
+                            data-patient-id="${patientId}"
+                            title="Clicca per aprire la scheda di ${name} ${surname}"
+                            data-toggle="tooltip" 
+                            data-placement="top" />
+                    `;
+
+                    // Attached data-id directly to <tr> for accurate retrieval on click
+                    const row = `
+                        <tr data-patient-id="${patientId}">
+                            <td class="text-center align-middle">${icon}</td>
+                            <td>${name}</td>
+                            <td>${surname}</td>
+                            <td>${genre}</td>
+                            <td>${italian_birth_date}</td>
+                            <td>${age.years ? age.years + " Anni" : ''}</td>
+                            <td>${minor_or_major}</td>
+                            <td>${region}</td>
+                            <td>${readableDate}</td>
+                        </tr>
+                    `;
+                    tableBody.append(row);
+                });
+
+                // 4. Initialize DataTables
+                if ($.fn.DataTable.isDataTable('#PatientdataTable')) {
+                    $('#PatientdataTable').DataTable().destroy();
+                }
+
+                const table = $('#PatientdataTable').DataTable({
+                    "pageLength": 5,
+                    "lengthChange": false,
+                    "searching": true,
+                    "info": true,
+                    "paging": true,
+                    "autoWidth": false,
+                    "dom": "tr",
+                    "responsive": true,
+                    "columnDefs": [
+                        {
+                            "targets": 0,
+                            "orderable": false,
+                            "searchable": false,
+                        }
+                    ],
+                    "initComplete": function(settings) {
+                        const api = this.api();
+                        api.columns.adjust();
+                        setTimeout(function() {
+                            $('#loadingSpinner').fadeOut(200, function() {
+                                $('#tableContainer').fadeIn(400);
+                            });
+                        }, 1000);
+
+                        $('#dropdownTarget').appendTo('#customFilterPlaceholder').removeClass('d-none');
+                        api.columns.adjust();
+                    }
+                });
+
+                // Track selected column state
+                let currentSearchColumn = 'all';
+
+                // Column Selector Handler
+                $('#columnSelectorMenu .dropdown-item').on('click', function(e) {
+                    e.preventDefault();
+                    currentSearchColumn = $(this).data('column');
+
+                    $('#columnSelectorMenu .dropdown-item').removeClass('active');
+                    $(this).addClass('active');
+
+                    $('#columnSelectorMenu .dropdown-item i.fa-check').remove();
+                    
+                    let selectedText = $(this).text().trim();
+                    $(this).append('<i class="fas fa-check fa-xs text-primary ml-2"></i>');
+                    $('#activeColumnLabel').text(currentSearchColumn === 'all' ? 'Tutte' : selectedText);
+
+                    // Re-trigger search when column scope changes
+                    executeSearch();
+                });
+
+                // Execute Search Helper Function
+                function executeSearch() {
+                    let searchVal = $('#customSearchInput').val();
+                    if (currentSearchColumn === 'all') {
+                        table.search(searchVal, false, false, true).draw();
+                    } else {
+                        table.search('')
+                             .column(currentSearchColumn)
+                             .search(searchVal, false, false, true)
+                             .draw();
+                    }
+                }
+
+                // Custom Search Input Event
+                $('#customSearchInput').on('input keyup', function() {
+                    window.isSearching = true;
+                    executeSearch();
+                    window.isSearching = false;
+                });
+
+                // Pagination Buttons
+                $('#prevPage').on('click', function() {
+                    window.isSearching = true;
+                    table.page('previous').draw('page'); 
+                    window.isSearching = false;
+                });
+
+                $('#nextPage').on('click', function() {
+                    window.isSearching = true;
+                    table.page('next').draw('page'); 
+                    window.isSearching = false;
+                });
+
+                // Dynamic Page Label & Controls Update
+                table.on('draw', function() {
+                    var info = table.page.info();
+                    var label = (info.pages > 0) ? (info.page + 1) + ' / ' + info.pages : '0 / 0';
+                    $('#currentPageLabel').text(label);
+                    $('#prevPage').prop('disabled', info.page === 0);
+                    $('#nextPage').prop('disabled', info.page >= info.pages - 1 || info.pages === 0);
+                });
+
+                // Initial Draw Call
+                table.draw();
+
+                // Row Selection & Active Patient Handler
+                $('#PatientTableBody').on('click', 'tr', function(e) {
+                    if ($(e.target).closest('button, a, i, img').length) return;
+
+                    const patientId = $(this).data('patient-id');
+                    if (!patientId) return;
+
+                    // Highlight active row across pages
+                    table.rows().nodes().to$().removeClass('table-primary');
+                    $(this).addClass('table-primary');
+
+                    // Store patient ID in localStorage
+                    localStorage.setItem('activePatientId', patientId);
+
+                    // Reset search field & state on row selection
+                    $('#customSearchInput').val('');
+                    table.search('').columns().search('').draw('page');
+
+                    currentSearchColumn = 'all';
+                    $('#activeColumnLabel').text('Tutte');
+                    $('#columnSelectorMenu .dropdown-item').removeClass('active');
+                    $('#columnSelectorMenu .dropdown-item[data-column="all"]').addClass('active');
+                    $('#columnSelectorMenu .dropdown-item i.fa-check').remove();
+                    $('#columnSelectorMenu .dropdown-item[data-column="all"]').append('<i class="fas fa-check fa-xs text-primary ml-2"></i>');
+                });
+
+
+                // Local module function (not attached to window)
+                function navigateToPatientProfile(patientId) {
+                    if (!patientId) return;
+                    console.log(patientId);
+                    // Save the ID in localStorage
+                    localStorage.setItem('activePatientId', patientId);
+                    // Redirect to new assessment page
+                    window.location.href = 'patient_process_3.html';
+                }
+
+                // Handler strictly for the avatar click
+                $('#PatientTableBody').on('click', '.patient-avatar', function(e) {
+                    e.stopPropagation(); // Prevents row-selection logic from firing
+                    const patientId = $(this).data('patient-id');
+                    navigateToPatientProfile(patientId);
+                });
+
+                // Row selection handler (ignores avatar clicks)
+                $('#PatientTableBody').on('click', 'tr', function(e) {
+                    if ($(e.target).closest('button, a, i, .patient-avatar').length) return;
+
+                    const patientId = $(this).data('patient-id');
+                    if (!patientId) return;
+
+                    table.rows().nodes().to$().removeClass('table-primary');
+                    $(this).addClass('table-primary');
+                    localStorage.setItem('activePatientId', patientId);
+                });
+
+
+                // Sidebar Toggle Handler
+                $("#sidebarToggleTop").on('click', function(e) {
+                    e.preventDefault();
+                    $("body").toggleClass("sidebar-toggled");
+                    $(".sidebar").toggleClass("toggled");
+                    table.columns.adjust();
+                });
+
+                // Logout Handler
+                $('#logoutBtn').on('click', function(e) {
+                    e.preventDefault(); 
+                    localStorage.clear();
+                    window.location.href = $(this).attr('href'); 
+                });
+
+            } catch (err) {
+                console.error("Error loading patients:", err);
+            }
+        })();
+    });
+</script>
+        <script type="module">
+
+            // --- Event Listeners 
+            document.addEventListener("DOMContentLoaded", async () => {
+                    
+                    // CHECK SESSIONE
+                    const { data: { session } } = await supabase.auth.getSession();
+                    
+                    if (!session?.user) {
+                        window.location.replace("index.html");
+                        return;
+                    }
+
+                    const user = session.user;
+
+                    // 2. AUTO LOGOUT HANDLER
+                    supabase.auth.onAuthStateChange((event, session) => {
+                        if (event === "SIGNED_OUT" || !session) {
+                        window.location.replace("index.html");
+                        }
+                    });
+
+                    // 3. DATI BASE USER (SOLO AUTH)
+                    const email = user.email;
+                    
+                    // 4. CARICA PROFILO DAL DATABASE 
+                    const { data: profile, error } = await supabase
+                        .from("Clinicals")
+                        .select("*")
+                        .eq("id", user.id)
+                        .single();
+
+                    if (error || !profile) {
+                        console.error("Errore caricamento profilo:", error);
+                        window.location.replace("index.html");
+                        return;
+                    }
+
+                    // 5. COSTRUZIONE DATI UI
+                    const name             = `${profile.name}`;
+                    const surname          = `${profile.surname}`;
+                    const fullNameNoPrefix = `${name} ${surname}`;
+                    const gender           = `${profile.genre}`;
+                        
+                    // --- Nome nella NavBar ---
+                    const userFullNameElement = document.getElementById("userFullName");
+                    if (userFullNameElement) {
+                        userFullNameElement.textContent = fullNameNoPrefix;
+                    }
+
+                    // update avatar in the navbar
+                    updateUserAvatar(gender);
+
+                    localStorage.removeItem('activePatientId');
+
+            });
+
+    </script>
+
+    <script>
+
+    //SIDEBAR Race condition fix
+    $(document).ready(function() {
+        // We attach the listener to 'body' so it never "dies" 
+        // even if the navbar is re-rendered or the script finishes late.
+        $("body").on('click', '#sidebarToggleTop', function(e) {
+            e.preventDefault();
+            
+            // 1. Toggle classes
+            $("body").toggleClass("sidebar-toggled");
+            $(".sidebar").toggleClass("toggled");
+
+            // 2. Fix DataTables layout if it's visible
+            if ($.fn.DataTable.isDataTable('#PatientdataTable')) {
+                $('#PatientdataTable').DataTable().columns.adjust();
+            }
+            
+            // 3. Handle the 'overflow' issue we discussed for your dashboard layout
+            if ($("body").hasClass("sidebar-toggled")) {
+                // Optional: prevent background scrolling on mobile when menu is open
+                if (window.innerWidth < 768) {
+                    $("html, body").css("overflow", "hidden");
+                }
+            } else {
+                $("html, body").css("overflow", ""); 
+            }
+        });
+    });
+
+    </script>
+
+</body>
+</html>
