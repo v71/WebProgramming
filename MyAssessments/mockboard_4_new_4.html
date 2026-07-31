@@ -328,6 +328,93 @@
 
 </style>
 
+<style>
+
+  /* Apply to your table */
+  #tableResponsiveContainer {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  /* Specify fixed percentages or pixel values on headers */
+  #tableResponsiveContainer th:nth-child(1) { width: 60px; }   /* ID */
+  #tableResponsiveContainer th:nth-child(2) { width: 25%; }   /* User */
+  #tableResponsiveContainer th:nth-child(3) { width: 10%; }   /* Gender */
+  #tableResponsiveContainer th:nth-child(4) { width: 8%; }    /* Age */
+  #tableResponsiveContainer th:nth-child(5) { width: 12%; }   /* Status */
+  #tableResponsiveContainer th:nth-child(6) { width: 12%; }   /* Sub Date */
+  #tableResponsiveContainer th:nth-child(7) { width: 15%; }   /* Region */
+  #tableResponsiveContainer th:nth-child(8) { width: 100px; }  /* Actions */
+
+  /* Keep long text contained without stretching columns */
+  #myTable td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+</style>
+
+<style>
+
+  /* Reduce size and deemphasize sorting icons */
+  th.sortable i.fa-sort,
+  th.sortable i.fa-sort-up,
+  th.sortable i.fa-sort-down {
+    font-size: 0.75rem;     /* Smaller icon size (default is 1rem / 100%) */
+    opacity: 0.5;           /* Softens visual weight */
+    margin-left: 0.35rem;   /* Keeps subtle spacing from header text */
+    vertical-align: middle; /* Keeps aligned with the header text */
+  }
+
+  /* Slightly darken the active sorted icon so it stays readable */
+  th.sortable i.fa-sort-up,
+  th.sortable i.fa-sort-down {
+    opacity: 0.85;
+  }
+
+</style>
+
+<style>
+
+    /* Custom View Button (e.g., Teal / Cyan) */
+    .btn-custom-view {
+      background-color: #00b4d8;
+      border-color: #00b4d8;
+      color: #ffffff;
+    }
+    .btn-custom-view:hover {
+      background-color: #0096c7;
+      border-color: #0096c7;
+      color: #ffffff;
+    }
+
+    /* Custom Edit Button (e.g., Warm Orange / Amber) */
+    .btn-custom-edit {
+      background-color: #f77f00;
+      border-color: #f77f00;
+      color: #ffffff;
+    }
+    .btn-custom-edit:hover {
+      background-color: #d66800;
+      border-color: #d66800;
+      color: #ffffff;
+    }
+
+    /* Custom Delete Button (e.g., Crimson / Coral) */
+    .btn-custom-delete {
+      background-color: #e63946;
+      border-color: #e63946;
+      color: #ffffff;
+    }
+    .btn-custom-delete:hover {
+      background-color: #d62828;
+      border-color: #d62828;
+      color: #ffffff;
+    }
+
+</style>
+
 <body id="page-top">
     <!--id wrapper-->
     <div id="wrapper"> 
@@ -384,8 +471,6 @@
                                     <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
                                 </span>
 
-                                  <!--<img id="userAvatar" class="img-profile rounded-circle" src="assets/sb-admin-2/img/undraw_profile.svg" alt="">-->
-                        
                                 <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
                                     <!-- Updated class from 'border' to 'border border-primary' -->
                                     <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 1px solid #0000FF !important;">
@@ -472,18 +557,35 @@
             <!-- Responsive Table Wrapper -->
             <div class="table-responsive" id="tableResponsiveContainer" style="display: none;">
             <table class="table table-bordered text-nowrap" id="userTable" width="100%" cellspacing="0">
+              
               <thead>
                 <tr>
-                  <th style="width: 50px;">Id</th>
-                  <th>Nome</th>
-                  <th>Genere</th>
-                  <th>Età Anagrafica</th>
-                  <th>Stato Civile</th>
-                  <th>Data di Iscrizione</th>
-                  <th>Regione</th>
-                  <th class="text-center" style="width: 100px;">Actions</th>
+                  <th data-sort="id" class="text-center" style="width: 50px;"> Id </th>
+
+                  <th data-sort="nome" class="sortable text-center">
+                    <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Paziente <i class="fas fa-sort sort-icon ml-1"></i>
+                  </th>
+
+                  <th data-sort="gender" class="sortable text-center">
+                    <i class="fas fa-venus-mars text-primary mr-1" style="font-size: 0.75em;"></i >Genere <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                  <th data-sort="age" class="sortable text-center">
+                    <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Età Anagrafica <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                  <th data-sort="status" class="sortable text-center">
+                    <i class="fas fa-hourglass-half text-primary mr-1" style="font-size: 0.75em;"></i >Stato Civile <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                  <th data-sort="subDate" class="sortable text-center">
+                    <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data Iscrizione <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                  <th data-sort="region" class="sortable text-center">
+                    <i class="fas fa-map-marker-alt text-primary mr-1" style="font-size: 0.75em;"></i> Regione <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                    <th class="text-center">
+                    <i class="fas fa-tasks text-primary mr-1" style="font-size: 0.75em;"></i> Azioni </th>
                 </tr>
               </thead>
+
               <tbody id="tableBody">
                   <!-- Inject data here -->                
               </tbody>
@@ -552,8 +654,7 @@
             
     </script>
 
-    
-     <script>
+    <script>
 
             // A global tracker variable to protect against aggressive database render loops
 
@@ -587,10 +688,11 @@
 
             }
         
-        </script>
+    </script>
 
 
 <script type="module">
+
     import {
         convertToItalianFormat,
         calculateAgeWithMonths
@@ -716,8 +818,6 @@
        * @param {Array<Object>} data - Array of record objects
        */
       
-        // targetSrc1 = 'assets/img/registrazione/terapeuta-female.png';
-
        function populateTable(data) {
         const $tbody = $('#tableBody');
         $tbody.empty(); // Clear existing rows
@@ -731,48 +831,54 @@
             </tr>
           `);
         } else {
-          data.forEach(item => {
+          data.forEach((item,index) => {
             const initials = getInitials(item.nome);
             const badgeClass = item.status === 'Maggiorenne' ? 'badge-success' : 'badge-primary';
 
             const rowHtml = `
               <tr data-id="${item.id}">
-                <td class="align-middle">${item.id}</td>
+                <td class="align-middle text-center">${index+1}</td>
+                
                 <td class="align-middle">
                   <div class="d-flex align-items-center">
-                 <div id="avatarContainer1" class="d-flex align-items-center justify-content-center bg-light rounded-circle border mr-3 flex-shrink-0" style="width: 55px; height: 55px; border: 1px solid #0000FF !important;">
-                  <img src="${item.avatar || (item.sesso === 'Femminile' || item.gender === 'Maschile' ? 'assets/img/registrazione/terapeuta-male.png' : 'assets/img/registrazione/terapeuta-female.png')}" alt="${item.nome || 'User'}" class="rounded-circle w-100 h-100" style="object-fit: cover;">
-                 </div>
+                    <div id="avatarContainer1" class="d-flex align-items-center justify-content-center bg-light rounded-circle border mr-3 flex-shrink-0" style="width: 55px; height: 55px; border: 1px solid #0000FF !important;">
+                      <img src="${item.avatar || (item.sesso === 'Femminile' || item.gender === 'Maschile' ? 'assets/img/registrazione/kid-male.png' : 'assets/img/registrazione/kid-female.png')}" alt="${item.nome || 'User'}" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                    </div>
                     <div>
                       <div class="font-weight-bold">${item.nome || 'N/A'}</div>
                       <div class="small text-gray-500">${item.birthDate || ''}</div>
                     </div>
                   </div>
                 </td>
-                <td class="align-middle">${item.gender || '-'}</td>
-                <td class="align-middle">${item.age || '-'}</td>
-
-                <td class="align-middle">
-                  <span class="badge ${badgeClass} badge-pill px-3 py-2">${item.status || 'Inactive'}</span>
-                </td>
-
-
-                <td class="align-middle">${item.subDate || '-'}</td>
-                <td class="align-middle">${item.region || '-'}</td>
                 
+                <td class="align-middle text-center">${item.gender || '-'}</td>
+                <td class="align-middle text-center">${item.age || '-'}</td>
+                <td class="align-middle text-center">${item.status || '-'}</td>
+                <td class="align-middle text-center">${item.subDate || '-'}</td>
+                <td class="align-middle text-center">${item.region || '-'}</td>
+              
                 <td class="text-center align-middle">
                   <div class="d-inline-flex">
-                   
-                    <a href="#" class="btn btn-info btn-circle btn-sm mr-1 edit-btn">
-                      <i class="fas fa-pencil-alt"></i>
+                    
+                    <!-- Custom View Button -->
+                    <a href="#" class="btn btn-custom-view btn-circle mr-1 view-btn" title="View details">
+                      <i class="fas fa-layer-group"></i>
                     </a>
-                   
-                     <a href="#" class="btn btn-danger btn-circle btn-sm delete-btn">
-                      <i class="fas fa-trash"></i>
+
+                    <!-- Custom Edit Button -->
+                    <a href="#" class="btn btn-custom-edit btn-circle mr-1 edit-btn" title="Edit">
+                      <i class="fas fa-notes-medical"></i>
                     </a>
-                   
+                    
+                    <!-- Custom Delete Button -->
+                    <a href="#" class="btn btn-custom-delete btn-circle delete-btn" title="Delete">
+                      <i class="fas fa-file-medical-alt"></i>
+                    </a>
+
                   </div>
                 </td>
+
+              
               </tr>
             `;
             $tbody.append(rowHtml);
@@ -790,6 +896,10 @@
         currentPage = 1;
         recalculateLayout();
       }
+
+      /**
+       * calculateRowsPerPage
+       */
 
       function calculateRowsPerPage() {
         // 1. Ensure first row is shown to measure actual rendered height
@@ -826,6 +936,10 @@
         return Math.max(1, calculatedCount);
       }
 
+      /**
+       * displayPage
+       */
+
       function displayPage(page, animate = true) {
         currentPage = page;
         const start = (page - 1) * rowsPerPage;
@@ -846,6 +960,10 @@
         }
       }
 
+      /**
+       * updateInfoAndPagination
+       */
+
       function updateInfoAndPagination(start, end) {
         const totalFiltered = $filteredRows.length;
         const showingStart = totalFiltered === 0 ? 0 : start + 1;
@@ -853,6 +971,10 @@
         $('#paginationInfo').text(`Showing ${showingStart} to ${showingEnd} of ${totalFiltered} entries`);
         renderPagination();
       }
+
+      /**
+       * renderPagination
+       */
 
       function renderPagination() {
         const totalFiltered = $filteredRows.length;
@@ -881,6 +1003,99 @@
         displayPage(currentPage, false);
       }
 
+      
+      // Set your default starting sort column and direction
+      let currentSortColumn = 'nome'; // Or 'subDate', 'age', etc.
+      let currentSortOrder = 'asc';
+
+      function sortDataAndPopulate(data, key, forceOrder = null) {
+        if (forceOrder) {
+          currentSortColumn = key;
+          currentSortOrder = forceOrder;
+        } else if (currentSortColumn === key) {
+          currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSortColumn = key;
+          currentSortOrder = 'asc';
+        }
+
+        // Sort array
+        data.sort((a, b) => {
+          let valA = a[key] ?? '';
+          let valB = b[key] ?? '';
+
+          const numA = parseFloat(valA);
+          const numB = parseFloat(valB);
+          if (!isNaN(numA) && !isNaN(numB)) {
+            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
+          }
+
+          const dateA = Date.parse(valA);
+          const dateB = Date.parse(valB);
+          if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
+            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+          }
+
+          return currentSortOrder === 'asc' 
+            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
+            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        // Re-populate table and update header icons
+        populateTable(data);
+        updateHeaderIcons(key, currentSortOrder);
+      }
+
+      /*
+      let currentSortColumn = null;
+      let currentSortOrder = 'asc';
+
+      function sortDataAndPopulate(data, key) {
+        // Toggle direction if clicking the same column twice
+        if (currentSortColumn === key) {
+          currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSortColumn = key;
+          currentSortOrder = 'asc';
+        }
+
+        // Sort the array in-place
+        data.sort((a, b) => {
+          let valA = a[key] ?? '';
+          let valB = b[key] ?? '';
+
+          // Numeric sorting for IDs or Ages
+          if (typeof valA === 'number' && typeof valB === 'number') {
+            return currentSortOrder === 'asc' ? valA - valB : valB - valA;
+          }
+
+          // Try parsing numeric strings (e.g., if age or id comes as a string)
+          const numA = parseFloat(valA);
+          const numB = parseFloat(valB);
+          if (!isNaN(numA) && !isNaN(numB)) {
+            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
+          }
+
+          // Date sorting if key looks like a date (e.g. subDate)
+          const dateA = Date.parse(valA);
+          const dateB = Date.parse(valB);
+          if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
+            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+          }
+
+          // Standard string comparison (case-insensitive)
+          return currentSortOrder === 'asc' 
+            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
+            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        // Re-populate your table using your existing function
+        populateTable(data);
+        
+        // Update header arrow icons visually
+        updateHeaderIcons(key, currentSortOrder);
+      }
+      */
       // =============================================================
       // 3. EVENT LISTENERS
       // =============================================================
@@ -929,6 +1144,27 @@
         resizeTimer = setTimeout(recalculateLayout, 150);
       });
 
+      // Click listener for sortable column headers
+      $(document).on('click', 'th.sortable', function() {
+        const sortKey = $(this).data('sort');
+        // Pass your current dataset variable (e.g., currentData or whatever holds your user array)
+        sortDataAndPopulate(myData, sortKey);
+      });
+
+      function updateHeaderIcons(activeKey, order) {
+        $('th.sortable').each(function() {
+          const $th = $(this);
+          // Target ONLY the sorting icon, leaving header icons intact
+          const $sortIcon = $th.find('i.sort-icon');
+          
+          if ($th.data('sort') === activeKey) {
+            $sortIcon.attr('class', order === 'asc' ? 'fas fa-sort-up sort-icon ml-1' : 'fas fa-sort-down sort-icon ml-1');
+          } else {
+            $sortIcon.attr('class', 'fas fa-sort sort-icon ml-1 text-muted');
+          }
+        });
+      }
+
       // =============================================================
       // 4. INITIAL LOAD EXECUTION WITH PROGRAMMATIC DATA
       // =============================================================
@@ -947,6 +1183,12 @@
         { id: 10, nome: 'Chiara Galli'     , subDate :'2026-01-12', age: '19' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2014-12-01' , region: 'Toscana' }
       ];
 
+         // Assuming myGlobalDataArray contains your patient data
+      if (myData && myData.length > 0) {
+        // Sort by 'nome' in 'asc' order on initial load
+        sortDataAndPopulate(myData, 'nome', 'asc');
+      }
+      
       $('#totalUsersCount').text($allRows.length);
 
       // 1. Temporarily place container in layout DOM (invisible) so jQuery can measure heights
