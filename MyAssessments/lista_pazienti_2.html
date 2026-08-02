@@ -195,153 +195,229 @@
 
     </style>
 
+  <style>
 
+      #loadingSpinner {
+          /* Adjust min-height to match the space your 5-row table usually takes */
+          min-height: 450px; 
+          display: flex;
+          flex-direction: column; /* Stack spinner and text vertically */
+          justify-content: center; /* Center vertically */
+          align-items: center; /* Center horizontally */
+          background-color: #fff; /* Match the card background */
+      }
 
+      /* Make the spinner "thickness" look proportional to the new size */
+      .spinner-border {
+          border-width: 0.5rem; 
+      }
 
-<style>
+  </style>
 
-    #loadingSpinner {
-        /* Adjust min-height to match the space your 5-row table usually takes */
-        min-height: 450px; 
-        display: flex;
-        flex-direction: column; /* Stack spinner and text vertically */
-        justify-content: center; /* Center vertically */
-        align-items: center; /* Center horizontally */
-        background-color: #fff; /* Match the card background */
+  <style>
+
+      @media (min-width: 768px) {
+          .sidebar {
+              display: flex !important;
+              width: 14rem !important; 
+              margin-left: 0 !important;
+              position: relative !important;
+              z-index: 1 !important;
+          }
+
+          .sidebar.toggled {
+              width: 14rem !important;
+          }
+
+          .sidebar .sidebar-brand .sidebar-brand-text {
+              display: inline !important;
+          }
+
+          #content-wrapper {
+              filter: none !important;
+              opacity: 1 !important;
+          }
+      }
+
+  </style>
+
+  <style>
+
+    .content-fade-in {
+        animation: fadeInUp 0.5s ease-out forwards;
     }
 
-    /* Make the spinner "thickness" look proportional to the new size */
-    .spinner-border {
-        border-width: 0.5rem; 
-    }
-
-</style>
-
-<style>
-
-    @media (min-width: 768px) {
-        .sidebar {
-            display: flex !important;
-            width: 14rem !important; 
-            margin-left: 0 !important;
-            position: relative !important;
-            z-index: 1 !important;
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
         }
-
-        .sidebar.toggled {
-            width: 14rem !important;
-        }
-
-        .sidebar .sidebar-brand .sidebar-brand-text {
-            display: inline !important;
-        }
-
-        #content-wrapper {
-            filter: none !important;
-            opacity: 1 !important;
+        to {
+            opacity: 1;
         }
     }
 
-</style>
+  </style>
 
-<style>
+  <!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
+  <style>
 
-.content-fade-in {
-    animation: fadeInUp 0.5s ease-out forwards;
-}
+      @keyframes structuralFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+      }
+      .fade-on-load {
+          opacity: 0;
+          animation: structuralFadeIn 0.25s ease-in-out forwards;
+          animation-delay: 0.1s; /* Tiny delay to let fonts and responsive break points calculate first */
+      }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-    }
-    to {
+  </style>
+
+  <!-- CSS Fade Transition for Table Only -->
+  <style>
+  
+      #tableResponsiveContainer {
         opacity: 1;
-    }
-}
-</style>
-
-<!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
-<style>
-    @keyframes structuralFadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
-    .fade-on-load {
+        transition: opacity 0.2s ease-in-out;
+      }
+      #tableResponsiveContainer.table-fade-out {
         opacity: 0;
-        animation: structuralFadeIn 0.25s ease-in-out forwards;
-        animation-delay: 0.1s; /* Tiny delay to let fonts and responsive break points calculate first */
-    }
+      }
+
+  </style>
+
+  <!-- CSS Fade Transition Only -->
+  <style>
+  
+      #tableResponsiveContainer {
+        opacity: 1;
+        transition: opacity 0.2s ease-in-out;
+      }
+      #tableResponsiveContainer.table-fade-out {
+        opacity: 0;
+      }
+
+  </style>
+
+  <style>
+
+      /* Transition state when clicking pagination links */
+      #tableResponsiveContainer.table-fade-out {
+        opacity: 0 !important;
+      }
+
+  </style>
+
+  <style>
+
+      /* Smooth hover highlight on table rows */
+      #userTable tbody tr {
+        transition: background-color 0.15s ease-in-out;
+        cursor: pointer; /* Keeps rows feeling interactive */
+      }
+
+      /* Hover background styling */
+      #userTable tbody tr:hover {
+        background-color: rgba(13, 110, 253, 0.06) !important; /* Subtle blue tint */
+      }
+
+      /* Dark mode / Bootstrap dark theme override (optional) */
+      [data-bs-theme="dark"] #userTable tbody tr:hover {
+        background-color: rgba(255, 255, 255, 0.08) !important;
+      }
+
 </style>
-
- <!-- CSS Fade Transition for Table Only -->
-  <style>
-    #tableResponsiveContainer {
-      opacity: 1;
-      transition: opacity 0.2s ease-in-out;
-    }
-    #tableResponsiveContainer.table-fade-out {
-      opacity: 0;
-    }
-  </style>
-
-
-<!-- CSS Fade Transition Only -->
-  <style>
-    #tableResponsiveContainer {
-      opacity: 1;
-      transition: opacity 0.2s ease-in-out;
-    }
-    #tableResponsiveContainer.table-fade-out {
-      opacity: 0;
-    }
-  </style>
 
 <style>
 
+  /* Apply to your table */
+  /*
+  #tableResponsiveContainer {
+    table-layout: fixed;
+    width: 100%;
+  }
+*/
+  /* Specify fixed percentages or pixel values on headers */
+  /*
+  #tableResponsiveContainer th:nth-child(1) { width: 60px; }   
+  #tableResponsiveContainer th:nth-child(2) { width: 25%; }  
+  #tableResponsiveContainer th:nth-child(3) { width: 10%; }   
+  #tableResponsiveContainer th:nth-child(4) { width: 8%; }   
+  #tableResponsiveContainer th:nth-child(5) { width: 12%; }  
+  #tableResponsiveContainer th:nth-child(6) { width: 12%; }  
+  #tableResponsiveContainer th:nth-child(7) { width: 15%; }   
+  #tableResponsiveContainer th:nth-child(8) { width: 100px; }  
+  */
 
-/* Lock table width so it never collapses horizontally during initial load */
-#userTable {
-  table-layout: fixed;
-  width: 100% !important;
-}
-
-/* Explicit column widths so cells don't shift when rows hide/show */
-#userTable th:nth-child(1) { width: 50px; }   /* # ID */
-#userTable th:nth-child(2) { width: 30%; }    /* User */
-#userTable th:nth-child(3) { width: 20%; }    /* Role */
-#userTable th:nth-child(4) { width: 15%; }    /* Status */
-#userTable th:nth-child(5) { width: 20%; }    /* Joined Date */
-#userTable th:nth-child(6) { width: 100px; }  /* Actions */
-
-/* Keep text neatly truncated if content overflows fixed columns */
-#userTable td, #userTable th {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Container stays invisible on frame 1, but keeps full width and height structure */
-#tableResponsiveContainer {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-}
-
-/* Revealed cleanly once Page 1 calculation completes */
-#tableResponsiveContainer.table-ready {
-  visibility: visible;
-  opacity: 1;
-}
+  /* Keep long text contained without stretching columns */
+  /*
+  #myTable td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+*/
 </style>
 
 <style>
-/* Transition state when clicking pagination links */
-#tableResponsiveContainer.table-fade-out {
-  opacity: 0 !important;
-}
+
+  /* Reduce size and deemphasize sorting icons */
+  th.sortable i.fa-sort,
+  th.sortable i.fa-sort-up,
+  th.sortable i.fa-sort-down {
+    font-size: 0.75rem;     /* Smaller icon size (default is 1rem / 100%) */
+    opacity: 0.5;           /* Softens visual weight */
+    margin-left: 0.35rem;   /* Keeps subtle spacing from header text */
+    vertical-align: middle; /* Keeps aligned with the header text */
+  }
+
+  /* Slightly darken the active sorted icon so it stays readable */
+  th.sortable i.fa-sort-up,
+  th.sortable i.fa-sort-down {
+    opacity: 0.85;
+  }
 
 </style>
 
+<style>
+
+    /* Custom View Button (e.g., Teal / Cyan) */
+    .btn-custom-view {
+      background-color: #00b4d8;
+      border-color: #00b4d8;
+      color: #ffffff;
+    }
+    .btn-custom-view:hover {
+      background-color: #0096c7;
+      border-color: #0096c7;
+      color: #ffffff;
+    }
+
+    /* Custom Edit Button (e.g., Warm Orange / Amber) */
+    .btn-custom-edit {
+      background-color: #f77f00;
+      border-color: #f77f00;
+      color: #ffffff;
+    }
+    .btn-custom-edit:hover {
+      background-color: #d66800;
+      border-color: #d66800;
+      color: #ffffff;
+    }
+
+    /* Custom Delete Button (e.g., Crimson / Coral) */
+    .btn-custom-delete {
+      background-color: #e63946;
+      border-color: #e63946;
+      color: #ffffff;
+    }
+    .btn-custom-delete:hover {
+      background-color: #d62828;
+      border-color: #d62828;
+      color: #ffffff;
+    }
+
+</style>
 
 <body id="page-top">
     <!--id wrapper-->
@@ -399,8 +475,6 @@
                                     <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
                                 </span>
 
-                                  <!--<img id="userAvatar" class="img-profile rounded-circle" src="assets/sb-admin-2/img/undraw_profile.svg" alt="">-->
-                        
                                 <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
                                     <!-- Updated class from 'border' to 'border border-primary' -->
                                     <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 1px solid #0000FF !important;">
@@ -444,8 +518,6 @@
                 </ul>
             </nav>
 
-            
-
 
 <!-- Main Content Container -->
 <div class="container-fluid">
@@ -484,237 +556,40 @@
                   <h5 class="mt-3 text-gray-600">Caricamento pazienti...</h5>
               </div>
                            
-
-          <!-- Responsive Table Wrapper -->
+            <!-- Responsive Table Wrapper -->
             <div class="table-responsive" id="tableResponsiveContainer" style="display: none;">
             <table class="table table-bordered text-nowrap" id="userTable" width="100%" cellspacing="0">
+              
               <thead>
                 <tr>
-                  <th style="width: 50px;">#</th>
-                  <th>User</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                  <th>Joined Date</th>
-                  <th class="text-center" style="width: 100px;">Actions</th>
+                  <th data-sort="id" class="text-center" style="width: 50px;"> Id </th>
+
+                  <th data-sort="nome" class="sortable text-center">
+                    <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Paziente <i class="fas fa-sort sort-icon ml-1"></i>
+                  </th>
+
+                  <th data-sort="subDate" class="sortable text-center">
+                    <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Nascita <i class="fas fa-sort sort-icon ml-1"></i></th>
+          
+                  <th data-sort="age" class="sortable text-center">
+                    <i class="fas  fa-hourglass-half text-primary mr-1" style="font-size: 0.75em;"></i> Età Anagrafica <i class="fas fa-sort sort-icon ml-1"></i></th>
+
+                  <th data-sort="gender" class="sortable text-center">
+                    <i class="fas fa-venus-mars text-primary mr-1" style="font-size: 0.75em;"></i >Genere <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                  <th data-sort="status" class="sortable text-center">
+                    <i class="fas fa-id-card text-primary mr-1" style="font-size: 0.75em;"></i >Stato Civile <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                  <th data-sort="region" class="sortable text-center">
+                    <i class="fas fa-map-marker-alt text-primary mr-1" style="font-size: 0.75em;"></i> Regione <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                    <th class="text-center">
+                    <i class="fas fa-tasks text-primary mr-1" style="font-size: 0.75em;"></i> Azioni </th>
+        
                 </tr>
               </thead>
               <tbody id="tableBody">
-                <tr>
-                  <td class="align-middle">1</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-primary text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>JD</b></div>
-                      <div><div class="font-weight-bold">Jane Doe</div><div class="small text-gray-500">jane.doe@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Administrator</td>
-                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
-                  <td class="align-middle">Jan 12, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">2</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-info text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>AS</b></div>
-                      <div><div class="font-weight-bold">Alex Smith</div><div class="small text-gray-500">alex.smith@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Editor</td>
-                  <td class="align-middle"><span class="badge badge-warning text-white px-2 py-1">Pending</span></td>
-                  <td class="align-middle">Feb 04, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">3</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-secondary text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>MJ</b></div>
-                      <div><div class="font-weight-bold">Michael Johnson</div><div class="small text-gray-500">m.johnson@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Subscriber</td>
-                  <td class="align-middle"><span class="badge badge-danger px-2 py-1">Inactive</span></td>
-                  <td class="align-middle">Mar 19, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">4</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-success text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>EW</b></div>
-                      <div><div class="font-weight-bold">Emma Watson</div><div class="small text-gray-500">emma.w@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Author</td>
-                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
-                  <td class="align-middle">Apr 02, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">5</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-dark text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>DB</b></div>
-                      <div><div class="font-weight-bold">David Brown</div><div class="small text-gray-500">david.b@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Moderator</td>
-                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
-                  <td class="align-middle">May 11, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">6</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-warning text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>SL</b></div>
-                      <div><div class="font-weight-bold">Sarah Lee</div><div class="small text-gray-500">sarah.lee@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Editor</td>
-                  <td class="align-middle"><span class="badge badge-warning text-white px-2 py-1">Pending</span></td>
-                  <td class="align-middle">May 28, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">7</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-danger text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>CR</b></div>
-                      <div><div class="font-weight-bold">Carlos Rossi</div><div class="small text-gray-500">carlos.r@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Subscriber</td>
-                  <td class="align-middle"><span class="badge badge-danger px-2 py-1">Inactive</span></td>
-                  <td class="align-middle">Jun 01, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">8</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-primary text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>LM</b></div>
-                      <div><div class="font-weight-bold">Laura Miller</div><div class="small text-gray-500">laura.m@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Administrator</td>
-                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
-                  <td class="align-middle">Jun 15, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">9</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-info text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>TW</b></div>
-                      <div><div class="font-weight-bold">Tom Wilson</div><div class="small text-gray-500">tom.w@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Author</td>
-                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
-                  <td class="align-middle">Jul 02, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">10</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-secondary text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>NK</b></div>
-                      <div><div class="font-weight-bold">Nina Kapoor</div><div class="small text-gray-500">nina.k@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Editor</td>
-                  <td class="align-middle"><span class="badge badge-warning text-white px-2 py-1">Pending</span></td>
-                  <td class="align-middle">Jul 10, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">11</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-success text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>OG</b></div>
-                      <div><div class="font-weight-bold">Oliver Green</div><div class="small text-gray-500">oliver.g@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Subscriber</td>
-                  <td class="align-middle"><span class="badge badge-success px-2 py-1">Active</span></td>
-                  <td class="align-middle">Jul 20, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="align-middle">12</td>
-                  <td class="align-middle">
-                    <div class="d-flex align-items-center">
-                      <div class="icon-circle bg-dark text-white mr-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 35px; height: 35px; border-radius: 50%;"><b>PS</b></div>
-                      <div><div class="font-weight-bold">Peter Parker</div><div class="small text-gray-500">peter.p@example.com</div></div>
-                    </div>
-                  </td>
-                  <td class="align-middle">Moderator</td>
-                  <td class="align-middle"><span class="badge badge-danger px-2 py-1">Inactive</span></td>
-                  <td class="align-middle">Jul 28, 2026</td>
-                  <td class="text-center align-middle">
-                    <div class="d-inline-flex">
-                      <a href="#" class="btn btn-info btn-circle btn-sm mr-1"><i class="fas fa-pencil-alt"></i></a>
-                      <a href="#" class="btn btn-danger btn-circle btn-sm"><i class="fas fa-trash"></i></a>
-                    </div>
-                  </td>
-                </tr>
+                  <!-- Inject data here -->                
               </tbody>
             </table>
           </div>
@@ -781,8 +656,7 @@
             
     </script>
 
-    
-     <script>
+    <script>
 
             // A global tracker variable to protect against aggressive database render loops
 
@@ -816,10 +690,11 @@
 
             }
         
-        </script>
+    </script>
 
 
 <script type="module">
+
     import {
         convertToItalianFormat,
         calculateAgeWithMonths
@@ -907,150 +782,148 @@
     });
 </script>
 
-
-
-  <!-- Table Pagination Script (Dynamic Vertical Fit) -->
-<!--<script>
-  $(document).ready(function() {
-    const $tableContainer = $('#tableResponsiveContainer');
-    const $cardBody = $('#tableCardContainer .card-body');
-    const $rows = $('#tableBody tr');
-    const totalRows = $rows.length;
- 
-    let rowsPerPage = 5; // Default fallback
-    let totalPages = 1;
-    let currentPage = 1;
-
-    $('#totalUsersCount').text(totalRows);
-
-    // Calculate how many rows fit in the available vertical space
-    function calculateRowsPerPage() {
-      // Temporarily reveal a row to measure its rendered height accurately
-      $rows.first().show();
-      const rowHeight = $rows.first().outerHeight() || 53; // ~53px default bootstrap row height
-      
-      // Measure container components to determine remaining space for <tbody>
-      const cardBodyHeight = $cardBody.height();
-      const theadHeight = $('#userTable thead').outerHeight() || 40;
-      const paginationFooterHeight = $('#tableCardContainer .row.align-items-center').outerHeight() || 50;
-
-      // Available vertical space for tbody rows
-      const availableHeight = cardBodyHeight - theadHeight - paginationFooterHeight - 20; // 20px padding buffer
-
-      // Calculate max fitting rows (minimum 1)
-      const calculatedCount = Math.floor(availableHeight / rowHeight);
-      return Math.max(1, calculatedCount);
-    }
-
-    function displayPage(page, animate = true) {
-      currentPage = page;
-      const start = (page - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
-
-      if (animate) {
-        $tableContainer.addClass('table-fade-out');
-        setTimeout(function() {
-          $rows.hide();
-          $rows.slice(start, end).show();
-
-          updateInfoAndPagination(start, end);
-          $tableContainer.removeClass('table-fade-out');
-        }, 200);
-      } else {
-        $rows.hide();
-        $rows.slice(start, end).show();
-        updateInfoAndPagination(start, end);
-      }
-    }
-
-    function updateInfoAndPagination(start, end) {
-      const showingStart = totalRows === 0 ? 0 : start + 1;
-      const showingEnd = Math.min(end, totalRows);
-      $('#paginationInfo').text(`Showing ${showingStart} to ${showingEnd} of ${totalRows} entries`);
-      renderPagination();
-    }
-
-    function renderPagination() {
-      totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
-      let paginationHTML = '';
-
-      const prevDisabled = currentPage === 1 ? 'disabled' : '';
-      paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
-
-      for (let i = 1; i <= totalPages; i++) {
-        const activeClass = i === currentPage ? 'active' : '';
-        paginationHTML += `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-      }
-
-      const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
-      paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
-
-      $('#paginationControls').html(paginationHTML);
-    }
-
-    function recalculateLayout() {
-      rowsPerPage = calculateRowsPerPage();
-      totalPages = Math.ceil(totalRows / rowsPerPage) || 1;
-      if (currentPage > totalPages) currentPage = totalPages;
-      displayPage(currentPage, false);
-    }
-
-    $(document).on('click', '#paginationControls a', function(e) {
-      e.preventDefault();
-      const targetPage = parseInt($(this).attr('data-page'));
-      
-      if (targetPage >= 1 && targetPage <= totalPages && targetPage !== currentPage) {
-        displayPage(targetPage);
-      }
-    });
-
-    // Debounced resize handler so window resizing updates row capacity smoothly
-    let resizeTimer;
-    $(window).on('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(recalculateLayout, 150);
-    });
-
-    // Initial capacity calculation on page load
-    recalculateLayout();
-  });
-
-</script>-->
-
-
 <!-- Table Pagination & Filtering Script -->
   <script>
+
     $(document).ready(function() {
+      // =============================================================
+      // 1. SELECTORS & STATE VARIABLES
+      // =============================================================
       const $tableContainer = $('#tableResponsiveContainer');
       const $cardBody = $('#tableCardContainer .card-body');
-      const $allRows = $('#tableBody tr');
+      const $spinner = $('#loadingSpinner');
+      let $allRows = $('#tableBody tr');
+
       let $filteredRows = $allRows;
-      
       let rowsPerPage = 5;
       let totalPages = 1;
       let currentPage = 1;
 
-      $('#totalUsersCount').text($allRows.length);
+      // =============================================================
+      // 2. CORE TABLE FUNCTIONS
+      // =============================================================
+      
+      /**
+       * Helper to generate initials for avatar circle (e.g., "Jane Doe" -> "JD")
+       */
+      function getInitials(name) {
+        if (!name) return 'U';
+        const parts = name.trim().split(' ');
+        if (parts.length >= 2) {
+          return (parts[0][0] + parts[1][0]).toUpperCase();
+        }
+        return name.substring(0, 2).toUpperCase();
+      }
 
-      const $spinner = $('#loadingSpinner');
+      /**
+       * Programmatically populates the table using exact original markup
+       * @param {Array<Object>} data - Array of record objects
+       */
+      
+       function populateTable(data) {
+        const $tbody = $('#tableBody');
+        $tbody.empty(); // Clear existing rows
 
-      // 1. Temporarily place container in layout DOM (invisible) so jQuery can measure heights
-      $tableContainer.css({
-        'visibility': 'hidden',
-        'display': 'block',
-        'opacity': '0'
-      });
+        if (!data || data.length === 0) {
+          $tbody.append(`
+            <tr class="no-data-row">
+              <td colspan="6" class="text-center py-4 text-muted">
+                No records found.
+              </td>
+            </tr>
+          `);
+        } else {
+          data.forEach((item,index) => {
+            const initials = getInitials(item.nome);
+            const badgeClass = item.status === 'Maggiorenne' ? 'badge-success' : 'badge-primary';
 
-      // 2. Perform space calculation and slice Page 1
-      recalculateLayout();
+            const rowHtml = `
+              <tr data-id="${item.id}">
+                <td class="align-middle text-center">${index+1}</td>
+                
+                <td class="align-middle">
+                  <div class="d-flex align-items-center">
+                    <div id="avatarContainer1" class="d-flex align-items-center justify-content-center bg-light rounded-circle border mr-3 flex-shrink-0" style="width: 55px; height: 55px; border: 1px solid #0000FF !important;">
+                      <img src="${item.avatar || (item.sesso === 'Femminile' || item.gender === 'Maschile' ? 'assets/img/registrazione/kid-male.png' : 'assets/img/registrazione/kid-female.png')}" alt="${item.nome || 'User'}" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                    </div>
+                    <div>
+                      <div class="font-weight-bold">${item.nome || 'N/A'}</div>
+                      
+                      <!-- Badges Row -->
+                      <div class="d-flex flex-wrap" style="gap: 5px;">
+                        <!-- Patient Status Badge Wrapper (Centered Layout) -->
+                        <span id="patientMinorOrMajor_1" 
+                              class="badge d-inline-flex align-items-center justify-content-center" 
+                              style="border-radius: 50px; padding: 2px 10px; background-color: ${item.status === 'Maggiorenne' ? '#f87171' : '#2ec4b6'}; color: #fff; font-weight: 600; max-width: 100%;">
+                          <i style="font-size: 0.85rem;">
+                            ${item.status === 'Maggiorenne' ? 'Minorenne' : 'Maggiorenne'}
+                          </i>      
+                        </span>
+                      </div>
 
-      // 3. Immediately hide spinner and reveal table synchronously
-      $spinner.hide();
-      $tableContainer.css({
-        'visibility': 'visible',
-        'opacity': '1',
-        'transition': 'opacity 0.2s ease-in-out'
-      });
+                      <!-- Subscription Date: Placed right under badges -->
+                      <div class="mt-1">
+                        <small class="text-muted d-inline-flex align-items-center" style="font-size: 0.75rem;">
+                          <i class="far fa-calendar mr-1"></i> 
+                          <span class="text-gray-600">
+                            ${(item.gender === 'Femminile') ? 'Iscritta il' : 'Iscritto il'} ${item.subDate || ''}
+                          </span>
+                        </small>
+                      </div>
+
+                    </div>
+                  </div>
+                </td>
+          
+                <td class="align-middle text-center">${item.birthDate || '-'}</td>
+                <td class="align-middle text-center">${item.age || '-'}</td>
+                <td class="align-middle text-center">${item.gender || '-'}</td>
+                <td class="align-middle text-center">${item.status || '-'}</td>
+                <td class="align-middle text-center">${item.region || '-'}</td>
+              
+                <td class="text-center align-middle">
+                  <div class="d-inline-flex">
+                    
+                    <!-- Custom View Button -->
+                    <a href="#" class="btn btn-custom-view btn-circle mr-3 view-btn" title="Assessments">
+                      <i class="fas fa-layer-group"></i>
+                    </a>
+
+                    <!-- Custom Edit Button -->
+                    <a href="#" class="btn btn-custom-edit btn-circle mr-3 edit-btn" title="Certificazioni">
+                      <i class="fas fa-notes-medical"></i>
+                    </a>
+                    
+                    <!-- Custom Delete Button -->
+                    <a href="#" class="btn btn-custom-delete btn-circle delete-btn" title="Terapie">
+                      <i class="fas fa-file-medical-alt"></i>
+                    </a>
+
+                  </div>
+                </td>
+
+              
+              </tr>
+            `;
+            $tbody.append(rowHtml);
+          });
+        }
+
+        // 1. Re-bind cached row references to the new dynamic rows
+        $allRows = $('#tableBody tr');
+        $filteredRows = $allRows;
+
+        // 2. Update total users counter
+        $('#totalUsersCount').text($allRows.length);
+
+        // 3. Reset to page 1 and recalculate layout with the TRUE row height
+        currentPage = 1;
+        recalculateLayout();
+      }
+
+      /**
+       * calculateRowsPerPage
+       */
 
       function calculateRowsPerPage() {
         // 1. Ensure first row is shown to measure actual rendered height
@@ -1087,6 +960,10 @@
         return Math.max(1, calculatedCount);
       }
 
+      /**
+       * displayPage
+       */
+
       function displayPage(page, animate = true) {
         currentPage = page;
         const start = (page - 1) * rowsPerPage;
@@ -1107,6 +984,10 @@
         }
       }
 
+      /**
+       * updateInfoAndPagination
+       */
+
       function updateInfoAndPagination(start, end) {
         const totalFiltered = $filteredRows.length;
         const showingStart = totalFiltered === 0 ? 0 : start + 1;
@@ -1114,6 +995,10 @@
         $('#paginationInfo').text(`Showing ${showingStart} to ${showingEnd} of ${totalFiltered} entries`);
         renderPagination();
       }
+
+      /**
+       * renderPagination
+       */
 
       function renderPagination() {
         const totalFiltered = $filteredRows.length;
@@ -1142,6 +1027,115 @@
         displayPage(currentPage, false);
       }
 
+      
+      // Set your default starting sort column and direction
+      let currentSortColumn = 'nome'; // Or 'subDate', 'age', etc.
+      let currentSortOrder = 'asc';
+
+      function sortDataAndPopulate(data, key, forceOrder = null) {
+        if (forceOrder) {
+          currentSortColumn = key;
+          currentSortOrder = forceOrder;
+        } else if (currentSortColumn === key) {
+          currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSortColumn = key;
+          currentSortOrder = 'asc';
+        }
+
+        // Sort array
+        data.sort((a, b) => {
+          let valA = a[key] ?? '';
+          let valB = b[key] ?? '';
+
+          const numA = parseFloat(valA);
+          const numB = parseFloat(valB);
+          if (!isNaN(numA) && !isNaN(numB)) {
+            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
+          }
+
+          const dateA = Date.parse(valA);
+          const dateB = Date.parse(valB);
+          if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
+            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+          }
+
+          return currentSortOrder === 'asc' 
+            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
+            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        // Re-populate table and update header icons
+        populateTable(data);
+        updateHeaderIcons(key, currentSortOrder);
+      }
+
+      /*
+      let currentSortColumn = null;
+      let currentSortOrder = 'asc';
+
+      function sortDataAndPopulate(data, key) {
+        // Toggle direction if clicking the same column twice
+        if (currentSortColumn === key) {
+          currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSortColumn = key;
+          currentSortOrder = 'asc';
+        }
+
+        // Sort the array in-place
+        data.sort((a, b) => {
+          let valA = a[key] ?? '';
+          let valB = b[key] ?? '';
+
+          // Numeric sorting for IDs or Ages
+          if (typeof valA === 'number' && typeof valB === 'number') {
+            return currentSortOrder === 'asc' ? valA - valB : valB - valA;
+          }
+
+          // Try parsing numeric strings (e.g., if age or id comes as a string)
+          const numA = parseFloat(valA);
+          const numB = parseFloat(valB);
+          if (!isNaN(numA) && !isNaN(numB)) {
+            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
+          }
+
+          // Date sorting if key looks like a date (e.g. subDate)
+          const dateA = Date.parse(valA);
+          const dateB = Date.parse(valB);
+          if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
+            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+          }
+
+          // Standard string comparison (case-insensitive)
+          return currentSortOrder === 'asc' 
+            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
+            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        // Re-populate your table using your existing function
+        populateTable(data);
+        
+        // Update header arrow icons visually
+        updateHeaderIcons(key, currentSortOrder);
+      }
+      */
+      // =============================================================
+      // 3. EVENT LISTENERS
+      // =============================================================
+     
+      // 👇 INSERT ROW CLICK HANDLER HERE 👇
+      $('#tableBody').on('click', 'tr', function(e) {
+        // Don't trigger if clicking explicit buttons/links inside an Action column
+        if ($(e.target).closest('a, button, input, .dropdown').length) {
+          return;
+        }
+        // Extract row data or ID (e.g. if using data-id="123" on <tr>)
+        const rowId = $(this).data('id');
+        console.log('Clicked row with ID:', rowId);
+        // Add your row click logic here (e.g., open modal, navigate to profile, highlight row)
+      });
+
       // Real-time Search Filtering
       $('#tableSearchInput').on('keyup input', function() {
         const searchTerm = $(this).val().toLowerCase().trim();
@@ -1158,6 +1152,7 @@
         recalculateLayout();
       });
 
+      // on click handler
       $(document).on('click', '#paginationControls a', function(e) {
         e.preventDefault();
         const targetPage = parseInt($(this).attr('data-page'));
@@ -1173,6 +1168,70 @@
         resizeTimer = setTimeout(recalculateLayout, 150);
       });
 
+      // Click listener for sortable column headers
+      $(document).on('click', 'th.sortable', function() {
+        const sortKey = $(this).data('sort');
+        // Pass your current dataset variable (e.g., currentData or whatever holds your user array)
+        sortDataAndPopulate(myData, sortKey);
+      });
+
+      function updateHeaderIcons(activeKey, order) {
+        $('th.sortable').each(function() {
+          const $th = $(this);
+          // Target ONLY the sorting icon, leaving header icons intact
+          const $sortIcon = $th.find('i.sort-icon');
+          
+          if ($th.data('sort') === activeKey) {
+            $sortIcon.attr('class', order === 'asc' ? 'fas fa-sort-up sort-icon ml-1' : 'fas fa-sort-down sort-icon ml-1');
+          } else {
+            $sortIcon.attr('class', 'fas fa-sort sort-icon ml-1 text-muted');
+          }
+        });
+      }
+
+      // =============================================================
+      // 4. INITIAL LOAD EXECUTION WITH PROGRAMMATIC DATA
+      // =============================================================
+      
+      // Sample data array (Replace this with your API/Database fetch result)
+      const myData = [
+        { id:  1, nome: 'Marco Rossi'      , subDate :'2026-01-12', age: '10' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2021-01-15' , region: 'Calabria' },
+        { id:  2, nome: 'Laura Bianchi'    , subDate :'2026-01-12', age: '11' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2021-03-22' , region: 'Sardegna' },
+        { id:  3, nome: 'Giuseppe Verde'   , subDate :'2026-01-12', age: '12' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2020-11-05' , region: 'Sicilia' },
+        { id:  4, nome: 'Elena Esposito'   , subDate :'2026-01-12', age: '13' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2020-02-10' , region: 'Sardegna' },
+        { id:  5, nome: 'Stefano Ricci'    , subDate :'2026-01-12', age: '14' , gender: 'Maschile'  , status: 'Maggiorenne' , birthDate: '2020-08-19' , region: 'Liguria' },
+        { id:  6, nome: 'Sofia Marino'     , subDate :'2026-01-12', age: '15' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2014-06-30' , region: 'Lombardia' },
+        { id:  7, nome: 'Andrea Conti'     , subDate :'2026-01-12', age: '16' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2016-01-12' , region: 'Lazio' },
+        { id:  8, nome: 'Francesca De Luca', subDate :'2026-01-12', age: '17' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2020-09-01' , region: 'Veneto' },
+        { id:  9, nome: 'Matteo Bruno'     , subDate :'2026-01-12', age: '18' , gender: 'Maschile'  , status: 'Maggiorenne' , birthDate: '2015-10-14' , region: 'Umbira' },
+        { id: 10, nome: 'Chiara Galli'     , subDate :'2026-01-12', age: '19' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2014-12-01' , region: 'Toscana' }
+      ];
+
+         // Assuming myGlobalDataArray contains your patient data
+      if (myData && myData.length > 0) {
+        // Sort by 'nome' in 'asc' order on initial load
+        sortDataAndPopulate(myData, 'nome', 'asc');
+      }
+      
+      $('#totalUsersCount').text($allRows.length);
+
+      // 1. Temporarily place container in layout DOM (invisible) so jQuery can measure heights
+      $tableContainer.css({
+        'visibility': 'hidden',
+        'display': 'block',
+        'opacity': '0'
+      });
+
+      // B. Populate table with data & calculate fitting rows
+      populateTable(myData);
+
+      // 3. Immediately hide spinner and reveal table synchronously
+      $spinner.hide();
+      $tableContainer.css({
+        'visibility': 'visible',
+        'opacity': '1',
+        'transition': 'opacity 0.2s ease-in-out'
+      });
 
       // ==========================================
       // INITIAL LOAD EXECUTION (STABLE & NO FLASH)
@@ -1261,9 +1320,9 @@
             $(".sidebar").toggleClass("toggled");
 
             // 2. Fix DataTables layout if it's visible
-            if ($.fn.DataTable.isDataTable('#PatientdataTable')) {
-                $('#PatientdataTable').DataTable().columns.adjust();
-            }
+       //     if ($.fn.DataTable.isDataTable('#PatientdataTable')) {
+       //         $('#PatientdataTable').DataTable().columns.adjust();
+       //     }
             
             // 3. Handle the 'overflow' issue we discussed for your dashboard layout
             if ($("body").hasClass("sidebar-toggled")) {
@@ -1276,8 +1335,6 @@
             }
         });
     });
-
-    
     
     </script>
 

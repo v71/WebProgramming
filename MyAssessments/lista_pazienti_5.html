@@ -328,6 +328,93 @@
 
 </style>
 
+<style>
+
+  /* Apply to your table */
+  
+  #tableResponsiveContainer {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  /* Specify fixed percentages or pixel values on headers */
+  
+  #tableResponsiveContainer th:nth-child(1) { width: 2%; }   
+  #tableResponsiveContainer th:nth-child(2) { width: 25%; }  
+  #tableResponsiveContainer th:nth-child(3) { width: 10%; }   
+  #tableResponsiveContainer th:nth-child(4) { width: 8%; }   
+  #tableResponsiveContainer th:nth-child(5) { width: 12%; }  
+  #tableResponsiveContainer th:nth-child(6) { width: 12%; }  
+  
+
+  /* Keep long text contained without stretching columns */
+  #myTable td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+</style>
+
+<style>
+
+  /* Reduce size and deemphasize sorting icons */
+  th.sortable i.fa-sort,
+  th.sortable i.fa-sort-up,
+  th.sortable i.fa-sort-down {
+    font-size: 0.75rem;     /* Smaller icon size (default is 1rem / 100%) */
+    opacity: 0.5;           /* Softens visual weight */
+    margin-left: 0.35rem;   /* Keeps subtle spacing from header text */
+    vertical-align: middle; /* Keeps aligned with the header text */
+  }
+
+  /* Slightly darken the active sorted icon so it stays readable */
+  th.sortable i.fa-sort-up,
+  th.sortable i.fa-sort-down {
+    opacity: 0.85;
+  }
+
+</style>
+
+<style>
+
+    /* Custom View Button (e.g., Teal / Cyan) */
+    .btn-custom-view {
+      background-color: #00b4d8;
+      border-color: #00b4d8;
+      color: #ffffff;
+    }
+    .btn-custom-view:hover {
+      background-color: #0096c7;
+      border-color: #0096c7;
+      color: #ffffff;
+    }
+
+    /* Custom Edit Button (e.g., Warm Orange / Amber) */
+    .btn-custom-edit {
+      background-color: #f77f00;
+      border-color: #f77f00;
+      color: #ffffff;
+    }
+    .btn-custom-edit:hover {
+      background-color: #d66800;
+      border-color: #d66800;
+      color: #ffffff;
+    }
+
+    /* Custom Delete Button (e.g., Crimson / Coral) */
+    .btn-custom-delete {
+      background-color: #e63946;
+      border-color: #e63946;
+      color: #ffffff;
+    }
+    .btn-custom-delete:hover {
+      background-color: #d62828;
+      border-color: #d62828;
+      color: #ffffff;
+    }
+
+</style>
+
 <body id="page-top">
     <!--id wrapper-->
     <div id="wrapper"> 
@@ -384,8 +471,6 @@
                                     <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
                                 </span>
 
-                                  <!--<img id="userAvatar" class="img-profile rounded-circle" src="assets/sb-admin-2/img/undraw_profile.svg" alt="">-->
-                        
                                 <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
                                     <!-- Updated class from 'border' to 'border border-primary' -->
                                     <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 1px solid #0000FF !important;">
@@ -429,8 +514,6 @@
                 </ul>
             </nav>
 
-            
-
 
 <!-- Main Content Container -->
 <div class="container-fluid">
@@ -449,7 +532,7 @@
           
           <!-- Search Input constrained to 250px -->
           <div class="input-group input-group-sm search-box" style="max-width: 250px;">
-            <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small" placeholder="Search patients..." aria-label="Search">
+            <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small" placeholder="Cerca Pazienti..." aria-label="Search">
             <div class="input-group-append">
               <button class="btn btn-primary" type="button" disabled>
                 <i class="fas fa-search fa-sm"></i>
@@ -472,16 +555,29 @@
             <!-- Responsive Table Wrapper -->
             <div class="table-responsive" id="tableResponsiveContainer" style="display: none;">
             <table class="table table-bordered text-nowrap" id="userTable" width="100%" cellspacing="0">
+              
               <thead>
                 <tr>
-                  <th style="width: 50px;">Id</th>
-                  <th>Nome</th>
-                  <th>Genere</th>
-                  <th>Età Anagrafica</th>
-                  <th>Stato Civile</th>
-                  <th>Data di Iscrizione</th>
-                  <th>Regione</th>
-                  <th class="text-center" style="width: 100px;">Actions</th>
+                  <th data-sort="id" class="text-center">
+                    <span class="fas fa-hashtag mr-1" style="font-size: 0.75em; color: #4e73df;"></span>
+                  </th>
+
+                  <th data-sort="name" class="sortable text-center">
+                    <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Paziente <i class="fas fa-sort sort-icon ml-1"></i>
+                  </th>
+
+                  <th data-sort="consent_date" class="sortable text-center">
+                    <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Nascita <i class="fas fa-sort sort-icon ml-1"></i></th>
+          
+                  <th data-sort="age" class="sortable text-center">
+                    <i class="fas  fa-hourglass-half text-primary mr-1" style="font-size: 0.75em;"></i> Età Anagrafica <i class="fas fa-sort sort-icon ml-1"></i></th>
+
+                  <th data-sort="genre" class="sortable text-center">
+                    <i class="fas fa-venus-mars text-primary mr-1" style="font-size: 0.75em;"></i >Genere <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                  <th data-sort="region" class="sortable text-center">
+                    <i class="fas fa-map-marker-alt text-primary mr-1" style="font-size: 0.75em;"></i> Regione <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
                 </tr>
               </thead>
               <tbody id="tableBody">
@@ -494,7 +590,6 @@
           <div class="row align-items-center mt-3">
             <div class="col-sm-12 col-md-5">
               <div class="text-muted small" id="paginationInfo">
-                Showing 1 to 5 of 12 entries
               </div>
             </div>
             <div class="col-sm-12 col-md-7">
@@ -547,13 +642,22 @@
             const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
             const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
             window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            import {
+                convertToItalianFormat,
+                calculateAgeWithMonths
+            } from "./assets/js/string_utils.js";
+
+            // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
+            window.convertToItalianFormat = convertToItalianFormat;
+            window.calculateAgeWithMonths = calculateAgeWithMonths;
+
             // Make the variable globally available from the start
             window.patients2 = [];
             
     </script>
 
-    
-     <script>
+    <script>
 
             // A global tracker variable to protect against aggressive database render loops
 
@@ -587,14 +691,17 @@
 
             }
         
-        </script>
+    </script>
 
 
 <script type="module">
+
+/*
     import {
         convertToItalianFormat,
         calculateAgeWithMonths
     } from "./assets/js/string_utils.js";
+*/
 
     $(document).ready(function() {
         (async () => {
@@ -622,39 +729,7 @@
 
                 window.patients2 = clients || [];
 
-                console.log(window.patients2);
-                /*
-                window.patients2.forEach(patient => {
-                    const name = patient.name || '';
-                    const surname = patient.surname || '';
-                    const genre = patient.genre || '';
-                    const birth_date = patient.birth_date;
-                    const consent_date = patient.consent_date;
-                    const region = patient.region || '';
-                    const age = calculateAgeWithMonths(birth_date);
-                    const readableDate = consent_date ? new Date(consent_date).toLocaleDateString('it-IT') : '';
-                    const italian_birth_date = convertToItalianFormat(birth_date);
-                    const minor_or_major = (age.years >= 18) ? "Maggiorenne" : "Minorenne";
-                    const patientId = patient.id;
-                    const avatarPath = (genre === 'Femminile') 
-                        ? 'assets/img/registrazione/kid-female.png' 
-                        : 'assets/img/registrazione/kid-male.png';
-
-                   const icon = `
-                        <img src="${avatarPath}" 
-                            class="rounded-circle border patient-avatar" 
-                            width="60" 
-                            height="60" 
-                            alt="Avatar" 
-                            style="border: 1px solid #0000FF !important; cursor: pointer; object-fit: cover; transition: transform 0.15s ease;" 
-                            data-patient-id="${patientId}"
-                            title="Clicca per aprire la scheda di ${name} ${surname}"
-                            data-toggle="tooltip" 
-                            data-placement="top" />
-                    `;
-
-                });
-                */
+             //   console.log(window.patients2);
 
                 // Sidebar Toggle Handler
                 $("#sidebarToggleTop").on('click', function(e) {
@@ -700,24 +775,10 @@
       // =============================================================
       
       /**
-       * Helper to generate initials for avatar circle (e.g., "Jane Doe" -> "JD")
-       */
-      function getInitials(name) {
-        if (!name) return 'U';
-        const parts = name.trim().split(' ');
-        if (parts.length >= 2) {
-          return (parts[0][0] + parts[1][0]).toUpperCase();
-        }
-        return name.substring(0, 2).toUpperCase();
-      }
-
-      /**
        * Programmatically populates the table using exact original markup
        * @param {Array<Object>} data - Array of record objects
        */
       
-        // targetSrc1 = 'assets/img/registrazione/terapeuta-female.png';
-
        function populateTable(data) {
         const $tbody = $('#tableBody');
         $tbody.empty(); // Clear existing rows
@@ -731,54 +792,73 @@
             </tr>
           `);
         } else {
-          data.forEach(item => {
-            const initials = getInitials(item.nome);
-            const badgeClass = item.status === 'Maggiorenne' ? 'badge-success' : 'badge-primary';
+          data.forEach((item,index) => {
 
-            const rowHtml = `
-              <tr data-id="${item.id}">
-                <td class="align-middle">${item.id}</td>
-                <td class="align-middle">
-                  <div class="d-flex align-items-center">
-                 <div id="avatarContainer1" class="d-flex align-items-center justify-content-center bg-light rounded-circle border mr-3 flex-shrink-0" style="width: 55px; height: 55px; border: 1px solid #0000FF !important;">
-                  <img src="${item.avatar || (item.sesso === 'Femminile' || item.gender === 'Maschile' ? 'assets/img/registrazione/terapeuta-male.png' : 'assets/img/registrazione/terapeuta-female.png')}" alt="${item.nome || 'User'}" class="rounded-circle w-100 h-100" style="object-fit: cover;">
-                 </div>
-                    <div>
-                      <div class="font-weight-bold">${item.nome || 'N/A'}</div>
-                      <div class="small text-gray-500">${item.birthDate || ''}</div>
-                    </div>
-                  </div>
-                </td>
-                <td class="align-middle">${item.gender || '-'}</td>
-                <td class="align-middle">${item.age || '-'}</td>
+                const id             = item.id;
+                const nome           = item.name;
+                const cognome        = item.surname;
+                const fullName       = `${nome} ${cognome}`;
+                const genre          = item.genre;
+                const birth_date     = item.birth_date;
+                const consent_date   = item.consent_date;
+                const region         = item.region;
+                const age            = calculateAgeWithMonths(birth_date);
+                const minor_or_major = (age.years >= 18) ? 1 : 0;
 
-                <td class="align-middle">
-                  <span class="badge ${badgeClass} badge-pill px-3 py-2">${item.status || 'Inactive'}</span>
-                </td>
+                let ageStr="";
+                if (age.months!=0)
+                    ageStr = age.years + " Anni e " + age.months + " mesi";
+                else
+                    ageStr = age.years + " Anni";
 
+                const rowHtml = `
+                  <tr data-id="${id}">
+                    <td class="align-middle text-center">${index + 1}</td>
+                    <td class="align-middle">
+                      <div class="d-flex align-items-center">
+                        <div id="avatarContainer1" class="d-flex align-items-center justify-content-center bg-light rounded-circle border mr-3 flex-shrink-0" style="width: 55px; height: 55px; border: 1px solid #0000FF !important;">
+                          <img src="${ genre === 'Maschile' ? 'assets/img/registrazione/kid-male.png' : 'assets/img/registrazione/kid-female.png'}" alt="${fullName || 'User'}" class="rounded-circle w-100 h-100" style="object-fit: cover;">
+                        </div>
+                        <div>
+                          <div class="font-weight-bold">${fullName || 'N/A'}</div>
+                          
+                          <!-- Badges Row -->
+                          <div class="d-flex flex-wrap" style="gap: 5px;">
+                            <!-- Patient Status Badge Wrapper (Centered Layout) -->
+                            <span id="patientMinorOrMajor_1" 
+                                  class="badge d-inline-flex align-items-center justify-content-center" 
+                                  style="border-radius: 50px; padding: 2px 10px; background-color: ${ minor_or_major === 1 ? '#2ec4b6' : ' #f87171'}; color: #fff; font-weight: 600; max-width: 100%;">
+                              <i style="font-size: 0.85rem;">
+                                ${minor_or_major === 1 ? 'Maggiorenne' : 'Minorenne'}
+                              </i>      
+                            </span>
+                          </div>
 
-                <td class="align-middle">${item.subDate || '-'}</td>
-                <td class="align-middle">${item.region || '-'}</td>
-                
-                <td class="text-center align-middle">
-                  <div class="d-inline-flex">
-                   
-                    <a href="#" class="btn btn-info btn-circle btn-sm mr-1 edit-btn">
-                      <i class="fas fa-pencil-alt"></i>
-                    </a>
-                   
-                     <a href="#" class="btn btn-danger btn-circle btn-sm delete-btn">
-                      <i class="fas fa-trash"></i>
-                    </a>
-                   
-                  </div>
-                </td>
-              </tr>
-            `;
-            $tbody.append(rowHtml);
-          });
+                          <!-- Subscription Date: Placed right under badges -->
+                          <div class="mt-1">
+                            <small class="text-muted d-inline-flex align-items-center" style="font-size: 0.75rem;">
+                              <i class="far fa-calendar mr-1"></i> 
+                              <span class="text-gray-600">
+                                ${(genre === 'Femminile') ? 'Iscritta il' : 'Iscritto il'} ${consent_date || ''}
+                              </span>
+                            </small>
+                          </div>
+
+                        </div>
+                      </div>
+                    </td>
+              
+                    <td class="align-middle text-center">${birth_date || '-'}</td>
+                    <td class="align-middle text-center">${ageStr || '-'}</td>
+                    <td class="align-middle text-center">${genre || '-'}</td>
+                    <td class="align-middle text-center">${region || '-'}</td>
+                  
+                  </tr>
+                `;
+                $tbody.append(rowHtml);
+              });
         }
-
+        
         // 1. Re-bind cached row references to the new dynamic rows
         $allRows = $('#tableBody tr');
         $filteredRows = $allRows;
@@ -790,6 +870,10 @@
         currentPage = 1;
         recalculateLayout();
       }
+
+      /**
+       * calculateRowsPerPage
+       */
 
       function calculateRowsPerPage() {
         // 1. Ensure first row is shown to measure actual rendered height
@@ -826,6 +910,10 @@
         return Math.max(1, calculatedCount);
       }
 
+      /**
+       * displayPage
+       */
+
       function displayPage(page, animate = true) {
         currentPage = page;
         const start = (page - 1) * rowsPerPage;
@@ -846,13 +934,21 @@
         }
       }
 
+      /**
+       * updateInfoAndPagination
+       */
+
       function updateInfoAndPagination(start, end) {
         const totalFiltered = $filteredRows.length;
         const showingStart = totalFiltered === 0 ? 0 : start + 1;
         const showingEnd = Math.min(end, totalFiltered);
-        $('#paginationInfo').text(`Showing ${showingStart} to ${showingEnd} of ${totalFiltered} entries`);
+        $('#paginationInfo').text(`Da ${showingStart} a ${showingEnd} di${totalFiltered} Pazienti`);
         renderPagination();
       }
+
+      /**
+       * renderPagination
+       */
 
       function renderPagination() {
         const totalFiltered = $filteredRows.length;
@@ -860,7 +956,7 @@
         let paginationHTML = '';
 
         const prevDisabled = currentPage === 1 ? 'disabled' : '';
-        paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+        paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Precedente</a></li>`;
 
         for (let i = 1; i <= totalPages; i++) {
           const activeClass = i === currentPage ? 'active' : '';
@@ -868,7 +964,7 @@
         }
 
         const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
-        paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+        paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Successivo</a></li>`;
 
         $('#paginationControls').html(paginationHTML);
       }
@@ -879,6 +975,48 @@
         totalPages = Math.ceil(totalFiltered / rowsPerPage) || 1;
         if (currentPage > totalPages) currentPage = totalPages;
         displayPage(currentPage, false);
+      }
+      
+      // Set your default starting sort column and direction
+      let currentSortColumn = 'name'; // Or 'subDate', 'age', etc.
+      let currentSortOrder = 'asc';
+
+      function sortDataAndPopulate(data, key, forceOrder = null) {
+        if (forceOrder) {
+          currentSortColumn = key;
+          currentSortOrder = forceOrder;
+        } else if (currentSortColumn === key) {
+          currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+        } else {
+          currentSortColumn = key;
+          currentSortOrder = 'asc';
+        }
+
+        // Sort array
+        data.sort((a, b) => {
+          let valA = a[key] ?? '';
+          let valB = b[key] ?? '';
+
+          const numA = parseFloat(valA);
+          const numB = parseFloat(valB);
+          if (!isNaN(numA) && !isNaN(numB)) {
+            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
+          }
+
+          const dateA = Date.parse(valA);
+          const dateB = Date.parse(valB);
+          if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
+            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+          }
+
+          return currentSortOrder === 'asc' 
+            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
+            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
+        });
+
+        // Re-populate table and update header icons
+        populateTable(data);
+        updateHeaderIcons(key, currentSortOrder);
       }
 
       // =============================================================
@@ -929,24 +1067,63 @@
         resizeTimer = setTimeout(recalculateLayout, 150);
       });
 
+      // Click listener for sortable column headers
+      $(document).on('click', 'th.sortable', function() {
+        const sortKey = $(this).data('sort');
+        // Pass your current dataset variable (e.g., currentData or whatever holds your user array)
+        sortDataAndPopulate(myData, sortKey);
+      });
+
+      function updateHeaderIcons(activeKey, order) {
+        $('th.sortable').each(function() {
+          const $th = $(this);
+          // Target ONLY the sorting icon, leaving header icons intact
+          const $sortIcon = $th.find('i.sort-icon');
+          
+          if ($th.data('sort') === activeKey) {
+            $sortIcon.attr('class', order === 'asc' ? 'fas fa-sort-up sort-icon ml-1' : 'fas fa-sort-down sort-icon ml-1');
+          } else {
+            $sortIcon.attr('class', 'fas fa-sort sort-icon ml-1 text-muted');
+          }
+        });
+      }
+
       // =============================================================
       // 4. INITIAL LOAD EXECUTION WITH PROGRAMMATIC DATA
       // =============================================================
       
       // Sample data array (Replace this with your API/Database fetch result)
       const myData = [
-        { id:  1, nome: 'Marco Rossi'      , subDate :'2026-01-12', age: '10' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2021-01-15' , region: 'Calabria' },
-        { id:  2, nome: 'Laura Bianchi'    , subDate :'2026-01-12', age: '11' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2021-03-22' , region: 'Sardegna' },
-        { id:  3, nome: 'Giuseppe Verde'   , subDate :'2026-01-12', age: '12' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2020-11-05' , region: 'Sicilia' },
-        { id:  4, nome: 'Elena Esposito'   , subDate :'2026-01-12', age: '13' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2020-02-10' , region: 'Sardegna' },
-        { id:  5, nome: 'Stefano Ricci'    , subDate :'2026-01-12', age: '14' , gender: 'Maschile'  , status: 'Maggiorenne' , birthDate: '2020-08-19' , region: 'Liguria' },
-        { id:  6, nome: 'Sofia Marino'     , subDate :'2026-01-12', age: '15' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2014-06-30' , region: 'Lombardia' },
-        { id:  7, nome: 'Andrea Conti'     , subDate :'2026-01-12', age: '16' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2016-01-12' , region: 'Lazio' },
-        { id:  8, nome: 'Francesca De Luca', subDate :'2026-01-12', age: '17' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2020-09-01' , region: 'Veneto' },
-        { id:  9, nome: 'Matteo Bruno'     , subDate :'2026-01-12', age: '18' , gender: 'Maschile'  , status: 'Maggiorenne' , birthDate: '2015-10-14' , region: 'Umbira' },
-        { id: 10, nome: 'Chiara Galli'     , subDate :'2026-01-12', age: '19' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2014-12-01' , region: 'Toscana' }
+        { name: 'Marco'     , surname: 'Rossi'    , consent_date :'2026-01-12', genre: 'Maschile'  , birth_date: '2001-01-15' , region: 'Calabria' },
+        { name: 'Laura'     , surname: 'Bianchi'  , consent_date :'2026-01-12', genre: 'Femminile' , birth_date: '2001-03-22' , region: 'Sardegna' },
+        { name: 'Giuseppe'  , surname: 'Verde'    , consent_date :'2026-01-12', genre: 'Maschile'  , birth_date: '2005-11-05' , region: 'Sicilia' },
+        { name: 'Elena'     , surname: 'Esposito' , consent_date :'2026-01-12', genre: 'Femminile' , birth_date: '2010-02-10' , region: 'Sardegna' },
+        { name: 'Stefano'   , surname: 'Ricci'    , consent_date :'2026-01-12', genre: 'Maschile'  , birth_date: '2005-08-19' , region: 'Liguria' },
+        { name: 'Sofia'     , surname: 'Marino'   , consent_date :'2026-01-12', genre: 'Femminile' , birth_date: '2014-06-30' , region: 'Lombardia' },
+        { name: 'Andrea'    , surname: 'Conti'    , consent_date :'2026-01-12', genre: 'Maschile'  , birth_date: '2006-01-12' , region: 'Lazio' },
+        { name: 'Francesca' , surname: 'De Luca'  , consent_date :'2026-01-12', genre: 'Femminile' , birth_date: '2020-09-01' , region: 'Veneto' },
+        { name: 'Matteo'    , surname: 'Bruno'    , consent_date :'2026-01-12', genre: 'Maschile'  , birth_date: '2015-10-14' , region: 'Umbira' },
+        { name: 'Chiara'    , surname: 'Galli'    , consent_date :'2026-01-12', genre: 'Femminile' , birth_date: '2004-12-01' , region: 'Toscana' },
+      
+        { name: 'Mirco'     , surname: 'Rossi'          , consent_date :'2026-01-12' , genre: 'Maschile'  , birth_date: '2021-01-15' , region: 'Calabria' },
+        { name: 'Laura'     , surname: 'Verdi'          , consent_date :'2026-01-12' , genre: 'Femminile' , birth_date: '2021-03-22' , region: 'Sardegna' },
+        { name: 'Giuseppe'  , surname: 'Rossi'          , consent_date :'2026-01-12' , genre: 'Maschile'  , birth_date: '2000-11-05' , region: 'Sicilia' },
+        { name: 'Elena'     , surname: 'Degli Espositi' , consent_date :'2026-01-12' , genre: 'Femminile' , birth_date: '2020-02-10' , region: 'Sardegna' },
+        { name: 'Stefano'   , surname: 'Ricco'          , consent_date :'2026-01-12' , genre: 'Maschile'  , birth_date: '2000-08-19' , region: 'Liguria' },
+        { name: 'Sofia'     , surname: 'Martino'        , consent_date :'2026-01-12' , genre: 'Femminile' , birth_date: '2014-06-30' , region: 'Lombardia' },
+        { name: 'Andrea'    , surname: 'Del Conte'      , consent_date :'2026-01-12' , genre: 'Maschile'  , birth_date: '2016-01-12' , region: 'Lazio' },
+        { name: 'Francesca' , surname: 'Lucarelli'      , consent_date :'2026-01-12' , genre: 'Femminile' , birth_date: '2000-09-01' , region: 'Veneto' },
+        { name: 'Matteo'    , surname: 'Bruni'          , consent_date :'2026-01-12' , genre: 'Maschile'  , birth_date: '2015-10-14' , region: 'Umbira' },
+        { name: 'Chiara'    , surname: 'Gallo'          , consent_date :'2026-01-12' , genre: 'Femminile' , birth_date: '2014-12-01' , region: 'Toscana' }
+      
       ];
 
+         // Assuming myGlobalDataArray contains your patient data
+      if (myData && myData.length > 0) {
+        // Sort by 'name' in 'asc' order on initial load
+        sortDataAndPopulate(myData, 'name', 'asc');
+      }
+      
       $('#totalUsersCount').text($allRows.length);
 
       // 1. Temporarily place container in layout DOM (invisible) so jQuery can measure heights

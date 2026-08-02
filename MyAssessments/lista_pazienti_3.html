@@ -331,28 +331,32 @@
 <style>
 
   /* Apply to your table */
+  /*
   #tableResponsiveContainer {
     table-layout: fixed;
     width: 100%;
   }
-
+*/
   /* Specify fixed percentages or pixel values on headers */
-  #tableResponsiveContainer th:nth-child(1) { width: 60px; }   /* ID */
-  #tableResponsiveContainer th:nth-child(2) { width: 25%; }   /* User */
-  #tableResponsiveContainer th:nth-child(3) { width: 10%; }   /* Gender */
-  #tableResponsiveContainer th:nth-child(4) { width: 8%; }    /* Age */
-  #tableResponsiveContainer th:nth-child(5) { width: 12%; }   /* Status */
-  #tableResponsiveContainer th:nth-child(6) { width: 12%; }   /* Sub Date */
-  #tableResponsiveContainer th:nth-child(7) { width: 15%; }   /* Region */
-  #tableResponsiveContainer th:nth-child(8) { width: 100px; }  /* Actions */
+  /*
+  #tableResponsiveContainer th:nth-child(1) { width: 60px; }   
+  #tableResponsiveContainer th:nth-child(2) { width: 25%; }  
+  #tableResponsiveContainer th:nth-child(3) { width: 10%; }   
+  #tableResponsiveContainer th:nth-child(4) { width: 8%; }   
+  #tableResponsiveContainer th:nth-child(5) { width: 12%; }  
+  #tableResponsiveContainer th:nth-child(6) { width: 12%; }  
+  #tableResponsiveContainer th:nth-child(7) { width: 15%; }   
+  #tableResponsiveContainer th:nth-child(8) { width: 100px; }  
+  */
 
   /* Keep long text contained without stretching columns */
+  /*
   #myTable td {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-
+*/
 </style>
 
 <style>
@@ -514,8 +518,6 @@
                 </ul>
             </nav>
 
-            
-
 
 <!-- Main Content Container -->
 <div class="container-fluid">
@@ -534,7 +536,7 @@
           
           <!-- Search Input constrained to 250px -->
           <div class="input-group input-group-sm search-box" style="max-width: 250px;">
-            <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small" placeholder="Search patients..." aria-label="Search">
+            <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small" placeholder="Cerca Pazienti..." aria-label="Search">
             <div class="input-group-append">
               <button class="btn btn-primary" type="button" disabled>
                 <i class="fas fa-search fa-sm"></i>
@@ -566,26 +568,23 @@
                     <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Paziente <i class="fas fa-sort sort-icon ml-1"></i>
                   </th>
 
+                  <th data-sort="subDate" class="sortable text-center">
+                    <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Nascita <i class="fas fa-sort sort-icon ml-1"></i></th>
+          
+                  <th data-sort="age" class="sortable text-center">
+                    <i class="fas  fa-hourglass-half text-primary mr-1" style="font-size: 0.75em;"></i> Età Anagrafica <i class="fas fa-sort sort-icon ml-1"></i></th>
+
                   <th data-sort="gender" class="sortable text-center">
                     <i class="fas fa-venus-mars text-primary mr-1" style="font-size: 0.75em;"></i >Genere <i class="fas fa-sort sort-icon ml-1"></i></th>
-                  
-                  <th data-sort="age" class="sortable text-center">
-                    <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Età Anagrafica <i class="fas fa-sort sort-icon ml-1"></i></th>
-                  
-                  <th data-sort="status" class="sortable text-center">
-                    <i class="fas fa-hourglass-half text-primary mr-1" style="font-size: 0.75em;"></i >Stato Civile <i class="fas fa-sort sort-icon ml-1"></i></th>
-                  
-                  <th data-sort="subDate" class="sortable text-center">
-                    <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data Iscrizione <i class="fas fa-sort sort-icon ml-1"></i></th>
                   
                   <th data-sort="region" class="sortable text-center">
                     <i class="fas fa-map-marker-alt text-primary mr-1" style="font-size: 0.75em;"></i> Regione <i class="fas fa-sort sort-icon ml-1"></i></th>
                   
                     <th class="text-center">
                     <i class="fas fa-tasks text-primary mr-1" style="font-size: 0.75em;"></i> Azioni </th>
+        
                 </tr>
               </thead>
-
               <tbody id="tableBody">
                   <!-- Inject data here -->                
               </tbody>
@@ -596,7 +595,6 @@
           <div class="row align-items-center mt-3">
             <div class="col-sm-12 col-md-5">
               <div class="text-muted small" id="paginationInfo">
-                Showing 1 to 5 of 12 entries
               </div>
             </div>
             <div class="col-sm-12 col-md-7">
@@ -833,7 +831,6 @@
         } else {
           data.forEach((item,index) => {
             const initials = getInitials(item.nome);
-            const badgeClass = item.status === 'Maggiorenne' ? 'badge-success' : 'badge-primary';
 
             const rowHtml = `
               <tr data-id="${item.id}">
@@ -846,32 +843,53 @@
                     </div>
                     <div>
                       <div class="font-weight-bold">${item.nome || 'N/A'}</div>
-                      <div class="small text-gray-500">${item.birthDate || ''}</div>
+                      
+                      <!-- Badges Row -->
+                      <div class="d-flex flex-wrap" style="gap: 5px;">
+                        <!-- Patient Status Badge Wrapper (Centered Layout) -->
+                        <span id="patientMinorOrMajor_1" 
+                              class="badge d-inline-flex align-items-center justify-content-center" 
+                              style="border-radius: 50px; padding: 2px 10px; background-color: ${item.status === 'Maggiorenne' ? '#2ec4b6' : ' #f87171'}; color: #fff; font-weight: 600; max-width: 100%;">
+                          <i style="font-size: 0.85rem;">
+                            ${item.status === 'Maggiorenne' ? 'Maggiorenne' : 'Minorenne'}
+                          </i>      
+                        </span>
+                      </div>
+
+                      <!-- Subscription Date: Placed right under badges -->
+                      <div class="mt-1">
+                        <small class="text-muted d-inline-flex align-items-center" style="font-size: 0.75rem;">
+                          <i class="far fa-calendar mr-1"></i> 
+                          <span class="text-gray-600">
+                            ${(item.gender === 'Femminile') ? 'Iscritta il' : 'Iscritto il'} ${item.subDate || ''}
+                          </span>
+                        </small>
+                      </div>
+
                     </div>
                   </div>
                 </td>
-                
-                <td class="align-middle text-center">${item.gender || '-'}</td>
+          
+                <td class="align-middle text-center">${item.birthDate || '-'}</td>
                 <td class="align-middle text-center">${item.age || '-'}</td>
-                <td class="align-middle text-center">${item.status || '-'}</td>
-                <td class="align-middle text-center">${item.subDate || '-'}</td>
+                <td class="align-middle text-center">${item.gender || '-'}</td>
                 <td class="align-middle text-center">${item.region || '-'}</td>
               
                 <td class="text-center align-middle">
                   <div class="d-inline-flex">
                     
                     <!-- Custom View Button -->
-                    <a href="#" class="btn btn-custom-view btn-circle mr-1 view-btn" title="View details">
+                    <a href="#" class="btn btn-custom-view btn-circle mr-3 view-btn" title="Assessments">
                       <i class="fas fa-layer-group"></i>
                     </a>
 
                     <!-- Custom Edit Button -->
-                    <a href="#" class="btn btn-custom-edit btn-circle mr-1 edit-btn" title="Edit">
+                    <a href="#" class="btn btn-custom-edit btn-circle mr-3 edit-btn" title="Certificazioni">
                       <i class="fas fa-notes-medical"></i>
                     </a>
                     
                     <!-- Custom Delete Button -->
-                    <a href="#" class="btn btn-custom-delete btn-circle delete-btn" title="Delete">
+                    <a href="#" class="btn btn-custom-delete btn-circle delete-btn" title="Terapie">
                       <i class="fas fa-file-medical-alt"></i>
                     </a>
 
@@ -968,7 +986,7 @@
         const totalFiltered = $filteredRows.length;
         const showingStart = totalFiltered === 0 ? 0 : start + 1;
         const showingEnd = Math.min(end, totalFiltered);
-        $('#paginationInfo').text(`Showing ${showingStart} to ${showingEnd} of ${totalFiltered} entries`);
+        $('#paginationInfo').text(`Da ${showingStart} a ${showingEnd} di${totalFiltered} Pazienti`);
         renderPagination();
       }
 
@@ -982,7 +1000,7 @@
         let paginationHTML = '';
 
         const prevDisabled = currentPage === 1 ? 'disabled' : '';
-        paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a></li>`;
+        paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Precedente</a></li>`;
 
         for (let i = 1; i <= totalPages; i++) {
           const activeClass = i === currentPage ? 'active' : '';
@@ -990,7 +1008,7 @@
         }
 
         const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
-        paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Next</a></li>`;
+        paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Successivo</a></li>`;
 
         $('#paginationControls').html(paginationHTML);
       }
@@ -1172,15 +1190,15 @@
       // Sample data array (Replace this with your API/Database fetch result)
       const myData = [
         { id:  1, nome: 'Marco Rossi'      , subDate :'2026-01-12', age: '10' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2021-01-15' , region: 'Calabria' },
-        { id:  2, nome: 'Laura Bianchi'    , subDate :'2026-01-12', age: '11' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2021-03-22' , region: 'Sardegna' },
+        { id:  2, nome: 'Laura Bianchi'    , subDate :'2026-01-12', age: '11' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2021-03-22' , region: 'Sardegna' },
         { id:  3, nome: 'Giuseppe Verde'   , subDate :'2026-01-12', age: '12' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2020-11-05' , region: 'Sicilia' },
         { id:  4, nome: 'Elena Esposito'   , subDate :'2026-01-12', age: '13' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2020-02-10' , region: 'Sardegna' },
-        { id:  5, nome: 'Stefano Ricci'    , subDate :'2026-01-12', age: '14' , gender: 'Maschile'  , status: 'Maggiorenne' , birthDate: '2020-08-19' , region: 'Liguria' },
-        { id:  6, nome: 'Sofia Marino'     , subDate :'2026-01-12', age: '15' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2014-06-30' , region: 'Lombardia' },
+        { id:  5, nome: 'Stefano Ricci'    , subDate :'2026-01-12', age: '14' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2020-08-19' , region: 'Liguria' },
+        { id:  6, nome: 'Sofia Marino'     , subDate :'2026-01-12', age: '15' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2014-06-30' , region: 'Lombardia' },
         { id:  7, nome: 'Andrea Conti'     , subDate :'2026-01-12', age: '16' , gender: 'Maschile'  , status: 'Minorenne'   , birthDate: '2016-01-12' , region: 'Lazio' },
-        { id:  8, nome: 'Francesca De Luca', subDate :'2026-01-12', age: '17' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2020-09-01' , region: 'Veneto' },
+        { id:  8, nome: 'Francesca De Luca', subDate :'2026-01-12', age: '17' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2020-09-01' , region: 'Veneto' },
         { id:  9, nome: 'Matteo Bruno'     , subDate :'2026-01-12', age: '18' , gender: 'Maschile'  , status: 'Maggiorenne' , birthDate: '2015-10-14' , region: 'Umbira' },
-        { id: 10, nome: 'Chiara Galli'     , subDate :'2026-01-12', age: '19' , gender: 'Femminile' , status: 'Minorenne'   , birthDate: '2014-12-01' , region: 'Toscana' }
+        { id: 10, nome: 'Chiara Galli'     , subDate :'2026-01-12', age: '19' , gender: 'Femminile' , status: 'Maggiorenne' , birthDate: '2014-12-01' , region: 'Toscana' }
       ];
 
          // Assuming myGlobalDataArray contains your patient data
