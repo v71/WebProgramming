@@ -520,6 +520,40 @@
 </style>
 
 <style>
+
+    .badge-co {
+    background-color: #d1e7dd; /* Light Green */
+    color: #0f5132;
+    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
+    border-radius: 30px;       /* This creates the pill shape */
+    font-size: 0.75rem;        /* Slightly smaller to look proportional */
+    font-weight: bold;
+    display: inline-block;     /* Essential for padding to work correctly on a span */
+}
+
+.badge-ra {
+    background-color: #fff3cd; /* Light Yellow/Orange */
+    color: #856404;
+    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
+    border-radius: 30px;       /* This creates the pill shape */
+    font-size: 0.75rem;        /* Slightly smaller to look proportional */
+    font-weight: bold;
+    display: inline-block;     /* Essential for padding to work correctly on a span */
+}
+
+.badge-rii {
+    background-color: #f8d7da; /* Light Red */
+    color: #842029;
+    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
+    border-radius: 30px;       /* This creates the pill shape */
+    font-size: 0.75rem;        /* Slightly smaller to look proportional */
+    font-weight: bold;
+    display: inline-block;     /* Essential for padding to work correctly on a span */
+}
+
+</style>
+
+<style>
 .no-spinner {
     /* Standard property (future-proof) */
     appearance: textfield;
@@ -583,124 +617,6 @@
 
 </style>
 
-
-  <!-- CSS Fade Transition for Table Only -->
-  <style>
-  
-      #tableResponsiveContainer {
-        opacity: 1;
-        transition: opacity 0.2s ease-in-out;
-      }
-      #tableResponsiveContainer.table-fade-out {
-        opacity: 0;
-      }
-
-  </style>
-
-  <!-- CSS Fade Transition Only -->
-  <style>
-  
-      #tableResponsiveContainer {
-        opacity: 1;
-        transition: opacity 0.2s ease-in-out;
-      }
-      #tableResponsiveContainer.table-fade-out {
-        opacity: 0;
-      }
-
-  </style>
-
-  <style>
-
-      /* Transition state when clicking pagination links */
-      #tableResponsiveContainer.table-fade-out {
-        opacity: 0 !important;
-      }
-
-  </style>
-
-  <style>
-
-      /* Smooth hover highlight on table rows */
-      #userTable tbody tr {
-        transition: background-color 0.15s ease-in-out;
-        cursor: pointer; /* Keeps rows feeling interactive */
-      }
-
-      /* Hover background styling */
-      #userTable tbody tr:hover {
-        background-color: rgba(13, 110, 253, 0.06) !important; /* Subtle blue tint */
-      }
-
-      /* Dark mode / Bootstrap dark theme override (optional) */
-      [data-bs-theme="dark"] #userTable tbody tr:hover {
-        background-color: rgba(255, 255, 255, 0.08) !important;
-      }
-
-</style>
-
-<style>
-
-  /* Apply to your table */
-  
-  #tableResponsiveContainer {
-    table-layout: fixed;
-    width: 100%;
-  }
-
-  /* Specify fixed percentages or pixel values on headers */
-  
-  
-  #tableResponsiveContainer th:nth-child(1) { width: 2%; }   
-  #tableResponsiveContainer th:nth-child(2) { width: 25%; }  
-  #tableResponsiveContainer th:nth-child(3) { width: 10%; }   
-  #tableResponsiveContainer th:nth-child(4) { width: 8%; }   
-  #tableResponsiveContainer th:nth-child(5) { width: 12%; }  
-
-  /* Keep long text contained without stretching columns */
-  #myTable td {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-</style>
-
-<style>
-
-  /* Reduce size and deemphasize sorting icons */
-  th.sortable i.fa-sort,
-  th.sortable i.fa-sort-up,
-  th.sortable i.fa-sort-down {
-    font-size: 0.75rem;     /* Smaller icon size (default is 1rem / 100%) */
-    opacity: 0.5;           /* Softens visual weight */
-    margin-left: 0.35rem;   /* Keeps subtle spacing from header text */
-    vertical-align: middle; /* Keeps aligned with the header text */
-  }
-
-  /* Slightly darken the active sorted icon so it stays readable */
-  th.sortable i.fa-sort-up,
-  th.sortable i.fa-sort-down {
-    opacity: 0.85;
-  }
-
-</style>
-
-<style>
-
-    @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-.page-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
-}
-
-</style>
 
 </head>
 
@@ -817,76 +733,152 @@
                 </nav>
 
 
-                <div class="container-fluid page-fade-in">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
                             
                             <!-- Outer Container: Added style="gap: 12px;" -->
                             <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
+                                <!-- FIRST SECTION (20% height minus half the gap) -->
+                                <div class="card shadow-sm" style="height: calc(20% - 24px); border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
 
-                                <!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
-<div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+                                    <!-- muted h2 level just to stop the html valdiator to complain-->
+                                    <h2 class="sr-only">muted h3</h2>
+                                    <!-- muted h2 level just to stop the html valdiator to complain-->
+                                    <h3 class="sr-only">muted h3</h3>
+                                     <!-- muted h2 level just to stop the html valdiator to complain-->
+                                    <h4 class="sr-only">muted h4</h4>
+                                    <!-- muted h3 level just to stop the html valdiator to complain-->
+                                    <h5 class="sr-only">muted h3</h5>
+                                    
+                                    <div class="card-header bg-white py-2 px-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
+                                    </div>
 
-    <h2 class="sr-only">muted h2</h2>
-    <h3 class="sr-only">muted h3</h3>
-    <h4 class="sr-only">muted h4</h4>
-    <h5 class="sr-only">muted h5</h5>
-    
-    <div class="card-header bg-white py-2 px-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-        <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
-        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
-    </div>
+                                    <div class="card-body p-2 px-3 d-flex align-items-center overflow-hidden">
+                                        <div class="d-flex align-items-center w-100 mb-2">
 
-    <!-- Locked body min-height to match fully loaded content -->
-    <div class="card-body px-3 py-2 d-flex overflow-hidden" style="min-width: 0; min-height: 105px;">
-        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-center w-100 mb-2" style="min-width: 0; gap: 12px;">
+                                            <!-- Compacted Avatar (48px) -->
+                                            <div class="position-relative d-inline-block mr-3" style="width: 60px; height: 60px; flex-shrink: 0;">
+                                                <div id="avatarContainer2" 
+                                                    class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                                                    style="border: 1px solid #0000FF !important;"
+                                                    role="img" 
+                                                    aria-label="Contenitore foto profilo">
+                                                    <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
+                                                    <img id="profileAvatar2" 
+                                                        src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                        class="img-fluid rounded-circle d-none" 
+                                                        width="60" 
+                                                        height="60" 
+                                                        alt="Foto profilo"
+                                                        style="object-fit: cover;">
+                                                </div>
+                                            </div>
 
-            <!-- Compacted Avatar (60px) -->
-            <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
-                <div id="avatarContainer2" 
-                    class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
-                    style="border: 1px solid #0000FF !important;"
-                    role="img" 
-                    aria-label="Contenitore foto profilo">
-                    <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
-                    <img id="profileAvatar2" 
-                        src="assets/sb-admin-2/img/undraw_profile.svg"
-                        class="img-fluid rounded-circle d-none" 
-                        width="80" 
-                        height="80" 
-                        alt="Foto profilo"
-                        style="object-fit: cover;">
+                                            <!-- Text Content Wrapper -->
+                                            <div class="d-flex flex-column overflow-hidden flex-grow-1">
+                                                <!-- Patient Full Name -->
+                                                <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.25rem; line-height: 1.2;">
+                                                    <span class="sr-only">Loading...</span>
+                                                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
+                                                </h5>
+
+                                                <!-- Badges Stacked Underneath -->
+                                                <div class="d-flex align-items-center flex-wrap mt-2" style="gap: 8px;">
+                                                    <span class="badge d-inline-flex align-items-center justify-content-center" 
+                                                        style="border-radius: 50px; font-size: 0.75rem; padding: 4px 8px; background-color: #4e73df; color: #fff; font-weight: 600;">
+                                                        <i class="fas fa-check-circle mr-1 flex-shrink-0" aria-hidden="true"></i>Utente Attivo
+                                                    </span>
+                                                    <span id="patientMinorOrMajor" 
+                                                        class="badge d-inline-flex align-items-center justify-content-center" 
+                                                        style="border-radius: 50px; font-size: 0.75rem; padding: 4px 8px; background-color: #4edf97; color: #fff; font-weight: 600;">
+                                                        <span class="sr-only">Loading status...</span>
+                                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
+                                                    </span>
+                                                </div>
+
+                                                <!-- Subscription Date -->
+                                                <div class="mt-2">
+                                                    <small class="text-muted" style="font-size: 0.8rem;">
+                                                        <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
+                                                        <span id="patientSubDate"> 
+                                                            <span class="sr-only">Loading date...</span>
+                                                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.8rem;" aria-hidden="true"></i>
+                                                        </span>   
+                                                    </small>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                     </div>
+
+                                </div>
+
+
+
+
+<!-- SECOND SECTION (80% height minus half the gap) -->
+<div class="card shadow-sm" style="height: auto; border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+    <div class="card-body p-3 overflow-auto">
+        <div class="row align-items-start">
+            
+            <!-- Three Columns for the 3 sections -->
+            <div class="col-lg-4 mb-3 mb-lg-0">
+                <!-- Section 1: Terapie -->
+                <div class="w-100 h-100 p-3 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-width: 0;">
+
+                    <div class="text-center mb-3">
+                        <div class="d-flex align-items-center justify-content-center mb-2">
+                            <h6 class="text-dark font-weight-bold mb-1" style="font-size: 1.5rem;">
+                                <i class="fas fa-layer-group text-primary mr-2" style="font-size: 1.2rem;" aria-hidden="true"></i>Assessments Caricati (1)
+                            </h6>
+                        </div>
+                        <p class="text-muted mb-0 small" style="font-weight: 650; font-size: 1.0rem;">
+                            Ultimo Assessment Caricato : A sorita
+                        </p>
+                        <p class="text-muted mb-0 small" style="font-weight: 500; font-size: 1.0rem;">
+                            Caricato il : 21/7/2026
+                        </p>
+                    </div>
+
+                                        <hr>
+                                  
+                                        <div class="mt-4 d-flex flex-column align-items-stretch justify-content-center" style="gap: 0.5rem; width: 100%; min-width: 0;">
+                                            <a href="pricing.html" class="btn btn-outline-primary shadow-none d-inline-flex align-items-center justify-content-center w-100" style="font-size: clamp(0.7rem, 2.5vw, 0.85rem); padding: 0.5rem 0.75rem; height: fit-content; max-width: 100%; min-width: 0;">
+                                                <i class="fas fa-plus-circle mr-2" style="flex-shrink: 0;" aria-hidden="true"></i>
+                                                <span class="text-truncate" style="min-width: 0;">Nuovo Assessment</span>
+                                            </a>
+                                            
+                                            <a href="pricing.html" class="btn btn-outline-primary shadow-none d-inline-flex align-items-center justify-content-center w-100" style="font-size: clamp(0.7rem, 2.5vw, 0.85rem); padding: 0.5rem 0.75rem; height: fit-content; max-width: 100%; min-width: 0;">
+                                                <i class="fas fa-eye mr-2" style="flex-shrink: 0;" aria-hidden="true"></i>
+                                                <span class="text-truncate" style="min-width: 0;">Guarda ultimo Assessment Caricato</span>
+                                            </a>
+                                            
+                                            <a href="pricing.html" class="btn btn-outline-primary shadow-none d-inline-flex align-items-center justify-content-center w-100" style="font-size: clamp(0.7rem, 2.5vw, 0.85rem); padding: 0.5rem 0.75rem; height: fit-content; max-width: 100%; min-width: 0;">
+                                                <i class="fas fa-list mr-2" style="flex-shrink: 0;" aria-hidden="true"></i>
+                                                <span class="text-truncate" style="min-width: 0;">Cronologia Assessments</span>
+                                            </a>
+                                        </div>
+
+
+
                 </div>
             </div>
 
-            <!-- Text Content Wrapper with exact vertical spacing reservation -->
-            <div class="d-flex flex-column flex-grow-1 overflow-hidden text-center text-md-left" style="min-width: 0; width: 100%; gap: 6px;">
-                <!-- Patient Full Name -->
-                <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
-                    <span class="sr-only">Loading...</span>
-                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
-                </h5>
-
-                <!-- Badges Stacked Underneath -->
-                <div class="d-flex align-items-center justify-content-center justify-content-md-start flex-wrap" style="min-width: 0; min-height: 27px;">
-                    <span id="patientMinorOrMajor" 
-                        class="badge d-inline-flex align-items-center justify-content-center text-truncate" 
-                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
-                        <span class="sr-only">Loading status...</span>
-                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
-                    </span>
+            <div class="col-lg-4 mb-3 mb-lg-0">
+                <!-- Section 2: Assessments -->
+                <div class="w-100 h-100 p-3 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-width: 0;">
+                    <!-- Content for Assessments goes here -->
                 </div>
+            </div>
 
-                <!-- Subscription Date -->
-                <div class="text-truncate" style="min-width: 0; min-height: 18px;">
-                    <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
-                        <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
-                        <span id="patientSubDate"> 
-                            <span class="sr-only">Loading date...</span>
-                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
-                        </span>   
-                    </small>
+            <div class="col-lg-4">
+                <!-- Section 3: Certificati -->
+                <div class="w-100 h-100 p-3 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-width: 0;">
+                    <!-- Content for Certificati goes here -->
                 </div>
             </div>
 
@@ -894,84 +886,6 @@
     </div>
 </div>
 
-    <!-- SECOND SECTION (Optimized with a fixed max-height / calculation to prevent clipping the first section) -->
-<div id="tableCardContainer" class="card shadow-sm d-flex flex-column" style="height: calc(80% - 41px); border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
-    
-    <!-- Card Header with Title & Search Bar -->
-    <div class="card-header bg-white d-flex align-items-center justify-content-between py-2 flex-shrink-0" style="border-bottom: none; min-height: 55px;">
-        <div class="d-flex align-items-center">
-            <i class="fas fa-users text-primary mr-2"></i>
-            <h6 class="m-0 font-weight-bold text-gray-800">Lista Assessments (<span id="totalUsersCount">
-                <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.85rem;"></i>
-            </span>)</h6>
-        </div>
-        
-        <!-- Search Input constrained to 250px -->
-        <div class="input-group input-group-sm search-box" style="max-width: 250px;">
-            <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small" placeholder="Cerca Pazienti..." aria-label="Search">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button" disabled>
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Card Body configured to flex and restrict height overflow -->
-    <div class="card-body p-3 d-flex flex-column flex-grow-1 overflow-hidden">
-        
-        <!-- The Spinner Container -->
-        <div id="loadingSpinner">
-            <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem; border-width: 0.4em;">
-                <span class="sr-only">Caricamento...</span>
-            </div>
-            <h5 class="mt-3 text-gray-600">Caricamento Pazienti...</h5>
-        </div>
-                 
-        <!-- Responsive Table Wrapper (Scrolls internally only if data exceeds height) -->
-        <div class="table-responsive flex-grow-1" id="tableResponsiveContainer" style="display: none; overflow-y: auto; min-height: 0;">
-            <table class="table table-bordered text-nowrap mb-0" id="userTable" width="100%" cellspacing="0">
-
-                <thead>
-                    <tr>
-                        <th data-sort="id" class="text-center">
-                            <span class="fas fa-hashtag mr-1" style="font-size: 0.75em; color: #4e73df;"></span>
-                        </th>
-                        <th data-sort="name" class="sortable text-center">
-                            <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Titolo Assessment <i class="fas fa-sort sort-icon ml-1"></i>
-                        </th>
-                        <th data-sort="consent_date" class="sortable text-center">
-                            <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Emissione <i class="fas fa-sort sort-icon ml-1"></i>
-                        </th>
-                        <th data-sort="age" class="sortable text-center">
-                            <i class="fas fa-shield-alt text-primary mr-1" style="font-size: 0.75em;"></i> Ente di Emissione <i class="fas fa-sort sort-icon ml-1"></i>
-                        </th>
-                        <th data-sort="genre" class="sortable text-center">
-                            <i class="fas fa-clock text-primary mr-1" style="font-size: 0.75em;"></i> Età Documento <i class="fas fa-sort sort-icon ml-1"></i>
-                        </th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <!-- Inject data here -->            
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Pagination Footer Controls (Fixed at bottom of flex container) -->
-        <div class="row align-items-center flex-shrink-0">
-            <div class="col-sm-12 col-md-5">
-                <div class="text-muted small" id="paginationInfo"></div>
-            </div>
-            <div class="col-sm-12 col-md-7">
-                <nav aria-label="Page navigation">
-                    <ul class="pagination pagination-sm justify-content-md-end justify-content-center mb-0" id="paginationControls">
-                    </ul>
-                </nav>
-            </div>
-        </div>
-
-    </div>
-</div>
 
 
                         </div>
@@ -1016,15 +930,6 @@
             const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
             const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
             window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-            import {
-                convertToItalianFormat,
-                calculateAgeWithMonths
-            } from "./assets/js/string_utils.js";
-
-            // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
-            window.convertToItalianFormat = convertToItalianFormat;
-            window.calculateAgeWithMonths = calculateAgeWithMonths;
 
             // Make the variable globally available from the start
             window.assessments = [];
@@ -1118,36 +1023,35 @@
 
             // ---------------------------------------------------------------------------------
             // Updates the age status badge of a patient with unified center alignments.
-            
+
             function updateAgeBadge(badgeElement, status) {
                 if (!badgeElement) return;
 
+                // d-inline-flex lets the container size itself strictly to the content string length
                 badgeElement.className = "badge text-white d-inline-flex align-items-center justify-content-center";
                 
-                // Design styles with proper vertical spacing
+                // Design styles
                 badgeElement.style.borderRadius = "50px";
                 badgeElement.style.fontSize = "0.75rem";
-                badgeElement.style.padding = "6px 12px"; // Increased vertical padding slightly to prevent clipping
+                badgeElement.style.padding = "4px 10px"; // Your precise custom padding
                 badgeElement.style.fontWeight = "600";
                 
-                // Safety boundaries and constraints
+                // Safety boundaries (allows adapting to length, but caps at container edge)
                 badgeElement.style.maxWidth = "100%";
-                badgeElement.style.minWidth = "0"; 
-                badgeElement.style.overflow = "hidden";
 
                 if (status === 1) {
                     // --- ADULT STATE (Green) ---
                     badgeElement.style.backgroundColor = "#4edf97";
                     badgeElement.innerHTML = `
                         <i class="fas fa-user mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
-                        <span class="text-truncate" style="line-height: 1.2; min-width: 0; display: inline-block;">Maggiorenne</span>
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Maggiorenne</span>
                     `;
                 } else {
                     // --- MINOR STATE (Red) ---
                     badgeElement.style.backgroundColor = "#ff4d4d";
                     badgeElement.innerHTML = `
                         <i class="fas fa-child mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
-                        <span class="text-truncate" style="line-height: 1.2; min-width: 0; display: inline-block;">Minorenne</span>
+                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Minorenne</span>
                     `;
                 }
             }
@@ -1183,355 +1087,6 @@
             });
 
         </script>
-
-        <!-- Table Pagination & Filtering Script -->
-    <script>
-        
-        // Global function to initialize or refresh the table with dynamic data
-        window.initTableWithData = function(dataSource) {
-
-                const $tableContainer = $('#tableResponsiveContainer');
-                const $cardBody = $('#tableCardContainer .card-body');
-                const $spinner = $('#loadingSpinner');
-                let $allRows = $('#tableBody tr');
-
-                let $filteredRows = $allRows;
-                let rowsPerPage = 5;
-                let totalPages = 1;
-                let currentPage = 1;
-
-                // ---------------------------------------------------------------------------------
-
-                function populateTable(data) {
-                    const $tbody = $('#tableBody');
-                    $tbody.empty();
-
-                    if (!data || data.length === 0) {
-                        $tbody.append(`
-                            <tr class="no-data-row">
-                                <td colspan="6" class="text-center py-4 text-muted">
-                                    Nessun paziente trovato.
-                                </td>
-                            </tr>
-                        `);
-                    } else {
-                        data.forEach((item, index) => {
-                            const id = item.id;
-                            const fullName = item.title;
-                            const birth_date = item.emission_date;
-                            const emission_entity=item.emission_entity;
-                            const age = calculateAgeWithMonths(birth_date);
-                            let ageStr = "";
-                            if (age.months !== 0)
-                            {
-                                if ( age.years!==0 )
-                                     ageStr = age.years + " Anni e " + age.months + " mesi";
-                                else    
-                                    ageStr = age.months + " mesi";
-                            }
-                            else
-                                ageStr = age.years + " Anni";
-
-                            const rowHtml = `
-                                <tr data-id="${id}">
-                                    <td class="align-middle text-center">${index + 1}</td>
-                                    <td class="font-weight-bold align-middle text-center">${fullName || '-'}</td>
-                                    <td class="align-middle text-center">${birth_date || '-'}</td>
-                                    <td class="align-middle text-center">${emission_entity || '-'}</td>
-                                    <td class="align-middle text-center">${ageStr || '-'}</td>
-                                </tr>
-                            `;
-                            $tbody.append(rowHtml);
-                        });
-                        
-                    }
-                    
-                    $allRows = $('#tableBody tr');
-                    $filteredRows = $allRows;
-                    $('#totalUsersCount').text($allRows.length);
-                    currentPage = 1;
-                    recalculateLayout();
-                }
-                // ---------------------------------------------------------------------------------
-
-                function calculateRowsPerPage() {
-                    $allRows.hide();
-                    $allRows.first().show();
-                    const rowHeight = $allRows.first().outerHeight() || 53;
-                    const $cardContainer = $('#tableCardContainer');
-                    const cardTopOffset = $cardContainer.offset().top || 0;
-                    const windowHeight = $(window).height() || 0;
-
-                    const cardHeaderHeight = $('#tableCardContainer .card-header').outerHeight() || 55;
-                    const theadHeight = $('#userTable thead').outerHeight() || 40;
-                    const paginationFooterHeight = $('#tableCardContainer .row.align-items-center').outerHeight() || 50;
-                    
-                    const bottomMarginBuffer = 130;
-                    const cardBodyPadding = 30;
-                    const tableBorderBuffer = 8;
-
-                    const occupiedSpace = cardTopOffset + cardHeaderHeight + theadHeight + paginationFooterHeight + cardBodyPadding + bottomMarginBuffer + tableBorderBuffer;
-                    const availableTbodySpace = windowHeight - occupiedSpace;
-                    const calculatedCount = Math.floor(availableTbodySpace / rowHeight);
-
-                    return Math.max(1, calculatedCount);
-                }
-
-                
-                // ---------------------------------------------------------------------------------
-
-                function displayPage(page, animate = true) {
-                    currentPage = page;
-                    const start = (page - 1) * rowsPerPage;
-                    const end = start + rowsPerPage;
-
-                    if (animate) {
-                        $tableContainer.addClass('table-fade-out');
-                        setTimeout(function() {
-                            $allRows.hide();
-                            $filteredRows.slice(start, end).show();
-                            updateInfoAndPagination(start, end);
-                            $tableContainer.removeClass('table-fade-out');
-                        }, 200);
-                    } else {
-                        $allRows.hide();
-                        $filteredRows.slice(start, end).show();
-                        updateInfoAndPagination(start, end);
-                    }
-                }
-
-                // ---------------------------------------------------------------------------------
-            
-                function updateHeaderIcons(activeKey, order) {
-                    $('th.sortable').each(function() {
-                        const $th = $(this);
-                        const $sortIcon = $th.find('i.sort-icon');
-                        if ($th.data('sort') === activeKey) {
-                            $sortIcon.attr('class', order === 'asc' ? 'fas fa-sort-up sort-icon ml-1' : 'fas fa-sort-down sort-icon ml-1');
-                        } else {
-                            $sortIcon.attr('class', 'fas fa-sort sort-icon ml-1 text-muted');
-                        }
-                    });
-                }
-
-                // ---------------------------------------------------------------------------------
-
-                function updateInfoAndPagination(start, end) {
-                    const totalFiltered = $filteredRows.length;
-                    const showingStart = totalFiltered === 0 ? 0 : start + 1;
-                    const showingEnd = Math.min(end, totalFiltered);
-                    $('#paginationInfo').text(`Da ${showingStart} a ${showingEnd} di ${totalFiltered} Pazienti`);
-                    renderPagination();
-                }
-
-                // ---------------------------------------------------------------------------------
-
-                function renderPagination() {
-                    const totalFiltered = $filteredRows.length;
-                    totalPages = Math.ceil(totalFiltered / rowsPerPage) || 1;
-                    let paginationHTML = '';
-
-                    const prevDisabled = currentPage === 1 ? 'disabled' : '';
-                    paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Precedente</a></li>`;
-
-                    for (let i = 1; i <= totalPages; i++) {
-                        const activeClass = i === currentPage ? 'active' : '';
-                        paginationHTML += `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-                    }
-
-                    const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
-                    paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Successivo</a></li>`;
-
-                    $('#paginationControls').html(paginationHTML);
-                }
-
-                // ---------------------------------------------------------------------------------
-
-                function recalculateLayout() {
-                    rowsPerPage = calculateRowsPerPage();
-                    const totalFiltered = $filteredRows.length;
-                    totalPages = Math.ceil(totalFiltered / rowsPerPage) || 1;
-                    if (currentPage > totalPages) currentPage = totalPages;
-                    displayPage(currentPage, false);
-                }
-
-                // ---------------------------------------------------------------------------------
-
-                let currentSortColumn = 'name';
-                let currentSortOrder = 'asc';
-
-                function sortDataAndPopulate(data, key, forceOrder = null) {
-                    if (forceOrder) {
-                        currentSortColumn = key;
-                        currentSortOrder = forceOrder;
-                    } else if (currentSortColumn === key) {
-                        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
-                    } else {
-                        currentSortColumn = key;
-                        currentSortOrder = 'asc';
-                    }
-
-                    data.sort((a, b) => {
-                        let valA = a[key] ?? '';
-                        let valB = b[key] ?? '';
-
-                        const numA = parseFloat(valA);
-                        const numB = parseFloat(valB);
-                        if (!isNaN(numA) && !isNaN(numB)) {
-                            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
-                        }
-
-                        const dateA = Date.parse(valA);
-                        const dateB = Date.parse(valB);
-                        if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
-                            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-                        }
-
-                        return currentSortOrder === 'asc' 
-                            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
-                            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
-                    });
-
-                    populateTable(data);
-                    updateHeaderIcons(key, currentSortOrder);
-                }
-
-                // ---------------------------------------------------------------------------------
-                // Event listeners
-
-                $('#tableBody').on('click', 'tr', function(e) {
-                    if ($(e.target).closest('a, button, input, .dropdown').length) return;
-                    const selectedPatientId = $(this).data('id');
-                    console.log('Clicked row with ID:', selectedPatientId);
-
-                    // Save the patient ID to localStorage
-                    localStorage.setItem('selectedPatientId', selectedPatientId);
-                    // Redirect to another page
-                    //window.location.href = 'patient_process_3.html';
-                });
-
-                $('#tableSearchInput').on('keyup input', function() {
-                    const searchTerm = $(this).val().toLowerCase().trim();
-                    if (searchTerm === '') {
-                        $filteredRows = $allRows;
-                    } else {
-                        $filteredRows = $allRows.filter(function() {
-                            return $(this).text().toLowerCase().indexOf(searchTerm) > -1;
-                        });
-                    }
-                    currentPage = 1;
-                    recalculateLayout();
-                });
-
-                $(document).on('click', '#paginationControls a', function(e) {
-                    e.preventDefault();
-                    const targetPage = parseInt($(this).attr('data-page'));
-                    if (targetPage >= 1 && targetPage <= totalPages && targetPage !== currentPage) {
-                        displayPage(targetPage);
-                    }
-                });
-
-                let resizeTimer;
-                $(window).on('resize', function() {
-                    clearTimeout(resizeTimer);
-                    resizeTimer = setTimeout(recalculateLayout, 150);
-                });
-
-                $(document).on('click', 'th.sortable', function() {
-                    const sortKey = $(this).data('sort');
-                    sortDataAndPopulate(dataSource, sortKey);
-                });
-
-                // Initial Load
-                if (dataSource && dataSource.length > 0) {
-                    sortDataAndPopulate(dataSource, 'name', 'asc');
-                } else {
-                    populateTable([]);
-                }
-
-                $tableContainer.css({ 'visibility': 'hidden', 'display': 'block', 'opacity': '0' });
-                $spinner.hide();
-                $tableContainer.css({ 'visibility': 'visible', 'opacity': '1', 'transition': 'opacity 0.2s ease-in-out' });
-                recalculateLayout();
-                $tableContainer.addClass('table-ready');
-            };
-
-            // ---------------------------------------------------------------------------------
-            // Automatically trigger if window.patients2 is already populated
-
-            $(document).ready(function() {
-                if (window.patients2 && window.patients2.length > 0) {
-                    window.initTableWithData(window.patients2);
-                }
-            });
-            
-    </script>
-
-    <script type="module">
-        
-        $(document).ready(function() {
-            (async () => {
-                try {
-                    // DEBUG PATIENT LIST
-                    const myData = [
-            
-                        { title: 'Documento1'   , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento2'   , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-                        { title: 'Documento3'   , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento4'   , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-                        { title: 'Documento5'   , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento6'   , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-                        { title: 'Documento7'   , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento8'   , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-                        { title: 'Documento9'   , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento10'  , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-
-                        { title: 'Documento11'  , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento12'  , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-                        { title: 'Documento13'  , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento14'  , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-                        { title: 'Documento15'  , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento16'  , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-                        { title: 'Documento17'  , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento18'  , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-                        { title: 'Documento19'  , emission_date :'2026-01-12' , emission_entity: 'Privato'  },
-                        { title: 'Documento20'  , emission_date :'2026-01-12' , emission_entity: 'Pubblico' },
-
-                    ];
-
-                    window.patients2 = myData;
-
-//                    console.log(window.patients2);
-                    
-                    // 3. Trigger initial table load if function exists
-                    if (typeof initTableWithData === 'function') {
-                        initTableWithData(window.patients2);
-                    }
-
-                //    console.log(window.patients2);
-
-                    // Sidebar Toggle Handler
-                    $("#sidebarToggleTop").on('click', function(e) {
-                        e.preventDefault();
-                        $("body").toggleClass("sidebar-toggled");
-                        $(".sidebar").toggleClass("toggled");
-                    });
-
-                    // Logout Handler
-                    $('#logoutBtn').on('click', function(e) {
-                        e.preventDefault(); 
-                        localStorage.clear();
-                        window.location.href = $(this).attr('href'); 
-                    });
-                    
-                } catch (err) {
-                    console.error("Error loading patients:", err);
-                }
-            })();
-        });
-        
-    </script>
-
 
         <!-- Main -->
         <script type="module">
@@ -1600,10 +1155,6 @@
 
                 const activePatientId = getValidPatientId();
 
-                // ------------------------
-                // --- ATTENZIONE -- QUI --
-                // ------------------------
-
                 if (!activePatientId) {
                     alert("Nessun paziente selezionato. Ritorno alla lista...");
                //     window.location.replace("patient-directory.html"); // Cambia con la tua pagina lista pazienti
@@ -1647,6 +1198,7 @@
                 //    console.log(minor_or_major);
                 //    console.log(age);
 
+                
                     //patientFullName
                     const patientFullNameId = document.getElementById("patientFullName");
                     patientFullNameId.textContent = fullNameNoPrefix;
@@ -1655,9 +1207,7 @@
                     updateAgeBadge(document.getElementById("patientMinorOrMajor"),minor_or_major);
                     updateSubscriptionDate(document.getElementById("patientSubDate"), subDateItalianFormat, gender);
                     updateUserAvatar(gender);
-                 
-                // remove the selected patient id
-       //         localStorage.removeItem('selectedPatientId');
+
 
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
@@ -1666,34 +1216,6 @@
             });
 
         </script>
-
-
-    <script>
-
-        //SIDEBAR Race condition fix
-        $(document).ready(function() {
-            // We attach the listener to 'body' so it never "dies" 
-            // even if the navbar is re-rendered or the script finishes late.
-            $("body").on('click', '#sidebarToggleTop', function(e) {
-                e.preventDefault();
-                
-                // 1. Toggle classes
-                $("body").toggleClass("sidebar-toggled");
-                $(".sidebar").toggleClass("toggled");
-
-                // 3. Handle the 'overflow' issue we discussed for your dashboard layout
-                if ($("body").hasClass("sidebar-toggled")) {
-                    // Optional: prevent background scrolling on mobile when menu is open
-                    if (window.innerWidth < 768) {
-                        $("html, body").css("overflow", "hidden");
-                    }
-                } else {
-                    $("html, body").css("overflow", ""); 
-                }
-            });
-        });
-    
-    </script>
 
         <!-- JS before </body> -->
         <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>

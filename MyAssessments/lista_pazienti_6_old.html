@@ -345,9 +345,6 @@
   #tableResponsiveContainer th:nth-child(4) { width: 8%; }   
   #tableResponsiveContainer th:nth-child(5) { width: 12%; }  
   #tableResponsiveContainer th:nth-child(6) { width: 12%; }  
-  #tableResponsiveContainer th:nth-child(7) { width: 8%; }  
-  #tableResponsiveContainer th:nth-child(8) { width: 8%; }  
-  #tableResponsiveContainer th:nth-child(9) { width: 8%; }  
   
 
   /* Keep long text contained without stretching columns */
@@ -415,20 +412,6 @@
       border-color: #d62828;
       color: #ffffff;
     }
-
-</style>
-
-<style>
-
-.hover-scale {
-    font-size: 1.8rem;
-    transition: transform 0.2s ease;
-    display: inline-block;
-    cursor: pointer;
-}
-.hover-scale:hover {
-    transform: scale(1.3);
-}
 
 </style>
 
@@ -560,52 +543,43 @@
 
         </div>
 
-          <div class="card-body p-3 d-flex flex-column flex-grow-1 overflow-hidden">
-
+        <div class="card-body">
+          
               <!-- The Spinner Container -->
               <div id="loadingSpinner">
                   <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem; border-width: 0.4em;">
                       <span class="sr-only">Caricamento...</span>
                   </div>
-                  <h5 class="mt-3 text-gray-600">Caricamento Pazienti...</h5>
+                  <h5 class="mt-3 text-gray-600">Caricamento pazienti...</h5>
               </div>
                            
             <!-- Responsive Table Wrapper -->
-            <div class="table-responsive flex-grow-1" id="tableResponsiveContainer" style="display: none; overflow-y: auto; min-height: 0;">
-                <table class="table table-bordered text-nowrap" id="userTable" width="100%" cellspacing="0">
+            <div class="table-responsive" id="tableResponsiveContainer" style="display: none;">
+            <table class="table table-bordered text-nowrap" id="userTable" width="100%" cellspacing="0">
               
               <thead>
-                    <tr>
-                    <th data-sort="id" class="text-center">
-                        <span class="fas fa-hashtag mr-1" style="font-size: 0.75em; color: #4e73df;"></span>
-                    </th>
+                <tr>
+                  <th data-sort="id" class="text-center">
+                    <span class="fas fa-hashtag mr-1" style="font-size: 0.75em; color: #4e73df;"></span>
+                  </th>
 
-                    <th data-sort="name" class="sortable text-center">
-                        <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Paziente <i class="fas fa-sort sort-icon ml-1"></i>
-                    </th>
+                  <th data-sort="name" class="sortable text-center">
+                    <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Paziente <i class="fas fa-sort sort-icon ml-1"></i>
+                  </th>
 
-                    <th data-sort="consent_date" class="sortable text-center">
-                        <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Nascita <i class="fas fa-sort sort-icon ml-1"></i></th>
-            
-                    <th data-sort="age" class="sortable text-center">
-                        <i class="fas  fa-hourglass-half text-primary mr-1" style="font-size: 0.75em;"></i> Età Anagrafica <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  <th data-sort="consent_date" class="sortable text-center">
+                    <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Nascita <i class="fas fa-sort sort-icon ml-1"></i></th>
+          
+                  <th data-sort="age" class="sortable text-center">
+                    <i class="fas  fa-hourglass-half text-primary mr-1" style="font-size: 0.75em;"></i> Età Anagrafica <i class="fas fa-sort sort-icon ml-1"></i></th>
 
-                    <th data-sort="genre" class="sortable text-center">
-                        <i class="fas fa-venus-mars text-primary mr-1" style="font-size: 0.75em;"></i >Genere <i class="fas fa-sort sort-icon ml-1"></i></th>
-                    
-                    <th data-sort="region" class="sortable text-center">
-                        <i class="fas fa-map-marker-alt text-primary mr-1" style="font-size: 0.75em;"></i> Regione <i class="fas fa-sort sort-icon ml-1"></i></th>
-            
-                    <th data-sort="region" class=" text-center">
-                        <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Assessments</th>
-
-                    <th data-sort="region" class=" text-center">
-                        <i class="fas fa-notes-medical text-primary mr-1" style="font-size: 0.75em;"></i> Certificati</th>
-
-                    <th data-sort="region" class=" text-center">
-                        <i class="fas fa-file-medical-alt text-primary mr-1" style="font-size: 0.75em;"></i> Terapia</th>
-
-                    </tr>
+                  <th data-sort="genre" class="sortable text-center">
+                    <i class="fas fa-venus-mars text-primary mr-1" style="font-size: 0.75em;"></i >Genere <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                  <th data-sort="region" class="sortable text-center">
+                    <i class="fas fa-map-marker-alt text-primary mr-1" style="font-size: 0.75em;"></i> Regione <i class="fas fa-sort sort-icon ml-1"></i></th>
+                  
+                </tr>
               </thead>
               <tbody id="tableBody">
                   <!-- Inject data here -->                
@@ -613,20 +587,21 @@
             </table>
           </div>
 
-          <!-- Pagination Footer Controls (Fixed at bottom of flex container) -->
-          <div class="row align-items-center flex-shrink-0">
-                <div class="col-sm-12 col-md-5">
-                    <div class="text-muted small" id="paginationInfo"></div>
-                </div>
-                <div class="col-sm-12 col-md-7">
-                    <nav aria-label="Page navigation">
-                        <ul class="pagination pagination-sm justify-content-md-end justify-content-center mb-0" id="paginationControls">
-                        </ul>
-                    </nav>
-                </div>
+          <!-- Pagination Footer Controls -->
+          <div class="row align-items-center mt-3">
+            <div class="col-sm-12 col-md-5">
+              <div class="text-muted small" id="paginationInfo">
+              </div>
+            </div>
+            <div class="col-sm-12 col-md-7">
+              <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm justify-content-md-end justify-content-center mb-0" id="paginationControls">
+                </ul>
+              </nav>
+            </div>
           </div>
-
         </div>
+
       </div>
     </div>
   </div>
@@ -681,6 +656,42 @@
             // Make the variable globally available from the start
             window.patients2 = [];
             
+    </script>
+
+    <script>
+
+            // A global tracker variable to protect against aggressive database render loops
+
+            function updateUserAvatar(userGender) {
+                
+                const avatarImg1 = document.getElementById('profileAvatar1');
+                const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
+                const container1 = document.getElementById('avatarContainer1');
+
+                if (!avatarImg1 || !spinnerIcon1) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc1 = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-female.png';
+                } else if (userGender === 'Maschile') {
+                    targetSrc1 = 'assets/img/registrazione/terapeuta-male.png';
+                }
+
+                // 2. Assign source asset
+                avatarImg1.src = targetSrc1;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon1.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg1.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container1) {
+                    container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+
+            }
+        
     </script>
 
     <script type="module">
@@ -747,13 +758,14 @@
                         initTableWithData(window.patients2);
                     }
 
-                //    console.log(window.patients2);
+                    console.log(window.patients2);
 
                     // Sidebar Toggle Handler
                     $("#sidebarToggleTop").on('click', function(e) {
                         e.preventDefault();
                         $("body").toggleClass("sidebar-toggled");
                         $(".sidebar").toggleClass("toggled");
+                        table.columns.adjust();
                     });
 
                     // Logout Handler
@@ -797,7 +809,7 @@
                         $tbody.append(`
                             <tr class="no-data-row">
                                 <td colspan="6" class="text-center py-4 text-muted">
-                                    Nessun paziente trovato.
+                                    No records found.
                                 </td>
                             </tr>
                         `);
@@ -813,31 +825,13 @@
                             const region = item.region;
                             const age = calculateAgeWithMonths(birth_date);
                             const minor_or_major = (age.years >= 18) ? 1 : 0;
+
                             let ageStr = "";
                             if (age.months !== 0)
                                 ageStr = age.years + " Anni e " + age.months + " mesi";
                             else
                                 ageStr = age.years + " Anni";
 
-                            // Read activity Josn for each patient
-                            let currentActivity = item?.activity 
-                                ? JSON.parse(JSON.stringify(item.activity)) 
-                                : { Assessments: [], Certificates: [], Therapies: [] };
-
-                            if (!Array.isArray(currentActivity.Assessments)) {
-                                currentActivity.Assessments = [];
-                            }
-
-                            const assessmentsCount = currentActivity.Assessments.length;
-                            const certificatesCount = currentActivity.Certificates.length;
-                            const therapiesCount = currentActivity.Therapies.length;
-
-                        //    console.log(fullName);
-                        //    console.log("Assessments : " , assessmentsCount);
-                        //    console.log("Certificats : ",certificatesCount);
-                        //    console.log("Therapies : ", therapiesCount);
-                        //    console.log("\n");
-                            
                             const rowHtml = `
                                 <tr data-id="${id}">
                                     <td class="align-middle text-center">${index + 1}</td>
@@ -870,19 +864,6 @@
                                     <td class="align-middle text-center">${ageStr || '-'}</td>
                                     <td class="align-middle text-center">${genre || '-'}</td>
                                     <td class="align-middle text-center">${region || '-'}</td>
-                                    
-                                    <td class="align-middle text-center">${assessmentsCount > 0 ? 
-                                    `<i class="fas fa-check-circle text-success hover-scale" data-bs-toggle="tooltip" title="${assessmentsCount} Assessment caricato" aria-hidden="true"></i>` : 
-                                    '<i class="fas fa-plus-circle text-primary hover-scale" style="font-size: 1.8rem;" data-bs-toggle="tooltip" title="Vai alla pagina degli assessments" aria-hidden="true"></i>'}</td>
-
-                                    <td class="align-middle text-center">${certificatesCount > 0 ? 
-                                    `<i class="fas fa-check-circle text-success hover-scale" data-bs-toggle="tooltip" title="${certificatesCount} Certificato caricato" aria-hidden="true"></i>` : 
-                                    '<i class="fas fa-plus-circle text-primary hover-scale" style="font-size: 1.8rem;" data-bs-toggle="tooltip" title="Vai alla pagina dei certificati" aria-hidden="true"></i>'}</td>
-
-                                    <td class="align-middle text-center">${therapiesCount > 0 ? 
-                                    `<i class="fas fa-check-circle text-success hover-scale" data-bs-toggle="tooltip" title="${certificatesCount} Terapia in corso" aria-hidden="true"></i>` : 
-                                    '<i class="fas fa-plus-circle text-primary hover-scale" style="font-size: 1.8rem;" data-bs-toggle="tooltip" title="Vai alla pagina delle terapie" aria-hidden="true"></i>'}</td>
-
                                 </tr>
                             `;
                             $tbody.append(rowHtml);
@@ -1148,10 +1129,9 @@
 
         // --- Event Listeners 
         document.addEventListener("DOMContentLoaded", async () => {
-            try {
+                
                 // CHECK SESSIONE
-                const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-                if (sessionError) throw sessionError;
+                const { data: { session } } = await supabase.auth.getSession();
                 
                 if (!session?.user) {
                     window.location.replace("index.html");
@@ -1163,7 +1143,7 @@
                 // 2. AUTO LOGOUT HANDLER
                 supabase.auth.onAuthStateChange((event, session) => {
                     if (event === "SIGNED_OUT" || !session) {
-                        window.location.replace("index.html");
+                    window.location.replace("index.html");
                     }
                 });
 
@@ -1197,15 +1177,9 @@
 
                 // update avatar in the navbar
                 updateUserAvatar(gender);
-                
                 // remove the selected patient id
                 localStorage.removeItem('selectedPatientId');
 
-            } catch (err) {
-                console.error("Si è verificato un errore inatteso:", err);
-                // Optional: redirect to error page or index on critical failure
-                // window.location.replace("index.html");
-            }
         });
 
     </script>
