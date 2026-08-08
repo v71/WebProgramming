@@ -543,9 +543,9 @@
           
           <div class="d-flex align-items-center">
             <i class="fas fa-users text-primary mr-2"></i>
-            <h6 class="m-0 font-weight-bold text-gray-800">Lista Pazienti (<span id="totalUsersCount">
+            <h6 class="m-0 font-weight-bold text-gray-800">Lista Pazienti <span id="totalUsersCount">
                 <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.85rem;"></i>
-            </span>)</h6>
+            </span></h6>
           </div>
           
           <!-- Search Input constrained to 250px -->
@@ -671,12 +671,14 @@
             
             import {
                 convertToItalianFormat,
+                extractDate,
                 calculateAgeWithMonths
             } from "./assets/js/string_utils.js";
 
             // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
             window.convertToItalianFormat = convertToItalianFormat;
             window.calculateAgeWithMonths = calculateAgeWithMonths;
+            window.extractDate = extractDate;
 
             // Make the variable globally available from the start
             window.patients2 = [];
@@ -792,11 +794,13 @@
                 function populateTable(data) {
                     const $tbody = $('#tableBody');
                     $tbody.empty();
-
+                    
+                    let nofound=1;
                     if (!data || data.length === 0) {
+                        nofound=0;
                         $tbody.append(`
                             <tr class="no-data-row">
-                                <td colspan="6" class="text-center py-4 text-muted">
+                                <td colspan="9" class="text-center py-4 text-muted">
                                     Nessun paziente trovato.
                                 </td>
                             </tr>
@@ -808,10 +812,11 @@
                             const cognome = item.surname;
                             const fullName = `${nome} ${cognome}`;
                             const genre = item.genre;
-                            const birth_date = item.birth_date;
-                            const consent_date = item.consent_date;
+                            const birth_date = convertToItalianFormat(item.birth_date);
+                            const bdate = item.birth_date;
+                            const consent_date = convertToItalianFormat(extractDate(item.consent_date));
                             const region = item.region;
-                            const age = calculateAgeWithMonths(birth_date);
+                            const age = calculateAgeWithMonths(bdate);
                             const minor_or_major = (age.years >= 18) ? 1 : 0;
                             let ageStr = "";
                             if (age.months !== 0)
@@ -831,6 +836,7 @@
                             const assessmentsCount = currentActivity.Assessments.length;
                             const certificatesCount = currentActivity.Certificates.length;
                             const therapiesCount = currentActivity.Therapies.length;
+
 
                         //    console.log(fullName);
                         //    console.log("Assessments : " , assessmentsCount);
@@ -870,28 +876,57 @@
                                     <td class="align-middle text-center">${ageStr || '-'}</td>
                                     <td class="align-middle text-center">${genre || '-'}</td>
                                     <td class="align-middle text-center">${region || '-'}</td>
-                                    
-                                    <td class="align-middle text-center">${assessmentsCount > 0 ? 
-                                    `<i class="fas fa-check-circle text-success hover-scale" data-bs-toggle="tooltip" title="${assessmentsCount} Assessment caricato" aria-hidden="true"></i>` : 
-                                    '<i class="fas fa-plus-circle text-primary hover-scale" style="font-size: 1.8rem;" data-bs-toggle="tooltip" title="Vai alla pagina degli assessments" aria-hidden="true"></i>'}</td>
 
-                                    <td class="align-middle text-center">${certificatesCount > 0 ? 
-                                    `<i class="fas fa-check-circle text-success hover-scale" data-bs-toggle="tooltip" title="${certificatesCount} Certificato caricato" aria-hidden="true"></i>` : 
-                                    '<i class="fas fa-plus-circle text-primary hover-scale" style="font-size: 1.8rem;" data-bs-toggle="tooltip" title="Vai alla pagina dei certificati" aria-hidden="true"></i>'}</td>
+                                    <td class="align-middle text-center">
+                                        ${assessmentsCount > 0 ? 
+                                        `<span id="btn-add-assessment-${id}" class="fa-stack hover-scale btn-add-assessment" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Assessments">
+                                            <i class="far fa-circle fa-stack-2x text-success" style="font-weight: 400;"></i>
+                                            <i class="fas fa-plus fa-stack-1x text-success" style="font-size: 0.8rem;"></i>
+                                        </span>` :
+                                        `<span id="btn-add-assessment-${id}" class="fa-stack hover-scale btn-add-assessment" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Assessments">
+                                            <i class="far fa-circle fa-stack-2x text-primary" style="font-weight: 400;"></i>
+                                            <i class="fas fa-plus fa-stack-1x text-primary" style="font-size: 0.8rem;"></i>
+                                        </span>`}
+                                    </td>
 
-                                    <td class="align-middle text-center">${therapiesCount > 0 ? 
-                                    `<i class="fas fa-check-circle text-success hover-scale" data-bs-toggle="tooltip" title="${certificatesCount} Terapia in corso" aria-hidden="true"></i>` : 
-                                    '<i class="fas fa-plus-circle text-primary hover-scale" style="font-size: 1.8rem;" data-bs-toggle="tooltip" title="Vai alla pagina delle terapie" aria-hidden="true"></i>'}</td>
+                                    <td class="align-middle text-center">
+                                        ${certificatesCount > 0 ? 
+                                        `<span id="btn-add-certificate-${id}" class="fa-stack hover-scale btn-add-certificate" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Certificato">
+                                            <i class="far fa-circle fa-stack-2x text-success" style="font-weight: 400;"></i>
+                                            <i class="fas fa-plus fa-stack-1x text-success" style="font-size: 0.8rem;"></i>
+                                        </span>` :
+                                        `<span id="btn-add-certificate-${id}" class="fa-stack hover-scale btn-add-certificate" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Certificato">
+                                            <i class="far fa-circle fa-stack-2x text-primary" style="font-weight: 400;"></i>
+                                            <i class="fas fa-plus fa-stack-1x text-primary" style="font-size: 0.8rem;"></i>
+                                        </span>`}
+                                    </td>
 
+                                    <td class="align-middle text-center">
+                                        ${therapiesCount > 0 ? 
+                                        `<span id="btn-add-therapy-${id}" class="fa-stack hover-scale btn-add-therapy" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi nuova Terapia">
+                                            <i class="far fa-circle fa-stack-2x text-success" style="font-weight: 400;"></i>
+                                            <i class="fas fa-plus fa-stack-1x text-success" style="font-size: 0.8rem;"></i>
+                                        </span>` :
+                                        `<span id="btn-add-therapy-${id}" class="fa-stack hover-scale btn-add-therapy" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi nuova Terapia">
+                                            <i class="far fa-circle fa-stack-2x text-primary" style="font-weight: 400;"></i>
+                                            <i class="fas fa-plus fa-stack-1x text-primary" style="font-size: 0.8rem;"></i>
+                                        </span>`}
+                                    </td>
+                                   
                                 </tr>
                             `;
                             $tbody.append(rowHtml);
                         });
                     }
                     
+                    // update clients count
                     $allRows = $('#tableBody tr');
                     $filteredRows = $allRows;
-                    $('#totalUsersCount').text($allRows.length);
+                    if (nofound === 0) {
+                        $('#totalUsersCount').text("");
+                    } else {
+                        $('#totalUsersCount').text("( " + $allRows.length + " )");
+                    }
                     currentPage = 1;
                     recalculateLayout();
                 }
@@ -1045,12 +1080,34 @@
                 $('#tableBody').on('click', 'tr', function(e) {
                     if ($(e.target).closest('a, button, input, .dropdown').length) return;
                     const selectedPatientId = $(this).data('id');
-                    console.log('Clicked row with ID:', selectedPatientId);
+//                    console.log('Clicked row with ID:', selectedPatientId);
 
                     // Save the patient ID to localStorage
                     localStorage.setItem('selectedPatientId', selectedPatientId);
                     // Redirect to another page
-                    window.location.href = 'patient_process_3.html';
+                
+                    // Check if user clicked the plus icon stack
+                    const addAssessmentBtn = event.target.closest('.btn-add-assessment');
+                    if (addAssessmentBtn) {
+                        const id = addAssessmentBtn.getAttribute('data-id');
+                        console.log("add-assessment");
+                        window.location.href = 'lista_assessments.html';
+                    }
+
+                    // Check if user clicked the plus icon stack
+                    const addCertificateBtn = event.target.closest('.btn-add-certificate');
+                    if (addCertificateBtn) {
+                        const id = addCertificateBtn.getAttribute('data-id');
+                        console.log("add-certificate");
+                    }
+                  
+                    // Check if user clicked the plus icon stack
+                    const addTherapyBtn = event.target.closest('.btn-add-therapy');
+                    if (addTherapyBtn) {
+                        const id = addTherapyBtn.getAttribute('data-id');
+                        console.log("add-therapy");
+                    }
+                  
                 });
 
                 $('#tableSearchInput').on('keyup input', function() {
@@ -1204,7 +1261,7 @@
             } catch (err) {
                 console.error("Si è verificato un errore inatteso:", err);
                 // Optional: redirect to error page or index on critical failure
-                // window.location.replace("index.html");
+                window.location.replace("index.html");
             }
         });
 
