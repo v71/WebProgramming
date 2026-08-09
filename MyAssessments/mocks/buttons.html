@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Card Button</title>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 40px;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        /* Smaller button styling */
+        .card-btn {
+            background: #fff;
+            border: none;
+            border-radius: 6px;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            text-align: left;
+            padding: 0;
+            font-family: inherit;
+            width: 210px;
+        }
+
+        .card-green { 
+            background-color: #7ab03d; /* Darker green tone by default */
+            color: #fff; 
+            transition: background-color 0.2s ease;
+        }
+
+        /* Lighter color on hover */
+        .card-btn:hover .card-green { 
+            background-color: #95cb51; 
+        }
+
+        .card-icon {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-content {
+            padding: 12px 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #e9ecef; /* Darker tone for white area by default */
+            color: #333;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Lighter color on hover for the content area */
+        .card-btn:hover .card-content {
+            background: #fff; 
+        }
+
+        .card-value {
+            font-size: 1.0rem;
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .card-label {
+            font-size: 0.7rem;
+            color: #666;
+        }
+    
+    </style>
+
+</head>
+<body>
+
+    <!-- Interactive Button Using the Card Structure -->
+    <button class="card-btn" onclick="alert('Button clicked!')">
+        <div class="card-content">
+            <div class="card-value">275</div>
+            <div class="card-label">New Projects</div>
+        </div>
+        <div class="card-green card-icon">
+            <i class="fa-solid fa-paintbrush"></i>
+        </div>
+    </button>
+
+</body>
+</html>

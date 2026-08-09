@@ -432,6 +432,92 @@
 
 </style>
 
+    <style>
+
+       /* Reduced vertical length using smaller padding */
+        .card-btn {
+            background: #fff;
+            border: none;
+            border-radius: 6px;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            text-align: left;
+            padding: 0;
+            font-family: inherit;
+            width: 150px;
+            height: 60px
+        }
+
+        .card-green { 
+            background-color: #7ab03d; /* Darker green tone by default */
+            color: #fff; 
+            transition: background-color 0.2s ease;
+        }
+
+        /* Lighter color on hover */
+        .card-btn:hover .card-green { 
+            background-color: #95cb51; 
+        }
+
+        .card-red { 
+            background-color: #b03d3d; /* Darker red tone matching the green's saturation/lightness */
+            color: #fff; 
+            transition: background-color 0.2s ease;
+        }
+
+        .card-btn:hover .card-red { 
+            background-color: #cb5151; /* Lighter red tone on hover */
+        }
+        
+        .card-blue { 
+            background-color: #3d7ab0; /* Darker blue tone matching the previous color's saturation/lightness */
+            color: #fff; 
+            transition: background-color 0.2s ease;
+        }
+
+        .card-btn:hover .card-blue { 
+            background-color: #5195cb; /* Lighter blue tone on hover */
+        }
+
+        .card-icon {
+            width: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+
+        .card-content {
+            padding: 10px 10px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: #e9ecef; /* Darker tone for white area by default */
+            color: #333;
+            transition: background-color 0.2s ease;
+        }
+
+        /* Lighter color on hover for the content area */
+        .card-btn:hover .card-content {
+            background: #fff; 
+        }
+
+        .card-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: -2px;
+        }
+
+        .card-label {
+            font-size: 0.75rem;
+            color: #666;
+        }
+    
+    </style>
+    
 <body id="page-top">
     <!--id wrapper-->
     <div id="wrapper"> 
@@ -597,13 +683,13 @@
                         <i class="fas fa-map-marker-alt text-primary mr-1" style="font-size: 0.75em;"></i> Regione <i class="fas fa-sort sort-icon ml-1"></i></th>
             
                     <th data-sort="region" class=" text-center">
-                        <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Assessments</th>
+                        <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Lista Assessments</th>
 
                     <th data-sort="region" class=" text-center">
-                        <i class="fas fa-notes-medical text-primary mr-1" style="font-size: 0.75em;"></i> Certificati</th>
+                        <i class="fas fa-notes-medical text-primary mr-1" style="font-size: 0.75em;"></i> Lista Certificati</th>
 
                     <th data-sort="region" class=" text-center">
-                        <i class="fas fa-file-medical-alt text-primary mr-1" style="font-size: 0.75em;"></i> Terapia</th>
+                        <i class="fas fa-file-medical-alt text-primary mr-1" style="font-size: 0.75em;"></i> Lista Terapia</th>
 
                     </tr>
               </thead>
@@ -877,40 +963,81 @@
                                     <td class="align-middle text-center">${genre || '-'}</td>
                                     <td class="align-middle text-center">${region || '-'}</td>
 
-                                    <td class="align-middle text-center">
+                                    <!--<td class="align-middle text-center">
                                         ${assessmentsCount > 0 ? 
                                         `<span id="btn-add-assessment-${id}" class="fa-stack hover-scale btn-add-assessment" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Assessments">
                                             <i class="far fa-circle fa-stack-2x text-success" style="font-weight: 400;"></i>
                                             <i class="fas fa-plus fa-stack-1x text-success" style="font-size: 0.8rem;"></i>
+                                            <i class="fas fa-layer-group fa-stack-1x text-success" style="font-size: 1.5rem;"></i>
                                         </span>` :
                                         `<span id="btn-add-assessment-${id}" class="fa-stack hover-scale btn-add-assessment" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Assessments">
                                             <i class="far fa-circle fa-stack-2x text-primary" style="font-weight: 400;"></i>
                                             <i class="fas fa-plus fa-stack-1x text-primary" style="font-size: 0.8rem;"></i>
                                         </span>`}
+                                    </td>-->
+
+                                    <td class="align-middle text-center">
+                                        
+                                        <!-- Interactive Button Using the Card Structure -->
+                                        <button class="card-btn" onclick="alert('Button clicked!')">
+                                            <div class="card-content">
+
+                                                ${assessmentsCount > 0 ?
+                                                `<div class="card-value">${assessmentsCount}</div>
+                                                 <div class="card-label">Assessment</div>` :
+                                                `<div class="card-label text-center">Lista vuota</div>` }
+
+                                            </div>
+                                            <div class="card-red card-icon">
+                                                <i class="fa-solid fa-layer-group"></i>
+                                            </div>
+                                        </button>
+
                                     </td>
 
                                     <td class="align-middle text-center">
-                                        ${certificatesCount > 0 ? 
-                                        `<span id="btn-add-certificate-${id}" class="fa-stack hover-scale btn-add-certificate" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Certificato">
-                                            <i class="far fa-circle fa-stack-2x text-success" style="font-weight: 400;"></i>
-                                            <i class="fas fa-plus fa-stack-1x text-success" style="font-size: 0.8rem;"></i>
-                                        </span>` :
-                                        `<span id="btn-add-certificate-${id}" class="fa-stack hover-scale btn-add-certificate" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Certificato">
-                                            <i class="far fa-circle fa-stack-2x text-primary" style="font-weight: 400;"></i>
-                                            <i class="fas fa-plus fa-stack-1x text-primary" style="font-size: 0.8rem;"></i>
-                                        </span>`}
+                                        
+                                        <!-- Interactive Button Using the Card Structure -->
+                                        <button class="card-btn" onclick="alert('Button clicked!')">
+                                            <div class="card-content">
+                                                
+                                                <!--<div class="card-value">${certificatesCount}</div>
+                                                <div class="card-label">Certificati</div>-->
+                                            
+                                                ${certificatesCount > 0 ?
+                                                `<div class="card-value">${certificatesCount}</div>
+                                                 <div class="card-label">Assessment</div>` :
+                                                `<div class="card-label text-center">Lista vuota</div>` }
+
+                                            </div>
+                                            <div class="card-green card-icon">
+                                                <i class="fa-solid fa-notes-medical"></i>
+                                            </div>
+                                        </button>
+
                                     </td>
 
                                     <td class="align-middle text-center">
-                                        ${therapiesCount > 0 ? 
-                                        `<span id="btn-add-therapy-${id}" class="fa-stack hover-scale btn-add-therapy" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi nuova Terapia">
-                                            <i class="far fa-circle fa-stack-2x text-success" style="font-weight: 400;"></i>
-                                            <i class="fas fa-plus fa-stack-1x text-success" style="font-size: 0.8rem;"></i>
-                                        </span>` :
-                                        `<span id="btn-add-therapy-${id}" class="fa-stack hover-scale btn-add-therapy" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi nuova Terapia">
-                                            <i class="far fa-circle fa-stack-2x text-primary" style="font-weight: 400;"></i>
-                                            <i class="fas fa-plus fa-stack-1x text-primary" style="font-size: 0.8rem;"></i>
-                                        </span>`}
+                                              
+                                        <!-- Interactive Button Using the Card Structure -->
+                                        <button class="card-btn" onclick="alert('Button clicked!')">
+                                            <div class="card-content">
+
+                                                <!--<div class="card-value">${therapiesCount}</div>
+                                                <div class="card-label">Terapie</div>-->
+
+                                                ${therapiesCount > 0 ?
+                                                `<div class="card-value">${therapiesCount}</div>
+                                                 <div class="card-label">Assessment</div>` :
+                                                `<div class="card-label text-center">Lista vuota</div>` }
+
+
+                                            </div>
+                                            <div class="card-blue card-icon">
+                                                <i class="fa-solid fa-file-medical-alt"></i>
+                                            </div>
+                                        </button>
+
                                     </td>
                                    
                                 </tr>
