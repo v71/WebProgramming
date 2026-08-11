@@ -687,15 +687,6 @@
 
 <style>
 
-    @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
 .page-fade-in {
     animation: fadeIn 0.6s ease-out forwards;
 }
@@ -817,7 +808,7 @@
                 </nav>
 
 
-                <div class="container-fluid page-fade-in">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
                             
@@ -826,7 +817,7 @@
 
 
 
-<!-- FIRST SECTION WITH RIGHT ACTION PANEL -->
+<!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
 <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
 
     <h2 class="sr-only">muted h2</h2>
@@ -841,99 +832,115 @@
 
     <!-- Locked body min-height to match fully loaded content -->
     <div class="card-body px-3 py-2 d-flex overflow-hidden" style="min-width: 0; min-height: 105px;">
-        <div class="row align-items-center w-100 m-0" style="min-width: 0; gap: 0;">
+        <!-- Changed outer container to be row-reverse for mobile stacking preferences, or keep as row -->
+        <div class="d-flex flex-row align-items-center w-100 mb-2" style="min-width: 0; gap: 12px;">
 
-            <!-- LEFT SIDE: Patient Info (Takes up remaining space) -->
-            <div class="col-lg-8 col-md-7 col-12 p-0 d-flex flex-column flex-md-row align-items-center align-items-md-center mb-2 mb-md-0" style="min-width: 0; gap: 12px;">
-
-                <!-- Compacted Avatar (80px) -->
-                <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
-                    <div id="avatarContainer2" 
-                        class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
-                        style="border: 1px solid #0000FF !important;"
-                        role="img" 
-                        aria-label="Contenitore foto profilo">
-                        <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
-                        <img id="profileAvatar2" 
-                            src="assets/sb-admin-2/img/undraw_profile.svg"
-                            class="img-fluid rounded-circle d-none" 
-                            width="80" 
-                            height="80" 
-                            alt="Foto profilo"
-                            style="object-fit: cover;">
-                    </div>
+            <!-- Compacted Avatar (80px as defined) -->
+            <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
+                <div id="avatarContainer2" 
+                    class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                    style="border: 1px solid #0000FF !important;"
+                    role="img" 
+                    aria-label="Contenitore foto profilo">
+                    <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
+                    <img id="profileAvatar2" 
+                        src="assets/sb-admin-2/img/undraw_profile.svg"
+                        class="img-fluid rounded-circle d-none" 
+                        width="80" 
+                        height="80" 
+                        alt="Foto profilo"
+                        style="object-fit: cover;">
                 </div>
-
-                <!-- Text Content Wrapper with exact vertical spacing reservation -->
-                <div class="d-flex flex-column flex-grow-1 overflow-hidden text-center text-md-left" style="min-width: 0; width: 100%; gap: 6px;">
-                    <!-- Patient Full Name -->
-                    <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
-                        <span class="sr-only">Loading...</span>
-                        <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
-                    </h5>
-
-                    <!-- Badges Stacked Underneath -->
-                    <div class="d-flex align-items-center justify-content-center justify-content-md-start flex-wrap" style="min-width: 0; min-height: 27px;">
-                        <span id="patientMinorOrMajor" 
-                            class="badge d-inline-flex align-items-center justify-content-center text-truncate" 
-                            style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
-                            <span class="sr-only">Loading status...</span>
-                            <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
-                        </span>
-                    </div>
-
-                    <!-- Subscription Date -->
-                    <div class="text-truncate" style="min-width: 0; min-height: 18px;">
-                        <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
-                            <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
-                            <span id="patientSubDate"> 
-                                <span class="sr-only">Loading date...</span>
-                                <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
-                            </span>  
-                        </small>
-                    </div>
-                </div>
-
             </div>
 
-    <!-- RIGHT SIDE: Panel with Outline Button (Vertically Centered) -->
-    <div class="col-lg-4 col-md-5 col-12 p-0 pl-md-3 d-flex justify-content-center justify-content-md-end align-items-center" style="min-width: 0;">
-        <button id="btnAddAssessmentMain" class="btn btn-outline-primary px-3 py-2 d-flex align-items-center" style="border-radius: 8px; font-weight: 600; font-size: 0.9rem; gap: 8px; position: static;">
-            <span class="fa-stack" style="font-size: 0.75rem;">
-                <i class="far fa-circle fa-stack-2x" style="font-weight: 400;"></i>
-                <i class="fas fa-plus fa-stack-1x"></i>
-            </span>
-            <span>Aggiungi Nuovo Assessment</span>
-        </button>
-    </div>
+            <!-- Text Content Wrapper (Centered text removed, now left aligned next to avatar) -->
+            <div class="d-flex flex-column overflow-hidden text-left" style="min-width: 0; gap: 6px;">
+                <!-- Patient Full Name -->
+                <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
+                    <span class="sr-only">Loading...</span>
+                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
+                </h5>
+
+                <!-- Badges Stacked Underneath -->
+                <div class="d-flex align-items-center justify-content-start flex-wrap" style="min-width: 0; min-height: 27px;">
+                    <span id="patientMinorOrMajor" 
+                        class="badge d-inline-flex align-items-center justify-content-center text-truncate" 
+                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #858796; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
+                        <span class="sr-only">Loading status...</span>
+                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+                <!-- Subscription Date -->
+                <div class="text-truncate" style="min-width: 0; min-height: 18px;">
+                    <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
+                        <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
+                        <span id="patientSubDate"> 
+                            <span class="sr-only">Loading date...</span>
+                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
+                        </span>  
+                    </small>
+                </div>
+            </div>
+
+            <!-- Added custom negative margin-top to shift it upwards -->
+            <div class="d-flex ml-auto pl-2 align-items-center" style="margin-top: -20px;">
+                <a href="#" class="btn btn-primary btn-icon-split shadow-sm" style="border-radius: 10px;">
+                    <span class="icon text-white">
+                        <i class="fas fa-circle-plus"></i>
+                    </span>
+                    <span class="text px-3">Aggiungi Nuovo Assessment</span>
+                </a>
+            </div>
 
         </div>
     </div>
 </div>
 
 
+
+
     <!-- SECOND SECTION (Optimized with a fixed max-height / calculation to prevent clipping the first section) -->
-<div id="tableCardContainer" class="card shadow-sm d-flex flex-column" style="height: calc(80% - 41px); border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+    <div id="tableCardContainer" class="card shadow-sm d-flex flex-column" style="height: calc(80% - 41px); border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
     
-    <!-- Card Header with Title & Search Bar -->
-    <div class="card-header bg-white d-flex align-items-center justify-content-between py-2 flex-shrink-0" style="border-bottom: none; min-height: 55px;">
-        <div class="d-flex align-items-center">
-            <i class="fas fa-users text-primary mr-2"></i>
-            <h6 class="m-0 font-weight-bold text-gray-800">Lista Assessments <span id="totalUsersCount">
+    <!-- Card Header with Title & Search Bar (Stacks on smaller screens) -->
+<div class="card-header bg-white d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between py-2 flex-shrink-0" style="border-bottom: none; min-height: 55px; gap: 10px;">
+    
+    <!-- Title Section -->
+    <div class="d-flex align-items-center">
+        <i class="fas fa-users text-primary mr-2"></i>
+        <h6 class="m-0 font-weight-bold text-gray-800">
+            Lista Assessments 
+            <span id="totalUsersCount">
                 <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.85rem;"></i>
-            </span></h6>
-        </div>
+            </span>
+        </h6>
+    </div>
+
+  <!-- Right-side controls container: stacks vertically on small screens, horizontal on medium and up -->
+    <div class="d-flex flex-column flex-md-row align-items-stretch align-items-md-center" style="gap: 10px;">
         
-        <!-- Search Input constrained to 250px -->
-        <div class="input-group input-group-sm search-box" style="max-width: 250px;">
-            <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small" placeholder="Cerca Pazienti..." aria-label="Search">
-            <div class="input-group-append">
-                <button class="btn btn-primary" type="button" disabled>
+        <!-- Search Input with a 1px solid blue border -->
+        <div class="input-group input-group-sm search-box w-100" style="max-width: 250px; border: 1px solid #dddfeb; border-radius: 0.45rem; overflow: hidden; height: 31px;">
+            <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small h-100" placeholder="Cerca Pazienti..." aria-label="Search">
+            <div class="input-group-append h-100">
+                <button class="btn btn-primary h-100 py-0 d-flex align-items-center justify-content-center" type="button" disabled style="width: 32px;">
                     <i class="fas fa-search fa-sm"></i>
                 </button>
             </div>
         </div>
+
+        <!-- New Button next to Search Input matched to height 31px -->
+        <!--<button id="btnAddAssessmentMain" class="btn btn-outline-primary btn-sm px-3 d-inline-flex align-items-center justify-content-center flex-shrink-0" style="height: 31px; border-radius: 6px; font-weight: 600; font-size: 0.8rem; gap: 6px; border-width: 1px; box-shadow: none !important;">
+            <span class="fa-stack" style="font-size: 0.6rem;">
+                <i class="fas fa-circle-plus fa-stack-2x"></i>
+            </span>
+            <span>Aggiungi Nuovo Assessment</span>
+        </button>-->
+
     </div>
+
+</div>
 
     <!-- Card Body configured to flex and restrict height overflow -->
     <div class="card-body p-3 d-flex flex-column flex-grow-1 overflow-hidden">
@@ -947,28 +954,31 @@
         </div>
                  
         <!-- Responsive Table Wrapper (Scrolls internally only if data exceeds height) -->
-        <div class="table-responsive flex-grow-1" id="tableResponsiveContainer" style="display: none; overflow-y: auto; min-height: 0;">
+        <div class="in table-responsive flex-grow-1" id="tableResponsiveContainer" style="display: none; overflow-y: auto; min-height: 0;">
             <table class="table table-bordered text-nowrap mb-0" id="userTable" width="100%" cellspacing="0">
 
-                <thead>
+               <thead>
                     <tr>
                         <th data-sort="id" class="text-center">
                             <span class="fas fa-hashtag mr-1" style="font-size: 0.75em; color: #4e73df;"></span>
                         </th>
-                        <th data-sort="name" class="sortable text-center">
+                        <th data-sort="titolo" class="sortable text-center">
                             <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Titolo Assessment <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
                         <th data-sort="consent_date" class="sortable text-center">
                             <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Emissione <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
-                        <th data-sort="age" class="sortable text-center">
+                        <!-- CORRECTION: changed data-sort from 'age' to 'ente' -->
+                        <th data-sort="ente" class="sortable text-center">
                             <i class="fas fa-shield-alt text-primary mr-1" style="font-size: 0.75em;"></i> Ente di Emissione <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
-                        <th data-sort="genre" class="sortable text-center">
+                        <!-- CORRECTION: changed data-sort from 'genre' to 'eta' -->
+                        <th data-sort="eta" class="sortable text-center">
                             <i class="fas fa-clock text-primary mr-1" style="font-size: 0.75em;"></i> Età Documento <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
                     </tr>
                 </thead>
+
                 <tbody id="tableBody">
                     <!-- Inject data here -->            
                 </tbody>
@@ -1203,302 +1213,335 @@
 
         </script>
 
-        <!-- Table Pagination & Filtering Script -->
+    <!-- Table Pagination & Filtering Script -->
     <script>
         
         // Global function to initialize or refresh the table with dynamic data
         window.initTableWithData = function(dataSource) {
                 
-                const $tableContainer = $('#tableResponsiveContainer');
-                const $cardBody = $('#tableCardContainer .card-body');
-                const $spinner = $('#loadingSpinner');
-                let $allRows = $('#tableBody tr');
+            const $tableContainer = $('#tableResponsiveContainer');
+            const $cardBody = $('#tableCardContainer .card-body');
+            const $spinner = $('#loadingSpinner');
+            let $allRows = $('#tableBody tr');
 
-                let $filteredRows = $allRows;
-                let rowsPerPage = 5;
-                let totalPages = 1;
-                let currentPage = 1;
+            let $filteredRows = $allRows;
+            let rowsPerPage = 5;
+            let totalPages = 1;
+            let currentPage = 1;
 
-                // ---------------------------------------------------------------------------------
+            // ---------------------------------------------------------------------------------
+            
+            function populateTable(data) {
                 
-                function populateTable(data) {
-                    
-                    const $tbody = $('#tableBody');
-                    $tbody.empty();
-                    
-                    let nofound=1;
-                    if (!data || data.length === 0) {
-                        nofound=0;
-                        $tbody.append(`
-                            <tr class="no-data-row">
-                                <td colspan="6" class="text-center py-4 text-muted">
-                                    Nessun assessment trovato.
-                                </td>
-                            </tr>
-                        `);
-                    } else {
-                        data.forEach((item, index) => {
-                            const id = item.id;
-
-                            const titolo = item.title;
-                            const data_emissione = item.italian_date;
-                            const ente_emettitore= item.entityName;
-                            const age=calculateAgeWithMonths(extractDate(item.timestamp));
-                            let ageStr = "";
-                            if (age.years === 0 && age.months === 0) {
+                const $tbody = $('#tableBody');
+                $tbody.empty();
+                
+                let nofound=1;
+                if (!data || data.length === 0) {
+                    nofound=0;
+                    $tbody.append(`
+                        <tr class="no-data-row">
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                Nessun assessment trovato.
+                            </td>
+                        </tr>
+                    `);
+                } else {
+                    data.forEach((item, index) => {
+                        const id = index;
+                        const titolo = item.title;
+                        const data_emissione = item.italian_date;
+                        const ente_emettitore= item.entityName;
+                        // qui il valore 'true' inverte la data
+                        const age=calculateAgeWithMonths(data_emissione,true);
+                        let ageStr = "";
+                        if (age.years === 0 && age.months === 0) {
+                            if (age.days === 0) {
                                 ageStr = "Oggi";
-                            } else if (age.months !== 0) {
-                                if (age.years !== 0) {
-                                    ageStr = age.years + " Anni e " + age.months + " mesi";
-                                } else {
-                                    ageStr = age.months + " mesi";
-                                }
+                            } else if (age.days === 1) {
+                                ageStr = "1 giorno";
                             } else {
-                                ageStr = age.years + " Anni";
+                                ageStr = age.days + " giorni";
                             }
+                        } else if (age.months !== 0) {
+                            if (age.years !== 0) {
+                                ageStr = age.years + " Anni e " + age.months + " mesi";
+                            } else {
+                                ageStr = age.months + " mesi";
+                            }
+                        } else {
+                            ageStr = age.years + " Anni";
+                        }
 
-                   //         console.log(titolo);
-                   //         console.log(data_emissione);
-                   //         console.log(ente_emettitore);
-                   //         console.log(ageStr);
+                    //    console.log(age.years);
+                    //    console.log(age.months);
+                    //    console.log(age.days);
+                    //    console.log(id);
+                    //    console.log(titolo);
+                    //    console.log(data_emissione);
+                    //    console.log(ente_emettitore);
+                    //    console.log(ageStr);
                             
-                            const rowHtml = `
-                                <tr data-id="${id}">
-                                    <td class="align-middle text-center">${index + 1}</td>
-                                    <td class="font-weight-bold align-middle text-center">${titolo || '-'}</td>
-                                    <td class="align-middle text-center">${data_emissione || '-'}</td>
-                                    <td class="align-middle text-center">${ente_emettitore || '-'}</td>
-                                    <td class="align-middle text-center">${ageStr || '-'}</td>
-                                </tr>
-                            `;
-                            $tbody.append(rowHtml);
-                        });
-                        
-                    }
-
-                    // update assessment count
-                    $allRows = $('#tableBody tr');
-                    $filteredRows = $allRows;
-                    if (nofound === 0) {
-                        $('#totalUsersCount').text("");
-                    } else {
-                        $('#totalUsersCount').text("( " + $allRows.length + " )");
-                    }
-                    currentPage = 1;
-                    recalculateLayout();
+                        const rowHtml = `
+                            <tr data-id="${id}">
+                                <td class="align-middle text-center">${index + 1}</td>
+                                <td class="font-weight-bold align-middle text-center">${titolo || '-'}</td>
+                                <td class="align-middle text-center">${data_emissione || '-'}</td>
+                                <td class="align-middle text-center">${ente_emettitore || '-'}</td>
+                                <td class="align-middle text-center">${ageStr || '-'}</td>
+                            </tr>
+                        `;
+                        $tbody.append(rowHtml);
+                    });
                     
                 }
-                // ---------------------------------------------------------------------------------
 
-                function calculateRowsPerPage() {
-                    $allRows.hide();
-                    $allRows.first().show();
-                    const rowHeight = $allRows.first().outerHeight() || 53;
-                    const $cardContainer = $('#tableCardContainer');
-                    const cardTopOffset = $cardContainer.offset().top || 0;
-                    const windowHeight = $(window).height() || 0;
-
-                    const cardHeaderHeight = $('#tableCardContainer .card-header').outerHeight() || 55;
-                    const theadHeight = $('#userTable thead').outerHeight() || 40;
-                    const paginationFooterHeight = $('#tableCardContainer .row.align-items-center').outerHeight() || 50;
-                    
-                    const bottomMarginBuffer = 130;
-                    const cardBodyPadding = 30;
-                    const tableBorderBuffer = 8;
-
-                    const occupiedSpace = cardTopOffset + cardHeaderHeight + theadHeight + paginationFooterHeight + cardBodyPadding + bottomMarginBuffer + tableBorderBuffer;
-                    const availableTbodySpace = windowHeight - occupiedSpace;
-                    const calculatedCount = Math.floor(availableTbodySpace / rowHeight);
-
-                    return Math.max(1, calculatedCount);
+                // update assessment count
+                $allRows = $('#tableBody tr');
+                $filteredRows = $allRows;
+                if (nofound === 0) {
+                    $('#totalUsersCount').text("");
+                } else {
+                    $('#totalUsersCount').text("( " + $allRows.length + " )");
                 }
+                currentPage = 1;
+                recalculateLayout();
+                
+            }
 
-                // ---------------------------------------------------------------------------------
+            // ---------------------------------------------------------------------------------
 
-                function displayPage(page, animate = true) {
-                    currentPage = page;
-                    const start = (page - 1) * rowsPerPage;
-                    const end = start + rowsPerPage;
+            function calculateRowsPerPage() {
+                $allRows.hide();
+                $allRows.first().show();
+                const rowHeight = $allRows.first().outerHeight() || 53;
+                const $cardContainer = $('#tableCardContainer');
+                const cardTopOffset = $cardContainer.offset().top || 0;
+                const windowHeight = $(window).height() || 0;
 
-                    if (animate) {
-                        $tableContainer.addClass('table-fade-out');
-                        setTimeout(function() {
-                            $allRows.hide();
-                            $filteredRows.slice(start, end).show();
-                            updateInfoAndPagination(start, end);
-                            $tableContainer.removeClass('table-fade-out');
-                        }, 200);
-                    } else {
+                const cardHeaderHeight = $('#tableCardContainer .card-header').outerHeight() || 55;
+                const theadHeight = $('#userTable thead').outerHeight() || 40;
+                const paginationFooterHeight = $('#tableCardContainer .row.align-items-center').outerHeight() || 50;
+                
+                const bottomMarginBuffer = 130;
+                const cardBodyPadding = 30;
+                const tableBorderBuffer = 8;
+
+                const occupiedSpace = cardTopOffset + cardHeaderHeight + theadHeight + paginationFooterHeight + cardBodyPadding + bottomMarginBuffer + tableBorderBuffer;
+                const availableTbodySpace = windowHeight - occupiedSpace;
+                const calculatedCount = Math.floor(availableTbodySpace / rowHeight);
+
+                return Math.max(1, calculatedCount);
+            }
+
+            // ---------------------------------------------------------------------------------
+
+            function displayPage(page, animate = true) {
+                currentPage = page;
+                const start = (page - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+
+                if (animate) {
+                    $tableContainer.addClass('table-fade-out');
+                    setTimeout(function() {
                         $allRows.hide();
                         $filteredRows.slice(start, end).show();
                         updateInfoAndPagination(start, end);
-                    }
-                }
-
-                // ---------------------------------------------------------------------------------
-            
-                function updateHeaderIcons(activeKey, order) {
-                    $('th.sortable').each(function() {
-                        const $th = $(this);
-                        const $sortIcon = $th.find('i.sort-icon');
-                        if ($th.data('sort') === activeKey) {
-                            $sortIcon.attr('class', order === 'asc' ? 'fas fa-sort-up sort-icon ml-1' : 'fas fa-sort-down sort-icon ml-1');
-                        } else {
-                            $sortIcon.attr('class', 'fas fa-sort sort-icon ml-1 text-muted');
-                        }
-                    });
-                }
-
-                // ---------------------------------------------------------------------------------
-
-                function updateInfoAndPagination(start, end) {
-                    const totalFiltered = $filteredRows.length;
-                    const showingStart = totalFiltered === 0 ? 0 : start + 1;
-                    const showingEnd = Math.min(end, totalFiltered);
-                    $('#paginationInfo').text(`Da ${showingStart} a ${showingEnd} di ${totalFiltered} Pazienti`);
-                    renderPagination();
-                }
-
-                // ---------------------------------------------------------------------------------
-
-                function renderPagination() {
-                    const totalFiltered = $filteredRows.length;
-                    totalPages = Math.ceil(totalFiltered / rowsPerPage) || 1;
-                    let paginationHTML = '';
-
-                    const prevDisabled = currentPage === 1 ? 'disabled' : '';
-                    paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Precedente</a></li>`;
-
-                    for (let i = 1; i <= totalPages; i++) {
-                        const activeClass = i === currentPage ? 'active' : '';
-                        paginationHTML += `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
-                    }
-
-                    const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
-                    paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Successivo</a></li>`;
-
-                    $('#paginationControls').html(paginationHTML);
-                }
-
-                // ---------------------------------------------------------------------------------
-
-                function recalculateLayout() {
-                    rowsPerPage = calculateRowsPerPage();
-                    const totalFiltered = $filteredRows.length;
-                    totalPages = Math.ceil(totalFiltered / rowsPerPage) || 1;
-                    if (currentPage > totalPages) currentPage = totalPages;
-                    displayPage(currentPage, false);
-                }
-
-                // ---------------------------------------------------------------------------------
-
-                let currentSortColumn = 'name';
-                let currentSortOrder = 'asc';
-
-                function sortDataAndPopulate(data, key, forceOrder = null) {
-                    if (forceOrder) {
-                        currentSortColumn = key;
-                        currentSortOrder = forceOrder;
-                    } else if (currentSortColumn === key) {
-                        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
-                    } else {
-                        currentSortColumn = key;
-                        currentSortOrder = 'asc';
-                    }
-
-                    data.sort((a, b) => {
-                        let valA = a[key] ?? '';
-                        let valB = b[key] ?? '';
-
-                        const numA = parseFloat(valA);
-                        const numB = parseFloat(valB);
-                        if (!isNaN(numA) && !isNaN(numB)) {
-                            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
-                        }
-
-                        const dateA = Date.parse(valA);
-                        const dateB = Date.parse(valB);
-                        if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
-                            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-                        }
-
-                        return currentSortOrder === 'asc' 
-                            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
-                            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
-                    });
-
-                    populateTable(data);
-                    updateHeaderIcons(key, currentSortOrder);
-                }
-
-                // ---------------------------------------------------------------------------------
-                // Event listeners
-
-                $('#tableBody').on('click', 'tr', function(e) {
-                    if ($(e.target).closest('a, button, input, .dropdown').length) return;
-                    const selectedPatientId = $(this).data('id');
-                    console.log('Clicked row with ID:', selectedPatientId);
-
-                    // Save the patient ID to localStorage
-                    localStorage.setItem('selectedPatientId', selectedPatientId);
-                    // Redirect to another page
-                    //window.location.href = 'patient_process_3.html';
-                });
-
-                $('#tableSearchInput').on('keyup input', function() {
-                    const searchTerm = $(this).val().toLowerCase().trim();
-                    if (searchTerm === '') {
-                        $filteredRows = $allRows;
-                    } else {
-                        $filteredRows = $allRows.filter(function() {
-                            return $(this).text().toLowerCase().indexOf(searchTerm) > -1;
-                        });
-                    }
-                    currentPage = 1;
-                    recalculateLayout();
-                });
-
-                $(document).on('click', '#paginationControls a', function(e) {
-                    e.preventDefault();
-                    const targetPage = parseInt($(this).attr('data-page'));
-                    if (targetPage >= 1 && targetPage <= totalPages && targetPage !== currentPage) {
-                        displayPage(targetPage);
-                    }
-                });
-
-                let resizeTimer;
-                $(window).on('resize', function() {
-                    clearTimeout(resizeTimer);
-                    resizeTimer = setTimeout(recalculateLayout, 150);
-                });
-
-                $(document).on('click', 'th.sortable', function() {
-                    const sortKey = $(this).data('sort');
-                    sortDataAndPopulate(dataSource, sortKey);
-                });
-
-                // Initial Load
-                if (dataSource && dataSource.length > 0) {
-                    sortDataAndPopulate(dataSource, 'name', 'asc');
+                        $tableContainer.removeClass('table-fade-out');
+                    }, 200);
                 } else {
-                    populateTable([]);
+                    $allRows.hide();
+                    $filteredRows.slice(start, end).show();
+                    updateInfoAndPagination(start, end);
                 }
-
-                $tableContainer.css({ 'visibility': 'hidden', 'display': 'block', 'opacity': '0' });
-                $spinner.hide();
-                $tableContainer.css({ 'visibility': 'visible', 'opacity': '1', 'transition': 'opacity 0.2s ease-in-out' });
-                recalculateLayout();
-                $tableContainer.addClass('table-ready');
-            };
+            }
 
             // ---------------------------------------------------------------------------------
-            // Automatically trigger if window.assessments is already populated
+        
+            function updateHeaderIcons(activeKey, order) {
+                $('th.sortable').each(function() {
+                    const $th = $(this);
+                    const $sortIcon = $th.find('i.sort-icon');
+                    if ($th.data('sort') === activeKey) {
+                        $sortIcon.attr('class', order === 'asc' ? 'fas fa-sort-up sort-icon ml-1' : 'fas fa-sort-down sort-icon ml-1');
+                    } else {
+                        $sortIcon.attr('class', 'fas fa-sort sort-icon ml-1 text-muted');
+                    }
+                });
+            }
 
-            $(document).ready(function() {
-                if (window.assessments && window.assessments.length > 0) {
-                    window.initTableWithData(window.assessments);
+            // ---------------------------------------------------------------------------------
+
+            function updateInfoAndPagination(start, end) {
+                const totalFiltered = $filteredRows.length;
+                const showingStart = totalFiltered === 0 ? 0 : start + 1;
+                const showingEnd = Math.min(end, totalFiltered);
+                $('#paginationInfo').text(`Da ${showingStart} a ${showingEnd} di ${totalFiltered} Documenti`);
+                renderPagination();
+            }
+
+            // ---------------------------------------------------------------------------------
+
+            function renderPagination() {
+                const totalFiltered = $filteredRows.length;
+                totalPages = Math.ceil(totalFiltered / rowsPerPage) || 1;
+                let paginationHTML = '';
+
+                const prevDisabled = currentPage === 1 ? 'disabled' : '';
+                paginationHTML += `<li class="page-item ${prevDisabled}"><a class="page-link" href="#" data-page="${currentPage - 1}">Precedente</a></li>`;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const activeClass = i === currentPage ? 'active' : '';
+                    paginationHTML += `<li class="page-item ${activeClass}"><a class="page-link" href="#" data-page="${i}">${i}</a></li>`;
+                }
+
+                const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+                paginationHTML += `<li class="page-item ${nextDisabled}"><a class="page-link" href="#" data-page="${currentPage + 1}">Successivo</a></li>`;
+
+                $('#paginationControls').html(paginationHTML);
+            }
+
+            // ---------------------------------------------------------------------------------
+
+            function recalculateLayout() {
+                rowsPerPage = calculateRowsPerPage();
+                const totalFiltered = $filteredRows.length;
+                totalPages = Math.ceil(totalFiltered / rowsPerPage) || 1;
+                if (currentPage > totalPages) currentPage = totalPages;
+                displayPage(currentPage, false);
+            }
+
+            // ---------------------------------------------------------------------------------
+
+            let currentSortColumn = 'name';
+            let currentSortOrder = 'asc';
+
+            function sortDataAndPopulate(data, key, forceOrder = null) {
+                if (forceOrder) {
+                    currentSortColumn = key;
+                    currentSortOrder = forceOrder;
+                } else if (currentSortColumn === key) {
+                    currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+                } else {
+                    currentSortColumn = key;
+                    currentSortOrder = 'asc';
+                }
+
+                data.sort((a, b) => {
+                    let valA = a[key] ?? '';
+                    let valB = b[key] ?? '';
+
+                    const numA = parseFloat(valA);
+                    const numB = parseFloat(valB);
+                    if (!isNaN(numA) && !isNaN(numB)) {
+                        return currentSortOrder === 'asc' ? numA - numB : numB - numA;
+                    }
+
+                    const dateA = Date.parse(valA);
+                    const dateB = Date.parse(valB);
+                    if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
+                        return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+                    }
+
+                    return currentSortOrder === 'asc' 
+                        ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
+                        : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
+                });
+
+                populateTable(data);
+                updateHeaderIcons(key, currentSortOrder);
+            }
+
+            // ---------------------------------------------------------------------------------
+            // Event listeners
+
+            $('#tableBody').on('click', 'tr', function(e) {
+                if ($(e.target).closest('a, button, input, .dropdown').length) return;
+                
+                const selectedAssessmentIndex = $(this).data('id');
+                console.log('Clicked row index:', selectedAssessmentIndex);
+
+                const activePatientId = getValidPatientId();
+                console.log('Patient Id:', activePatientId);
+
+                // Save both the patient ID and the specific assessment index to localStorage
+                
+                // Save both the patient ID and the specific assessment index to localStorage
+                if (activePatientId !== undefined && selectedAssessmentIndex !== undefined) {
+                    localStorage.setItem('selectedPatientId', patientId);
+                    localStorage.setItem('selectedAssessmentId', selectedAssessmentIndex);
+                    
+                    // Optional: Redirect to the editing or detail page
+                    // window.location.href = 'edit_assessment.html';
+                }
+                    
+            });
+
+            $(document).on('click', '#btnAddAssessmentMain', function(e) {
+                e.preventDefault();
+                console.log('Aggiungi Nuovo Assessment button clicked via .on()!');
+
+                const activePatientId = getValidPatientId();
+                console.log('Patient Id:', activePatientId);
+
+                // Add your redirection or action logic here
+                window.location.href = 'assessment_add_new.html';
+            });
+
+            $('#tableSearchInput').on('keyup input', function() {
+                const searchTerm = $(this).val().toLowerCase().trim();
+                if (searchTerm === '') {
+                    $filteredRows = $allRows;
+                } else {
+                    $filteredRows = $allRows.filter(function() {
+                        return $(this).text().toLowerCase().indexOf(searchTerm) > -1;
+                    });
+                }
+                currentPage = 1;
+                recalculateLayout();
+            });
+
+            $(document).on('click', '#paginationControls a', function(e) {
+                e.preventDefault();
+                const targetPage = parseInt($(this).attr('data-page'));
+                if (targetPage >= 1 && targetPage <= totalPages && targetPage !== currentPage) {
+                    displayPage(targetPage);
                 }
             });
+
+            let resizeTimer;
+            $(window).on('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(recalculateLayout, 150);
+            });
+
+            $(document).on('click', 'th.sortable', function() {
+                const sortKey = $(this).data('sort');
+                sortDataAndPopulate(dataSource, sortKey);
+            });
+
+            // Initial Load
+            if (dataSource && dataSource.length > 0) {
+                sortDataAndPopulate(dataSource, 'name', 'asc');
+            } else {
+                populateTable([]);
+            }
+
+            $tableContainer.css({ 'visibility': 'hidden', 'display': 'block', 'opacity': '0' });
+            $spinner.hide();
+            $tableContainer.css({ 'visibility': 'visible', 'opacity': '1', 'transition': 'opacity 0.2s ease-in-out' });
+            recalculateLayout();
+            $tableContainer.addClass('table-ready');
+        };
+
+        // ---------------------------------------------------------------------------------
+        // Automatically trigger if window.assessments is already populated
+
+        $(document).ready(function() {
+            if (window.assessments && window.assessments.length > 0) {
+                window.initTableWithData(window.assessments);
+            }
+        });
             
     </script>
 
@@ -1546,19 +1589,9 @@
         
     </script>
 
-
         <!-- Main -->
         <script type="module">
 
-             // ✅ Import string utils
-            /*
-             import {
-                formatName,
-                convertToItalianFormat,
-                extractDate,
-                calculateAgeWithMonths
-            } from "./assets/js/string_utils.js";
-            */
             // --- Event Listeners 
             document.addEventListener("DOMContentLoaded", async () => {
                 
@@ -1653,25 +1686,7 @@
                     const minor_or_major = (age.years >= 18) ? 1 : 0;
                     const subdate = patientData.consent_date;
                     const subDateItalianFormat = subdate ? new Date(subdate).toLocaleDateString('it-IT') : '';
-                    
   
-//                    const activityData = patientData.activity;
-//                    console.log("Activity JSON data:", activityData)
-                    // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
-//                    let currentActivity = patientData?.activity 
-//                        ? JSON.parse(JSON.stringify(patientData.activity)) 
-//                        : { Assessments: [], Certificates: [], Therapies: [] };
-//                    if (!Array.isArray(currentActivity.Assessments)) {
-//                        currentActivity.Assessments = [];
-//                    }
-                    // Extract and log the Assessments array
-//                    const assessmentsArray = currentActivity.Assessments;
-//                    console.log("Assessments data array:", assessmentsArray);
-//                    // Example: Loop through each assessment to inspect its data
-//                    assessmentsArray.forEach((assessment, index) => {
-//                        console.log(`Assessment [${index}]:`, assessment);
-//                    });
-                    
                 //    console.log(name);
                 //    console.log(surname);
                 //    console.log(genre);

@@ -109,7 +109,7 @@
                   }
       // -----------------------------------------------------------------
       // calcola anni e mesi trascorsi in formato ISO
-
+/*
      export function calculateAgeWithMonths(birthDateString) {
                 // parsing formato ISO: YYYY-MM-DD
 //                const parts = birthDateString.split("-");
@@ -131,7 +131,76 @@
                 }
                 return { years: ageYears, months: ageMonths };
             }
+*/
+                  /*
+      export function calculateAgeWithMonths(birthDateString,) {
+          // parsing formato ISO: YYYY-MM-DD o DD/MM/YYYY
+          const parts = birthDateString.includes("-") ? birthDateString.split("-") : birthDateString.split("/");
+          if (parts.length !== 3) return null;
+          const year  = parseInt(parts[0], 10);
+          const month = parseInt(parts[1], 10) - 1;
+          const day   = parseInt(parts[2], 10);
+          const birthDate = new Date(year, month, day);
+          const today = new Date();
+          let ageYears = today.getFullYear() - birthDate.getFullYear();
+          let ageMonths = today.getMonth() - birthDate.getMonth();
+          let ageDays = today.getDate() - birthDate.getDate();
+          // If current day is less than birth day, borrow days from the previous month
+          if (ageDays < 0) {
+              ageMonths--;
+              // Get the number of days in the previous month relative to today
+              const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+              ageDays += previousMonth.getDate();
+          }
+          // If current month is less than birth month, borrow months from the previous year
+          if (ageMonths < 0) {
+              ageYears--;
+              ageMonths += 12;
+          }
+          return { years: ageYears, months: ageMonths, days: ageDays };
+      }
+*/
 
+    export function calculateAgeWithMonths(birthDateString, isReverse = false) {
+          // parsing formato ISO: YYYY-MM-DD o DD/MM/YYYY (o DD-MM-YYYY / YYYY/MM/DD se reverse)
+          const parts = birthDateString.includes("-") ? birthDateString.split("-") : birthDateString.split("/");
+          if (parts.length !== 3) return null;
+
+          let year, month, day;
+          if (isReverse) {
+              // Assuming reverse order like DD-MM-YYYY or DD/MM/YYYY when parts[0] is day
+              day = parseInt(parts[0], 10);
+              month = parseInt(parts[1], 10) - 1;
+              year = parseInt(parts[2], 10);
+          } else {
+              // Standard ISO order: YYYY-MM-DD
+              year = parseInt(parts[0], 10);
+              month = parseInt(parts[1], 10) - 1;
+              day = parseInt(parts[2], 10);
+          }
+
+          const birthDate = new Date(year, month, day);
+          const today = new Date();
+          let ageYears = today.getFullYear() - birthDate.getFullYear();
+          let ageMonths = today.getMonth() - birthDate.getMonth();
+          let ageDays = today.getDate() - birthDate.getDate();
+
+          // If current day is less than birth day, borrow days from the previous month
+          if (ageDays < 0) {
+              ageMonths--;
+              // Get the number of days in the previous month relative to today
+              const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+              ageDays += previousMonth.getDate();
+          }
+
+          // If current month is less than birth month, borrow months from the previous year
+          if (ageMonths < 0) {
+              ageYears--;
+              ageMonths += 12;
+          }
+
+          return { years: ageYears, months: ageMonths, days: ageDays };
+    }
 
     // Computes the absolute number of calendar days between two dates.
     export function getDaysBetween(date1, date2) {

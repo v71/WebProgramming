@@ -518,6 +518,14 @@
     
     </style>
     
+    <style>
+    
+        .page-fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+    </style>
+
 <body id="page-top">
     <!--id wrapper-->
     <div id="wrapper"> 
@@ -657,7 +665,7 @@
               </div>
                            
             <!-- Responsive Table Wrapper -->
-            <div class="table-responsive flex-grow-1" id="tableResponsiveContainer" style="display: none; overflow-y: auto; min-height: 0;">
+            <div class="table-responsive flex-grow-1" id="tableResponsiveContainer" style="display: none; overflow-y: auto; min-height: 0; ">
                 <table class="table table-bordered text-nowrap" id="userTable" width="100%" cellspacing="0">
               
               <thead>
@@ -670,7 +678,7 @@
                         <i class="fas fa-user-circle text-primary mr-1" style="font-size: 0.75em;"></i> Paziente <i class="fas fa-sort sort-icon ml-1"></i>
                     </th>
 
-                    <th data-sort="consent_date" class="sortable text-center">
+                    <th data-sort="birth_date" class="sortable text-center">
                         <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Nascita <i class="fas fa-sort sort-icon ml-1"></i></th>
             
                     <th data-sort="age" class="sortable text-center">
@@ -910,6 +918,9 @@
                             else
                                 ageStr = age.years + " Anni";
 
+                            // Enrich the objects in memory with the sortable value
+                            item.ageSortKey = (age.years * 12) + (age.months || 0);
+
                             // Read activity Josn for each patient
                             let currentActivity = item?.activity 
                                 ? JSON.parse(JSON.stringify(item.activity)) 
@@ -923,13 +934,6 @@
                             const certificatesCount = currentActivity.Certificates.length;
                             const therapiesCount = currentActivity.Therapies.length;
 
-
-                        //    console.log(fullName);
-                        //    console.log("Assessments : " , assessmentsCount);
-                        //    console.log("Certificats : ",certificatesCount);
-                        //    console.log("Therapies : ", therapiesCount);
-                        //    console.log("\n");
-                            
                             const rowHtml = `
                                 <tr data-id="${id}">
                                     <td class="align-middle text-center">${index + 1}</td>
@@ -963,23 +967,10 @@
                                     <td class="align-middle text-center">${genre || '-'}</td>
                                     <td class="align-middle text-center">${region || '-'}</td>
 
-                                    <!--<td class="align-middle text-center">
-                                        ${assessmentsCount > 0 ? 
-                                        `<span id="btn-add-assessment-${id}" class="fa-stack hover-scale btn-add-assessment" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Assessments">
-                                            <i class="far fa-circle fa-stack-2x text-success" style="font-weight: 400;"></i>
-                                            <i class="fas fa-plus fa-stack-1x text-success" style="font-size: 0.8rem;"></i>
-                                            <i class="fas fa-layer-group fa-stack-1x text-success" style="font-size: 1.5rem;"></i>
-                                        </span>` :
-                                        `<span id="btn-add-assessment-${id}" class="fa-stack hover-scale btn-add-assessment" style="font-size: 0.9rem; cursor: pointer;" data-id="${id}" data-bs-toggle="tooltip" title="Aggiungi un nuovo Assessments">
-                                            <i class="far fa-circle fa-stack-2x text-primary" style="font-weight: 400;"></i>
-                                            <i class="fas fa-plus fa-stack-1x text-primary" style="font-size: 0.8rem;"></i>
-                                        </span>`}
-                                    </td>-->
-
                                     <td class="align-middle text-center">
                                         
                                         <!-- Interactive Button Using the Card Structure -->
-                                        <button class="card-btn" onclick="alert('Button clicked!')">
+                                        <button id="add-assessment" class="card-btn">
                                             <div class="card-content">
 
                                                 ${assessmentsCount > 0 ?
@@ -998,7 +989,7 @@
                                     <td class="align-middle text-center">
                                         
                                         <!-- Interactive Button Using the Card Structure -->
-                                        <button class="card-btn" onclick="alert('Button clicked!')">
+                                        <button class="card-btn">
                                             <div class="card-content">
                                                 
                                                 <!--<div class="card-value">${certificatesCount}</div>
@@ -1020,7 +1011,7 @@
                                     <td class="align-middle text-center">
                                               
                                         <!-- Interactive Button Using the Card Structure -->
-                                        <button class="card-btn" onclick="alert('Button clicked!')">
+                                        <button class="card-btn">
                                             <div class="card-content">
 
                                                 <!--<div class="card-value">${therapiesCount}</div>
@@ -1161,9 +1152,74 @@
                 }
 
                 // ---------------------------------------------------------------------------------
+                // Helper function to convert age strings into total months for sorting
+
+                function parseAgeToTotalMonths(ageStr) {
+                    if (!ageStr || ageStr === '-') return 0;
+                    let totalMonths = 0;
+                    const lower = ageStr.toLowerCase();
+
+                    // Match years
+                    const yearsMatch = lower.match(/(\d+)\s*anni/);
+                    if (yearsMatch) {
+                        totalMonths += parseInt(yearsMatch[1], 10) * 12;
+                    }
+
+                    // Match months
+                    const monthsMatch = lower.match(/(\d+)\s*mesi/);
+                    if (monthsMatch) {
+                        totalMonths += parseInt(monthsMatch[1], 10);
+                    }
+
+                    return totalMonths;
+                }
+
+                // ---------------------------------------------------------------------------------
 
                 let currentSortColumn = 'name';
                 let currentSortOrder = 'asc';
+
+                /*
+                function sortDataAndPopulate(data, key, forceOrder = null) {
+                    if (forceOrder) {
+                        currentSortColumn = key;
+                        currentSortOrder = forceOrder;
+                    } else if (currentSortColumn === key) {
+                        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+                    } else {
+                        currentSortColumn = key;
+                        currentSortOrder = 'asc';
+                    }
+
+                    data.sort((a, b) => {
+                        
+                        // If the sorting key is 'age', look at 'ageSortKey' instead
+                        const lookupKey = (key === 'age') ? 'ageSortKey' : key;
+                        
+                        let valA = a[lookupKey] ?? '';
+                        let valB = b[lookupKey] ?? '';
+                                        
+                        const numA = parseFloat(valA);
+                        const numB = parseFloat(valB);
+                        if (!isNaN(numA) && !isNaN(numB)) {
+                            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
+                        }
+
+                        const dateA = Date.parse(valA);
+                        const dateB = Date.parse(valB);
+                        if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
+                            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+                        }
+
+                        return currentSortOrder === 'asc' 
+                            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
+                            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
+                    });
+
+                    populateTable(data);
+                    updateHeaderIcons(key, currentSortOrder);
+                }
+                */
 
                 function sortDataAndPopulate(data, key, forceOrder = null) {
                     if (forceOrder) {
@@ -1177,9 +1233,14 @@
                     }
 
                     data.sort((a, b) => {
-                        let valA = a[key] ?? '';
-                        let valB = b[key] ?? '';
+                        // If the sorting key is 'age', look at 'ageSortKey' instead
+                        const lookupKey = (key === 'age') ? 'ageSortKey' : key;
+                        
+                        let valA = a[lookupKey] ?? '';
+                        let valB = b[lookupKey] ?? '';
 
+                        // Since ageSortKey is a clean number, parseFloat will catch it naturally, 
+                        // but you can also handle it explicitly here if needed:
                         const numA = parseFloat(valA);
                         const numB = parseFloat(valB);
                         if (!isNaN(numA) && !isNaN(numB)) {
@@ -1207,34 +1268,21 @@
                 $('#tableBody').on('click', 'tr', function(e) {
                     if ($(e.target).closest('a, button, input, .dropdown').length) return;
                     const selectedPatientId = $(this).data('id');
-//                    console.log('Clicked row with ID:', selectedPatientId);
+                    console.log('Clicked row with ID:', selectedPatientId);
 
                     // Save the patient ID to localStorage
                     localStorage.setItem('selectedPatientId', selectedPatientId);
-                    // Redirect to another page
-                
-                    // Check if user clicked the plus icon stack
-                    const addAssessmentBtn = event.target.closest('.btn-add-assessment');
-                    if (addAssessmentBtn) {
-                        const id = addAssessmentBtn.getAttribute('data-id');
-                        console.log("add-assessment");
-                        window.location.href = 'lista_assessments.html';
-                    }
+                });
 
-                    // Check if user clicked the plus icon stack
-                    const addCertificateBtn = event.target.closest('.btn-add-certificate');
-                    if (addCertificateBtn) {
-                        const id = addCertificateBtn.getAttribute('data-id');
-                        console.log("add-certificate");
-                    }
-                  
-                    // Check if user clicked the plus icon stack
-                    const addTherapyBtn = event.target.closest('.btn-add-therapy');
-                    if (addTherapyBtn) {
-                        const id = addTherapyBtn.getAttribute('data-id');
-                        console.log("add-therapy");
-                    }
-                  
+                // Event listener for the assessment button
+                $('#tableBody').on('click', '#add-assessment', function(e) {
+                    e.stopPropagation(); // Prevents the row click event from triggering
+                    const selectedPatientId = $(this).closest('tr').data('id');
+                    // Save the patient ID to localStorage
+                    localStorage.setItem('selectedPatientId', selectedPatientId);
+//                    console.log('Assessment button clicked for patient ID:', selectedPatientId);
+                    // Add your redirection or action logic here
+                     window.location.href = 'lista_assessments.html';
                 });
 
                 $('#tableSearchInput').on('keyup input', function() {
@@ -1383,7 +1431,7 @@
                 updateUserAvatar(gender);
                 
                 // remove the selected patient id
-                localStorage.removeItem('selectedPatientId');
+           //     localStorage.removeItem('selectedPatientId');
 
             } catch (err) {
                 console.error("Si è verificato un errore inatteso:", err);

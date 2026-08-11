@@ -595,6 +595,13 @@
     }
 </style>
 
+<style>
+
+    .page-fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+
+</style>
 
 </head>
 
@@ -711,7 +718,7 @@
                 </nav>
 
 
-                <div class="container-fluid page-fade-in">
+                <div class="container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
                             
@@ -766,7 +773,7 @@
                 <div class="d-flex align-items-center justify-content-center justify-content-md-start flex-wrap" style="min-width: 0; min-height: 27px;">
                     <span id="patientMinorOrMajor" 
                         class="badge d-inline-flex align-items-center justify-content-center text-truncate" 
-                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
+                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #858796; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
                         <span class="sr-only">Loading status...</span>
                         <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
                     </span>
@@ -787,19 +794,6 @@
         </div>
     </div>
 </div>
-
-<!-- NOME TERAPIA SECTION (Matched to First Card) -->
-<!--<div class="card mb-1 shadow-sm" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
-    <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-        <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
-        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Inserisci dati del fascicolo</h6>
-    </div>
-    <div id="therapy-name" class="rounded p-3 mb-4 d-flex flex-column mx-4" 
-        style="gap: 20px; background-color: transparent; border: none; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
-        <input type="text" id="therapyInput" class="form-control" placeholder="Inserisci il nome della terapia..." required
-            style="border: 1px solid rgba(0, 0, 0, 0.12) !important; background-color: transparent; font-size: 1.5rem; height: 60px; padding: 12px 20px; border-radius: 8px;">
-    </div>
-</div>-->
 
 <!-- DYNAMIC CONTENT SECTION -->
 <div id="dynamicContentContainer" class="card mb-4 shadow-sm d-flex flex-column" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; flex-grow: 1;">
@@ -2012,7 +2006,6 @@
                             // Fallback for any other standard text inputs
                             input.value = 'Test Data ' + Math.floor(Math.random() * 100);
                         }
-
                     break;
 
                     case 'number':
@@ -2028,16 +2021,24 @@
                             randomVal = parseFloat(randomVal.toFixed(1));
                         }
                         input.value = randomVal;
-                        break;
+                    break;
 
                     case 'date':
-                        // Generates a random date within the current year
+                       // Generates a random date in the past (within the current year, up to today)
                         const today = new Date();
-                        const randomDay = Math.floor(Math.random() * 28) + 1;
-                        const month = String(today.getMonth() + 1).padStart(2, '0');
-                        const day = String(randomDay).padStart(2, '0');
-                        input.value = `${today.getFullYear()}-${month}-${day}`;
-                        break;
+                        const currentYear = today.getFullYear();
+                        const currentMonth = today.getMonth(); // 0-indexed
+                        const currentDay = today.getDate();
+                        // Pick a random month from January (0) up to the current month
+                        const randomMonth = Math.floor(Math.random() * (currentMonth + 1));
+                        // Determine the maximum possible day for that month
+                        // If it's the current month, limit to today's date; otherwise, limit to 28
+                        const maxDay = (randomMonth === currentMonth) ? currentDay : 28;
+                        const randomDay = Math.floor(Math.random() * maxDay) + 1;
+                        const monthStr = String(randomMonth + 1).padStart(2, '0');
+                        const dayStr = String(randomDay).padStart(2, '0');
+                        input.value = `${currentYear}-${monthStr}-${dayStr}`;
+                    break;
 
                     default:
                             input.value = "Test " + Math.floor(Math.random() * 10);

@@ -11,7 +11,10 @@
     <!-- CSS in <head> -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 
-    <style>
+
+
+
+        <style>
         /* Custom Overrides for the "Renaizant" look */
         #accordionSidebar { background-color: rgb(17, 25, 131) !important; background-image: none !important; }
         .sidebar-dark .nav-item .nav-link { color: rgba(255, 255, 255, 0.7); }
@@ -452,10 +455,8 @@
 
 <style>
 
-
 .note-box {
     background-color: #f0f7f4; /* Light, soft background color */
-    border-left: 5px solid #4fce55; /* Thicker, darker left border */
     padding: 15px 20px;
     border-radius: 4px;
     color: #2e7d32; /* Darker text for readability */
@@ -575,6 +576,32 @@
 }
 
 </style>
+<style>
+    /* Clean hover state using shadow framing without a thicker internal border */
+    .btn-outline-secondary:hover {
+        background-color: #f8f9fa !important;
+        border-color: #80bdff !important;
+        color: #0056b3 !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15) !important;
+        z-index: 2; /* Brings the button border above the input border on hover */
+    }
+</style>
+
+<style>
+    .row .form-control:hover, 
+    .row .form-control:focus {
+        border-color: #80bdff !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15) !important;
+    }
+</style>
+
+<style>
+
+.page-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+}
+
+</style>
 
 </head>
 
@@ -582,43 +609,43 @@
     <!-- Wrapper -->
     <div id="wrapper">
 
-        <!-- Sidebar -->
-
+       <!-- Sidebar -->
         <ul class="navbar-nav bg-white sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <!-- Sidebar - Brand -->
-            <div class="sidebar-brand d-flex align-items-center justify-content-center">
-                <!-- The custom class enforces the animation timeline natively -->
-                <img src="assets/img/logo_new_light_3.png"
-                    class="img-fluid fade-on-load" 
-                    alt="logo" 
-                    style="width: 100%; height: auto; object-fit: contain;">
-            </div>
-            
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-            
-            <!-- Nav Item - Dashboard -->
+            <!-- Sidebar - Brand (Wrapped in a li element) -->
             <li class="nav-item">
-                
-                <!-- Menu Wrapper with the same robust animation class -->
-                <div class="fade-on-load">
-                    <a class="nav-link nav-link-blue" href="clinician-dashboard.html">
-                        <i class="fas fa-fw fa-tachometer-alt"></i>
-                        <span>Dashboard</span>
-                    </a>
-
-                    <a class="nav-link nav-link-blue" href="mockboard.html">
-                        <i class="fas fa-fw fa-users"></i>
-                        <span>Lista Pazienti</span>
-                    </a>
+                <div class="sidebar-brand d-flex align-items-center justify-content-center">
+                    <!-- The custom class enforces the animation timeline natively -->
+                    <img src="assets/img/logo_new_light_3.png"
+                        class="img-fluid fade-on-load" 
+                        alt="logo" 
+                        style="width: 100%; height: auto; object-fit: contain;">
                 </div>
+            </li>
+            
+            <!-- Divider (Wrapped inside an li element) -->
+            <li class="nav-item">
+                <hr class="sidebar-divider my-0">
+            </li>
+            
+            <!-- Nav Items -->
+            <li class="nav-item fade-on-load">
+                <a class="nav-link nav-link-blue" href="clinician-dashboard.html">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
 
+            <li class="nav-item fade-on-load">
+                <a class="nav-link nav-link-blue" href="lista_pazienti_6.html">
+                    <i class="fas fa-fw fa-users"></i>
+                    <span>Lista Pazienti</span>
+                </a>
             </li>
 
         </ul>
         <!-- End of Sidebar -->
-
+        
         <!-- content-wrapper -->
         <div id="content-wrapper" class="d-flex flex-column" style="background-color: #f6f8fa !important;">
             <!-- content -->
@@ -639,22 +666,28 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <span id="userFullName" class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                        <!--<i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #343a40;"></i>-->
+                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i>
                                     </span>
-                                    <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
-                                        <!-- Updated class from 'border' to 'border border-primary' -->
-                                        <div id="avatarContainer1" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 1px solid #0000FF !important;">
+                                   <div class="position-relative d-inline-block" style="width: 40px; height: 40px;">
+                                        <div id="avatarContainer1" 
+                                            class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                                            style="border: 1px solid #0000FF !important;"
+                                            role="img" 
+                                            aria-label="Contenitore foto profilo">
                                             <i id="avatarSpinnerIcon1" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
                                             <img id="profileAvatar1" 
+                                                src="assets/sb-admin-2/img/undraw_profile.svg"
                                                 class="img-fluid rounded-circle d-none" 
-                                                width="140" height="140" 
+                                                width="140" 
+                                                height="140" 
                                                 alt="Foto profilo"
                                                 style="object-fit: cover;">
                                         </div>
                                     </div>
+
                             </a>
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
+
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown" role="menu">
                                 <!--<a class="dropdown-item" href="#">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
@@ -684,191 +717,207 @@
                     </ul>
                 </nav>
 
-<!-- ----------------------------------------------------------------------------------------- -->
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12">
+                            
+                            <!-- Outer Container: Added style="gap: 12px;" -->
+                            <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
-<div class="container-fluid full-height-container">
-    <div class="row">
-        <div class="col-xl-12 col-lg-12 ">
-            <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
-                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
-                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
+
+<!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
+<div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+
+    <h2 class="sr-only">muted h2</h2>
+    <h3 class="sr-only">muted h3</h3>
+    <h4 class="sr-only">muted h4</h4>
+    <h5 class="sr-only">muted h5</h5>
+    
+    <div class="card-header bg-white py-2 px-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+        <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
+    </div>
+
+    <!-- Locked body min-height to match fully loaded content -->
+    <div class="card-body px-3 py-2 d-flex overflow-hidden" style="min-width: 0; min-height: 105px;">
+        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-center w-100 mb-2" style="min-width: 0; gap: 12px;">
+
+            <!-- Compacted Avatar (60px) -->
+            <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
+                <div id="avatarContainer2" 
+                    class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                    style="border: 1px solid #0000FF !important;"
+                    role="img" 
+                    aria-label="Contenitore foto profilo">
+                    <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
+                    <img id="profileAvatar2" 
+                        src="assets/sb-admin-2/img/undraw_profile.svg"
+                        class="img-fluid rounded-circle d-none" 
+                        width="80" 
+                        height="80" 
+                        alt="Foto profilo"
+                        style="object-fit: cover;">
                 </div>
-
-                <div class="d-flex flex-column pl-4">
-                                
-                    <!-- TOP ROW: 20% Height -->
-                    <div class="row m-0" style="min-height: 20%; flex-shrink: 0;">
-                        <!-- Added d-flex and align-items-center to put image and text side-by-side -->
-                        <div class="col-12 py-3 d-flex align-items-center">
-
-                            <!-- Profile Image Container -->
-                            <div class="position-relative flex-shrink-0 mr-3" style="width: 80px; height: 80px;">
-                                <!-- Added a 3px solid custom blue border matching your previous styling style -->
-                                <img id="patientAvatar" src="assets/sb-admin-2/img/undraw_profile.svg"
-                                    class="img-fluid rounded-circle border shadow-sm p-1" 
-                                    style="background-color: #fff; object-fit: cover; width: 100%; height: 100%; display: block; border: 1px solid #0000FF !important;">
-                            </div>
-
-                            <!-- Text Content Wrapper -->
-                            <div class="d-flex flex-column overflow-hidden">
-             
-                                <h5 id="patientFullName" class="text-dark mb-2 font-weight-bold text-truncate" style="font-size: 2.0rem; line-height: 1.2;">
-                                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
-                                </h5>
-
-                                <!-- Badges Row -->
-                                <!-- d-flex here allows badges to sit side-by-side if you want,or remove d-flex to keep them stacked -->
-                                <div class="d-flex flex-wrap" style="gap: 5px;">
-                                    <!-- Active User Badge (Centered Layout) -->
-                                    <span class="badge d-inline-flex align-items-center justify-content-center" 
-                                        style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4e73df; color: #fff; font-weight: 600;">
-                                        <i class="fas fa-check-circle mr-1 flex-shrink-0"></i>Utente Attivo
-                                    </span>
-                                    <!-- Patient Status Badge Wrapper (Centered Layout) -->
-                                    <span id="patientMinorOrMajor" 
-                                        class="badge d-inline-flex align-items-center justify-content-center" 
-                                        style="border-radius: 50px; font-size: 0.8rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%;">
-                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;"></i>
-                                    </span>
-                                </div>
-
-                                    <!-- Subscription Date: Placed right under badges -->
-                                <div class="mt-2 ">
-                                    <small  class="text-muted" style="font-size: 0.85rem;">
-                                        <i class="far fa-calendar mr-1"></i> 
-                                        <span id="patientSubDate"> 
-                                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.85rem;"></i>
-                                        </span>   
-                                    </small>
-                                </div>
-
-                                </div>
-                            </div>
-                        </div>
-                                           
-                </div>
-                
             </div>
+
+            <!-- Text Content Wrapper with exact vertical spacing reservation -->
+            <div class="d-flex flex-column flex-grow-1 overflow-hidden text-center text-md-left" style="min-width: 0; width: 100%; gap: 6px;">
+                <!-- Patient Full Name -->
+                <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
+                    <span class="sr-only">Loading...</span>
+                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
+                </h5>
+
+                <!-- Badges Stacked Underneath -->
+                <div class="d-flex align-items-center justify-content-center justify-content-md-start flex-wrap" style="min-width: 0; min-height: 27px;">
+                    <span id="patientMinorOrMajor" 
+                        class="badge d-inline-flex align-items-center justify-content-center text-truncate" 
+                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
+                        <span class="sr-only">Loading status...</span>
+                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+                <!-- Subscription Date -->
+                <div class="text-truncate" style="min-width: 0; min-height: 18px;">
+                    <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
+                        <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
+                        <span id="patientSubDate"> 
+                            <span class="sr-only">Loading date...</span>
+                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
+                        </span>   
+                    </small>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
 
-<!-- NOME TERAPIA ----------------------------------------------------------------------------------------- -->
+<!-- DYNAMIC CONTENT SECTION -->
+<div id="dynamicContentContainer" class="card mb-4 shadow-sm d-flex flex-column" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; flex-grow: 1;">
+    
+    <!-- This body container will automatically expand vertically as items are appended -->
+    <div class="card-body p-4 d-flex flex-column" style="gap: 15px; min-width: 0;">
+        <!-- New elements added dynamically will appear here and push the container downwards -->
 
-<div class="container-fluid full-height-container">
-    <div class="row">
-        <div class="col-xl-12 col-lg-12 d-flex">
-            <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
-                
-                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                    <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
-                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Inserisci il Nome del Fascicolo</h6>
+
+        <article class="pt-container" style="text-align: center;">
+            <h1 class="pt-title" style="margin-bottom: 20px;">FASCICOLO SCREENING DSA</h1>
+                    
+            <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
+                PROTOCOLLO CLINICO CON CUT-OFF NORMATIVI INTEGRATI (CONSENSUS CONFERENCE)
+            </h2>
+
+            <!--<button type="button" class="btn btn-warning btn-sm" onclick="autoFillFormDebug()">
+                ⚡ Debug Fill
+            </button>-->
+
+            <div class="container-fluid mt-2 mb-4">
+
+                <div class="row border-top border-left border-right m-0">
+                    <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                    style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Titolo Fascicolo</div>
+                    <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                    style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Ente Emettitore</div>
                 </div>
 
-                <div id="therapy-name" class="rounded p-3 mb-4 d-flex flex-column mx-4" 
-                    style="gap: 20px; background-color: transparent; border: none; align-items: flex-start; padding-left: 20px; padding-right: 20px;">
-                    <input type="text" id="therapyInput" class="form-control" placeholder="Inserisci il nome della terapia..." required
-                        style="border: none !important; background-color: transparent; font-size: 1.5rem; height: 60px; padding: 12px 20px;">
-                </div>
-                 
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ----------------------------------------------------------------------------------------- -->
-
-<div class="container-fluid full-height-container">
-    <div class="row">
-        <div class="col-xl-12 col-lg-12 d-flex">
-            <div class="card mb-2 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; display: flex; flex-direction: column;">
-                
-                <!--<div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                    <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
-                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Fascicolo di Screening</h6>
-                </div>-->
-
-            <!-- About Section -->
-
-            <div class="card-body">
-                <article class="pt-container" style="text-align: center;">
-                    <h1 class="pt-title" style="margin-bottom: 20px;">FASCICOLO SCREENING DSA</h1>
-                    
-                    <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                        PROTOCOLLO CLINICO CON CUT-OFF NORMATIVI INTEGRATI (CONSENSUS CONFERENCE)
-                    </h2>
-
-                    <p class="note-box">
-                        <strong>Guida alla Valutazione:</strong> Questo fascicolo unisce gli stimoli alternativi della Forma B ai criteri diagnostici ufficiali italiani. 
-                        Per ciascuna prova sono riportate le fasce di performance: 
-                        <span class="badge-co">CO</span> Criterio di Competenza (Norma), 
-                        <span class="badge-ra">RA</span> Richiesta di Attenzione (Borderline), e
-                        <span class="badge-rii">RII</span> Richiesta di Intervento Immediato (Sospetto Deficit).
-                    </p>
-
-                    <div class="container-fluid mt-4">
-
-                        <div class="row border-top border-left border-right m-0">
-                             <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Nome e Cognome</div>
-                             <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Classe Scolastica</div>
-                             <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Data Valutazione</div>
-                        </div>
-
-                        <div class="row border m-0">
-                           
-                            <div id="formPatientName" class="col-4 p-2 border-right d-flex align-items-center justify-content-center" style="font-weight: 600;font-size: 1.0rem;  color:#7b80a7">
-                                Davide Cleopadre
-                            </div>
-
-                            <div class="col-4 p-2 border-right">
-                                <select id="scuolaSelect">
-                                    <optgroup label="Scuola Primaria">
-                                        <option>2ª classe Scuola Primaria</option>
-                                        <option>3ª classe Scuola Primaria</option>
-                                        <option>4ª classe Scuola Primaria</option>
-                                        <option>5ª classe Scuola Primaria</option>
-                                    </optgroup>
-                                    <optgroup label="Scuola Secondaria di 1º Grado">
-                                        <option>1ª classe Scuola Secondaria di 1º Grado</option>
-                                        <option>2ª classe Scuola Secondaria di 1º Grado</option>
-                                        <option>3ª classe Scuola Secondaria di 1º Grado</option>
-                                    </optgroup>
-                                    <optgroup label="Scuola Secondaria di 2º Grado">
-                                        <option>1ª classe Scuola Secondaria di 2º Grado</option>
-                                        <option>2ª classe Scuola Secondaria di 2º Grado</option>
-                                        <option>3ª classe Scuola Secondaria di 2º Grado</option>
-                                        <option>4ª classe Scuola Secondaria di 2º Grado</option>
-                                        <option>5ª classe Scuola Secondaria di 2º Grado</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-                                                                                                
-                            <div class="col-4 p-2 border-right">
-                                <div class="input-group" style="width: 100%;">
-                                    <input type="date" id="clinicalDate" class="form-control" required max="" style="height: 40px; font-size: 1rem;">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="button" onclick="injectCurrentDate()" style="height: 40px; padding: 0 15px;">
-                                            Oggi
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                          
-                            <script>
-                                function injectCurrentDate() {
-                                    // Current date in YYYY-MM-DD format (standard for date inputs)
-                                    const today = new Date().toISOString().split('T')[0];
-                                    document.getElementById('clinicalDate').value = today;
-                                }
-                            </script>
-
-                        </div>
-                    
+                <div class="row border m-0">
+                    <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                        <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Titolo Fascicolo" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
                     </div>
+                    <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                        <input type="text" id="formEntity" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Ente Emettitore" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
+                    </div>
+                </div>
+
+            </div>
+
+            <p class="note-box">
+                <strong>Guida alla Valutazione:</strong> Questo fascicolo unisce gli stimoli alternativi della Forma B ai criteri diagnostici ufficiali italiani. 
+                Per ciascuna prova sono riportate le fasce di performance: 
+                <span class="badge-co">CO</span> Criterio di Competenza (Norma), 
+                <span class="badge-ra">RA</span> Richiesta di Attenzione (Borderline), e
+                <span class="badge-rii">RII</span> Richiesta di Intervento Immediato (Sospetto Deficit).
+            </p>
+
+            <div class="container-fluid mt-4">
+
+                <div class="row border-top border-left border-right m-0">
+                    <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
+                        style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Nome e Cognome</div>
+                    <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
+                        style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Classe Scolastica</div>
+                    <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
+                        style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Data Valutazione</div>
+                </div>
+
+                <div class="row border m-0">
+                           
+                  <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
+                    <input type="text" id="formPatientName" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Nome e Cognome" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
+                  </div>
+
+                <div class="col-4 p-2 border-right">
+                    <select id="scuolaSelect" class="form-control" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
+                        <option value="" disabled selected hidden>Seleziona classe...</option>
+                        <optgroup label="Scuola Primaria">
+                            <option>2ª classe Scuola Primaria</option>
+                            <option>3ª classe Scuola Primaria</option>
+                            <option>4ª classe Scuola Primaria</option>
+                            <option>5ª classe Scuola Primaria</option>
+                        </optgroup>
+                        <optgroup label="Scuola Secondaria di 1º Grado">
+                            <option>1ª classe Scuola Secondaria di 1º Grado</option>
+                            <option>2ª classe Scuola Secondaria di 1º Grado</option>
+                            <option>3ª classe Scuola Secondaria di 1º Grado</option>
+                        </optgroup>
+                        <optgroup label="Scuola Secondaria di 2º Grado">
+                            <option>1ª classe Scuola Secondaria di 2º Grado</option>
+                            <option>2ª classe Scuola Secondaria di 2º Grado</option>
+                            <option>3ª classe Scuola Secondaria di 2º Grado</option>
+                            <option>4ª classe Scuola Secondaria di 2º Grado</option>
+                            <option>5ª classe Scuola Secondaria di 2º Grado</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+
+<div class="col-4 p-2 border-right">
+    <div id="dateGroup" class="input-group" style="width: 100%;">
+        <input type="date" id="clinicalDate" class="form-control shadow-none" required max="" style="height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; background-color: transparent;">
+        <div class="input-group-append">
+            <button id="oggiBtn" class="btn btn-outline-secondary" type="button" onclick="injectCurrentDate()" style="height: 40px; padding: 0 15px; border-radius: 0 6px 6px 0; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-left: none !important; background-color: transparent;">
+                Oggi
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const dateGroup = document.getElementById('dateGroup');
+    const clinicalDate = document.getElementById('clinicalDate');
+    const oggiBtn = document.getElementById('oggiBtn');
+
+    dateGroup.addEventListener('mouseenter', function() {
+        clinicalDate.style.borderColor = 'rgba(209, 211, 226, 1.0)';
+        oggiBtn.style.borderColor = 'rgba(209, 211, 226, 1.0)';
+    });
+
+    dateGroup.addEventListener('mouseleave', function() {
+        clinicalDate.style.borderColor = 'rgba(209, 211, 226, 1.0)';
+        oggiBtn.style.borderColor = 'rgba(209, 211, 226, 1.0)';
+    });
+
+    function injectCurrentDate() {
+        const today = new Date().toISOString().split('T')[0];
+        clinicalDate.value = today;
+    }
+</script>
+
+
+            </div>
+        </div>
 
                     <div class="container-fluid mt-4 mb-4">
                         <div class="row m-0">
@@ -1390,18 +1439,6 @@
                     <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
                     </h2>
 
-                    <!--<div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
-                        <a href="#" id="assegna-btn" class="inner-action-btn" 
-                            onclick="validateForm(); return false;" 
-                            style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
-                            <i class="fas fa-plus-circle text-success mr-2"></i> Assegna
-                        </a>
-                        <a href="#" id="svuota-btn" class="inner-action-btn" data-toggle="modal" data-target="#confirmClearModal" 
-                            style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
-                            <i class="fas fa-trash text-danger mr-2"></i> Svuota
-                        </a>
-                    </div>-->
-
                     <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
                         <!-- Save Button -->
                         <button type="button" 
@@ -1423,17 +1460,15 @@
                         </button>
                     </div>
 
-
                 </article>
-
-            </div>
-          </div>
-        </div>
-    </div> 
+    </div>
 </div>
 
-
-            </div> <!-- content -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> <!-- content -->
 
            <!-- Footer -->
             <footer class="sticky-footer bg-white border-top">
@@ -1448,7 +1483,8 @@
         </div><!-- content-wrapper -->
     </div><!-- Wrapper -->
 
-    <style>
+
+        <style>
     
         /* Make the modal feel 'outside' the normal UI flow */
         .modal-system-alert {
@@ -1492,12 +1528,6 @@
         </div>
     </div>
 
-        <!--<script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
-        <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
-        <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
-        <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>-->
 
         <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
         <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -1506,6 +1536,13 @@
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>        
         <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
 
+        
+    <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
+    <!--<script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>-->
+    
      <script type="module">
 
              // init supabase
@@ -1516,16 +1553,21 @@
             const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
             window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
             
+            import {
+                convertToItalianFormat,
+                calculateAgeWithMonths
+            } from "./assets/js/string_utils.js";
+
+            // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
+            window.calculateAgeWithMonths = calculateAgeWithMonths;
+
     </script>
 
         <script>
 
-            // A global tracker variable to protect against aggressive database render loops
-            let isAvatarStateLocked = false;
+            // ---------------------------------------------------------------------------------
 
-            function updateUserAvatar(userGender) {
-                // If the loop tries to run a second time, immediately reject it to save performance
-                if (isAvatarStateLocked) return;
+            function updateClinicianAvatar(userGender) {
                 
                 const avatarImg1 = document.getElementById('profileAvatar1');
                 const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
@@ -1557,61 +1599,94 @@
                     container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
                 }
                 
-                // 4. Lock down state so external asynchronous loops cannot re-enable the loading indicators
-                isAvatarStateLocked = true;
             }
-        
-        </script>
-       
-        <script>
 
-            // 1. Helper function to validate the patientId from localStorage
+            // ---------------------------------------------------------------------------------
+
+            function updateUserAvatar(userGender) {
+
+                const avatarImg1 = document.getElementById('profileAvatar2');
+                const spinnerIcon1 = document.getElementById('avatarSpinnerIcon2');
+                const container1 = document.getElementById('avatarContainer2');
+
+                if (!avatarImg1 || !spinnerIcon1) return;
+
+                // 1. Process and sanitize input values
+                let targetSrc  = 'assets/sb-admin-2/img/undraw_profile.svg';
+                let targetSrc1 = 'assets/sb-admin-2/img/undraw_profile.svg';
+
+                if (userGender === 'Femminile') {
+                    targetSrc  = 'assets/img/registrazione/kid-female.png';
+                    targetSrc1 = 'assets/img/registrazione/kid-female.png';
+
+                } else if (userGender === 'Maschile') {
+                    targetSrc  = 'assets/img/registrazione/kid-male.png';
+                    targetSrc1 = 'assets/img/registrazione/kid-male.png';
+                }
+
+                // 2. Assign source asset
+                avatarImg1.src = targetSrc1;
+
+                // 3. Clear placeholder settings and render image node
+                spinnerIcon1.classList.add('d-none');     // Permanently hide the spinner element
+                avatarImg1.classList.remove('d-none');   // Force show the newly assigned image layout
+                
+                if (container1) {
+                    container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
+                }
+                
+            }
+
+            // ---------------------------------------------------------------------------------
+            // Helper function to validate the patientId from localStorage
+
             function getValidPatientId() {
-                const activeId = localStorage.getItem('activePatientId');
+                const activeId = localStorage.getItem('selectedPatientId');
                 if (!activeId || activeId.trim() === '' || activeId === 'null' || activeId === 'undefined') {
                     return null;
                 }
                 return activeId.trim();
             }
 
-        </script>
-
-        <script>
-
+            // ---------------------------------------------------------------------------------
             // Updates the age status badge of a patient with unified center alignments.
+            
             function updateAgeBadge(badgeElement, status) {
                 if (!badgeElement) return;
 
-                // d-inline-flex lets the container size itself strictly to the content string length
                 badgeElement.className = "badge text-white d-inline-flex align-items-center justify-content-center";
                 
-                // Design styles
+                // Design styles with proper vertical spacing
                 badgeElement.style.borderRadius = "50px";
                 badgeElement.style.fontSize = "0.75rem";
-                badgeElement.style.padding = "4px 10px"; // Your precise custom padding
+                badgeElement.style.padding = "6px 12px"; // Increased vertical padding slightly to prevent clipping
                 badgeElement.style.fontWeight = "600";
                 
-                // Safety boundaries (allows adapting to length, but caps at container edge)
+                // Safety boundaries and constraints
                 badgeElement.style.maxWidth = "100%";
+                badgeElement.style.minWidth = "0"; 
+                badgeElement.style.overflow = "hidden";
 
                 if (status === 1) {
                     // --- ADULT STATE (Green) ---
                     badgeElement.style.backgroundColor = "#4edf97";
                     badgeElement.innerHTML = `
                         <i class="fas fa-user mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
-                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Maggiorenne</span>
+                        <span class="text-truncate" style="line-height: 1.2; min-width: 0; display: inline-block;">Maggiorenne</span>
                     `;
                 } else {
                     // --- MINOR STATE (Red) ---
                     badgeElement.style.backgroundColor = "#ff4d4d";
                     badgeElement.innerHTML = `
                         <i class="fas fa-child mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
-                        <span class="text-truncate flex-grow-1" style="min-width: 0; line-height: 1;">Minorenne</span>
+                        <span class="text-truncate" style="line-height: 1.2; min-width: 0; display: inline-block;">Minorenne</span>
                     `;
                 }
             }
-        
+
+            // ---------------------------------------------------------------------------------
             // Updates the subscription date label with proper Italian gender agreement.
+
             function updateSubscriptionDate(target, date, gender) {
                 const element = typeof target === "string" ? document.getElementById(target) : target;
                 if (!element) return;
@@ -1622,27 +1697,6 @@
             
         </script>
         
-        <script>
-
-            // Save partial progress
-            function saveDraftStep(stepName, stepData) {
-                let draft = JSON.parse(sessionStorage.getItem('currentAssessmentDraft') || '{}');
-                draft[stepName] = stepData;
-                sessionStorage.setItem('currentAssessmentDraft', JSON.stringify(draft));
-            }
-
-            // Retrieve accumulated draft when saving to Supabase
-            function getDraftForSaving() {
-                return JSON.parse(sessionStorage.getItem('currentAssessmentDraft') || '{}');
-            }
-
-            // Clear draft after successful Supabase save
-            function clearDraft() {
-                sessionStorage.removeItem('currentAssessmentDraft');
-            }
-
-        </script>
-
          <script>
 
             $(document).ready(function() {
@@ -1662,31 +1716,354 @@
 
         </script>
 
+        <script>
+
+            function confirmRemoveAll()
+            {
+                console.log("removal confirmed");
+                
+                // 1. Explicitly remove focus from the button that triggered the event
+                if (document.activeElement instanceof HTMLElement) {
+                    document.activeElement.blur();
+                }
+                
+                // 1. Clear all standard inputs (text, date, number, etc.)
+                const allInputs = document.querySelectorAll('input');
+                allInputs.forEach(input => {
+                    // Reset value
+                    input.value = '';
+                    // Reset border styles (in case you added red borders for errors)
+                    input.style.borderColor = '';
+                });
+
+                // 2. Reset all selects to the first option (the "Seleziona..." one)
+                const allSelects = document.querySelectorAll('select');
+                allSelects.forEach(select => {
+                    select.selectedIndex = 0; 
+                    select.style.borderColor = '';
+                });
+
+                console.log("All elements cleared.");
+
+                // 2. Move focus to the body to be safe
+                document.body.focus();
+
+                // 3. Close the modal
+                $('#confirmClearModal').modal('hide');
+            }
+            
+        </script>
+
+        <script>
+            
+            function validateForm() 
+            {
+                // Title check
+                const titleInput = document.getElementById('formTitle');
+                if (!titleInput.checkValidity() || !titleInput.value.trim()) {
+                    titleInput.reportValidity(); // Displays the native browser warning popup
+                    return false; 
+                }
+
+                // Entitiy check
+                const entityInput = document.getElementById('formEntity');
+                if (!entityInput.checkValidity() || !entityInput.value.trim()) {
+                    entityInput.reportValidity(); // Displays the native browser warning popup
+                    return false; 
+                }
+
+                // Patient name check
+                const nameInput = document.getElementById('formPatientName');
+                if (!nameInput.checkValidity() || !nameInput.value.trim()) {
+                    nameInput.reportValidity(); // Displays the native browser warning popup
+                    return false; 
+                }
+                
+                // scuola check
+                const scuolaSelect = document.getElementById('scuolaSelect');
+                if (!scuolaSelect.checkValidity() || !scuolaSelect.value) {
+                    scuolaSelect.reportValidity(); // Displays the native browser warning popup
+                    return false;
+                } else {
+                    scuolaSelect.style.borderColor = '';
+                    scuolaSelect.style.boxShadow = '';
+                    scuolaSelect.style.borderRadius = '';
+                }
+                
+                let schoolData = null;
+                // Ensure an option is actually selected
+                if (scuolaSelect.selectedIndex >= 0) {
+                    const selectedOption = scuolaSelect.options[scuolaSelect.selectedIndex];
+                    schoolData = {
+                        text: selectedOption.text,                   // The visible text of the option
+                        group: selectedOption.parentNode.label || '' // The optgroup label (e.g., "Scuola Primaria")
+                    };
+                }
+
+                // Date check
+                const dateInput = document.getElementById('clinicalDate');
+                if (!dateInput.checkValidity()) {
+                    dateInput.reportValidity();
+                    return false;
+                }
+                
+                // Read & validate PROVA inputs
+                const input1 = document.getElementById('prova_a_1');
+                if (!input1.checkValidity()) {
+                    input1.reportValidity();
+                    return false;
+                }
+                
+                const input2 = document.getElementById('prova_a_2');
+                if (!input2.checkValidity()) {
+                    input2.reportValidity();
+                    return false;
+                }
+                
+                const input3 = document.getElementById('prova_b_1');
+                if (!input3.checkValidity()) {
+                    input3.reportValidity();
+                    return false;
+                }
+
+                const input4 = document.getElementById('prova_c_1');
+                if (!input4.checkValidity()) {
+                    input4.reportValidity();
+                    return false;
+                }
+                
+                const input5 = document.getElementById('prova_d_1');
+                if (!input5.checkValidity()) {
+                    input5.reportValidity();
+                    return false;
+                }
+
+                const input6 = document.getElementById('prova_d_2');
+                if (!input6.checkValidity()) {
+                    input6.reportValidity();
+                    return false;
+                }
+                
+                const input7 = document.getElementById('prova_d_3');
+                if (!input7.checkValidity()) {
+                    input7.reportValidity();
+                    return false;
+                }
+                
+                const input8 = document.getElementById('prova_e_1');
+                if (!input8.checkValidity()) {
+                    input8.reportValidity();
+                    return false;
+                }
+                
+                const input9 = document.getElementById('prova_f_1');
+                if (!input9.checkValidity()) {
+                    input9.reportValidity();
+                    return false;
+                }
+
+                const select1 = document.getElementById('CoRiiSelect1');
+                if (!select1.checkValidity()) {
+                    select1.reportValidity();
+                    return false;
+                }
+
+                const select2 = document.getElementById('CoRiiSelect2');
+                if (!select2.checkValidity()) {
+                    select2.reportValidity();
+                    return false;
+                }
+
+                // 5. Build fresh protocol payload
+                const newAssessment = {
+                    timestamp: new Date().toISOString(),
+                    title: titleInput.value.trim(),
+                    entityName: entityInput.value.trim(),
+                    evaluationDate: dateInput.value,
+                    italian_date : new Date(dateInput.value).toLocaleDateString('it-IT'),
+                    education: schoolData,
+                    prova_a: { 
+                        accuratezza: input1.value.trim(), 
+                        velocita: parseFloat(input2.value).toFixed(1) 
+                    },
+                    prova_b: { errori_ortografici_totali: input3.value.trim() },
+                    prova_c: { lettura_e_comprensione_del_testo: input4.value.trim() },
+                    prova_d: {
+                        dettato_di_numeri: input5.value.trim(),
+                        fatti_numerici_calcolo_rapido: input6.value.trim(),
+                        grandezza_frazionaria: input7.value.trim()
+                    },
+                    prova_e: { errori_di_decisione: input8.value.trim() },
+                    prova_f: { capacità_working_memory: input9.value.trim() },
+                    prova_g: {
+                        isolamento_dei_dati_rilevanti: select1.value,
+                        risoluzione_e_algoritmo: select2.value
+                    }
+                };
+
+                console.log("Assessment Payload Ready:", newAssessment);
+                return newAssessment;
+            }
+
+            // 2. Direct Save Handler (Async)
+            async function submitAssessment() {
+                
+                // Step A: Validate and build assessment payload
+                const newAssessment = validateForm();
+                if (!newAssessment) return; // Validation failed, browser popup shown, abort.
+                
+                // Step B: Get active patient ID
+                const activePatientId = getValidPatientId();
+                if (!activePatientId) {
+                    alert("Nessun paziente attivo trovato!");
+                    return;
+                }
+
+                try {
+             
+                    console.log("saving");
+                        
+                    // Use consistent Supabase client reference
+                    const supabaseClient = window.supabase;
+
+                    // Step C: Fetch existing patient activity column
+                    const { data: patient, error: fetchError } = await supabaseClient
+                        .from("Clients")
+                        .select("activity")
+                        .eq("id", activePatientId)
+                        .single();
+
+                    if (fetchError) throw fetchError;
+
+                    // Step D: Prepare updated structure safely
+                    // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
+                    let currentActivity = patient?.activity 
+                        ? JSON.parse(JSON.stringify(patient.activity)) 
+                        : { Assessments: [], Certificates: [], Therapies: [] };
+
+                    if (!Array.isArray(currentActivity.Assessments)) {
+                        currentActivity.Assessments = [];
+                    }
+
+                    // Prepend new assessment to top of array
+                    currentActivity.Assessments.unshift(newAssessment);
+                    
+                    // Step E: Save back to Supabase (using supabaseClient)
+                    const { data,error: updateError } = await supabaseClient
+                        .from("Clients")
+                        .update({ activity: currentActivity })
+                        .eq("id", activePatientId)
+                        .select(); // <--- Adding .select() returns the updated row to verify
+                
+                        console.log("Updated row result:", data);
+
+                    if (updateError) throw updateError;
+
+                    console.log("Saved successfully!");
+                    
+                    // Redirect back to the patient list
+                    window.location.href = 'lista_assessments.html';
+
+                } catch (err) {
+                    console.error("Errore durante il salvataggio:", err);
+                }
+                    
+            }
+            
+        </script>
+
+<script>
+
+        function autoFillFormDebug() {
+            console.log("⚡ Auto-filling form with debug data...");
+
+            // 1. Fill Text, Number, and Date Inputs
+            const allInputs = document.querySelectorAll('input');
+            
+            allInputs.forEach(input => {
+                // Skip buttons, hidden fields, submit inputs, or disabled inputs
+                if (['button', 'submit', 'hidden', 'reset'].includes(input.type) || input.disabled) {
+                    return;
+                }
+
+                switch (input.type) {
+                    case 'text':
+                        // Target specific text fields by their IDs
+                        if (input.id === 'formTitle') {
+                            const titles = ['Valutazione DSA', 'Screening Logopedico', 'Protocollo Competenze Strumentali', 'Verifica Apprendimento'];
+                            input.value = titles[Math.floor(Math.random() * titles.length)];
+                        } 
+                        else if (input.id === 'formEntity') {
+                            const entities = ['ASL Milano', 'Studio Medico Associato', 'Centro Clinico Specialistico', 'Polo Riabilitativo'];
+                            input.value = entities[Math.floor(Math.random() * entities.length)];
+                        } 
+                        else if (input.id === 'formPatientName') {
+                            const names = ['Mario Rossi', 'Giulia Bianchi', 'Luca Verdi', 'Sofia Neri', 'Alessandro Colombo'];
+                            input.value = names[Math.floor(Math.random() * names.length)];
+                        } 
+                        else {
+                            // Fallback for any other standard text inputs
+                            input.value = 'Test Data ' + Math.floor(Math.random() * 100);
+                        }
+
+                    break;
+
+                    case 'number':
+                        // Respect min/max attributes if set, otherwise pick a random number between 0 and 100
+                        const min = input.min !== '' ? parseFloat(input.min) : 0;
+                        const max = input.max !== '' ? parseFloat(input.max) : 100;
+                        const step = input.step ? parseFloat(input.step) : 1;
+                        
+                        let randomVal = (Math.random() * (max - min) + min);
+                        if (step === 1) {
+                            randomVal = Math.floor(randomVal);
+                        } else {
+                            randomVal = parseFloat(randomVal.toFixed(1));
+                        }
+                        input.value = randomVal;
+                        break;
+
+                    case 'date':
+                        // Generates a random date within the current year
+                        const today = new Date();
+                        const randomDay = Math.floor(Math.random() * 28) + 1;
+                        const month = String(today.getMonth() + 1).padStart(2, '0');
+                        const day = String(randomDay).padStart(2, '0');
+                        input.value = `${today.getFullYear()}-${month}-${day}`;
+                        break;
+
+                    default:
+                            input.value = "Test " + Math.floor(Math.random() * 10);
+                    break;
+                }
+
+                // Trigger 'input' and 'change' events in case you have UI listeners/validations
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            });
+
+            // 2. Select Random Options for Select Boxes
+            const allSelects = document.querySelectorAll('select');
+            allSelects.forEach(select => {
+                if (select.options.length > 1) {
+                    // Pick a random index skipping index 0 (usually the "Seleziona..." placeholder)
+                    const randomIndex = Math.floor(Math.random() * (select.options.length - 1)) + 1;
+                    select.selectedIndex = randomIndex;
+                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+
+            console.log("✅ Form auto-filled successfully!");
+        }
+
+</script>
+
         <!-- Main -->
         <script type="module">
         
-             // ✅ Import string utils
-             import {
-                formatName,
-                convertToItalianFormat,
-                extractDate,
-                calculateAgeWithMonths
-            } from "./assets/js/string_utils.js";
-
-           import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-           
-           // --- Supabase setup ---
-        //   const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
-        //   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
-        //   const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
             // --- Event Listeners 
             document.addEventListener("DOMContentLoaded", async () => {
        
-                // set maximum date as today
-                const today = new Date().toISOString().split('T')[0];
-                document.getElementById('clinicalDate').setAttribute('max', today);
-
                 // CHECK SESSIONE
                 const { data: { session } } = await window.supabase.auth.getSession();
 
@@ -1734,32 +2111,33 @@
                     userFullNameElement.textContent = fullNameNoPrefix;
                 }
         
-                // update avatar in the navbar
-                if (typeof updateUserAvatar === 'function') {
-                   updateUserAvatar(genre);
-                }
+                updateClinicianAvatar(genre);
 
                 // ---  RECUPERO DATI PAZIENTE DA SUPABASE ---
 
                 const activePatientId = getValidPatientId();
 
+                // ------------------------
+                // --- ATTENZIONE -- QUI --
+                // ------------------------
+
                 if (!activePatientId) {
                     alert("Nessun paziente selezionato. Ritorno alla lista...");
-               //     window.location.replace("patient-directory.html"); // Cambia con la tua pagina lista pazienti
+                    window.location.replace("lista_pazienti6.html"); // Cambia con la tua pagina lista pazienti
                     return;
                 }
                 
-            //    console.log(activePatientId);
+                console.log("Selected Patient Id : ", activePatientId);
         
                 try {
-                    
+                   
                     // Esegui la query per il paziente attivo
                     const { data: patientData, error: patientError } = await window.supabase
                         .from("Clients") // <-- Sostituisci con il nome esatto della tua tabella pazienti
                         .select("*")
                         .eq("id", activePatientId)
                         .single();
-
+                        
                     if (patientError || !patientData) {
                         console.error("Errore durante il recupero del paziente:", patientError);
                       //  alert("Impossibile trovare i dati del paziente selezionato.");
@@ -1773,11 +2151,12 @@
                     const gender = patientData.genre;
                     const fullNameNoPrefix = `${name} ${surname}`;
                     const bdate = patientData.birth_date;
-                    const age = calculateAgeWithMonths(bdate);
+                    const age = window.calculateAgeWithMonths(bdate);
                     const minor_or_major = (age.years >= 18) ? 1 : 0;
                     const subdate = patientData.consent_date;
                     const subDateItalianFormat = subdate ? new Date(subdate).toLocaleDateString('it-IT') : '';
-           
+                    const activityData = patientData.activity;
+
                 //    console.log(name);
                 //    console.log(surname);
                 //    console.log(genre);
@@ -1789,21 +2168,14 @@
                     //patientFullName
                     const patientFullNameId = document.getElementById("patientFullName");
                     patientFullNameId.textContent = fullNameNoPrefix;
+                    
                     // patient age badge
                     updateAgeBadge(document.getElementById("patientMinorOrMajor"),minor_or_major);
                     updateSubscriptionDate(document.getElementById("patientSubDate"), subDateItalianFormat, gender);
-                    // patient avatar
-                    const patientavatarImg1 = document.getElementById("patientAvatar");
-                    if (gender === 'Femminile') {
-                            patientavatarImg1.src = 'assets/img/registrazione/kid-female.png';
-                    } else if (gender === 'Maschile') {
-                        patientavatarImg1.src = 'assets/img/registrazione/kid-male.png';
-                    } 
-                    const formPatientNameId= document.getElementById("formPatientName");
-                    formPatientNameId.textContent= fullNameNoPrefix;
-                    
+                    updateUserAvatar(gender);
+                 
 
-                } catch (err) {
+            } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
                 }
 
@@ -1811,250 +2183,33 @@
 
         </script>
 
-        <script>
 
-            // Create choices.js dorpdown menu
-            document.addEventListener('DOMContentLoaded', function() {
-                const element = document.getElementById('scuolaSelect');
-                const choices = new Choices(element, {
-                    searchEnabled: false,
-                    itemSelectText: '',
-                    shouldSort: false, // Keeps your custom order
-                    position: 'bottom'
-                });
+    <script>
+
+        //SIDEBAR Race condition fix
+        $(document).ready(function() {
+            // We attach the listener to 'body' so it never "dies" 
+            // even if the navbar is re-rendered or the script finishes late.
+            $("body").on('click', '#sidebarToggleTop', function(e) {
+                e.preventDefault();
+                
+                // 1. Toggle classes
+                $("body").toggleClass("sidebar-toggled");
+                $(".sidebar").toggleClass("toggled");
+
+                // 3. Handle the 'overflow' issue we discussed for your dashboard layout
+                if ($("body").hasClass("sidebar-toggled")) {
+                    // Optional: prevent background scrolling on mobile when menu is open
+                    if (window.innerWidth < 768) {
+                        $("html, body").css("overflow", "hidden");
+                    }
+                } else {
+                    $("html, body").css("overflow", ""); 
+                }
             });
-
-        </script>
-
-        <script>
-
-            function confirmRemoveAll()
-            {
-                console.log("removal confirmed");
-
-                // 1. Explicitly remove focus from the button that triggered the event
-                if (document.activeElement instanceof HTMLElement) {
-                    document.activeElement.blur();
-                }
-
-                // 1. Clear all standard inputs (text, date, number, etc.)
-                const allInputs = document.querySelectorAll('input');
-                allInputs.forEach(input => {
-                    // Reset value
-                    input.value = '';
-                    // Reset border styles (in case you added red borders for errors)
-                    input.style.borderColor = '';
-                });
-
-                // 2. Reset all selects to the first option (the "Seleziona..." one)
-                const allSelects = document.querySelectorAll('select');
-                allSelects.forEach(select => {
-                    select.selectedIndex = 0; 
-                    select.style.borderColor = '';
-                });
-
-                console.log("All elements cleared.");
-
-                // 2. Move focus to the body to be safe
-                document.body.focus();
-
-                // 3. Close the modal
-                $('#confirmClearModal').modal('hide');
-                
-            }
-
-        </script>
-
-        <script>
-
-            function validateForm() {
-
-                // Title check
-                const titleInput = document.getElementById('therapyInput');
-                if (!titleInput.checkValidity() || !titleInput.value.trim()) {
-                    titleInput.reportValidity(); // Displays the native browser warning popup
-                    return false; // FIX: Return false instead of undefined
-                }
-
-                // Date check
-                const dateInput = document.getElementById('clinicalDate');
-                if (!dateInput.checkValidity()) {
-                    dateInput.reportValidity();
-                    return false;
-                }
-
-                // School select check & read
-                const selectElement = document.getElementById('scuolaSelect');
-                if (!selectElement.checkValidity()) { // FIX: Added check before reading options
-                    selectElement.reportValidity();
-                    return false;
-                }
-                
-                const selectedOption = selectElement.options[selectElement.selectedIndex];
-                const schoolData = {
-                    value: selectedOption.value,
-                    group: selectedOption.parentNode.label || ''
-                };
-
-                // Read & validate PROVA inputs
-                const input1 = document.getElementById('prova_a_1');
-                if (!input1.checkValidity()) {
-                    input1.reportValidity();
-                    return false;
-                }
-
-                const input2 = document.getElementById('prova_a_2');
-                if (!input2.checkValidity()) {
-                    input2.reportValidity();
-                    return false;
-                }
-
-                const input3 = document.getElementById('prova_b_1');
-                if (!input3.checkValidity()) {
-                    input3.reportValidity();
-                    return false;
-                }
-
-                const input4 = document.getElementById('prova_c_1');
-                if (!input4.checkValidity()) {
-                    input4.reportValidity();
-                    return false;
-                }
-
-                const input5 = document.getElementById('prova_d_1');
-                if (!input5.checkValidity()) {
-                    input5.reportValidity();
-                    return false;
-                }
-
-                const input6 = document.getElementById('prova_d_2');
-                if (!input6.checkValidity()) {
-                    input6.reportValidity();
-                    return false;
-                }
-
-                const input7 = document.getElementById('prova_d_3');
-                if (!input7.checkValidity()) {
-                    input7.reportValidity();
-                    return false;
-                }
-
-                const input8 = document.getElementById('prova_e_1');
-                if (!input8.checkValidity()) {
-                    input8.reportValidity();
-                    return false;
-                }
-
-                const input9 = document.getElementById('prova_f_1');
-                if (!input9.checkValidity()) {
-                    input9.reportValidity();
-                    return false;
-                }
-
-                const select1 = document.getElementById('CoRiiSelect1');
-                if (!select1.checkValidity()) {
-                    select1.reportValidity();
-                    return false;
-                }
-
-                const select2 = document.getElementById('CoRiiSelect2');
-                if (!select2.checkValidity()) {
-                    select2.reportValidity();
-                    return false;
-                }
-
-                // 5. Build fresh protocol payload
-                const newAssessment = {
-                    timestamp: new Date().toISOString(),
-                    title: { text: titleInput.value.trim() },
-                    data: { evaluationDate: dateInput.value },
-                    education: schoolData,
-                    prova_a: { 
-                        accuratezza: input1.value.trim(), 
-                        velocita: parseFloat(input2.value).toFixed(1) 
-                    },
-                    prova_b: { errori_ortografici_totali: input3.value.trim() },
-                    prova_c: { lettura_e_comprensione_del_testo: input4.value.trim() },
-                    prova_d: {
-                        dettato_di_numeri: input5.value.trim(),
-                        fatti_numerici_calcolo_rapido: input6.value.trim(),
-                        grandezza_frazionaria: input7.value.trim()
-                    },
-                    prova_e: { errori_di_decisione: input8.value.trim() },
-                    prova_f: { capacità_working_memory: input9.value.trim() },
-                    prova_g: {
-                        isolamento_dei_dati_rilevanti: select1.value,
-                        risoluzione_e_algoritmo: select2.value
-                    }
-                };
-
-                console.log("Assessment Payload Ready:", newAssessment);
-                return newAssessment;
-            }
-
-            // 2. Direct Save Handler (Async)
-            async function submitAssessment() {
-                
-                // Step A: Validate and build assessment payload
-                const newAssessment = validateForm();
-                if (!newAssessment) return; // Validation failed, browser popup shown, abort.
-
-                // Step B: Get active patient ID
-                const activePatientId = localStorage.getItem('activePatientId');
-                if (!activePatientId) {
-                    alert("Nessun paziente attivo trovato!");
-                    return;
-                }
-
-                try {
-                    // Use consistent Supabase client reference
-                    const supabaseClient = window.supabase;
-
-                    // Step C: Fetch existing patient activity column
-                    const { data: patient, error: fetchError } = await supabaseClient
-                        .from("Clients")
-                        .select("activity")
-                        .eq("id", activePatientId)
-                        .single();
-
-                    if (fetchError) throw fetchError;
-
-                    // Step D: Prepare updated structure safely
-                    // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
-                    let currentActivity = patient?.activity 
-                        ? JSON.parse(JSON.stringify(patient.activity)) 
-                        : { Assessments: [], Certificates: [], Therapies: [] };
-
-                    if (!Array.isArray(currentActivity.Assessments)) {
-                        currentActivity.Assessments = [];
-                    }
-
-                    // Prepend new assessment to top of array
-                    currentActivity.Assessments.unshift(newAssessment);
-
-                    // Step E: Save back to Supabase (using supabaseClient)
-                    const { data,error: updateError } = await supabaseClient
-                        .from("Clients")
-                        .update({ activity: currentActivity })
-                        .eq("id", activePatientId)
-                        .select(); // <--- Adding .select() returns the updated row to verify
-                
-                        console.log("Updated row result:", data);
-
-                    if (updateError) throw updateError;
-
-                    console.log("Saved successfully!");
-
-                } catch (err) {
-                    console.error("Errore durante il salvataggio:", err);
-                }
-            }
-
-        </script>
-
-       
-    <!-- JS before </body> -->
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+        });
+    
+    </script>
 
 </body>
 </html>
