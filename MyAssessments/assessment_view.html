@@ -603,6 +603,48 @@
 
 </style>
 
+<style>
+
+    .badge-status-adult {
+        background-color: #4edf97 !important;
+        color: #fff !important;
+    }
+    .badge-status-minor {
+        background-color: #f87171 !important;
+        color: #fff !important;
+    }
+
+</style>
+
+<style>
+
+    /* Custom Tooltip Styling - Navy Blue & White */
+    .tooltip .tooltip-inner {
+        background-color: #4e73df; /* Navy Blue */
+        color: #ffffff;            /* White text */
+        border-radius: 6px;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+
+    /* Custom Tooltip Arrow Color matching Navy Blue */
+    .tooltip.bs-tooltip-top .arrow::before {
+        border-top-color: #002D62;
+    }
+    .tooltip.bs-tooltip-bottom .arrow::before {
+        border-bottom-color: #002D62;
+    }
+    .tooltip.bs-tooltip-left .arrow::before {
+        border-left-color: #002D62;
+    }
+    .tooltip.bs-tooltip-right .arrow::before {
+        border-right-color: #002D62;
+}
+
+</style>
+
 </head>
 
 <body id="page-top">
@@ -770,12 +812,14 @@
 
                 <!-- Badges Stacked Underneath -->
                 <div class="d-flex align-items-center justify-content-center justify-content-md-start flex-wrap" style="min-width: 0; min-height: 27px;">
-                    <span id="patientMinorOrMajor" 
-                        class="badge d-inline-flex align-items-center justify-content-center text-truncate" 
-                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #4edf97; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
+
+                     <span id="patientMinorOrMajor" 
+                        class="badge badge-status-minor d-inline-flex align-items-center justify-content-center text-truncate" 
+                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #858796; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
                         <span class="sr-only">Loading status...</span>
                         <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
                     </span>
+
                 </div>
 
                 <!-- Subscription Date -->
@@ -794,14 +838,29 @@
     </div>
 </div>
 
+
+
 <!-- DYNAMIC CONTENT SECTION -->
 <div id="dynamicContentContainer" class="card mb-4 shadow-sm d-flex flex-column" style="border-radius: 12px; overflow: hidden; border: none; min-width: 0; flex-grow: 1;">
     
     <!-- This body container will automatically expand vertically as items are appended -->
     <div class="card-body p-4 d-flex flex-column" style="gap: 15px; min-width: 0;">
+     
+        <!-- Wrapper using ml-auto to push the button to the right, plus right padding/margin if needed -->
+        <div class="d-flex align-items-center ml-auto" style="padding-right: 15px;">
+            <!-- Round Lock Button with Tooltip -->
+            <button id="lockToggleButton" 
+                    class="btn btn-success rounded-circle shadow-sm d-flex align-items-center justify-content-center" 
+                    style="width: 80px; height:  80px; border: none;" 
+                    data-state="unlocked" 
+                    data-toggle="tooltip" 
+                    data-placement="top" 
+                    title="Form sbloccato (clicca per bloccare)">
+                <i id="lockToggleIcon" class="fas fa-lock-open text-white" style="font-size: 1.8rem;"></i>
+            </button>
+        </div>
+
         <!-- New elements added dynamically will appear here and push the container downwards -->
-
-
         <article class="pt-container" style="text-align: center;">
             <h1 class="pt-title" style="margin-bottom: 20px;">FASCICOLO SCREENING DSA</h1>
                     
@@ -1439,8 +1498,7 @@
                     <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
                     </h2>
 
-                    <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
-                        <!-- Save Button -->
+                       <!-- <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
                         <button type="button" 
                                 id="assegna-btn" 
                                 class="inner-action-btn" 
@@ -1449,7 +1507,6 @@
                             <i class="fas fa-plus-circle text-success mr-2"></i> Assegna
                         </button>
 
-                        <!-- Clear Button (Triggers Bootstrap Modal) -->
                         <button type="button" 
                                 id="svuota-btn" 
                                 class="inner-action-btn" 
@@ -1458,7 +1515,7 @@
                                 style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
                             <i class="fas fa-trash text-danger mr-2"></i> Svuota
                         </button>
-                    </div>
+                    </div>-->
 
                 </article>
     </div>
@@ -1518,7 +1575,7 @@
                 <h5 class="modal-title font-weight-bold text-white">Attenzione</h5>
             </div>
             <div class="modal-body text-white-50">
-                Questa operazione è irreversibile. Confermi di voler svuotare l'intero elenco dei protocolli?
+                Questa operazione è irreversibile. Confermi di voler svuotare l'intero form ?
             </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annulla</button>
@@ -1650,7 +1707,7 @@
 
             // ---------------------------------------------------------------------------------
             // Updates the age status badge of a patient with unified center alignments.
-            
+            /*
             function updateAgeBadge(badgeElement, status) {
                 if (!badgeElement) return;
 
@@ -1658,8 +1715,8 @@
                 
                 // Design styles with proper vertical spacing
                 badgeElement.style.borderRadius = "50px";
-                badgeElement.style.fontSize = "0.75rem";
-                badgeElement.style.padding = "6px 12px"; // Increased vertical padding slightly to prevent clipping
+                badgeElement.style.fontSize = "0.85rem";
+                badgeElement.style.padding = "4px 10px"; // Increased vertical padding slightly to prevent clipping
                 badgeElement.style.fontWeight = "600";
                 
                 // Safety boundaries and constraints
@@ -1671,15 +1728,47 @@
                     // --- ADULT STATE (Green) ---
                     badgeElement.style.backgroundColor = "#4edf97";
                     badgeElement.innerHTML = `
-                        <i class="fas fa-user mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
+                        <span class="text-truncate font-italic" style="line-height: 1.2; min-width: 0; display: inline-block;">Maggiorenne</span>
+                    `;
+                } else {
+                    // --- MINOR STATE (Red) ---
+                    badgeElement.style.backgroundColor = "#f87171";
+                    badgeElement.innerHTML = `
+                        <span class="text-truncate font-italic" style="line-height: 1.2; min-width: 0; display: inline-block;">Minorenne</span>
+                    `;
+                }
+                   
+            }
+            */
+            
+            function updateAgeBadge(badgeElement, status) {
+                if (!badgeElement) return;
+
+                if (status === 1) {
+                    // --- ADULT STATE (Green) ---
+                    badgeElement.className = "badge badge-status-adult d-inline-flex align-items-center justify-content-center text-truncate";
+                    badgeElement.style.borderRadius = "50px";
+                    badgeElement.style.fontSize = "0.85rem";
+                    badgeElement.style.padding = "4px 10px";
+                    badgeElement.style.fontWeight = "600";
+                    badgeElement.style.maxWidth = "100%";
+                    badgeElement.style.minWidth = "0"; 
+                    badgeElement.style.overflow = "hidden";
+                    badgeElement.innerHTML = `
                         <span class="text-truncate" style="line-height: 1.2; min-width: 0; display: inline-block;">Maggiorenne</span>
                     `;
                 } else {
                     // --- MINOR STATE (Red) ---
-                    badgeElement.style.backgroundColor = "#ff4d4d";
+                    badgeElement.className = "badge badge-status-minor d-inline-flex align-items-center justify-content-center text-truncate";
+                    badgeElement.style.borderRadius = "50px";
+                    badgeElement.style.fontSize = "0.85rem";
+                    badgeElement.style.padding = "4px 10px";
+                    badgeElement.style.fontWeight = "600";
+                    badgeElement.style.maxWidth = "100%";
+                    badgeElement.style.minWidth = "0"; 
+                    badgeElement.style.overflow = "hidden";
                     badgeElement.innerHTML = `
-                        <i class="fas fa-child mr-1 flex-shrink-0" style="font-size: 0.75rem;"></i> 
-                        <span class="text-truncate" style="line-height: 1.2; min-width: 0; display: inline-block;">Minorenne</span>
+                        <span class="text-truncate font-italic" style="line-height: 1.2; min-width: 0; display: inline-block;">Minorenne</span>
                     `;
                 }
             }
@@ -2173,7 +2262,7 @@
                     updateAgeBadge(document.getElementById("patientMinorOrMajor"),minor_or_major);
                     updateSubscriptionDate(document.getElementById("patientSubDate"), subDateItalianFormat, gender);
                     updateUserAvatar(gender);
-                 
+                
 
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
@@ -2183,6 +2272,40 @@
 
         </script>
 
+    <script>
+
+        $(document).ready(function() {
+            // 1. Initialize Bootstrap Tooltips
+            $('[data-toggle="tooltip"]').tooltip();
+
+            // 2. Click Listener to Toggle State & Update Tooltip Text
+            $('#lockToggleButton').on('click', function() {
+                const $btn = $(this);
+                const $icon = $('#lockToggleIcon');
+                const currentState = $btn.attr('data-state');
+                
+                // Hide tooltip temporarily during state switch
+                $btn.tooltip('hide');
+                
+                if (currentState === 'unlocked') {
+                    // --- SWITCH TO LOCKED STATE (Red) ---
+                    $btn.removeClass('btn-success').addClass('btn-danger');
+                    $btn.attr('data-state', 'locked');
+                    $btn.attr('data-original-title', 'Form bloccato (clicca per sbloccare)');
+                    
+                    $icon.removeClass('fa-lock-open').addClass('fa-lock');
+                } else {
+                    // --- SWITCH TO UNLOCKED STATE (Green) ---
+                    $btn.removeClass('btn-danger').addClass('btn-success');
+                    $btn.attr('data-state', 'unlocked');
+                    $btn.attr('data-original-title', 'Form sbloccato (clicca per bloccare)');
+                    
+                    $icon.removeClass('fa-lock').addClass('fa-lock-open');
+                }
+            });
+        });
+
+    </script>
 
     <script>
 
