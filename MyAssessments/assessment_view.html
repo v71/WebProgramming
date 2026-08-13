@@ -699,8 +699,11 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
+ 
+                    <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: calc(1rem + 0.5vw) !important;">
+                        Ispeziona Assessment
+                    </h1>
 
-                    <h1 class="h4 mb-0 text-gray-800">Dashboard Clinico</h1>
 
                     <ul class="navbar-nav ml-auto">
                         <li class="topbar-divider d-none d-sm-block"></li>
@@ -848,7 +851,6 @@
      
         <!-- Wrapper using ml-auto to push the button to the right, plus right padding/margin if needed -->
         <div class="d-flex align-items-center ml-auto" style="padding-right: 15px;">
-            <!-- Round Lock Button with Tooltip -->
             <button id="lockToggleButton" 
                     class="btn btn-success rounded-circle shadow-sm d-flex align-items-center justify-content-center" 
                     style="width: 80px; height:  80px; border: none;" 
@@ -2306,6 +2308,34 @@
         });
 
     </script>
+
+         <script>
+
+            $(document).ready(function() {
+                // Intercept the Logout button click
+                $('#logoutBtn').on('click', function(e) {
+                    // 1. Stop the browser from immediately redirecting to index.html
+                    e.preventDefault();
+                    // 2. Run your application cleanup logic here
+                    console.log("Logging out... clearing patient session data.");
+                    // Clear your persistent patient storage so it doesn't hang around
+                    // If you need to clear all session tokens, you could do:
+                    localStorage.clear(); 
+                    // 3. Manually trigger the redirect now that the data is wiped
+                    window.location.href = $(this).attr('href'); 
+                });
+            });
+
+        </script>
+
+         <script>
+                   // Sidebar Toggle Handler
+                    $("#sidebarToggleTop").on('click', function(e) {
+                        e.preventDefault();
+                        $("body").toggleClass("sidebar-toggled");
+                        $(".sidebar").toggleClass("toggled");
+                    });
+        </script>
 
     <script>
 

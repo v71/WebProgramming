@@ -725,7 +725,7 @@
                     </button>
 
                     <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
-                        Dashboard - Aggiungi un nuovo Assessment
+                        Dashboard - Revisiona Assessment
                     </h1>
 
                     <ul class="navbar-nav ml-auto">
@@ -888,79 +888,28 @@
                                     PROTOCOLLO CLINICO CON CUT-OFF NORMATIVI INTEGRATI (CONSENSUS CONFERENCE)
                                 </h2>
 
-                                <button type="button" class="btn btn-warning btn-sm mb-3" onclick="autoFillFormDebug()">
+                                <!--<button type="button" class="btn btn-warning btn-sm mb-3" onclick="autoFillFormDebug()">
                                     ⚡ Debug Fill
-                                </button>
+                                </button>-->
 
                                 <div class="container-fluid mt-2 mb-4">
 
                                     <div class="row border-top border-left border-right m-0">
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
                                         style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Titolo Fascicolo</div>
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
                                         style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Ente Emettitore</div>
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
+                                        style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Data Valutazione</div>
                                     </div>
 
                                     <div class="row border m-0">
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
                                             <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Titolo Fascicolo" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
                                         </div>
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
                                             <input type="text" id="formEntity" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Ente Emettitore" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
                                         </div>
-                                    </div>
-
-                                </div>
-
-                                <p class="note-box">
-                                    <strong>Guida alla Valutazione:</strong> Questo fascicolo unisce gli stimoli alternativi della Forma B ai criteri diagnostici ufficiali italiani. 
-                                    Per ciascuna prova sono riportate le fasce di performance: 
-                                    <span class="badge-co">CO</span> Criterio di Competenza (Norma), 
-                                    <span class="badge-ra">RA</span> Richiesta di Attenzione (Borderline), e
-                                    <span class="badge-rii">RII</span> Richiesta di Intervento Immediato (Sospetto Deficit).
-                                </p>
-
-                                <div class="container-fluid mt-4">
-
-                                    <div class="row border-top border-left border-right m-0">
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Nome e Cognome</div>
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Classe Scolastica</div>
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Data Valutazione</div>
-                                    </div>
-                                    
-                                    <div class="row border m-0">
-
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input type="text" id="formPatientName" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Nome e Cognome" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
-                                        </div>
-
-                                        <div class="col-4 p-2 border-right">
-                                            <select id="scuolaSelect" class="form-control" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
-                                                <option value="" disabled selected hidden>Seleziona classe...</option>
-                                                <optgroup label="Scuola Primaria">
-                                                    <option>2ª classe Scuola Primaria</option>
-                                                    <option>3ª classe Scuola Primaria</option>
-                                                    <option>4ª classe Scuola Primaria</option>
-                                                    <option>5ª classe Scuola Primaria</option>
-                                                </optgroup>
-                                                <optgroup label="Scuola Secondaria di 1º Grado">
-                                                    <option>1ª classe Scuola Secondaria di 1º Grado</option>
-                                                    <option>2ª classe Scuola Secondaria di 1º Grado</option>
-                                                    <option>3ª classe Scuola Secondaria di 1º Grado</option>
-                                                </optgroup>
-                                                <optgroup label="Scuola Secondaria di 2º Grado">
-                                                    <option>1ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>2ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>3ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>4ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>5ª classe Scuola Secondaria di 2º Grado</option>
-                                                </optgroup>
-                                            </select>
-                                        </div>
-                                        
                                         <div class="col-4 p-2 border-right">
                                             <div id="dateGroup" class="input-group" style="width: 100%;">
                                                 <input type="date" id="clinicalDate" class="form-control shadow-none" required max="" style="height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; background-color: transparent;">
@@ -993,6 +942,71 @@
                                             }
                                         </script>
 
+                                    </div>
+
+                                </div>
+
+                                <p class="note-box">
+                                    <strong>Guida alla Valutazione:</strong> Questo fascicolo unisce gli stimoli alternativi della Forma B ai criteri diagnostici ufficiali italiani. 
+                                    Per ciascuna prova sono riportate le fasce di performance: 
+                                    <span class="badge-co">CO</span> Criterio di Competenza (Norma), 
+                                    <span class="badge-ra">RA</span> Richiesta di Attenzione (Borderline), e
+                                    <span class="badge-rii">RII</span> Richiesta di Intervento Immediato (Sospetto Deficit).
+                                </p>
+
+                                <div class="container-fluid mt-4">
+
+                                    <div class="row border-top border-left border-right m-0">
+                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Nome e Cognome</div>
+                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Classe Scolastica</div>
+                                    </div>
+
+                                    <div class="row border m-0">
+
+                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                                            <input type="text" id="formPatientName" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Nome e Cognome" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
+                                        </div>
+
+                                        <div class="col-6 p-2 border-right">
+                                            <!-- Wrapper with relative positioning -->
+                                            <div style="position: relative;">
+                                                <select id="scuolaSelect" class="form-control" required style="height: 40px; font-size: 1rem; border-radius: 6px; padding-right: 35px; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
+                                                        onclick="
+                                                            const arrow = this.nextElementSibling;
+                                                            arrow.innerText = (arrow.innerText === '▲') ? '▼' : '▲';
+                                                        "
+                                                        onchange="this.nextElementSibling.innerText = '▲'; this.blur();"
+                                                        onblur="this.nextElementSibling.innerText = '▲';">
+                                                    <option value="" disabled selected hidden>Seleziona classe...</option>
+                                                    <optgroup label="Scuola Primaria">
+                                                        <option>2ª classe Scuola Primaria</option>
+                                                        <option>3ª classe Scuola Primaria</option>
+                                                        <option>4ª classe Scuola Primaria</option>
+                                                        <option>5ª classe Scuola Primaria</option>
+                                                    </optgroup>
+                                                    <optgroup label="Scuola Secondaria di 1º Grado">
+                                                        <option>1ª classe Scuola Secondaria di 1º Grado</option>
+                                                        <option>2ª classe Scuola Secondaria di 1º Grado</option>
+                                                        <option>3ª classe Scuola Secondaria di 1º Grado</option>
+                                                    </optgroup>
+                                                    <optgroup label="Scuola Secondaria di 2º Grado">
+                                                        <option>1ª classe Scuola Secondaria di 2º Grado</option>
+                                                        <option>2ª classe Scuola Secondaria di 2º Grado</option>
+                                                        <option>3ª classe Scuola Secondaria di 2º Grado</option>
+                                                        <option>4ª classe Scuola Secondaria di 2º Grado</option>
+                                                        <option>5ª classe Scuola Secondaria di 2º Grado</option>
+                                                    </optgroup>
+                                                </select>
+                                                <!-- Single arrow indicator -->
+                                                <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #6c757d; font-size: 0.8rem;">
+                                                    ▲
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                      
                                     </div>
 
                                 </div>
@@ -1526,6 +1540,12 @@
     </div>
 </div>
 
+
+
+
+
+
+
                         </div>
                     </div>
                 </div>
@@ -1546,7 +1566,7 @@
     </div><!-- Wrapper -->
 
 
-    <style>
+        <style>
     
         /* Make the modal feel 'outside' the normal UI flow */
         .modal-system-alert {
@@ -1621,6 +1641,9 @@
 
                 // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
                 window.calculateAgeWithMonths = calculateAgeWithMonths;
+
+                // Make the variable globally available from the start
+                window.assessments = [];
 
         </script>
 
@@ -1706,6 +1729,17 @@
                 }
                 return activeId.trim();
             }
+
+           function getValidAssessmentId() {
+                // 1. Read the UUID string from localStorage
+                const targetId = localStorage.getItem('selectedAssessmentId');
+                // 2. Validate that it exists and isn't empty/null/undefined
+                if (!targetId || targetId === 'null' || targetId === 'undefined' || targetId.trim() === '') {
+                    return null;
+                }
+                return targetId;
+            }
+
 
             // ---------------------------------------------------------------------------------
             // Updates the age status badge of a patient with unified center alignments.
@@ -1930,7 +1964,6 @@
 
                 // 5. Build fresh protocol payload
                 const newAssessment = {
-                    uniqueId: crypto.randomUUID(),
                     timestamp: new Date().toISOString(),
                     title: titleInput.value.trim(),
                     entityName: entityInput.value.trim(),
@@ -1962,7 +1995,7 @@
 
             // 2. Direct Save Handler (Async)
             async function submitAssessment() {
-
+                /*
                 // Step A: Validate and build assessment payload
                 const newAssessment = validateForm();
                 if (!newAssessment) return; // Validation failed, browser popup shown, abort.
@@ -2018,116 +2051,208 @@
                     
                     // Redirect back to the patient list
                     window.location.href = 'lista_assessments.html';
-                    
+
                 } catch (err) {
                     console.error("Errore durante il salvataggio:", err);
                 }
-                    
+                 */   
             }
             
         </script>
 
 <script>
 
-        function autoFillFormDebug() {
-            console.log("⚡ Auto-filling form with debug data...");
 
-            // 1. Fill Text, Number, and Date Inputs
-            const allInputs = document.querySelectorAll('input');
+        function injectFormattedDate(dateInputData) {
+            if (!dateInputData) return;
             
-            allInputs.forEach(input => {
-                // Skip buttons, hidden fields, submit inputs, or disabled inputs
-                if (['button', 'submit', 'hidden', 'reset'].includes(input.type) || input.disabled) {
-                    return;
+            // Force it to be a string
+            let dateString = String(dateInputData).trim();
+            let formattedDate = dateString;
+            
+            console.log(dateString );
+
+            // Check if it contains slashes (e.g. DD/MM/YYYY)
+            if (dateString.includes('/')) {
+                const parts = dateString.split('/');
+                if (parts.length === 3) {
+                    let day = parts[0].padStart(2, '0');
+                    let month = parts[1].padStart(2, '0');
+                    let year = parts[2];
+
+                    if (year.length === 2) {
+                        year = '20' + year;
+                    }
+                    // Reconstruct safely
+                    formattedDate = year + '-' + month + '-' + day;
+                }
+            }
+            return formattedDate;
+         //   console.log(formattedDate);
+        //    const dateInput = document.getElementById('clinicalDate');
+        //    if (dateInput) {
+        //        dateInput.value = formattedDate;
+        //        console.log("Original data:", dateInputData, "Converted value set to:", dateInput.value);
+        //    } else {
+        //        console.warn("Element #clinicalDate not found!");
+        //    }
+        }
+
+
+
+        function FillForm(assessmentId,fullNameNoPrefix) {
+              
+       //   console.log("Looking for assessmentId:", assessmentId);
+       //   console.log("Current window.assessments array:", window.assessments);
+
+          // Run the search
+          const assessment = window.assessments.find(item => item.uniqueId === assessmentId.trim());
+
+          console.log("Found result:", assessment);
+
+          // Title check
+          const titleInput = document.getElementById('formTitle');
+          if (titleInput) {
+            titleInput.value = assessment.title || ""; 
+          }
+
+         // Entitiy check
+         const entityInput = document.getElementById('formEntity');
+         if (entityInput) {
+            entityInput.value = assessment.entityName; 
+         }
+
+        // Patient name check
+         const nameInput = document.getElementById('formPatientName');
+         if (nameInput) {
+            nameInput.value = fullNameNoPrefix; 
+         }
+
+         const dateInput = document.getElementById('clinicalDate');
+         if (dateInput) {
+            dateInput.value = injectFormattedDate(assessment.italian_date); 
+         }
+
+            /*
+                // scuola check
+                const scuolaSelect = document.getElementById('scuolaSelect');
+                if (!scuolaSelect.checkValidity() || !scuolaSelect.value) {
+                    scuolaSelect.reportValidity(); // Displays the native browser warning popup
+                    return false;
+                } else {
+                    scuolaSelect.style.borderColor = '';
+                    scuolaSelect.style.boxShadow = '';
+                    scuolaSelect.style.borderRadius = '';
+                }
+                
+                let schoolData = null;
+                // Ensure an option is actually selected
+                if (scuolaSelect.selectedIndex >= 0) {
+                    const selectedOption = scuolaSelect.options[scuolaSelect.selectedIndex];
+                    schoolData = {
+                        text: selectedOption.text,                   // The visible text of the option
+                        group: selectedOption.parentNode.label || '' // The optgroup label (e.g., "Scuola Primaria")
+                    };
                 }
 
-                switch (input.type) {
-                    case 'text':
-                        // Target specific text fields by their IDs
-                        if (input.id === 'formTitle') {
-                            const titles = ['Valutazione DSA', 
-                                            'Screening Logopedico', 
-                                            'Protocollo Competenze Strumentali', 
-                                            'Verifica Apprendimento',
-                                            'Valutazione DSA A', 
-                                            'Screening Logopedico A', 
-                                            'Protocollo Competenze Strumentali A', 
-                                            'Verifica Apprendimento A',
-                                            'Valutazione DSA B', 
-                                            'Screening Logopedico B', 
-                                            'Protocollo Competenze Strumentali B', 
-                                            'Verifica Apprendimento B'
-                                        ];
-                            input.value = titles[Math.floor(Math.random() * titles.length)];
-                        } 
-                        else if (input.id === 'formEntity') {
-                            const entities = ['ASL Milano', 'Studio Medico Associato', 'Centro Clinico Specialistico', 'Polo Riabilitativo'];
-                            input.value = entities[Math.floor(Math.random() * entities.length)];
-                        } 
-                        else if (input.id === 'formPatientName') {
-                            const names = ['Mario Rossi', 'Giulia Bianchi', 'Luca Verdi', 'Sofia Neri', 'Alessandro Colombo'];
-                            input.value = names[Math.floor(Math.random() * names.length)];
-                        } 
-                        else {
-                            // Fallback for any other standard text inputs
-                            input.value = 'Test Data ' + Math.floor(Math.random() * 100);
-                        }
-                    break;
-
-                    case 'number':
-                        // Respect min/max attributes if set, otherwise pick a random number between 0 and 100
-                        const min = input.min !== '' ? parseFloat(input.min) : 0;
-                        const max = input.max !== '' ? parseFloat(input.max) : 100;
-                        const step = input.step ? parseFloat(input.step) : 1;
-                        
-                        let randomVal = (Math.random() * (max - min) + min);
-                        if (step === 1) {
-                            randomVal = Math.floor(randomVal);
-                        } else {
-                            randomVal = parseFloat(randomVal.toFixed(1));
-                        }
-                        input.value = randomVal;
-                    break;
-
-                    case 'date':
-                       // Generates a random date in the past (within the current year, up to today)
-                        const today = new Date();
-                        const currentYear = today.getFullYear();
-                        const currentMonth = today.getMonth(); // 0-indexed
-                        const currentDay = today.getDate();
-                        // Pick a random month from January (0) up to the current month
-                        const randomMonth = Math.floor(Math.random() * (currentMonth + 1));
-                        // Determine the maximum possible day for that month
-                        // If it's the current month, limit to today's date; otherwise, limit to 28
-                        const maxDay = (randomMonth === currentMonth) ? currentDay : 28;
-                        const randomDay = Math.floor(Math.random() * maxDay) + 1;
-                        const monthStr = String(randomMonth + 1).padStart(2, '0');
-                        const dayStr = String(randomDay).padStart(2, '0');
-                        input.value = `${currentYear}-${monthStr}-${dayStr}`;
-                    break;
-
-                    default:
-                            input.value = "Test " + Math.floor(Math.random() * 10);
-                    break;
+                // Read & validate PROVA inputs
+                const input1 = document.getElementById('prova_a_1');
+                if (!input1.checkValidity()) {
+                    input1.reportValidity();
+                    return false;
+                }
+                
+                const input2 = document.getElementById('prova_a_2');
+                if (!input2.checkValidity()) {
+                    input2.reportValidity();
+                    return false;
+                }
+                
+                const input3 = document.getElementById('prova_b_1');
+                if (!input3.checkValidity()) {
+                    input3.reportValidity();
+                    return false;
                 }
 
-                // Trigger 'input' and 'change' events in case you have UI listeners/validations
-                input.dispatchEvent(new Event('input', { bubbles: true }));
-                input.dispatchEvent(new Event('change', { bubbles: true }));
-            });
-
-            // 2. Select Random Options for Select Boxes
-            const allSelects = document.querySelectorAll('select');
-            allSelects.forEach(select => {
-                if (select.options.length > 1) {
-                    // Pick a random index skipping index 0 (usually the "Seleziona..." placeholder)
-                    const randomIndex = Math.floor(Math.random() * (select.options.length - 1)) + 1;
-                    select.selectedIndex = randomIndex;
-                    select.dispatchEvent(new Event('change', { bubbles: true }));
+                const input4 = document.getElementById('prova_c_1');
+                if (!input4.checkValidity()) {
+                    input4.reportValidity();
+                    return false;
                 }
-            });
+                
+                const input5 = document.getElementById('prova_d_1');
+                if (!input5.checkValidity()) {
+                    input5.reportValidity();
+                    return false;
+                }
 
-            console.log("✅ Form auto-filled successfully!");
+                const input6 = document.getElementById('prova_d_2');
+                if (!input6.checkValidity()) {
+                    input6.reportValidity();
+                    return false;
+                }
+                
+                const input7 = document.getElementById('prova_d_3');
+                if (!input7.checkValidity()) {
+                    input7.reportValidity();
+                    return false;
+                }
+                
+                const input8 = document.getElementById('prova_e_1');
+                if (!input8.checkValidity()) {
+                    input8.reportValidity();
+                    return false;
+                }
+                
+                const input9 = document.getElementById('prova_f_1');
+                if (!input9.checkValidity()) {
+                    input9.reportValidity();
+                    return false;
+                }
+
+                const select1 = document.getElementById('CoRiiSelect1');
+                if (!select1.checkValidity()) {
+                    select1.reportValidity();
+                    return false;
+                }
+
+                const select2 = document.getElementById('CoRiiSelect2');
+                if (!select2.checkValidity()) {
+                    select2.reportValidity();
+                    return false;
+                }
+
+                // 5. Build fresh protocol payload
+                const newAssessment = {
+                    timestamp: new Date().toISOString(),
+                    title: titleInput.value.trim(),
+                    entityName: entityInput.value.trim(),
+                    evaluationDate: dateInput.value,
+                    italian_date : new Date(dateInput.value).toLocaleDateString('it-IT'),
+                    education: schoolData,
+                    prova_a: { 
+                        accuratezza: input1.value.trim(), 
+                        velocita: parseFloat(input2.value).toFixed(1) 
+                    },
+                    prova_b: { errori_ortografici_totali: input3.value.trim() },
+                    prova_c: { lettura_e_comprensione_del_testo: input4.value.trim() },
+                    prova_d: {
+                        dettato_di_numeri: input5.value.trim(),
+                        fatti_numerici_calcolo_rapido: input6.value.trim(),
+                        grandezza_frazionaria: input7.value.trim()
+                    },
+                    prova_e: { errori_di_decisione: input8.value.trim() },
+                    prova_f: { capacità_working_memory: input9.value.trim() },
+                    prova_g: {
+                        isolamento_dei_dati_rilevanti: select1.value,
+                        risoluzione_e_algoritmo: select2.value
+                    }
+                };
+
+                console.log("Assessment Payload Ready:", newAssessment);
+          
+          */
+
         }
 
 </script>
@@ -2200,8 +2325,18 @@
                     window.location.replace("lista_pazienti6.html"); // Cambia con la tua pagina lista pazienti
                     return;
                 }
-                
-                console.log("Selected Patient Id : ", activePatientId);
+
+                const activeAssessmentId = getValidAssessmentId();
+
+                // ✅ Correct validation for a UUID string
+                if (!activeAssessmentId || activeAssessmentId === 'null' || activeAssessmentId === 'undefined' || activeAssessmentId.trim() === '') {
+                    alert("Nessun assessment selezionato. Ritorno alla lista...");
+                    window.location.replace("lista_pazienti6.html");
+                    return;
+                }
+
+          //      console.log("Selected Patient Id : ", activePatientId);
+          //      console.log("Selected Assessmnet Id : ", activeAssessmentId);
         
                 // --- Sidebar Assign Assessment Click Handler ---
                 const assignBtn = document.getElementById("assegna-btn");
@@ -2267,7 +2402,20 @@
                     updateAgeBadge(document.getElementById("patientMinorOrMajor"),minor_or_major);
                     updateSubscriptionDate(document.getElementById("patientSubDate"), subDateItalianFormat, gender);
                     updateUserAvatar(gender);
+
+                    // Accedi direttamente al JSON object
+                    // Fallback sicuro nel caso in cui la colonna sia NULL nel database
+                    const patientActivity = patientData.activity || { Assessments: [], Certificates: [], Therapies: [] };
+               //     console.log("Activity:", patientActivity);
                  
+                    window.assessments = patientActivity.Assessments || [];
+                    
+            //        console.log("Assessments:", window.assessments);
+
+                    // fill form with patient selcted assessment
+                    FillForm(activeAssessmentId,fullNameNoPrefix);
+
+                 //   console.log(window.assessments[activeAssessmentId]);
 
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);

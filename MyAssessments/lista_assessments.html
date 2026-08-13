@@ -4,12 +4,16 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>MyAssessments</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/startbootstrap-sb-admin-2/4.1.4/css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
 
+        <!-- Custom fonts for this template -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+        <!-- Custom styles for this template -->
+        <link href="assets/sb-admin-2/css/sb-admin-2.min.css" rel="stylesheet">
+        <!-- Custom styles for this page -->
+        <link href="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
-    <!-- CSS in <head> -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
 
     <style>
         /* Custom Overrides for the "Renaizant" look */
@@ -693,7 +697,7 @@
 
 </style>
 
-<!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
+    <!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
     <style>
 
         @keyframes structuralFadeIn {
@@ -762,10 +766,16 @@
                 </a>
             </li>
 
-              <li class="nav-item fade-on-load">
+            <!-- Divider -->
+            <hr class="sidebar-divider fade-on-load">
+            <!-- Heading -->
+            <div class=" fade-on-load sidebar-heading" style="font-size: 0.85rem; font-weight: 700;">
+                Azioni
+            </div>
+            <li class="nav-item fade-on-load">
                 <a class="nav-link nav-link-blue" href="assessment_add_new.html">
                     <i class="fas fa-circle-plus"></i>
-                    <span>Aggiungi Nuovo Paziente</span>
+                    <span>Nuovo Assessment</span>
                 </a>
             </li>
 
@@ -784,7 +794,9 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <h1 class="h4 mb-0 text-gray-800">Lista Assessments</h1>
+                    <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
+                        Dashboard - Lista Assessments
+                    </h1>
 
                     <ul class="navbar-nav ml-auto">
                         <li class="topbar-divider d-none d-sm-block"></li>
@@ -844,7 +856,7 @@
                 </nav>
 
 
-                <div class="container-fluid">
+                <div class="fade-on-load container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
                             
@@ -953,11 +965,10 @@
         <div class="card-header bg-white d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between py-2 flex-shrink-0" style="border-bottom: none; min-height: 55px; gap: 10px;">
             
             <!-- Title Section -->
-            <div class="d-flex align-items-center">
-                <i class="fas fa-users text-primary mr-2"></i>
-                <h6 class="m-0 font-weight-bold text-gray-800">
-                    Lista Assessments 
-                    <span id="totalUsersCount">
+            <div class="d-flex align-items-center" style="min-width: 0; width: 100%;">
+                <i class="fas fa-users text-primary mr-2" style="flex-shrink: 0;"></i>
+                <h6 class="m-0 font-weight-bold text-gray-800" style="min-width: 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    Lista Assessments <span id="totalUsersCount">
                         <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.85rem;"></i>
                     </span>
                 </h6>
@@ -1109,7 +1120,6 @@
             // ---------------------------------------------------------------------------------
 
             function updateClinicianAvatar(userGender) {
-                
                 const avatarImg1 = document.getElementById('profileAvatar1');
                 const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
                 const container1 = document.getElementById('avatarContainer1');
@@ -1139,7 +1149,6 @@
                 if (container1) {
                     container1.classList.remove('bg-light', 'p-1'); // Clean up temporary loading borders
                 }
-                
             }
 
             // ---------------------------------------------------------------------------------
@@ -1255,6 +1264,15 @@
 
         </script>
 
+         <script>
+                   // Sidebar Toggle Handler
+                    $("#sidebarToggleTop").on('click', function(e) {
+                        e.preventDefault();
+                        $("body").toggleClass("sidebar-toggled");
+                        $(".sidebar").toggleClass("toggled");
+                    });
+        </script>
+
     <!-- Table Pagination & Filtering Script -->
     <script>
         
@@ -1332,7 +1350,7 @@
                         const rowHtml = `
                             <tr data-id="${id}">
                                 <td class="align-middle text-center">${index + 1}</td>
-                                <td class="font-weight-bold align-middle text-center">${title || '-'}</td>
+                                <td class="align-middle text-center">${title || '-'}</td>
                                 <td class="align-middle text-center">${italian_date || '-'}</td>
                                 <td class="align-middle text-center">${entityName || '-'}</td>
                                 <td class="align-middle text-center">${ageStr || '-'}</td>
@@ -1353,7 +1371,6 @@
                 }
                 currentPage = 1;
                 recalculateLayout();
-                
             }
 
             // ---------------------------------------------------------------------------------
@@ -1379,7 +1396,6 @@
                 const calculatedCount = Math.floor(availableTbodySpace / rowHeight);
 
                 return Math.max(1, calculatedCount);
-                
             }
 
             // ---------------------------------------------------------------------------------
@@ -1510,32 +1526,30 @@
             $('#tableBody').on('click', 'tr', function(e) {
                 if ($(e.target).closest('a, button, input, .dropdown').length) return;
                 
-                
-                const selectedAssessmentIndex = $(this).data('id');
-                console.log('Clicked row index:', selectedAssessmentIndex);
-
+                const tableIndex = $(this).data('id');
+                const selectedAssessmentId = window.assessments[tableIndex].uniqueId;
                 const selectedPatientId = getValidPatientId();
-                console.log('Patient Id:', selectedPatientId);
                 
                 // Save both the patient ID and the specific assessment index to localStorage
-                
-                // Save both the patient ID and the specific assessment index to localStorage
-                if (selectedPatientId !== undefined && selectedAssessmentIndex !== undefined) {
+
+                if (selectedPatientId !== undefined && selectedAssessmentId !== undefined) {
                     localStorage.setItem('selectedPatientId', selectedPatientId);
-                    localStorage.setItem('selectedAssessmentId', selectedAssessmentIndex);
+                    localStorage.setItem('selectedAssessmentId', selectedAssessmentId);
+                    
+                    console.log("PatientId : ",selectedPatientId);
+                    console.log("AssessmnetId :",selectedAssessmentId);
                     
                     // Optional: Redirect to the editing or detail page
-                    // window.location.href = 'edit_assessment.html';
+                    window.location.href = 'assessment_view_3.html';
                 }
-                    
             });
 
             $(document).on('click', '#btnAddAssessmentMain', function(e) {
                 e.preventDefault();
                 console.log('Aggiungi Nuovo Assessment button clicked via .on()!');
 
-                const activePatientId = getValidPatientId();
-                console.log('Patient Id:', activePatientId);
+               // const activePatientId = getValidPatientId();
+               // console.log('Patient Id:', activePatientId);
 
                 // Add your redirection or action logic here
                 window.location.href = 'assessment_add_new.html';
@@ -1707,11 +1721,11 @@
 
                 if (!activePatientId) {
                     alert("Nessun paziente selezionato. Ritorno alla lista...");
-               //     window.location.replace("patient-directory.html"); // Cambia con la tua pagina lista pazienti
+                    window.location.replace("lista_pazienti_6.html"); // Cambia con la tua pagina lista pazienti
                     return;
                 }
                 
-//                console.log("Selected Patient Id : ", activePatientId);
+                // console.log("Selected Patient Id : ", activePatientId);
         
                 try {
                     
@@ -1777,7 +1791,7 @@
             // even if the navbar is re-rendered or the script finishes late.
             $("body").on('click', '#sidebarToggleTop', function(e) {
                 e.preventDefault();
-                
+               
                 // 1. Toggle classes
                 $("body").toggleClass("sidebar-toggled");
                 $(".sidebar").toggleClass("toggled");
@@ -1795,9 +1809,6 @@
         });
     
     </script>
-
-        <!-- JS before </body> -->
-        <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 
 </body>
 </html>

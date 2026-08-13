@@ -690,25 +690,6 @@
                 </a>
             </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider fade-on-load">
-            <!-- Heading -->
-            <div class=" fade-on-load sidebar-heading" style="font-size: 0.85rem; font-weight: 700;">
-                Azioni
-            </div>
-            <li class="nav-item fade-on-load">
-                <a id="assegna-btn" class="nav-link nav-link-blue" href="assessment_add_new.html">
-                    <i class="fas fa-circle-plus"></i>
-                    <span>Assegna Assessment</span>
-                </a>
-            </li>
-            <li class="nav-item fade-on-load">
-                <a id="svuota-btn" class="nav-link nav-link-blue" href="assessment_add_new.html">
-                    <i class="fas fa-rotate-left"></i>
-                    <span>Svuota Modulo Assessment</span>
-                </a>
-            </li>
-
         </ul>
         <!-- End of Sidebar -->
         
@@ -724,8 +705,8 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
-                        Dashboard - Aggiungi un nuovo Assessment
+                    <h1 class="h4 mb-0 text-gray-800" style="font-size: 1.8rem !important; line-height: 1.2; height: auto !important; min-height: auto !important;">
+                        Dashboard - Revisiona Assessment
                     </h1>
 
                     <ul class="navbar-nav ml-auto">
@@ -1514,6 +1495,31 @@
 
                                 </div>
 
+                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
+                                </h2>
+
+                                <div class="d-flex" style="gap: 15px; flex-wrap: wrap;">
+                                    <!-- Save Button -->
+                                    <button type="button" 
+                                            id="assegna-btn" 
+                                            class="inner-action-btn" 
+                                            onclick="submitAssessment()" 
+                                            style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
+                                        <i class="fas fa-plus-circle text-success mr-2"></i> Assegna
+                                    </button>
+
+                                    <!-- Clear Button (Triggers Bootstrap Modal) -->
+                                    <button type="button" 
+                                            id="svuota-btn" 
+                                            class="inner-action-btn" 
+                                            data-toggle="modal" 
+                                            data-target="#confirmClearModal" 
+                                            style="height: 45px; padding: 0 25px; font-size: 0.85rem; white-space: nowrap;">
+                                        <i class="fas fa-trash text-danger mr-2"></i> Svuota
+                                    </button>
+                                </div>
+                                
+
                             </article>
 
                         </div>
@@ -1525,6 +1531,12 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
 
                         </div>
                     </div>
@@ -1546,7 +1558,7 @@
     </div><!-- Wrapper -->
 
 
-    <style>
+        <style>
     
         /* Make the modal feel 'outside' the normal UI flow */
         .modal-system-alert {
@@ -1598,37 +1610,39 @@
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>        
         <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
 
-        <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
-        <!--<script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-        <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
-        <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>-->
+        
+    <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
+    <!--<script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>-->
     
-        <script type="module">
+     <script type="module">
 
-                // init supabase
-                import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-                
-                // --- Supabase setup ---
-                const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
-                const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
-                window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                
-                import {
-                    convertToItalianFormat,
-                    calculateAgeWithMonths
-                } from "./assets/js/string_utils.js";
+             // init supabase
+            import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+            
+            // --- Supabase setup ---
+            const SUPABASE_URL = "https://bjbnkqgyibadjlrcjqfs.supabase.co";
+            const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJqYm5rcWd5aWJhZGpscmNqcWZzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ2ODkyOTksImV4cCI6MjA4MDI2NTI5OX0.sFqboExgH7E3o51COcAGGn2Tz5mO75ccUn3IKJIf-w8";
+            window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            
+            import {
+                convertToItalianFormat,
+                calculateAgeWithMonths
+            } from "./assets/js/string_utils.js";
 
-                // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
-                window.calculateAgeWithMonths = calculateAgeWithMonths;
+            // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
+            window.calculateAgeWithMonths = calculateAgeWithMonths;
 
-        </script>
+    </script>
 
         <script>
 
             // ---------------------------------------------------------------------------------
 
             function updateClinicianAvatar(userGender) {
+                
                 const avatarImg1 = document.getElementById('profileAvatar1');
                 const spinnerIcon1 = document.getElementById('avatarSpinnerIcon1');
                 const container1 = document.getElementById('avatarContainer1');
@@ -1664,6 +1678,7 @@
             // ---------------------------------------------------------------------------------
 
             function updateUserAvatar(userGender) {
+
                 const avatarImg1 = document.getElementById('profileAvatar2');
                 const spinnerIcon1 = document.getElementById('avatarSpinnerIcon2');
                 const container1 = document.getElementById('avatarContainer2');
@@ -1774,7 +1789,8 @@
 
         <script>
 
-            function confirmRemoveAll() {
+            function confirmRemoveAll()
+            {
                 console.log("removal confirmed");
                 
                 // 1. Explicitly remove focus from the button that triggered the event
@@ -1811,7 +1827,8 @@
 
         <script>
             
-            function validateForm()  {
+            function validateForm() 
+            {
                 // Title check
                 const titleInput = document.getElementById('formTitle');
                 if (!titleInput.checkValidity() || !titleInput.value.trim()) {
@@ -1930,7 +1947,6 @@
 
                 // 5. Build fresh protocol payload
                 const newAssessment = {
-                    uniqueId: crypto.randomUUID(),
                     timestamp: new Date().toISOString(),
                     title: titleInput.value.trim(),
                     entityName: entityInput.value.trim(),
@@ -1962,7 +1978,7 @@
 
             // 2. Direct Save Handler (Async)
             async function submitAssessment() {
-
+                
                 // Step A: Validate and build assessment payload
                 const newAssessment = validateForm();
                 if (!newAssessment) return; // Validation failed, browser popup shown, abort.
@@ -2018,7 +2034,7 @@
                     
                     // Redirect back to the patient list
                     window.location.href = 'lista_assessments.html';
-                    
+
                 } catch (err) {
                     console.error("Errore durante il salvataggio:", err);
                 }
@@ -2045,19 +2061,7 @@
                     case 'text':
                         // Target specific text fields by their IDs
                         if (input.id === 'formTitle') {
-                            const titles = ['Valutazione DSA', 
-                                            'Screening Logopedico', 
-                                            'Protocollo Competenze Strumentali', 
-                                            'Verifica Apprendimento',
-                                            'Valutazione DSA A', 
-                                            'Screening Logopedico A', 
-                                            'Protocollo Competenze Strumentali A', 
-                                            'Verifica Apprendimento A',
-                                            'Valutazione DSA B', 
-                                            'Screening Logopedico B', 
-                                            'Protocollo Competenze Strumentali B', 
-                                            'Verifica Apprendimento B'
-                                        ];
+                            const titles = ['Valutazione DSA', 'Screening Logopedico', 'Protocollo Competenze Strumentali', 'Verifica Apprendimento'];
                             input.value = titles[Math.floor(Math.random() * titles.length)];
                         } 
                         else if (input.id === 'formEntity') {
@@ -2203,26 +2207,6 @@
                 
                 console.log("Selected Patient Id : ", activePatientId);
         
-                // --- Sidebar Assign Assessment Click Handler ---
-                const assignBtn = document.getElementById("assegna-btn");
-                if (assignBtn) {
-                    assignBtn.addEventListener("click", function(e) {
-                        e.preventDefault(); // Uncoment if you want to stop default navigation
-                        //console.log("Assegna Assessment clicked!");
-                        submitAssessment();
-                    });
-                }
-
-                const emptyBtn = document.getElementById("svuota-btn");
-                if (emptyBtn) {
-                    emptyBtn.addEventListener("click", function(e) {
-                        e.preventDefault(); // Uncoment if you want to stop default navigation
-                        //console.log("Svuota Assessment clicked!");
-                        // Trigger the Bootstrap modal to show
-                        $('#confirmClearModal').modal('show');
-                    });
-                }
-
                 try {
                    
                     // Esegui la query per il paziente attivo
