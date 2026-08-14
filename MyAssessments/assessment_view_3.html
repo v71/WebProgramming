@@ -650,6 +650,26 @@
 }
 </style>
 
+
+<style>
+
+    .arrow-select {
+        padding-right: 2.75rem;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        background-repeat: no-repeat;
+        background-position: right 0.65rem center;
+        background-size: 22px;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3e%3cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3e%3c/svg%3e");
+    }
+
+    .arrow-select.open {
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3e%3cpath fill-rule='evenodd' d='M14.77 12.79a.75.75 0 01-1.06-.02L10 8.81l-3.71 3.96a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z' clip-rule='evenodd'/%3e%3c/svg%3e");
+    }
+
+</style>
+
 </head>
 
 <body id="page-top">
@@ -696,16 +716,25 @@
             <div class=" fade-on-load sidebar-heading" style="font-size: 0.85rem; font-weight: 700;">
                 Azioni
             </div>
+            
             <li class="nav-item fade-on-load">
-                <a id="assegna-btn" class="nav-link nav-link-blue" href="assessment_add_new.html">
+                <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-circle-plus"></i>
                     <span>Assegna Assessment</span>
                 </a>
             </li>
+
             <li class="nav-item fade-on-load">
-                <a id="svuota-btn" class="nav-link nav-link-blue" href="assessment_add_new.html">
-                    <i class="fas fa-rotate-left"></i>
-                    <span>Svuota Modulo Assessment</span>
+                <a id="riempi-btn" class="nav-link nav-link-blue" href="#">
+                    <i class="fas fa-arrows-rotate"></i>
+                    <span>Riempi Assessment</span>
+                </a>
+            </li>
+
+            <li class="nav-item fade-on-load">
+                <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
+                    <i class="fas fa-broom"></i>
+                    <span>Svuota Assessment</span>
                 </a>
             </li>
 
@@ -969,9 +998,8 @@
                                             <input type="text" id="formPatientName" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Nome e Cognome" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
                                         </div>
 
-                                        <div class="col-6 p-2 border-right">
-                                            <!-- Wrapper with relative positioning -->
-                                            <div style="position: relative;">
+                                        <!--<div class="col-6 p-2 border-right">
+                                           <div style="position: relative;">
                                                 <select id="scuolaSelect" class="form-control" required style="height: 40px; font-size: 1rem; border-radius: 6px; padding-right: 35px; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
                                                         onclick="
                                                             const arrow = this.nextElementSibling;
@@ -999,14 +1027,39 @@
                                                         <option>5ª classe Scuola Secondaria di 2º Grado</option>
                                                     </optgroup>
                                                 </select>
-                                                <!-- Single arrow indicator -->
+                                               
                                                 <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #6c757d; font-size: 0.8rem;">
                                                     ▲
                                                 </div>
                                             </div>
+                                        </div>-->
+                                      
+                                        <!-- Just add the "arrow-select" class to any <select> you want this behavior on -->
+                                        <div class="col-6 p-2 border-right">
+                                            <select id="scuolaSelect" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
+                                                <option value="" disabled selected hidden>Seleziona classe...</option>
+                                                <optgroup label="Scuola Primaria">
+                                                    <option>2ª classe Scuola Primaria</option>
+                                                    <option>3ª classe Scuola Primaria</option>
+                                                    <option>4ª classe Scuola Primaria</option>
+                                                    <option>5ª classe Scuola Primaria</option>
+                                                </optgroup>
+                                                <optgroup label="Scuola Secondaria di 1º Grado">
+                                                    <option>1ª classe Scuola Secondaria di 1º Grado</option>
+                                                    <option>2ª classe Scuola Secondaria di 1º Grado</option>
+                                                    <option>3ª classe Scuola Secondaria di 1º Grado</option>
+                                                </optgroup>
+                                                <optgroup label="Scuola Secondaria di 2º Grado">
+                                                    <option>1ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>2ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>3ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>4ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>5ª classe Scuola Secondaria di 2º Grado</option>
+                                                </optgroup>
+                                            </select>
                                         </div>
 
-                                      
+
                                     </div>
 
                                 </div>
@@ -1502,30 +1555,84 @@
                                             Isolamento dei Dati Rilevanti
                                         </div>
 
-                                        <div id="prova_g_1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                        <!--<div id="prova_g_1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                             <select id="CoRiiSelect1" class="form-control" required>
                                                 <option value="" disabled selected>Seleziona...</option>
                                                 <option value="CO">CO</option>
                                                 <option value="RII">RII</option>
                                             </select>
+                                        </div>-->
+
+                                        <!--<div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;" style="position: relative;">
+                                            <select id="CoRiiSelect1" class="form-control" required style="height: 40px; font-size: 1rem; border-radius: 6px; padding-right: 35px; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
+                                                    onclick="
+                                                        const arrow = this.nextElementSibling;
+                                                        arrow.innerText = (arrow.innerText === '▲') ? '▼' : '▲';
+                                                    "
+                                                    onchange="this.nextElementSibling.innerText = '▲'; this.blur();"
+                                                    onblur="this.nextElementSibling.innerText = '▲';">
+                                                    <option value="" disabled selected hidden>Seleziona...</option>
+                                                    <option value="CO">CO</option>
+                                                    <option value="RII">RII</option>
+                                            </select>
+                                            <div style="position: absolute; right: 22px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #6c757d; font-size: 0.8rem;">
+                                                ▲
+                                            </div>
+                                        </div>-->
+
+                                        <!-- Another select reusing the same behavior, zero extra code needed -->
+                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                            <select id="CoRiiSelect1" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
+                                                <option value="" disabled selected hidden>Seleziona...</option>
+                                                 <option value="CO">CO</option>
+                                                 <option value="RII">RII</option>
+                                            </select>
                                         </div>
 
+
                                     </div>
+                                    
                                     <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
                                         <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                         Risoluzione e Algoritmo
                                         </div>
 
-                                        <div id="prova_g_2" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                        <!--<div id="prova_g_2" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                             <select id="CoRiiSelect2" class="form-control" required>
                                                 <option value="" disabled selected>Seleziona...</option>
                                                 <option value="CO">CO</option>
                                                 <option value="RII">RII</option>
                                             </select>
+                                        </div>-->
+
+                                        <!--<div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;" style="position: relative;">
+                                            <select id="CoRiiSelect2" class="form-control" required style="height: 40px; font-size: 1rem; border-radius: 6px; padding-right: 35px; appearance: none; -webkit-appearance: none; -moz-appearance: none;"
+                                                    onclick="
+                                                        const arrow = this.nextElementSibling;
+                                                        arrow.innerText = (arrow.innerText === '▲') ? '▼' : '▲';
+                                                    "
+                                                    onchange="this.nextElementSibling.innerText = '▲'; this.blur();"
+                                                    onblur="this.nextElementSibling.innerText = '▲';">
+                                                    <option value="" disabled selected hidden>Seleziona...</option>
+                                                    <option value="CO">CO</option>
+                                                    <option value="RII">RII</option>
+                                            </select>
+                                            <div style="position: absolute; right: 22px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #6c757d; font-size: 0.8rem;">
+                                                ▲
+                                            </div>
+                                        </div>-->
+
+                                        <!-- Another select reusing the same behavior, zero extra code needed -->
+                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                            <select id="CoRiiSelect2" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
+                                                <option value="" disabled selected hidden>Seleziona...</option>
+                                                 <option value="CO">CO</option>
+                                                 <option value="RII">RII</option>
+                                            </select>
                                         </div>
 
                                     </div>
-
+                                    
                                 </div>
 
                             </article>
@@ -1539,12 +1646,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
 
                         </div>
                     </div>
@@ -1644,6 +1745,9 @@
 
                 // Make the variable globally available from the start
                 window.assessments = [];
+                window.uniquePatientId;
+                window.assessmentId;
+                window.fullNameNoPrefix;
 
         </script>
 
@@ -1809,7 +1913,7 @@
         <script>
 
             function confirmRemoveAll() {
-                console.log("removal confirmed");
+            //    console.log("removal confirmed");
                 
                 // 1. Explicitly remove focus from the button that triggered the event
                 if (document.activeElement instanceof HTMLElement) {
@@ -1832,7 +1936,7 @@
                     select.style.borderColor = '';
                 });
 
-                console.log("All elements cleared.");
+           //     console.log("All elements cleared.");
 
                 // 2. Move focus to the body to be safe
                 document.body.focus();
@@ -1962,8 +2066,11 @@
                     return false;
                 }
 
-                // 5. Build fresh protocol payload
+//                console.log(window.uniquePatientId);
+
+                // Build fresh protocol payload
                 const newAssessment = {
+                    uniqueId: window.uniquePatientId,
                     timestamp: new Date().toISOString(),
                     title: titleInput.value.trim(),
                     entityName: entityInput.value.trim(),
@@ -1989,17 +2096,43 @@
                     }
                 };
 
-                console.log("Assessment Payload Ready:", newAssessment);
+         //       console.log("Assessment Payload Ready:", newAssessment);
                 return newAssessment;
             }
 
-            // 2. Direct Save Handler (Async)
+            // Direct Save Handler (Async)
             async function submitAssessment() {
-                /*
+                
                 // Step A: Validate and build assessment payload
                 const newAssessment = validateForm();
                 if (!newAssessment) return; // Validation failed, browser popup shown, abort.
                 
+                // Ensure the global ID exists
+                if (!window.assessmentId) {
+                    console.error("window.assessmentId is undefined!");
+                    return;
+                }
+                
+                // Step B: Find the index of the existing assessment in the global array
+                const targetId = window.assessmentId.trim();
+                const index = window.assessments.findIndex(item => item.uniqueId === targetId);
+
+                if (index !== -1) {
+                    // Replace the old assessment with the new updated payload
+      //              window.assessments[index] = newAssessment;
+                    console.log("Replaced existing assessment at index:", index);
+                } else {
+                    console.warn("Assessment not found in local array, pushing as new.");
+    //                window.assessments.unshift(newAssessment);
+                }
+                
+                // Run the search
+    //            const assessment = window.assessments.find(item => item.uniqueId === window.assessmentId.trim());
+
+      //          console.log("Found result:", assessment);
+
+            
+                /*
                 // Step B: Get active patient ID
                 const activePatientId = getValidPatientId();
                 if (!activePatientId) {
@@ -2062,6 +2195,7 @@
 
 <script>
 
+        // -------------------------------------------------------------------
 
         function injectFormattedDate(dateInputData) {
             if (!dateInputData) return;
@@ -2070,8 +2204,6 @@
             let dateString = String(dateInputData).trim();
             let formattedDate = dateString;
             
-            console.log(dateString );
-
             // Check if it contains slashes (e.g. DD/MM/YYYY)
             if (dateString.includes('/')) {
                 const parts = dateString.split('/');
@@ -2088,142 +2220,131 @@
                 }
             }
             return formattedDate;
-         //   console.log(formattedDate);
-        //    const dateInput = document.getElementById('clinicalDate');
-        //    if (dateInput) {
-        //        dateInput.value = formattedDate;
-        //        console.log("Original data:", dateInputData, "Converted value set to:", dateInput.value);
-        //    } else {
-        //        console.warn("Element #clinicalDate not found!");
-        //    }
         }
 
+        // -------------------------------------------------------------------
 
+        function setSelectByText(selectElement, targetText) {
+
+            if (!selectElement) return;
+
+            let found = false;
+            for (let i = 0; i < selectElement.options.length; i++) {
+                // Compare text (case-insensitive and trimmed for safety)
+                if (selectElement.options[i].text.trim().toLowerCase() === targetText.trim().toLowerCase()) {
+                    selectElement.selectedIndex = i;
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) {
+                // Reset arrow back to default state just in case it was open
+                const arrow = selectElement.nextElementSibling;
+                if (arrow) arrow.innerText = '▲';
+            } else {
+                console.warn(`Option matching "${targetText}" not found.`);
+            }
+        }
+  
+        // -------------------------------------------------------------------
+
+        function setInputValue(inputElement,value) {
+            if (inputElement) {
+                inputElement.value = value;
+                
+                // Optional: Trigger an 'input' or 'change' event if your app 
+                // has listeners watching for changes on this field
+                inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+            } else {
+                console.warn("Input element #prova_a_1 not found.");
+            }
+        }
+
+        // -------------------------------------------------------------------
 
         function FillForm(assessmentId,fullNameNoPrefix) {
               
-       //   console.log("Looking for assessmentId:", assessmentId);
-       //   console.log("Current window.assessments array:", window.assessments);
+            //   console.log("Looking for assessmentId:", assessmentId);
+            //   console.log("Current window.assessments array:", window.assessments);
 
-          // Run the search
-          const assessment = window.assessments.find(item => item.uniqueId === assessmentId.trim());
+            // Run the search
+            const assessment = window.assessments.find(item => item.uniqueId === assessmentId.trim());
 
-          console.log("Found result:", assessment);
+            //  console.log("Found result:", assessment);
 
-          // Title check
-          const titleInput = document.getElementById('formTitle');
-          if (titleInput) {
-            titleInput.value = assessment.title || ""; 
-          }
+            // Title check
+            const titleInput = document.getElementById('formTitle');
+            if (titleInput) {
+                titleInput.value = assessment.title || ""; 
+            }
 
-         // Entitiy check
-         const entityInput = document.getElementById('formEntity');
-         if (entityInput) {
-            entityInput.value = assessment.entityName; 
-         }
+            // Entitiy check
+            const entityInput = document.getElementById('formEntity');
+            if (entityInput) {
+                entityInput.value = assessment.entityName; 
+            }
 
-        // Patient name check
-         const nameInput = document.getElementById('formPatientName');
-         if (nameInput) {
-            nameInput.value = fullNameNoPrefix; 
-         }
+            // Patient name check
+            const nameInput = document.getElementById('formPatientName');
+            if (nameInput) {
+                nameInput.value = fullNameNoPrefix; 
+            }
 
-         const dateInput = document.getElementById('clinicalDate');
-         if (dateInput) {
-            dateInput.value = injectFormattedDate(assessment.italian_date); 
-         }
+            const dateInput = document.getElementById('clinicalDate');
+            if (dateInput) {
+                dateInput.value = injectFormattedDate(assessment.italian_date); 
+            }
 
-            /*
-                // scuola check
-                const scuolaSelect = document.getElementById('scuolaSelect');
-                if (!scuolaSelect.checkValidity() || !scuolaSelect.value) {
-                    scuolaSelect.reportValidity(); // Displays the native browser warning popup
-                    return false;
-                } else {
-                    scuolaSelect.style.borderColor = '';
-                    scuolaSelect.style.boxShadow = '';
-                    scuolaSelect.style.borderRadius = '';
-                }
-                
-                let schoolData = null;
-                // Ensure an option is actually selected
-                if (scuolaSelect.selectedIndex >= 0) {
-                    const selectedOption = scuolaSelect.options[scuolaSelect.selectedIndex];
-                    schoolData = {
-                        text: selectedOption.text,                   // The visible text of the option
-                        group: selectedOption.parentNode.label || '' // The optgroup label (e.g., "Scuola Primaria")
-                    };
-                }
+            // console.log(assessment.education.text);
 
-                // Read & validate PROVA inputs
-                const input1 = document.getElementById('prova_a_1');
-                if (!input1.checkValidity()) {
-                    input1.reportValidity();
-                    return false;
-                }
-                
-                const input2 = document.getElementById('prova_a_2');
-                if (!input2.checkValidity()) {
-                    input2.reportValidity();
-                    return false;
-                }
-                
-                const input3 = document.getElementById('prova_b_1');
-                if (!input3.checkValidity()) {
-                    input3.reportValidity();
-                    return false;
-                }
+            const scuolaSelect = document.getElementById('scuolaSelect');
+            setSelectByText(scuolaSelect,assessment.education.text);
 
-                const input4 = document.getElementById('prova_c_1');
-                if (!input4.checkValidity()) {
-                    input4.reportValidity();
-                    return false;
-                }
-                
-                const input5 = document.getElementById('prova_d_1');
-                if (!input5.checkValidity()) {
-                    input5.reportValidity();
-                    return false;
-                }
+            const input1 = document.getElementById('prova_a_1');
+            setInputValue(input1,assessment.prova_a.accuratezza);         
 
-                const input6 = document.getElementById('prova_d_2');
-                if (!input6.checkValidity()) {
-                    input6.reportValidity();
-                    return false;
-                }
-                
-                const input7 = document.getElementById('prova_d_3');
-                if (!input7.checkValidity()) {
-                    input7.reportValidity();
-                    return false;
-                }
-                
-                const input8 = document.getElementById('prova_e_1');
-                if (!input8.checkValidity()) {
-                    input8.reportValidity();
-                    return false;
-                }
-                
-                const input9 = document.getElementById('prova_f_1');
-                if (!input9.checkValidity()) {
-                    input9.reportValidity();
-                    return false;
-                }
+            const input2 = document.getElementById('prova_a_2');
+            setInputValue(input2,assessment.prova_a.velocita);         
 
-                const select1 = document.getElementById('CoRiiSelect1');
-                if (!select1.checkValidity()) {
-                    select1.reportValidity();
-                    return false;
-                }
+            const input3 = document.getElementById('prova_b_1');
+            setInputValue(input3,assessment.prova_b.errori_ortografici_totali);         
 
-                const select2 = document.getElementById('CoRiiSelect2');
-                if (!select2.checkValidity()) {
-                    select2.reportValidity();
-                    return false;
-                }
+            const input4 = document.getElementById('prova_c_1');
+            setInputValue(input4,assessment.prova_c.lettura_e_comprensione_del_testo);         
+
+            const input5 = document.getElementById('prova_d_1');
+            setInputValue(input5,assessment.prova_d.dettato_di_numeri);       
+
+            const input6 = document.getElementById('prova_d_2');
+            setInputValue(input6,assessment.prova_d.fatti_numerici_calcolo_rapido);    
+
+            const input7 = document.getElementById('prova_d_3');
+            setInputValue(input7,assessment.prova_d.grandezza_frazionaria);         
+
+            const input8 = document.getElementById('prova_e_1');
+            setInputValue(input8,assessment.prova_e.errori_di_decisione);         
+
+            const input9 = document.getElementById('prova_f_1');
+            setInputValue(input9,assessment.prova_f.capacità_working_memory);         
+
+            const select1 = document.getElementById('CoRiiSelect1');
+            setSelectByText(select1,assessment.prova_g.risoluzione_e_algoritmo);
+    
+            const select2 = document.getElementById('CoRiiSelect2');
+            setSelectByText(select2,assessment.prova_g.isolamento_dei_dati_rilevanti);
+    
+            // save patient Id
+            window.uniquePatientId=assessment.uniqueId;
+
+          //  console.log(window.uniquePatientId);
+
+            
+         /*
 
                 // 5. Build fresh protocol payload
                 const newAssessment = {
+                    uniqueId: crypto.randomUUID(),
                     timestamp: new Date().toISOString(),
                     title: titleInput.value.trim(),
                     entityName: entityInput.value.trim(),
@@ -2358,6 +2479,15 @@
                     });
                 }
 
+                const fillBtn = document.getElementById("riempi-btn");
+                if (fillBtn) {
+                    fillBtn.addEventListener("click", function(e) {
+                        e.preventDefault(); // Uncoment if you want to stop default navigation
+                        //console.log("Riempi Assessment clicked!");
+                        FillForm(window.assessmentId,window.fullNameNoPrefix);
+                    });
+                }
+
                 try {
                    
                     // Esegui la query per il paziente attivo
@@ -2407,15 +2537,14 @@
                     // Fallback sicuro nel caso in cui la colonna sia NULL nel database
                     const patientActivity = patientData.activity || { Assessments: [], Certificates: [], Therapies: [] };
                //     console.log("Activity:", patientActivity);
-                 
                     window.assessments = patientActivity.Assessments || [];
-                    
+                    window.assessmentId=activeAssessmentId;
+                    window.fullNameNoPrefix=fullNameNoPrefix;
+
             //        console.log("Assessments:", window.assessments);
-
+            
                     // fill form with patient selcted assessment
-                    FillForm(activeAssessmentId,fullNameNoPrefix);
-
-                 //   console.log(window.assessments[activeAssessmentId]);
+                    FillForm(window.assessmentId,window.fullNameNoPrefix);
 
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
@@ -2481,6 +2610,53 @@
         });
     
     </script>
+
+
+<script>
+
+    (function () {
+        function initArrowSelect(select) {
+            let isOpen = false;
+
+            select.addEventListener('mousedown', () => {
+                const alreadyFocused = document.activeElement === select;
+
+                if (alreadyFocused && isOpen) {
+                    isOpen = false;
+                } else {
+                    isOpen = true;
+                }
+                select.classList.toggle('open', isOpen);
+            });
+
+            select.addEventListener('keydown', (e) => {
+                if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
+                    isOpen = true;
+                    select.classList.add('open');
+                }
+                if (e.key === 'Escape') {
+                    isOpen = false;
+                    select.classList.remove('open');
+                }
+            });
+
+            select.addEventListener('change', () => {
+                isOpen = false;
+                select.classList.remove('open');
+            });
+
+            select.addEventListener('blur', () => {
+                isOpen = false;
+                select.classList.remove('open');
+            });
+        }
+
+        // Applies to every select with the "arrow-select" class, present now or added later
+        document.querySelectorAll('select.arrow-select').forEach(initArrowSelect);
+    })();
+
+</script>
+
 
 </body>
 </html>

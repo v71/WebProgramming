@@ -650,6 +650,25 @@
 }
 </style>
 
+<style>
+
+.arrow-select {
+    padding-right: 2.75rem;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-repeat: no-repeat;
+    background-position: right 0.65rem center;
+    background-size: 22px;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3e%3cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+.arrow-select.open {
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3e%3cpath fill-rule='evenodd' d='M14.77 12.79a.75.75 0 01-1.06-.02L10 8.81l-3.71 3.96a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z' clip-rule='evenodd'/%3e%3c/svg%3e");
+}
+
+</style>
+
 </head>
 
 <body id="page-top">
@@ -895,72 +914,23 @@
                                 <div class="container-fluid mt-2 mb-4">
 
                                     <div class="row border-top border-left border-right m-0">
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
                                         style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Titolo Fascicolo</div>
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
                                         style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Ente Emettitore</div>
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
+                                        style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Data Valutazione</div>
+                                        
                                     </div>
 
                                     <div class="row border m-0">
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
                                             <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Titolo Fascicolo" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
                                         </div>
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
                                             <input type="text" id="formEntity" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Ente Emettitore" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
                                         </div>
-                                    </div>
 
-                                </div>
-
-                                <p class="note-box">
-                                    <strong>Guida alla Valutazione:</strong> Questo fascicolo unisce gli stimoli alternativi della Forma B ai criteri diagnostici ufficiali italiani. 
-                                    Per ciascuna prova sono riportate le fasce di performance: 
-                                    <span class="badge-co">CO</span> Criterio di Competenza (Norma), 
-                                    <span class="badge-ra">RA</span> Richiesta di Attenzione (Borderline), e
-                                    <span class="badge-rii">RII</span> Richiesta di Intervento Immediato (Sospetto Deficit).
-                                </p>
-
-                                <div class="container-fluid mt-4">
-
-                                    <div class="row border-top border-left border-right m-0">
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Nome e Cognome</div>
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Classe Scolastica</div>
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Data Valutazione</div>
-                                    </div>
-                                    
-                                    <div class="row border m-0">
-
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input type="text" id="formPatientName" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Nome e Cognome" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
-                                        </div>
-
-                                        <div class="col-4 p-2 border-right">
-                                            <select id="scuolaSelect" class="form-control" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
-                                                <option value="" disabled selected hidden>Seleziona classe...</option>
-                                                <optgroup label="Scuola Primaria">
-                                                    <option>2ª classe Scuola Primaria</option>
-                                                    <option>3ª classe Scuola Primaria</option>
-                                                    <option>4ª classe Scuola Primaria</option>
-                                                    <option>5ª classe Scuola Primaria</option>
-                                                </optgroup>
-                                                <optgroup label="Scuola Secondaria di 1º Grado">
-                                                    <option>1ª classe Scuola Secondaria di 1º Grado</option>
-                                                    <option>2ª classe Scuola Secondaria di 1º Grado</option>
-                                                    <option>3ª classe Scuola Secondaria di 1º Grado</option>
-                                                </optgroup>
-                                                <optgroup label="Scuola Secondaria di 2º Grado">
-                                                    <option>1ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>2ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>3ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>4ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>5ª classe Scuola Secondaria di 2º Grado</option>
-                                                </optgroup>
-                                            </select>
-                                        </div>
-                                        
                                         <div class="col-4 p-2 border-right">
                                             <div id="dateGroup" class="input-group" style="width: 100%;">
                                                 <input type="date" id="clinicalDate" class="form-control shadow-none" required max="" style="height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; background-color: transparent;">
@@ -992,6 +962,83 @@
                                                 clinicalDate.value = today;
                                             }
                                         </script>
+
+                                        
+                                    </div>
+
+                                </div>
+
+                                <p class="note-box">
+                                    <strong>Guida alla Valutazione:</strong> Questo fascicolo unisce gli stimoli alternativi della Forma B ai criteri diagnostici ufficiali italiani. 
+                                    Per ciascuna prova sono riportate le fasce di performance: 
+                                    <span class="badge-co">CO</span> Criterio di Competenza (Norma), 
+                                    <span class="badge-ra">RA</span> Richiesta di Attenzione (Borderline), e
+                                    <span class="badge-rii">RII</span> Richiesta di Intervento Immediato (Sospetto Deficit).
+                                </p>
+
+                                <div class="container-fluid mt-4">
+
+                                    <div class="row border-top border-left border-right m-0">
+                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Nome e Cognome</div>
+                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
+                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Classe Scolastica</div>
+                                    </div>
+                                    
+                                    <div class="row border m-0">
+
+                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                                            <input type="text" id="formPatientName" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Nome e Cognome" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
+                                        </div>
+
+                                        <!--<div class="col-6 p-2 border-right">
+                                            <select id="scuolaSelect" class="form-control" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
+                                                <option value="" disabled selected hidden>Seleziona classe...</option>
+                                                <optgroup label="Scuola Primaria">
+                                                    <option>2ª classe Scuola Primaria</option>
+                                                    <option>3ª classe Scuola Primaria</option>
+                                                    <option>4ª classe Scuola Primaria</option>
+                                                    <option>5ª classe Scuola Primaria</option>
+                                                </optgroup>
+                                                <optgroup label="Scuola Secondaria di 1º Grado">
+                                                    <option>1ª classe Scuola Secondaria di 1º Grado</option>
+                                                    <option>2ª classe Scuola Secondaria di 1º Grado</option>
+                                                    <option>3ª classe Scuola Secondaria di 1º Grado</option>
+                                                </optgroup>
+                                                <optgroup label="Scuola Secondaria di 2º Grado">
+                                                    <option>1ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>2ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>3ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>4ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>5ª classe Scuola Secondaria di 2º Grado</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>-->
+
+                                        <!-- Just add the "arrow-select" class to any <select> you want this behavior on -->
+                                        <div class="col-6 p-2 border-right">
+                                            <select id="scuolaSelect" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
+                                                <option value="" disabled selected hidden>Seleziona classe...</option>
+                                                <optgroup label="Scuola Primaria">
+                                                    <option>2ª classe Scuola Primaria</option>
+                                                    <option>3ª classe Scuola Primaria</option>
+                                                    <option>4ª classe Scuola Primaria</option>
+                                                    <option>5ª classe Scuola Primaria</option>
+                                                </optgroup>
+                                                <optgroup label="Scuola Secondaria di 1º Grado">
+                                                    <option>1ª classe Scuola Secondaria di 1º Grado</option>
+                                                    <option>2ª classe Scuola Secondaria di 1º Grado</option>
+                                                    <option>3ª classe Scuola Secondaria di 1º Grado</option>
+                                                </optgroup>
+                                                <optgroup label="Scuola Secondaria di 2º Grado">
+                                                    <option>1ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>2ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>3ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>4ª classe Scuola Secondaria di 2º Grado</option>
+                                                    <option>5ª classe Scuola Secondaria di 2º Grado</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
 
                                     </div>
 
@@ -1488,27 +1535,46 @@
                                             Isolamento dei Dati Rilevanti
                                         </div>
 
-                                        <div id="prova_g_1" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                        <!--<div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                             <select id="CoRiiSelect1" class="form-control" required>
                                                 <option value="" disabled selected>Seleziona...</option>
                                                 <option value="CO">CO</option>
                                                 <option value="RII">RII</option>
+                                            </select>
+                                        </div>-->
+
+                                        <!-- Another select reusing the same behavior, zero extra code needed -->
+                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                            <select id="CoRiiSelect1" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
+                                                <option value="" disabled selected hidden>Seleziona...</option>
+                                                 <option value="CO">CO</option>
+                                                 <option value="RII">RII</option>
                                             </select>
                                         </div>
 
                                     </div>
                                     <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
                                         <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        Risoluzione e Algoritmo
+                                            Risoluzione e Algoritmo
                                         </div>
 
-                                        <div id="prova_g_2" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                        <!--<div id="prova_g_2" class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
                                             <select id="CoRiiSelect2" class="form-control" required>
                                                 <option value="" disabled selected>Seleziona...</option>
                                                 <option value="CO">CO</option>
                                                 <option value="RII">RII</option>
                                             </select>
+                                        </div>-->
+
+                                        <!-- Another select reusing the same behavior, zero extra code needed -->
+                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
+                                            <select id="CoRiiSelect2" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
+                                                <option value="" disabled selected hidden>Seleziona...</option>
+                                                 <option value="CO">CO</option>
+                                                 <option value="RII">RII</option>
+                                            </select>
                                         </div>
+
 
                                     </div>
 
@@ -2333,6 +2399,52 @@
         });
     
     </script>
+
+
+<script>
+
+    (function () {
+        function initArrowSelect(select) {
+            let isOpen = false;
+
+            select.addEventListener('mousedown', () => {
+                const alreadyFocused = document.activeElement === select;
+
+                if (alreadyFocused && isOpen) {
+                    isOpen = false;
+                } else {
+                    isOpen = true;
+                }
+                select.classList.toggle('open', isOpen);
+            });
+
+            select.addEventListener('keydown', (e) => {
+                if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
+                    isOpen = true;
+                    select.classList.add('open');
+                }
+                if (e.key === 'Escape') {
+                    isOpen = false;
+                    select.classList.remove('open');
+                }
+            });
+
+            select.addEventListener('change', () => {
+                isOpen = false;
+                select.classList.remove('open');
+            });
+
+            select.addEventListener('blur', () => {
+                isOpen = false;
+                select.classList.remove('open');
+            });
+        }
+
+        // Applies to every select with the "arrow-select" class, present now or added later
+        document.querySelectorAll('select.arrow-select').forEach(initArrowSelect);
+    })();
+
+</script>
 
 </body>
 </html>
