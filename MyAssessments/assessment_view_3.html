@@ -727,7 +727,7 @@
             <li class="nav-item fade-on-load">
                 <a id="riempi-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-arrows-rotate"></i>
-                    <span>Riempi Assessment</span>
+                    <span>Resetta Assessment</span>
                 </a>
             </li>
 
@@ -2102,7 +2102,81 @@
 
             // Direct Save Handler (Async)
             async function submitAssessment() {
+               
+                // Step A: Validate and build assessment payload
+                const newAssessment = validateForm();
+                if (!newAssessment) return; // Validation failed, abort.
                 
+                // Ensure the global ID exists
+                if (!window.assessmentId) {
+                    console.error("window.assessmentId is undefined!");
+                    return;
+                }
+
+                // Step B: Find the index of the existing assessment in the global array
+                const targetId = window.assessmentId.trim();
+                const index = window.assessments.findIndex(item => item.uniqueId === targetId);
+
+                if (index !== -1) {
+                    // Replace the old assessment with the new updated payload
+                    window.assessments[index] = newAssessment;
+                    console.log("Replaced existing assessment at index:", index);
+                } else {
+                    console.warn("Assessment not found in local array, pushing as new.");
+                    window.assessments.unshift(newAssessment);
+                }
+            
+                // Step B: Get active patient ID
+                const activePatientId = getValidPatientId();
+                if (!activePatientId) {
+                    alert("Nessun paziente attivo trovato!");
+                    return;
+                }
+
+                try {
+                        
+                 //   console.log("Saving updated assessments to Supabase...");
+                        
+                    const supabaseClient = window.supabase;
+
+                    // Step D: Fetch existing patient activity column to preserve other arrays (Certificates, Therapies)
+                    const { data: patient, error: fetchError } = await supabaseClient
+                        .from("Clients")
+                        .select("activity")
+                        .eq("id", activePatientId)
+                        .single();
+
+                    if (fetchError) throw fetchError;
+
+                    // Prepare updated structure safely
+                    let currentActivity = patient?.activity 
+                        ? JSON.parse(JSON.stringify(patient.activity)) 
+                        : { Assessments: [], Certificates: [], Therapies: [] };
+
+                      //  console.log(currentActivity);
+                        
+                        // Overwrite or update the Assessments array with your modified window.assessments
+                        currentActivity.Assessments = window.assessments;
+                    
+                        // Step E: Save back to Supabase
+                        const { data, error: updateError } = await supabaseClient
+                            .from("Clients")
+                            .update({ activity: currentActivity })
+                            .eq("id", activePatientId)
+                            .select(); 
+
+                        if (updateError) throw updateError;
+
+                    //    console.log("Saved successfully!", data);
+                        
+                        // Redirect back to the patient list
+                        window.location.href = 'lista_assessments.html';
+
+                } catch (err) {
+                    console.error("Errore durante il salvataggio:", err);
+                }
+                
+                /*
                 // Step A: Validate and build assessment payload
                 const newAssessment = validateForm();
                 if (!newAssessment) return; // Validation failed, browser popup shown, abort.
@@ -2112,27 +2186,28 @@
                     console.error("window.assessmentId is undefined!");
                     return;
                 }
-                
+      
+                // Run the search
+            //            const assessment = window.assessments.find(item => item.uniqueId === window.assessmentId.trim());
+            //          console.log("Found result:", assessment);
+
+                console.log(newAssessment.uniqueId);
+
                 // Step B: Find the index of the existing assessment in the global array
                 const targetId = window.assessmentId.trim();
                 const index = window.assessments.findIndex(item => item.uniqueId === targetId);
 
+                 console.log(window.assessments[index].uniqueId);
+               
                 if (index !== -1) {
                     // Replace the old assessment with the new updated payload
-      //              window.assessments[index] = newAssessment;
+                    window.assessments[index] = newAssessment;
                     console.log("Replaced existing assessment at index:", index);
                 } else {
                     console.warn("Assessment not found in local array, pushing as new.");
-    //                window.assessments.unshift(newAssessment);
+                    window.assessments.unshift(newAssessment);
                 }
-                
-                // Run the search
-    //            const assessment = window.assessments.find(item => item.uniqueId === window.assessmentId.trim());
-
-      //          console.log("Found result:", assessment);
-
             
-                /*
                 // Step B: Get active patient ID
                 const activePatientId = getValidPatientId();
                 if (!activePatientId) {
@@ -2141,7 +2216,6 @@
                 }
 
                 try {
-             
                     console.log("saving");
                         
                     // Use consistent Supabase client reference
@@ -2156,39 +2230,11 @@
 
                     if (fetchError) throw fetchError;
 
-                    // Step D: Prepare updated structure safely
-                    // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
-                    let currentActivity = patient?.activity 
-                        ? JSON.parse(JSON.stringify(patient.activity)) 
-                        : { Assessments: [], Certificates: [], Therapies: [] };
-
-                    if (!Array.isArray(currentActivity.Assessments)) {
-                        currentActivity.Assessments = [];
-                    }
-
-                    // Prepend new assessment to top of array
-                    currentActivity.Assessments.unshift(newAssessment);
-                    
-                    // Step E: Save back to Supabase (using supabaseClient)
-                    const { data,error: updateError } = await supabaseClient
-                        .from("Clients")
-                        .update({ activity: currentActivity })
-                        .eq("id", activePatientId)
-                        .select(); // <--- Adding .select() returns the updated row to verify
-                
-                        console.log("Updated row result:", data);
-
-                    if (updateError) throw updateError;
-
-                    console.log("Saved successfully!");
-                    
-                    // Redirect back to the patient list
-                    window.location.href = 'lista_assessments.html';
-
-                } catch (err) {
+                    console.log(patient);
+                     } catch (err) {
                     console.error("Errore durante il salvataggio:", err);
                 }
-                 */   
+                 */
             }
             
         </script>
@@ -2337,6 +2383,8 @@
             // save patient Id
             window.uniquePatientId=assessment.uniqueId;
 
+            console.log("Assessment Index:", assessment.uniqueId);
+      
           //  console.log(window.uniquePatientId);
 
             
@@ -2542,6 +2590,8 @@
                     window.fullNameNoPrefix=fullNameNoPrefix;
 
             //        console.log("Assessments:", window.assessments);
+            
+                      console.log("Assessment Index:", window.assessmentId);
             
                     // fill form with patient selcted assessment
                     FillForm(window.assessmentId,window.fullNameNoPrefix);
