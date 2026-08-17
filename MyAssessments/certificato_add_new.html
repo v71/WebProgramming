@@ -720,13 +720,14 @@
                     <i class="fas fa-circle-plus"></i>
                     <span>Assegna Assessment</span>
                 </a>
-            </li>
+            </li>-->
+
             <li class="nav-item fade-on-load">
                 <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-rotate-left"></i>
-                    <span>Svuota Modulo Assessment</span>
+                    <span>Chiudi Certificato</span>
                 </a>
-            </li>-->
+            </li>
 
         </ul>
         <!-- End of Sidebar -->
@@ -883,17 +884,22 @@
 </div>
 
 
-<!-- FIRST SECTION (Fills the available webpage height) -->
-<div class="card shadow-sm d-flex flex-column" style="height: calc(90% - 100px); border-radius: 12px; overflow: hidden; border: none; margin-bottom: 16px;">
+
+
+
+
+
+<!-- FIRST SECTION -->
+<div class="card shadow-sm d-flex flex-column" style="min-height: calc(90% - 100px); border-radius: 12px; overflow: visible; border: none; margin-bottom: 16px;">
 
     <div class="container-fluid p-4 d-flex flex-column flex-grow-1">
-        <div class="row h-100">
+        <div class="row">
             <div class="col-xl-12 col-lg-12 d-flex flex-column">
                 
                 <!-- Outer Container -->
                 <div class="d-flex flex-column flex-grow-1 w-100 align-items-center text-center justify-content-center" style="gap: 16px;">
 
-                    <h4 class="font-weight-bold text-secondary mb-2">Carica un file PDF</h4>
+                    <h4 id="pdfTitle" class="font-weight-bold text-secondary mb-2">Carica un file PDF</h4>
 
                     <!-- Drag and Drop & Upload Section -->
                     <div id="dropZone" class="d-flex flex-column justify-content-center align-items-center w-100" style="border: 2px dashed #6c757d; border-radius: 8px; padding: 25px; background-color: #f8f9fa; cursor: pointer; transition: background-color 0.2s ease;"
@@ -905,19 +911,17 @@
                         <p class="mb-1 font-weight-bold text-secondary">Trascina qui il tuo file PDF</p>
                         <p class="text-muted small mb-3">oppure</p>
                         
-                        <!-- PDF Upload Button -->
                         <label for="pdfFileInput" class="btn btn-primary mb-0 px-3 py-1" style="cursor: pointer;">
                             <i class="fas fa-upload mr-1"></i> Seleziona PDF
                         </label>
                         <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;" onchange="handleFileSelect(this)">
                         
-                        <!-- File name preview display -->
                         <div id="fileNameDisplay" class="mt-2 text-success font-weight-bold small" style="display: none;"></div>
                     </div>
 
                     <!-- PDF Live Preview Container (Initially Hidden) -->
-                    <div id="pdfPreviewContainer" class="w-100 flex-grow-1 border rounded bg-white" style="display: none; overflow: hidden; min-height: 400px;">
-                        <embed id="pdfEmbedViewer" type="application/pdf" width="100%" height="100%" />
+                    <div id="pdfPreviewContainer" class="w-100 border rounded bg-white" style="display: none; margin: 24px 0; padding: 16px; box-sizing: border-box;">
+                        <embed id="pdfEmbedViewer" type="application/pdf" width="100%" style="height: 1200px; display: block;" />
                     </div>
 
                 </div>
@@ -926,9 +930,6 @@
         </div>
     </div>
 </div>
-
-
-
 
 
                         </div>
@@ -1216,9 +1217,81 @@
             
         </script>
 
-    <script>
+
+<script>
+let dropZoneClone = null; // keeps a reusable copy of the original drop zone
+
+function handleFileSelect(input) {
+    const file = input.files[0];
+    if (file) processFile(file);
+}
+
+function handleFileDrop(event) {
+    event.preventDefault();
+    event.currentTarget.style.backgroundColor = '#f8f9fa';
+    const file = event.dataTransfer.files[0];
+    if (file) processFile(file);
+}
+
+function processFile(file) {
+    if (file.type !== 'application/pdf') {
+        alert('Per favore carica solo file PDF.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const dropZone = document.getElementById('dropZone');
+        const previewContainer = document.getElementById('pdfPreviewContainer');
+        const embedViewer = document.getElementById('pdfEmbedViewer');
+        const pdfTitle = document.getElementById('pdfTitle');
+
+        // Save a clone of the drop zone before removing it
+        if (dropZone) {
+            dropZoneClone = dropZone.cloneNode(true);
+        }
+
+        // Load the PDF into the embed
+        embedViewer.setAttribute('src', e.target.result);
+
+        // Swap the heading text to the file name
+        pdfTitle.textContent = file.name;
+
+        // Remove the drop zone, show preview in its place
+        if (dropZone) dropZone.remove();
+        previewContainer.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+function dismissPreview() {
+    const previewContainer = document.getElementById('pdfPreviewContainer');
+    const embedViewer = document.getElementById('pdfEmbedViewer');
+    const pdfTitle = document.getElementById('pdfTitle');
+
+    // Clear the embed source to release the loaded PDF
+    embedViewer.setAttribute('src', '');
+
+    // Hide the preview
+    previewContainer.style.display = 'none';
+
+    // Restore the original heading text
+    if (pdfTitle) {
+        pdfTitle.textContent = 'Carica un file PDF';
+    }
+
+    // Re-insert a fresh clone of the drop zone right before the preview container
+    if (dropZoneClone) {
+        const freshDropZone = dropZoneClone.cloneNode(true);
+        previewContainer.parentNode.insertBefore(freshDropZone, previewContainer);
+    }
+}
+
 
 </script>
+
+
+
 
         <!-- Main -->
         <script type="module">
@@ -1290,7 +1363,17 @@
                 }
                 
                 console.log("Selected Patient Id : ", activePatientId);
-        
+
+                const dismissBtn = document.getElementById("svuota-btn");
+                if (dismissBtn) {
+                        dismissBtn.addEventListener('click', function(e) {
+                            event.preventDefault();
+                            console.log("Rimuovi anteprima clicked!");
+                        dismissPreview();
+                    });
+                }
+
+                /*
                 // --- Sidebar Assign Assessment Click Handler ---
                 const assignBtn = document.getElementById("assegna-btn");
                 if (assignBtn) {
@@ -1310,7 +1393,7 @@
                         $('#confirmClearModal').modal('show');
                     });
                 }
-
+                */
                 try {
                    
                     // Esegui la query per il paziente attivo
@@ -1422,50 +1505,6 @@
     </script>
 
 
-<script>
-
-    (function () {
-        function initArrowSelect(select) {
-            let isOpen = false;
-
-            select.addEventListener('mousedown', () => {
-                const alreadyFocused = document.activeElement === select;
-
-                if (alreadyFocused && isOpen) {
-                    isOpen = false;
-                } else {
-                    isOpen = true;
-                }
-                select.classList.toggle('open', isOpen);
-            });
-
-            select.addEventListener('keydown', (e) => {
-                if (['Enter', ' ', 'ArrowDown', 'ArrowUp'].includes(e.key)) {
-                    isOpen = true;
-                    select.classList.add('open');
-                }
-                if (e.key === 'Escape') {
-                    isOpen = false;
-                    select.classList.remove('open');
-                }
-            });
-
-            select.addEventListener('change', () => {
-                isOpen = false;
-                select.classList.remove('open');
-            });
-
-            select.addEventListener('blur', () => {
-                isOpen = false;
-                select.classList.remove('open');
-            });
-        }
-
-        // Applies to every select with the "arrow-select" class, present now or added later
-        document.querySelectorAll('select.arrow-select').forEach(initArrowSelect);
-    })();
-
-</script>
 
 </body>
 </html>
