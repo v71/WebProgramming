@@ -720,7 +720,7 @@
             <li class="nav-item fade-on-load">
                 <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-circle-plus"></i>
-                    <span>Assegna Assessment</span>
+                    <span>Aggiorna Assessment</span>
                 </a>
             </li>
 
@@ -735,6 +735,13 @@
                 <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-broom"></i>
                     <span>Svuota Assessment</span>
+                </a>
+            </li>
+
+            <li class="nav-item fade-on-load">
+                <a id="elimina-btn" class="nav-link nav-link-blue" href="#">
+                    <i class="fas fa-circle-xmark"></i>
+                    <span>Elimina Assessment</span>
                 </a>
             </li>
 
@@ -1712,6 +1719,25 @@
     </div>
 
 
+    <div class="modal fade" id="confirmDeleteAssessmentModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg modal-system-alert">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title font-weight-bold text-white">Attenzione</h5>
+                </div>
+                <div class="modal-body text-white-50">
+                    Confermi di voler eliminare questo assessment? Questa operazione è irreversibile.
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annulla</button>
+                    <!-- Added id="confirmDeleteBtn" -->
+                    <button type="button" id="confirmDeleteBtn" class="btn btn-light text-danger font-weight-bold">Conferma ed Elimina</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
         <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
         <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -2176,70 +2202,11 @@
                     console.error("Errore durante il salvataggio:", err);
                 }
                 
-                /*
-                // Step A: Validate and build assessment payload
-                const newAssessment = validateForm();
-                if (!newAssessment) return; // Validation failed, browser popup shown, abort.
-                
-                // Ensure the global ID exists
-                if (!window.assessmentId) {
-                    console.error("window.assessmentId is undefined!");
-                    return;
-                }
-      
-                // Run the search
-            //            const assessment = window.assessments.find(item => item.uniqueId === window.assessmentId.trim());
-            //          console.log("Found result:", assessment);
-
-                console.log(newAssessment.uniqueId);
-
-                // Step B: Find the index of the existing assessment in the global array
-                const targetId = window.assessmentId.trim();
-                const index = window.assessments.findIndex(item => item.uniqueId === targetId);
-
-                 console.log(window.assessments[index].uniqueId);
-               
-                if (index !== -1) {
-                    // Replace the old assessment with the new updated payload
-                    window.assessments[index] = newAssessment;
-                    console.log("Replaced existing assessment at index:", index);
-                } else {
-                    console.warn("Assessment not found in local array, pushing as new.");
-                    window.assessments.unshift(newAssessment);
-                }
-            
-                // Step B: Get active patient ID
-                const activePatientId = getValidPatientId();
-                if (!activePatientId) {
-                    alert("Nessun paziente attivo trovato!");
-                    return;
-                }
-
-                try {
-                    console.log("saving");
-                        
-                    // Use consistent Supabase client reference
-                    const supabaseClient = window.supabase;
-
-                    // Step C: Fetch existing patient activity column
-                    const { data: patient, error: fetchError } = await supabaseClient
-                        .from("Clients")
-                        .select("activity")
-                        .eq("id", activePatientId)
-                        .single();
-
-                    if (fetchError) throw fetchError;
-
-                    console.log(patient);
-                     } catch (err) {
-                    console.error("Errore durante il salvataggio:", err);
-                }
-                 */
             }
             
-        </script>
+    </script>
 
-<script>
+    <script>
 
         // -------------------------------------------------------------------
 
@@ -2383,49 +2350,93 @@
             // save patient Id
             window.uniquePatientId=assessment.uniqueId;
 
-            console.log("Assessment Index:", assessment.uniqueId);
-      
-          //  console.log(window.uniquePatientId);
-
-            
-         /*
-
-                // 5. Build fresh protocol payload
-                const newAssessment = {
-                    uniqueId: crypto.randomUUID(),
-                    timestamp: new Date().toISOString(),
-                    title: titleInput.value.trim(),
-                    entityName: entityInput.value.trim(),
-                    evaluationDate: dateInput.value,
-                    italian_date : new Date(dateInput.value).toLocaleDateString('it-IT'),
-                    education: schoolData,
-                    prova_a: { 
-                        accuratezza: input1.value.trim(), 
-                        velocita: parseFloat(input2.value).toFixed(1) 
-                    },
-                    prova_b: { errori_ortografici_totali: input3.value.trim() },
-                    prova_c: { lettura_e_comprensione_del_testo: input4.value.trim() },
-                    prova_d: {
-                        dettato_di_numeri: input5.value.trim(),
-                        fatti_numerici_calcolo_rapido: input6.value.trim(),
-                        grandezza_frazionaria: input7.value.trim()
-                    },
-                    prova_e: { errori_di_decisione: input8.value.trim() },
-                    prova_f: { capacità_working_memory: input9.value.trim() },
-                    prova_g: {
-                        isolamento_dei_dati_rilevanti: select1.value,
-                        risoluzione_e_algoritmo: select2.value
-                    }
-                };
-
-                console.log("Assessment Payload Ready:", newAssessment);
-          
-          */
+      //      console.log("Assessment Index:", assessment.uniqueId);
 
         }
 
 </script>
 
+<script>
+
+    async function RemoveAssessment(assessmentId)
+    {
+        console.log("remove assessment function");
+        
+        if (!assessmentId) {
+            console.error("No uniqueId provided for deletion.");
+            return;
+        }
+
+        // Get active patient ID (adjust this selector/function based on how your app tracks the current patient)
+        const activePatientId = typeof getValidPatientId === 'function' ? getValidPatientId() : window.currentPatientId;
+        if (!activePatientId) {
+            alert("Nessun paziente attivo trovato!");
+            return;
+        }
+        
+        try {
+            
+            console.log("Deleting assessment with ID:", assessmentId);
+                
+            const supabaseClient = window.supabase;
+
+            // 1. Fetch existing patient activity column from Supabase
+            const { data: patient, error: fetchError } = await supabaseClient
+                .from("Clients")
+                .select("activity")
+                .eq("id", activePatientId)
+                .single();
+
+            if (fetchError) throw fetchError;
+
+            console.log(patient);
+            
+            // 2. Parse current activity structure safely
+            let currentActivity = patient?.activity 
+                ? JSON.parse(JSON.stringify(patient.activity)) 
+                : { Assessments: [], Certificates: [], Therapies: [] };
+
+            if (!Array.isArray(currentActivity.Assessments)) {
+                currentActivity.Assessments = [];
+            }
+
+            // 3. Filter out the assessment matching the target uniqueId
+            currentActivity.Assessments = currentActivity.Assessments.filter(
+                item => item.uniqueId !== assessmentId.trim()
+            );
+
+            console.log(currentActivity);
+            
+            // Optional: Update local global arrays if your app uses them
+            if (window.assessments && Array.isArray(window.assessments)) {
+                window.assessments = window.assessments.filter(
+                    item => item.uniqueId !==  assessmentId.trim()
+                );
+            }
+
+            
+            // 4. Save the filtered array back to Supabase
+            const { data, error: updateError } = await supabaseClient
+                .from("Clients")
+                .update({ activity: currentActivity })
+                .eq("id", activePatientId)
+                .select(); 
+
+            if (updateError) throw updateError;
+
+            console.log("Assessment deleted successfully!", data);
+            
+           // 5. Redirect to the patient list view
+            window.location.href = 'lista_pazienti_6.html';
+
+        } catch (err) {
+            console.error("Errore durante l'eliminazione:", err);
+            alert("Errore durante l'eliminazione dell'assessment.");
+        }
+    }
+
+</script>
+    
         <!-- Main -->
         <script type="module">
         
@@ -2536,6 +2547,40 @@
                     });
                 }
 
+                /*
+                const removeBtn = document.getElementById("elimina-btn");
+                if (removeBtn) {
+                    removeBtn.addEventListener("click", function(e) {
+                        e.preventDefault(); // Uncoment if you want to stop default navigation
+                        //console.log("Rimuovi Assessment clicked!");
+                        // Trigger the Bootstrap modal to show
+                        $('#confirmDeleteAssessmentModal').modal('show');
+                 //       RemoveAssessment(window.assessmentId);
+                    });
+                }*/
+
+                const removeBtn = document.getElementById("elimina-btn");
+                if (removeBtn) {
+                    removeBtn.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        
+                        // Assume you have the assessment ID available here (e.g., window.assessmentId or a local variable)
+                        const currentId = window.assessmentId; 
+                        
+                        if (!currentId) {
+                            console.error("No assessment ID found for deletion.");
+                            return;
+                        }
+
+                        // Dynamically set the onclick attribute with your parameter
+                        const confirmBtn = document.getElementById("confirmDeleteBtn");
+                        confirmBtn.setAttribute("onclick", `RemoveAssessment('${currentId}')`);
+                        
+                        // Show the dedicated modal
+                        $('#confirmDeleteAssessmentModal').modal('show');
+                    });
+                }
+
                 try {
                    
                     // Esegui la query per il paziente attivo
@@ -2591,9 +2636,7 @@
 
             //        console.log("Assessments:", window.assessments);
             
-                      console.log("Assessment Index:", window.assessmentId);
-            
-                    // fill form with patient selcted assessment
+                    // fill form with patient selected assessment
                     FillForm(window.assessmentId,window.fullNameNoPrefix);
 
             } catch (err) {
