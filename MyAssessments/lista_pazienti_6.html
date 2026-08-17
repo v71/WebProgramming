@@ -992,12 +992,10 @@
                                         <!-- Interactive Button Using the Card Structure -->
                                         <button id="add-assessment" class="card-btn">
                                             <div class="card-content">
-
                                                 ${assessmentsCount > 0 ?
                                                 `<div class="card-value">${assessmentsCount}</div>
                                                  <div class="card-label">Assessment</div>` :
                                                 `<div class="card-label text-center">Lista vuota</div>` }
-
                                             </div>
                                             <div class="card-red card-icon">
                                                 <i class="fa-solid fa-layer-group"></i>
@@ -1009,17 +1007,12 @@
                                     <td class="align-middle text-center">
                                         
                                         <!-- Interactive Button Using the Card Structure -->
-                                        <button class="card-btn">
+                                        <button id="add-certificate" class="card-btn">
                                             <div class="card-content">
-                                                
-                                                <!--<div class="card-value">${certificatesCount}</div>
-                                                <div class="card-label">Certificati</div>-->
-                                            
                                                 ${certificatesCount > 0 ?
                                                 `<div class="card-value">${certificatesCount}</div>
-                                                 <div class="card-label">Assessment</div>` :
+                                                 <div class="card-label">Certificate</div>` :
                                                 `<div class="card-label text-center">Lista vuota</div>` }
-
                                             </div>
                                             <div class="card-green card-icon">
                                                 <i class="fa-solid fa-notes-medical"></i>
@@ -1031,18 +1024,12 @@
                                     <td class="align-middle text-center">
                                               
                                         <!-- Interactive Button Using the Card Structure -->
-                                        <button class="card-btn">
+                                        <button id="add-therapy" class="card-btn">
                                             <div class="card-content">
-
-                                                <!--<div class="card-value">${therapiesCount}</div>
-                                                <div class="card-label">Terapie</div>-->
-
                                                 ${therapiesCount > 0 ?
                                                 `<div class="card-value">${therapiesCount}</div>
-                                                 <div class="card-label">Assessment</div>` :
+                                                 <div class="card-label">Terapie</div>` :
                                                 `<div class="card-label text-center">Lista vuota</div>` }
-
-
                                             </div>
                                             <div class="card-blue card-icon">
                                                 <i class="fa-solid fa-file-medical-alt"></i>
@@ -1199,48 +1186,6 @@
                 let currentSortColumn = 'name';
                 let currentSortOrder = 'asc';
 
-                /*
-                function sortDataAndPopulate(data, key, forceOrder = null) {
-                    if (forceOrder) {
-                        currentSortColumn = key;
-                        currentSortOrder = forceOrder;
-                    } else if (currentSortColumn === key) {
-                        currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
-                    } else {
-                        currentSortColumn = key;
-                        currentSortOrder = 'asc';
-                    }
-
-                    data.sort((a, b) => {
-                        
-                        // If the sorting key is 'age', look at 'ageSortKey' instead
-                        const lookupKey = (key === 'age') ? 'ageSortKey' : key;
-                        
-                        let valA = a[lookupKey] ?? '';
-                        let valB = b[lookupKey] ?? '';
-                                        
-                        const numA = parseFloat(valA);
-                        const numB = parseFloat(valB);
-                        if (!isNaN(numA) && !isNaN(numB)) {
-                            return currentSortOrder === 'asc' ? numA - numB : numB - numA;
-                        }
-
-                        const dateA = Date.parse(valA);
-                        const dateB = Date.parse(valB);
-                        if (!isNaN(dateA) && !isNaN(dateB) && isNaN(valA) && isNaN(valB)) {
-                            return currentSortOrder === 'asc' ? dateA - dateB : dateB - dateA;
-                        }
-
-                        return currentSortOrder === 'asc' 
-                            ? String(valA).localeCompare(String(valB), undefined, { numeric: true, sensitivity: 'base' })
-                            : String(valB).localeCompare(String(valA), undefined, { numeric: true, sensitivity: 'base' });
-                    });
-
-                    populateTable(data);
-                    updateHeaderIcons(key, currentSortOrder);
-                }
-                */
-
                 function sortDataAndPopulate(data, key, forceOrder = null) {
                     if (forceOrder) {
                         currentSortColumn = key;
@@ -1304,6 +1249,18 @@
                     // Add your redirection or action logic here
                      window.location.href = 'lista_assessments.html';
                 });
+
+               // Event listener for the assessment button
+                $('#tableBody').on('click', '#add-certificate', function(e) {
+                    e.stopPropagation(); // Prevents the row click event from triggering
+                    const selectedPatientId = $(this).closest('tr').data('id');
+                    // Save the patient ID to localStorage
+                    localStorage.setItem('selectedPatientId', selectedPatientId);
+                    console.log('Certioficate button clicked for patient ID:', selectedPatientId);
+                    // Add your redirection or action logic here
+                     window.location.href = 'lista_certificati.html';
+                });
+
 
                 $('#tableSearchInput').on('keyup input', function() {
                     const searchTerm = $(this).val().toLowerCase().trim();

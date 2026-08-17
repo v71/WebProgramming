@@ -773,9 +773,9 @@
                 Azioni
             </div>
             <li class="nav-item fade-on-load">
-                <a class="nav-link nav-link-blue" href="assessment_add_new.html">
+                <a class="nav-link nav-link-blue" href="certificato_add_new.html">
                     <i class="fas fa-circle-plus"></i>
-                    <span>Nuovo Assessment</span>
+                    <span>Nuovo Certificato</span>
                 </a>
             </li>
 
@@ -795,7 +795,7 @@
                     </button>
 
                     <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
-                        Dashboard - Lista Assessments
+                        Dashboard - Lista Certificati
                     </h1>
 
                     <ul class="navbar-nav ml-auto">
@@ -931,19 +931,10 @@
                 </div>
             </div>
 
-            <!-- Added custom negative margin-top to shift it upwards -->
-            <!-- <div class="d-flex ml-auto pl-2 align-items-center" style="margin-top: -20px;">
-                <a href="#" class="btn btn-primary btn-icon-split shadow-sm" style="border-radius: 10px;">
-                    <span class="icon text-white">
-                        <i class="fas fa-circle-plus"></i>
-                    </span>
-                    <span class="text px-3">Aggiungi Nuovo Assessment</span>
-                </a>
-            </div> -->
-
         </div>
     </div>
 </div>
+
 
     <!-- THIRD SECTION (Optimized with a fixed max-height / calculation to prevent clipping the first section) -->
     <div id="tableCardContainer" class="card shadow-sm d-flex flex-column" style="height: 75%; border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
@@ -955,7 +946,7 @@
             <div class="d-flex align-items-center" style="min-width: 0; width: 100%;">
                 <i class="fas fa-users text-primary mr-2" style="flex-shrink: 0;"></i>
                 <h6 class="m-0 font-weight-bold text-gray-800" style="min-width: 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    Lista Assessments <span id="totalUsersCount">
+                    Lista Certificati <span id="totalUsersCount">
                         <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.85rem;"></i>
                     </span>
                 </h6>
@@ -966,7 +957,7 @@
                 
                 <!-- Search Input with a 1px solid blue border -->
                 <div class="input-group input-group-sm search-box w-100" style="max-width: 250px; border: 1px solid #dddfeb; border-radius: 0.45rem; overflow: hidden; height: 31px;">
-                    <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small h-100" placeholder="Cerca Assessments..." aria-label="Search">
+                    <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small h-100" placeholder="Cerca Certificati..." aria-label="Search">
                     <div class="input-group-append h-100">
                         <button class="btn btn-primary h-100 py-0 d-flex align-items-center justify-content-center" type="button" disabled style="width: 32px;">
                             <i class="fas fa-search fa-sm"></i>
@@ -986,7 +977,7 @@
             <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem; border-width: 0.4em;">
                 <span class="sr-only">Caricamento...</span>
             </div>
-            <h5 class="mt-3 text-gray-600">Caricamento Assessments...</h5>
+            <h5 class="mt-3 text-gray-600">Caricamento Certificati...</h5>
         </div>
                  
         <!-- Responsive Table Wrapper (Scrolls internally only if data exceeds height) -->
@@ -999,7 +990,7 @@
                             <span class="fas fa-hashtag mr-1" style="font-size: 0.75em; color: #4e73df;"></span>
                         </th>
                         <th data-sort="title" class="sortable text-center">
-                            <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Titolo Assessment <i class="fas fa-sort sort-icon ml-1"></i>
+                            <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Titolo Certificato <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
                         <th data-sort="italian_date" class="sortable text-center">
                             <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Emissione <i class="fas fa-sort sort-icon ml-1"></i>
@@ -1090,7 +1081,7 @@
             window.extractDate = extractDate;
 
             // Make the variable globally available from the start
-            window.assessments = [];
+            window.certificati = [];
 
     </script>
 
@@ -1255,9 +1246,11 @@
     <!-- Table Pagination & Filtering Script -->
     <script>
         
+        
         // Global function to initialize or refresh the table with dynamic data
-        window.initTableWithData = function(dataSource) {
-                
+        window.initTableWithData = function(dataSource) 
+        {
+            
             const $tableContainer = $('#tableResponsiveContainer');
             const $cardBody = $('#tableCardContainer .card-body');
             const $spinner = $('#loadingSpinner');
@@ -1267,11 +1260,11 @@
             let rowsPerPage = 5;
             let totalPages = 1;
             let currentPage = 1;
-
+            
             // ---------------------------------------------------------------------------------
             
             function populateTable(data) {
-                
+                  
                 const $tbody = $('#tableBody');
                 $tbody.empty();
                 
@@ -1281,7 +1274,7 @@
                     $tbody.append(`
                         <tr class="no-data-row">
                             <td colspan="6" class="text-center py-4 text-muted">
-                                Nessun assessment trovato.
+                                Nessun certificato trovato.
                             </td>
                         </tr>
                     `);
@@ -1350,10 +1343,11 @@
                 }
                 currentPage = 1;
                 recalculateLayout();
+            
             }
-
+            
             // ---------------------------------------------------------------------------------
-
+            
             function calculateRowsPerPage() {
                 $allRows.hide();
                 $allRows.first().show();
@@ -1413,6 +1407,7 @@
                 });
             }
 
+            
             // ---------------------------------------------------------------------------------
 
             function updateInfoAndPagination(start, end) {
@@ -1498,7 +1493,8 @@
                 populateTable(data);
                 updateHeaderIcons(key, currentSortOrder);
             }
-
+            
+            
             // ---------------------------------------------------------------------------------
             // Event listeners
 
@@ -1506,7 +1502,7 @@
                 if ($(e.target).closest('a, button, input, .dropdown').length) return;
                 
                 const tableIndex = $(this).data('id');
-                const selectedAssessmentId = window.assessments[tableIndex].uniqueId;
+                const selectedAssessmentId = window.certificati[tableIndex].uniqueId;
                 const selectedPatientId = getValidPatientId();
                 
                 // Save both the patient ID and the specific assessment index to localStorage
@@ -1531,7 +1527,7 @@
                // console.log('Patient Id:', activePatientId);
 
                 // Add your redirection or action logic here
-                window.location.href = 'assessment_add_new.html';
+                window.location.href = 'certificati_add_new.html';
             });
 
             $('#tableSearchInput').on('keyup input', function() {
@@ -1578,17 +1574,18 @@
             $tableContainer.css({ 'visibility': 'visible', 'opacity': '1', 'transition': 'opacity 0.2s ease-in-out' });
             recalculateLayout();
             $tableContainer.addClass('table-ready');
+            
         };
-
+        
         // ---------------------------------------------------------------------------------
-        // Automatically trigger if window.assessments is already populated
+        // Automatically trigger if window.certificcati is already populated
 
         $(document).ready(function() {
-            if (window.assessments && window.assessments.length > 0) {
-                window.initTableWithData(window.assessments);
+            if (window.certificati && window.certificati.length > 0) {
+                window.initTableWithData(window.certificati);
             }
         });
-            
+      
     </script>
 
     <script type="module">
@@ -1617,13 +1614,13 @@
                     const patientActivity = patientData.activity || { Assessments: [], Certificates: [], Therapies: [] };
                     console.log("Activity:", patientActivity);
 
-                    window.assessments = patientActivity.Assessments || [];
+                    window.certificati = patientActivity.Certificates || [];
                     
-                    console.log("Assessments:", window.assessments);
+                    console.log("Certificati:", window.certificati);
                     
                     // 3. Trigger initial table load if function exists
                     if (typeof initTableWithData === 'function') {
-                        initTableWithData(window.assessments);
+                        initTableWithData(window.certificati);
                     }
                     
                 } catch (err) {
