@@ -715,13 +715,12 @@
             <div class=" fade-on-load sidebar-heading" style="font-size: 0.85rem; font-weight: 700;">
                 Azioni
             </div>
-            <!--<li class="nav-item fade-on-load">
+            <li class="nav-item fade-on-load">
                 <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-circle-plus"></i>
-                    <span>Assegna Assessment</span>
+                    <span>Salva Certificato</span>
                 </a>
-            </li>-->
-
+            </li>
             <li class="nav-item fade-on-load">
                 <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-rotate-left"></i>
@@ -899,7 +898,7 @@
                 <!-- Outer Container -->
                 <div class="d-flex flex-column flex-grow-1 w-100 align-items-center text-center justify-content-center" style="gap: 16px;">
 
-                    <h4 id="pdfTitle" class="font-weight-bold text-secondary mb-2">Carica un file PDF</h4>
+                    <h4 id="pdfTitle" class="font-weight-bold text-secondary mb-2">Carica un file in formato PDF</h4>
 
                     <!-- Drag and Drop & Upload Section -->
                     <div id="dropZone" class="d-flex flex-column justify-content-center align-items-center w-100" style="border: 2px dashed #6c757d; border-radius: 8px; padding: 25px; background-color: #f8f9fa; cursor: pointer; transition: background-color 0.2s ease;"
@@ -1025,6 +1024,7 @@
                     calculateAgeWithMonths
                 } from "./assets/js/string_utils.js";
 
+                
                 // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
                 window.calculateAgeWithMonths = calculateAgeWithMonths;
 
@@ -1217,80 +1217,95 @@
             
         </script>
 
+        <script>
 
-<script>
-let dropZoneClone = null; // keeps a reusable copy of the original drop zone
+                function submitCertificate()
+                {
+                    const activePatientId = getValidPatientId();
+                    const pdfTitle = document.getElementById('pdfTitle');
 
-function handleFileSelect(input) {
-    const file = input.files[0];
-    if (file) processFile(file);
-}
+                    console.log(pdfTitle.textContent);
+                    // 1. Create a unique file path for storage (e.g., patientId/timestamp-filename.pdf)
+                    const fileExt = pdfTitle.textContent.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
+                    const filePath = `${activePatientId}/${fileName}`;
+                  
+                    console.log(filePath);
+                }
 
-function handleFileDrop(event) {
-    event.preventDefault();
-    event.currentTarget.style.backgroundColor = '#f8f9fa';
-    const file = event.dataTransfer.files[0];
-    if (file) processFile(file);
-}
+        </script>
 
-function processFile(file) {
-    if (file.type !== 'application/pdf') {
-        alert('Per favore carica solo file PDF.');
-        return;
-    }
+        <script>
 
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const dropZone = document.getElementById('dropZone');
-        const previewContainer = document.getElementById('pdfPreviewContainer');
-        const embedViewer = document.getElementById('pdfEmbedViewer');
-        const pdfTitle = document.getElementById('pdfTitle');
+            let dropZoneClone = null; // keeps a reusable copy of the original drop zone
 
-        // Save a clone of the drop zone before removing it
-        if (dropZone) {
-            dropZoneClone = dropZone.cloneNode(true);
-        }
+            function handleFileSelect(input) {
+                const file = input.files[0];
+                if (file) processFile(file);
+            }
 
-        // Load the PDF into the embed
-        embedViewer.setAttribute('src', e.target.result);
+            function handleFileDrop(event) {
+                event.preventDefault();
+                event.currentTarget.style.backgroundColor = '#f8f9fa';
+                const file = event.dataTransfer.files[0];
+                if (file) processFile(file);
+            }
 
-        // Swap the heading text to the file name
-        pdfTitle.textContent = file.name;
+            function processFile(file) {
+                if (file.type !== 'application/pdf') {
+                    alert('Per favore carica solo file PDF.');
+                    return;
+                }
 
-        // Remove the drop zone, show preview in its place
-        if (dropZone) dropZone.remove();
-        previewContainer.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-}
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const dropZone = document.getElementById('dropZone');
+                    const previewContainer = document.getElementById('pdfPreviewContainer');
+                    const embedViewer = document.getElementById('pdfEmbedViewer');
+                    const pdfTitle = document.getElementById('pdfTitle');
 
-function dismissPreview() {
-    const previewContainer = document.getElementById('pdfPreviewContainer');
-    const embedViewer = document.getElementById('pdfEmbedViewer');
-    const pdfTitle = document.getElementById('pdfTitle');
+                    // Save a clone of the drop zone before removing it
+                    if (dropZone) {
+                        dropZoneClone = dropZone.cloneNode(true);
+                    }
 
-    // Clear the embed source to release the loaded PDF
-    embedViewer.setAttribute('src', '');
+                    // Load the PDF into the embed
+                    embedViewer.setAttribute('src', e.target.result);
 
-    // Hide the preview
-    previewContainer.style.display = 'none';
+                    // Swap the heading text to the file name
+                    pdfTitle.textContent = file.name;
 
-    // Restore the original heading text
-    if (pdfTitle) {
-        pdfTitle.textContent = 'Carica un file PDF';
-    }
+                    // Remove the drop zone, show preview in its place
+                    if (dropZone) dropZone.remove();
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
 
-    // Re-insert a fresh clone of the drop zone right before the preview container
-    if (dropZoneClone) {
-        const freshDropZone = dropZoneClone.cloneNode(true);
-        previewContainer.parentNode.insertBefore(freshDropZone, previewContainer);
-    }
-}
+            function dismissPreview() {
+                const previewContainer = document.getElementById('pdfPreviewContainer');
+                const embedViewer = document.getElementById('pdfEmbedViewer');
+                const pdfTitle = document.getElementById('pdfTitle');
 
+                // Clear the embed source to release the loaded PDF
+                embedViewer.setAttribute('src', '');
 
-</script>
+                // Hide the preview
+                previewContainer.style.display = 'none';
 
+                // Restore the original heading text
+                if (pdfTitle) {
+                    pdfTitle.textContent = 'Carica un file in formato PDF';
+                }
 
+                // Re-insert a fresh clone of the drop zone right before the preview container
+                if (dropZoneClone) {
+                    const freshDropZone = dropZoneClone.cloneNode(true);
+                    previewContainer.parentNode.insertBefore(freshDropZone, previewContainer);
+                }
+            }
+
+        </script>
 
 
         <!-- Main -->
@@ -1373,17 +1388,17 @@ function dismissPreview() {
                     });
                 }
 
-                /*
                 // --- Sidebar Assign Assessment Click Handler ---
                 const assignBtn = document.getElementById("assegna-btn");
                 if (assignBtn) {
                     assignBtn.addEventListener("click", function(e) {
                         e.preventDefault(); // Uncoment if you want to stop default navigation
-                        console.log("Assegna Certificato clicked!");
-//                        submitAssessment();
+                     //   console.log("Assegna Certificato clicked!");
+                        submitCertificate();
                     });
                 }
 
+                /*
                 const emptyBtn = document.getElementById("svuota-btn");
                 if (emptyBtn) {
                     emptyBtn.addEventListener("click", function(e) {
