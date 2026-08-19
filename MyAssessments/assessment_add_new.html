@@ -115,75 +115,7 @@
 }
 
 </style>
-
-    <style>
-        
-        /* 1. Navigation Styling */
-        .modern-pills .nav-link {
-            border: none;
-            border-bottom: 2px solid transparent;
-            color: #94a3b8;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            padding: 16px;
-            transition: all 0.2s ease;
-        }
-
-        .modern-pills .nav-link.active {
-            color: #3b82f6;
-            border-bottom-color: #3b82f6;
-            background: transparent;
-        }
-
-        /* 2. Spaced Button Styling */
-        .spaced-action-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 16px;
-            text-decoration: none !important;
-            background: #ffffff;
-            border: 1px solid #f1f5f9; /* Subtle border */
-            border-radius: 12px; /* Rounded corners */
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        
-        .spaced-action-item:hover {
-            background-color: #f8fafc;
-            border-color: #e2e8f0;
-            transform: translateX(4px); /* Subtle slide effect */
-        }
-
-        .action-label {
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #334155;
-        }
-
-        /* 3. Small Modern Icons */
-        .icon-box {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 12px;
-            font-size: 0.8rem;
-        }
-
-        /* Soft Colors */
-        .bg-blue-soft { background-color: #eff6ff; }
-        .bg-red-soft { background-color: #fef2f2; }
-        .bg-purple-soft { background-color: #f5f3ff; }
-        .bg-green-soft { background-color: #ecfdf5; }
-        .text-purple { color: #8b5cf6; }
-        
-        .ms-auto { margin-left: auto; }
-
-    </style>
-
+    
     <style>
 
         @media (max-width: 768px) {
@@ -215,63 +147,6 @@
 
 
     <style>
-        
-        #therapy-name {
-            background-color: #f8f9fc;      /* Very subtle light background */
-            border-radius: 8px 8px 8px 8px;     /* Rounded right side only */
-        }
-
-    </style>
-
-    <style>
-
-        .inner-action-btn {
-            flex: 1;
-            min-width: 100px;
-            height: 35px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #ffffff;
-            border: 1px solid #d1e9ff;
-            border-radius: 8px;
-            font-size: 0.65rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            transition: all 0.2s ease;
-            text-decoration: none !important;
-            cursor: pointer;
-            color: #4a4a4a;
-        }
-
-        .inner-action-btn:hover {
-            background-color: #ffffff;
-            border-color: #4e73df;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
-        }
-
-        .inner-action-btn:active {
-            transform: translateY(0);
-        }
-
-        .inner-action-btn i {
-            margin-right: 6px;
-            font-size: 0.8rem;
-        }
-        
-        /* The 'Muted' state for your custom button */
-        .inner-action-btn.disabled {
-            opacity: 0.5;
-            pointer-events: none;    /* Physically prevents clicking */
-            cursor: not-allowed;
-            filter: grayscale(1);    /* Optional: makes the green icon look grey */
-            text-decoration: none;
-        }
-
-    </style>
-
-    <style>
 
         .btn-muted {
             opacity: 0.3 !important;
@@ -286,166 +161,92 @@
 <!-- Google Fonts -->
 
 <style>
-  .pt-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 50px 20px;
-    font-family: 'Inter', sans-serif;
-    color: #2a2a2a;
-    line-height: 1.8;
-  }
 
-  .pt-title {
-    font-size: 2.0rem;
-    font-weight: 600;
-    line-height: 1.25;
-    margin-bottom: 10px;
-    color: #0f0f0f;
-  }
+    .pt-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 50px 20px;
+        color: #2a2a2a;
+        line-height: 1.8;
+    }
 
-  .pt-meta {
-    font-size: 0.92rem;
-    color: #666;
-    margin-bottom: 35px;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 15px;
-  }
+    .pt-title {
+        font-size: 2.0rem;
+        font-weight: 600;
+        line-height: 1.25;
+        margin-bottom: 10px;
+        color: #0f0f0f;
+    }
 
-  .pt-section-title {
-    font-size: 1.0rem;
-    font-weight: 600;
-    margin-bottom: 15px;
-    color: #4ba37f;
-  }
+    .pt-meta {
+        font-size: 0.92rem;
+        color: #666;
+        margin-bottom: 35px;
+        border-bottom: 1px solid #e0e0e0;
+        padding-bottom: 15px;
+    }
 
-  .pt-subtitle {
-    font-size: 1.15rem;
-    color: #555;
-    line-height: 1.5;
-    margin-bottom: 35px;
-  }
+    .pt-section-title {
+        font-size: 1.0rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        color: #4ba37f;
+    }
 
-  .pt-quote {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
-    background: #f4f7ff;
-    padding: 25px 30px;
-    border-left: 5px solid #005bbb;
-    margin: 40px 0;
-    color: #233;
-  }
+    .pt-subtitle {
+        font-size: 1.15rem;
+        color: #555;
+        line-height: 1.5;
+        margin-bottom: 35px;
+    }
 
-  .pt-list {
-    list-style: disc;
-    padding-left: 1.25rem;
-    margin-bottom: 1rem;
-  }
+    .pt-quote {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.25rem;
+        background: #f4f7ff;
+        padding: 25px 30px;
+        border-left: 5px solid #005bbb;
+        margin: 40px 0;
+        color: #233;
+    }
 
-  .pt-list li {
-    margin-bottom: .5rem;
-  }
+    .pt-list {
+        list-style: disc;
+        padding-left: 1.25rem;
+        margin-bottom: 1rem;
+    }
 
-  .pt-highlight-box {
-    background: #fafafa;
-    border: 1px solid #e6e6e6;
-    padding: 20px 25px;
-    border-radius: 6px;
-    margin: 35px 0;
-  }
+    .pt-list li {
+        margin-bottom: .5rem;
+    }
 
-  .pt-highlight-box strong {
-    color: #005bbb;
-  }
-  
-#funzioni-esecutive {
-  padding-bottom: 60px;
-}
+    .pt-highlight-box {
+        background: #fafafa;
+        border: 1px solid #e6e6e6;
+        padding: 20px 25px;
+        border-radius: 6px;
+        margin: 35px 0;
+    }
 
-.pt-section-title {
-  margin-bottom: 30px;
-}
+    .pt-highlight-box strong {
+        color: #005bbb;
+    }
+    
 
-.ef-item p {
-  text-align: center;
-}
+    .pt-section-title {
+    margin-bottom: 30px;
+    }
+
+    .ef-item p {
+    text-align: center;
+    }
+
+    .section-title {
+    font-weight: 700;
+    color: #2c3e50;
+    }
+
 </style>
-
-<style>
-
-.section-title {
-  font-weight: 700;
-  color: #2c3e50;
-}
-</style>
-
-<style>
-
-/* TESTO GENERICO */
-.ef-item p {
-  text-align: center;
-}
-
-/* IMMAGINE */
-.ef-image {
-  border-radius: 12px;
-}
-
-/* GRID */
-.ef-grid {
-  display: grid;
-  /*grid-template-columns: repeat(2, 1fr);*/
-  gap: 20px;
-}
-
-/* CARD */
-.ef-card {
-  background: #bdbdfa;
-  border-radius: 12px;
-  padding: 20px;
-  position: relative;
-  min-height: 160px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-}
-
-/* TITOLO */
-.ef-card h5 {
-  font-weight: 700;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-/* TESTO */
-.ef-card p {
-  font-size: 0.9rem;
-  line-height: 1.5;
-  text-align: left;
-}
-
-/* ICONA */
-.ef-icon {
-  position: absolute;
-  top: 15px;
-  left: 15px;
-  width: 36px;
-  height: 36px;
-  background: transparent;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-}
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .ef-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
-
 
 <style>
 
@@ -501,24 +302,6 @@
     }
 </style>
 
-
-<style>
-
-/* Force the dropdown list to be wider than the select input */
-.choices__list--dropdown {
-    min-width: 350px; /* Adjust this value to fit your longest string */
-    z-index: 1050;    /* Ensures it sits on top of other grid elements */
-}
-
-/* Optional: Clean up the appearance to match your grid */
-.choices__inner {
-    border: 1px solid #dee2e6;
-    border-radius: 4px;
-    padding: 5px;
-}
-
-</style>
-
 <style>
 
     .badge-co {
@@ -570,6 +353,7 @@
 }
 
 </style>
+
 <style>
     /* Clean hover state using shadow framing without a thicker internal border */
     .btn-outline-secondary:hover {
@@ -596,22 +380,6 @@
     }
 
 </style>
-
-<!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
-    <style>
-
-        @keyframes structuralFadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        .fade-on-load {
-            opacity: 0;
-            animation: structuralFadeIn 0.25s ease-in-out forwards;
-            animation-delay: 0.1s; /* Tiny delay to let fonts and responsive break points calculate first */
-        }
-
-    </style>
-    
 <!-- Custom Animation Styles (Protects both desktop and mobile viewports) -->
     <style>
 
@@ -638,16 +406,6 @@
         color: #fff !important;
     }
 
-</style>
-
-<style>
-
-    .table-responsive {
-    display: block;
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-}
 </style>
 
 <style>
@@ -901,7 +659,7 @@
                         <div style="min-width: 750px;">
                             
                             <article class="pt-container" style="text-align: center;">
-                                <h1 class="pt-title" style="margin-bottom: 20px;">FASCICOLO SCREENING DSA</h1>
+                                <h1 class="pt-title" style="margin-bottom: 20px;">Fascicolo Screening DSA</h1>
                                         
                                 <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
                                     PROTOCOLLO CLINICO CON CUT-OFF NORMATIVI INTEGRATI (CONSENSUS CONFERENCE)
