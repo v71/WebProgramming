@@ -482,7 +482,7 @@
             <li class="nav-item fade-on-load">
                 <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-rotate-left"></i>
-                    <span>Svuota Assessment</span>
+                    <span>Svuota Form Assessment</span>
                 </a>
             </li>
 
@@ -1559,7 +1559,7 @@
         <script>
 
             function confirmRemoveAll() {
-                console.log("removal confirmed");
+           //     console.log("removal confirmed");
                 
                 // 1. Explicitly remove focus from the button that triggered the event
                 if (document.activeElement instanceof HTMLElement) {
@@ -1582,7 +1582,7 @@
                     select.style.borderColor = '';
                 });
 
-                console.log("All elements cleared.");
+            //    console.log("All elements cleared.");
 
                 // 2. Move focus to the body to be safe
                 document.body.focus();
@@ -1760,7 +1760,7 @@
 
                 try {
              
-                    console.log("saving");
+             //       console.log("saving");
                         
                     // Use consistent Supabase client reference
                     const supabaseClient = window.supabase;
@@ -1794,11 +1794,11 @@
                         .eq("id", activePatientId)
                         .select(); // <--- Adding .select() returns the updated row to verify
                 
-                        console.log("Updated row result:", data);
+           //       console.log("Updated row result:", data);
 
                     if (updateError) throw updateError;
 
-                    console.log("Saved successfully!");
+         //           console.log("Saved successfully!");
                     
                     // Redirect back to the patient list
                     window.location.href = 'lista_assessments.html';

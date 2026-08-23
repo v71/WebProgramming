@@ -107,59 +107,9 @@
                       const [date] = isoString.split("T");
                       return date;
                   }
+
       // -----------------------------------------------------------------
       // calcola anni e mesi trascorsi in formato ISO
-/*
-     export function calculateAgeWithMonths(birthDateString) {
-                // parsing formato ISO: YYYY-MM-DD
-//                const parts = birthDateString.split("-");
-                const parts = birthDateString.includes("-") ? birthDateString.split("-") : birthDateString.split("/");
-                if (parts.length !== 3) return null;
-                const year  = parseInt(parts[0], 10);
-                const month = parseInt(parts[1], 10) - 1;
-                const day   = parseInt(parts[2], 10);
-                const birthDate = new Date(year, month, day);
-                const today = new Date();
-                let ageYears = today.getFullYear() - birthDate.getFullYear();
-                let ageMonths = today.getMonth() - birthDate.getMonth();
-                if (today.getDate() < birthDate.getDate()) {
-                    ageMonths--;
-                }
-                if (ageMonths < 0) {
-                    ageYears--;
-                    ageMonths += 12;
-                }
-                return { years: ageYears, months: ageMonths };
-            }
-*/
-                  /*
-      export function calculateAgeWithMonths(birthDateString,) {
-          // parsing formato ISO: YYYY-MM-DD o DD/MM/YYYY
-          const parts = birthDateString.includes("-") ? birthDateString.split("-") : birthDateString.split("/");
-          if (parts.length !== 3) return null;
-          const year  = parseInt(parts[0], 10);
-          const month = parseInt(parts[1], 10) - 1;
-          const day   = parseInt(parts[2], 10);
-          const birthDate = new Date(year, month, day);
-          const today = new Date();
-          let ageYears = today.getFullYear() - birthDate.getFullYear();
-          let ageMonths = today.getMonth() - birthDate.getMonth();
-          let ageDays = today.getDate() - birthDate.getDate();
-          // If current day is less than birth day, borrow days from the previous month
-          if (ageDays < 0) {
-              ageMonths--;
-              // Get the number of days in the previous month relative to today
-              const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
-              ageDays += previousMonth.getDate();
-          }
-          // If current month is less than birth month, borrow months from the previous year
-          if (ageMonths < 0) {
-              ageYears--;
-              ageMonths += 12;
-          }
-          return { years: ageYears, months: ageMonths, days: ageDays };
-      }
-*/
 
     export function calculateAgeWithMonths(birthDateString, isReverse = false) {
           // parsing formato ISO: YYYY-MM-DD o DD/MM/YYYY (o DD-MM-YYYY / YYYY/MM/DD se reverse)
@@ -249,4 +199,18 @@
             const msInDay = 24 * 60 * 60 * 1000;
             const diffInDays = Math.round(diffInMs / msInDay);
             return diffInDays;
+        }
+
+        export function sanitizeFilename(str) {
+            return str
+                // Normalize accented characters (e.g., "à" becomes "a" + "`")
+                .normalize("NFD")
+                // Remove the accent marks
+                .replace(/[\u0300-\u036f]/g, "")
+                // Replace spaces and special characters with hyphens
+                .replace(/[^a-zA-Z0-9-_]/g, "-")
+                // Remove multiple consecutive hyphens
+                .replace(/-+/g, "-")
+                // Remove leading/trailing hyphens
+                .replace(/^-+|-+$/g, "");
         }

@@ -1505,20 +1505,20 @@
                     return;
 
                 const tableIndex = $(this).data('id');
-                const selectedAssessmentId = window.certificati[tableIndex].uniqueId;
+                const selectedCertificateId = window.certificati[tableIndex].uniqueId;
                 const selectedPatientId = getValidPatientId();
                 
                 // Save both the patient ID and the specific assessment index to localStorage
 
-                if (selectedPatientId !== undefined && selectedAssessmentId !== undefined) {
+                if (selectedPatientId !== undefined && selectedCertificateId !== undefined) {
                     localStorage.setItem('selectedPatientId', selectedPatientId);
-                    localStorage.setItem('selectedAssessmentId', selectedAssessmentId);
+                    localStorage.setItem('selectedCertificateId', selectedCertificateId);
                     
                     console.log("PatientId : ",selectedPatientId);
-                    console.log("AssessmnetId :",selectedAssessmentId);
+                    console.log("CertificateId :",selectedCertificateId);
                     
                     // Optional: Redirect to the editing or detail page
-                    window.location.href = 'assessment_view_3.html';
+                    window.location.href = 'certificato_view.html';
                 }
             });
 

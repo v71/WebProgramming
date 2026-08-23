@@ -476,7 +476,8 @@
             <div class=" fade-on-load sidebar-heading" style="font-size: 0.85rem; font-weight: 700;">
                 Azioni
             </div>
-            <li class="nav-item fade-on-load">
+
+            <!--<li class="nav-item fade-on-load">
                 <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-circle-plus"></i>
                     <span>Salva Certificato</span>
@@ -486,6 +487,34 @@
                 <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-rotate-left"></i>
                     <span>Svuota Form Certificato</span>
+                </a>
+            </li>-->
+
+             <li class="nav-item fade-on-load">
+                <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
+                    <i class="fas fa-circle-plus"></i>
+                    <span>Aggiorna Certificato</span>
+                </a>
+            </li>
+
+            <li class="nav-item fade-on-load">
+                <a id="riempi-btn" class="nav-link nav-link-blue" href="#">
+                    <i class="fas fa-arrows-rotate"></i>
+                    <span>Ripristina Certificato</span>
+                </a>
+            </li>
+
+            <li class="nav-item fade-on-load">
+                <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
+                    <i class="fas fa-broom"></i>
+                    <span>Svuota Form Certificato</span>
+                </a>
+            </li>
+
+            <li class="nav-item fade-on-load">
+                <a id="elimina-btn" class="nav-link nav-link-blue" href="#">
+                    <i class="fas fa-circle-xmark"></i>
+                    <span>Elimina Certificato</span>
                 </a>
             </li>
 
@@ -505,7 +534,7 @@
                     </button>
 
                     <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
-                        Dashboard - Aggiungi un nuovo Certificato
+                        Dashboard - Revisiona Certificato
                     </h1>
 
                     <ul class="navbar-nav ml-auto">
@@ -685,6 +714,7 @@
                             </div>
 
 
+
                                 <div id="pdfPreviewContainer" class="w-100 border rounded bg-white" style="display: none; margin: 24px 0; padding: 16px; box-sizing: border-box;">
 
                                     <h1 id="pdfTitle" class="pt-title" style="margin-bottom: 20px; text-align: center;"></h1>
@@ -850,19 +880,23 @@
                 window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
                 import {
-                    calculateAgeWithMonths,
-                    sanitizeFilename
+                    convertToItalianFormat,
+                    calculateAgeWithMonths
                 } from "./assets/js/string_utils.js";
+
                 
                 // EXPOSE THEM GLOBALLY SO YOUR READY FUNCTION CAN SEE THEM
                 window.calculateAgeWithMonths = calculateAgeWithMonths;
-                window.sanitizeFilename=sanitizeFilename;
+
+                // Make the variable globally available from the start
+                window.certificates = [];
+                window.uniquePatientId;
+                window.certificatetId;
                 window.fullNameNoPrefix;
 
         </script>
 
         <script>
-
             // ---------------------------------------------------------------------------------
 
             function updateClinicianAvatar(userGender) {
@@ -942,6 +976,16 @@
                     return null;
                 }
                 return activeId.trim();
+            }
+
+            function getValidCertificateId() {
+                // 1. Read the UUID string from localStorage
+                const targetId = localStorage.getItem('selectedCertificateId');
+                // 2. Validate that it exists and isn't empty/null/undefined
+                if (!targetId || targetId === 'null' || targetId === 'undefined' || targetId.trim() === '') {
+                    return null;
+                }
+                return targetId;
             }
 
             // ---------------------------------------------------------------------------------
@@ -1060,37 +1104,9 @@
                 // 3. Close the modal
                 $('#confirmClearModal').modal('hide');
             }
-
+            
         </script>
 
-        <script>
-
-            async function saveToSupabase(filePath) {
-                if (!currentUploadedFile) {
-                    alert("Nessun file selezionato.");
-                    return;
-                }
-
-                const { data, error } = await window.supabase.storage
-                    .from('patient-pdf')
-                    .upload(filePath, currentUploadedFile, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
-
-                if (error) {
-                    console.error("Errore durante il caricamento:", error.message);
-                    alert("Errore nel salvataggio: " + error.message);
-                    return false;
-                }
-
-                console.log("PDF salvato con successo!", data);
-
-                return true;
-            }
-        
-        </script>
- 
         <script>
             
             function validateForm()  {
@@ -1124,15 +1140,16 @@
                 }
                 
                 const pdfTitle = document.getElementById('pdfTitle');
+            //    console.log(pdfTitle.textContent);
+                // 1. Create a unique file path for storage (e.g., patientId/timestamp-filename.pdf)
                 const fileExt = pdfTitle.textContent.split('.').pop();
-                // 1. Get title without extension and sanitize it to use as the folder/file name
+                const fileName = `${activePatientId}.${fileExt}`;
                 const pdfTitleNoExt = pdfTitle.textContent.replace(/\.[^/.]+$/, "");
-                const sanitizedFileName = sanitizeFilename(pdfTitleNoExt);
-                // 2. Generate the timestamp
-                const timestamp = Date.now();
-                // 3. Construct the file path: fullNameNoPrefix / filename / timestamp.fileExt
-                const filePath = `${window.fullNameNoPrefix}/${sanitizedFileName}/${timestamp}.${fileExt}`;
-
+                const fullNameNoPrefix = `${window.globalPatientData.name}${window.globalPatientData.surname}-${pdfTitleNoExt}`;
+                const filePath = `${fullNameNoPrefix}/${fileName}`;
+                    
+                console.log(filePath);
+    
                 // 5. Build fresh protocol payload
                 const newCertificate = {
                     uniqueId: crypto.randomUUID(),
@@ -1155,7 +1172,6 @@
 
                 async function submitCertificate()
                 {
-                    
                     // Step A: Validate and build certificate payload
                     const newCertificate = validateForm();
                     if (!newCertificate) return; // Validation failed, browser popup shown, abort.
@@ -1195,36 +1211,28 @@
                             currentActivity.Certificates = [];
                         }
 
+                       // console.log(currentActivity.Certificates);
+
                         // Prepend new assessment to top of array
                         currentActivity.Certificates.unshift(newCertificate);
 
-                        // uploads pdf int the supabase storage bucket
-                       // 1. Wait for the PDF to fully upload to the storage bucket first
-                        await saveToSupabase(newCertificate.filePath);
-
                      //   console.log(currentActivity.Certificates);
+                        
+                        // Step E: Save back to Supabase (using supabaseClient)
+                        const { data,error: updateError } = await supabaseClient
+                            .from("Clients")
+                            .update({ activity: currentActivity })
+                            .eq("id", activePatientId)
+                            .select(); // <--- Adding .select() returns the updated row to verify
+                    
+                     //       console.log("Updated row result:", data);
 
-                     try {
-                            const { data, error: updateError } = await supabaseClient
-                                .from("Clients")
-                                .update({ activity: currentActivity })
-                                .eq("id", activePatientId)
-                                .select();
+                        if (updateError) throw updateError;
 
-                            if (updateError) {
-                                console.error("Errore nell'aggiornamento della tabella Clients:", updateError.message);
-                                return; // Stops here if the database update fails
-                            }
-                            
-                            console.log("Tabella Clients aggiornata con successo:", data);
-
-                             // Redirect back to the patient list
-                            window.location.href = 'lista_certificati.html';
-
-                        } catch (err) {
-                            console.error("Eccezione durante l'aggiornamento DB:", err);
-                        }
-
+                   //     console.log("Saved successfully!");
+                        
+                        // Redirect back to the patient list
+                        window.location.href = 'lista_certificati.html';
                     } catch (err) {
                         console.error("Errore durante il salvataggio:", err);
                     }
@@ -1236,7 +1244,6 @@
         <script>
 
             let dropZoneClone = null; // keeps a reusable copy of the original drop zone
-            let currentUploadedFile = null;
 
             function handleFileSelect(input) {
                 const file = input.files[0];
@@ -1256,10 +1263,6 @@
                     return;
                 }
 
-                // Save the file bytes globally so we can use it during the Supabase upload
-                currentUploadedFile = file;
-
-                // read in the pdf file
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const dropZone = document.getElementById('dropZone');
@@ -1286,6 +1289,7 @@
             }
 
         </script>
+
 
         <!-- Main -->
         <script type="module">
@@ -1356,6 +1360,15 @@
                     return;
                 }
                 
+                const activeCertificateId = getValidCertificateId();
+
+                // ✅ Correct validation for a UUID string
+                if (!activeCertificateId || activeCertificateId === 'null' || activeCertificateId === 'undefined' || activeCertificateId.trim() === '') {
+                    alert("Nessun certificato selezionato. Ritorno alla lista...");
+                    window.location.replace("lista_pazienti6.html");
+                    return;
+                }
+
           //      console.log("Selected Patient Id : ", activePatientId);
 
                 const dismissBtn = document.getElementById("svuota-btn");
@@ -1406,9 +1419,6 @@
                     const subDateItalianFormat = subdate ? new Date(subdate).toLocaleDateString('it-IT') : '';
                     const activityData = patientData.activity;
 
-                    // Save the whole object globally
-                    window.fullNameNoPrefix=fullNameNoPrefix;
-
                 //    console.log(name);
                 //    console.log(surname);
                 //    console.log(genre);
@@ -1426,6 +1436,16 @@
                     updateSubscriptionDate(document.getElementById("patientSubDate"), subDateItalianFormat, gender);
                     updateUserAvatar(gender);
                  
+                    // Accedi direttamente al JSON object
+                    // Fallback sicuro nel caso in cui la colonna sia NULL nel database
+                    const patientActivity = patientData.activity || { Assessments: [], Certificates: [], Therapies: [] };
+                   //     console.log("Activity:", patientActivity);
+                    window.certificates = patientActivity.Certificates || [];
+                    window.assessmentId=activeCertificateId;
+                    window.fullNameNoPrefix=fullNameNoPrefix;
+
+                    console.log(window.certificates);
+
 
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
