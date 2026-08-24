@@ -428,8 +428,6 @@
 
 </style>
 
-
-
 </head>
 
 <body id="page-top">
@@ -656,34 +654,29 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12">
                 
-                
                 <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
-                   
                     <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                        
                        
                         <div style="min-width: 750px;">
                             
                             <article class="pt-container" style="text-align: center;">
 
-                                
-                            <div id="dropZone" class="d-flex flex-column justify-content-center align-items-center flex-grow-1" style="width: 1400px; min-height: 350px; margin-left: auto; margin-right: auto; border: 2px dashed #6c757d; border-radius: 8px; padding: 100px; background-color: #f8f9fa; cursor: pointer; transition: background-color 0.2s ease;"
-                                ondragover="event.preventDefault(); this.style.backgroundColor='#e2e6ea';"
-                                ondragleave="this.style.backgroundColor='#f8f9fa';"
-                                ondrop="handleFileDrop(event)">
+                                <div id="dropZone" class="d-flex flex-column justify-content-center align-items-center flex-grow-1 mx-auto" style="width: 100%; max-width: 1400px; min-height: 350px; border: 2px dashed #6c757d; border-radius: 8px; padding: 100px; background-color: #f8f9fa; cursor: pointer; transition: background-color 0.2s ease;"
+                                    ondragover="event.preventDefault(); this.style.backgroundColor='#e2e6ea';"
+                                    ondragleave="this.style.backgroundColor='#f8f9fa';"
+                                    ondrop="handleFileDrop(event)">
 
-                                <i class="fas fa-file-pdf text-danger mb-2" style="font-size: 6.0rem;"></i>
-                                <h2 class="mb-2 text-secondary">Trascina qui il tuo file PDF</h2>
-                                <h5 class="text-muted mb-3">oppure</h5>
-                                
-                                <label for="pdfFileInput" class="btn btn-primary mb-0 px-4 py-2" style="cursor: pointer;">
-                                    <i class="fas fa-upload mr-1"></i> Seleziona PDF
-                                </label>
-                                <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;" onchange="handleFileSelect(this)">
-                                
-                            </div>
-
+                                    <i class="fas fa-file-pdf text-danger mb-1" style="font-size: 5.0rem;"></i>
+                                    <h2 class="mb-1 text-secondary">Trascina qui il tuo file PDF</h2>
+                                    <h5 class="text-muted mb-1">oppure</h5>
+                                    
+                                    <label for="pdfFileInput" class="btn btn-primary mb-2 px-4 py-2" style="cursor: pointer;">
+                                        <i class="fas fa-upload mr-1"></i> Seleziona PDF
+                                    </label>
+                                    <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;" onchange="handleFileSelect(this)">
+                                    
+                                </div>
 
                                 <div id="pdfPreviewContainer" class="w-100 border rounded bg-white" style="display: none; margin: 24px 0; padding: 16px; box-sizing: border-box;">
 
@@ -825,6 +818,26 @@
         </div>
     </div>
 
+    <div class="modal fade" id="noPdfModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg modal-system-alert">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title font-weight-bold text-white">Attenzione</h5>
+            </div>
+            <div class="modal-body text-white-50">
+                <!-- Updated text to match the new purpose -->
+                <p id="modalMessage">Il file caricato non è valido. È richiesto un documento in formato PDF.</p>
+                <!-- Displaying the specific invalid file name -->
+                <div id="invalidFileWarning" class="alert alert-warning mt-3 mb-0" role="alert">
+                    File non valido: <strong id="invalidFileName"></strong>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-light" data-dismiss="modal">Ok</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
         <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
         <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -1204,30 +1217,30 @@
 
                      //   console.log(currentActivity.Certificates);
 
-                     try {
-                            const { data, error: updateError } = await supabaseClient
-                                .from("Clients")
-                                .update({ activity: currentActivity })
-                                .eq("id", activePatientId)
-                                .select();
+                        try {
+                                const { data, error: updateError } = await supabaseClient
+                                    .from("Clients")
+                                    .update({ activity: currentActivity })
+                                    .eq("id", activePatientId)
+                                    .select();
 
-                            if (updateError) {
-                                console.error("Errore nell'aggiornamento della tabella Clients:", updateError.message);
-                                return; // Stops here if the database update fails
-                            }
-                            
-                            console.log("Tabella Clients aggiornata con successo:", data);
+                                if (updateError) {
+                                    console.error("Errore nell'aggiornamento della tabella Clients:", updateError.message);
+                                    return; // Stops here if the database update fails
+                                }
+                                
+                                console.log("Tabella Clients aggiornata con successo:", data);
 
-                             // Redirect back to the patient list
-                            window.location.href = 'lista_certificati.html';
+                                // Redirect back to the patient list
+                                window.location.href = 'lista_certificati.html';
+
+                            } catch (err) {
+                                    console.error("Eccezione durante l'aggiornamento DB:", err);
+                                }
 
                         } catch (err) {
-                            console.error("Eccezione durante l'aggiornamento DB:", err);
+                            console.error("Errore durante il salvataggio:", err);
                         }
-
-                    } catch (err) {
-                        console.error("Errore durante il salvataggio:", err);
-                    }
                         
                 }
 
@@ -1252,7 +1265,9 @@
 
             function processFile(file) {
                 if (file.type !== 'application/pdf') {
-                    alert('Per favore carica solo file PDF.');
+                    document.getElementById('invalidFileName').textContent = file.name;
+                    // Trigger the new modal ID
+                    $('#noPdfModal').modal('show');
                     return;
                 }
 
