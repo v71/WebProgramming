@@ -1154,7 +1154,8 @@
                     entityName: entityInput.value.trim(),
                     evaluationDate: dateInput.value,
                     italian_date : new Date(dateInput.value).toLocaleDateString('it-IT'),
-                    filePath: filePath
+                    filePath: filePath,
+                    fileName: pdfTitle.textContent
                 };
 
   //              console.log("Certificate Payload Ready:", newCertificate);
@@ -1172,6 +1173,8 @@
                     // Step A: Validate and build certificate payload
                     const newCertificate = validateForm();
                     if (!newCertificate) return; // Validation failed, browser popup shown, abort.
+
+               //     console.log(newCertificate);
 
                     // Step B: Get active patient ID
                     const activePatientId = getValidPatientId();
@@ -1229,7 +1232,7 @@
                                     return; // Stops here if the database update fails
                                 }
                                 
-                                console.log("Tabella Clients aggiornata con successo:", data);
+                         //       console.log("Tabella Clients aggiornata con successo:", data);
 
                                 // Redirect back to the patient list
                                 window.location.href = 'lista_certificati.html';
@@ -1241,7 +1244,6 @@
                         } catch (err) {
                             console.error("Errore durante il salvataggio:", err);
                         }
-                        
                 }
 
         </script>

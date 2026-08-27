@@ -477,19 +477,6 @@
                 Azioni
             </div>
 
-            <!--<li class="nav-item fade-on-load">
-                <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
-                    <i class="fas fa-circle-plus"></i>
-                    <span>Salva Certificato</span>
-                </a>
-            </li>
-            <li class="nav-item fade-on-load">
-                <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
-                    <i class="fas fa-rotate-left"></i>
-                    <span>Svuota Form Certificato</span>
-                </a>
-            </li>-->
-
              <li class="nav-item fade-on-load">
                 <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-circle-plus"></i>
@@ -685,37 +672,15 @@
         <div class="row">
             <div class="col-xl-12 col-lg-12">
                 
-                
                 <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
-                   
                     <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
                         
-                       
                         <div style="min-width: 750px;">
                             
                             <article class="pt-container" style="text-align: center;">
 
-                                
-                            <div id="dropZone" class="d-flex flex-column justify-content-center align-items-center flex-grow-1" style="width: 1400px; min-height: 350px; margin-left: auto; margin-right: auto; border: 2px dashed #6c757d; border-radius: 8px; padding: 100px; background-color: #f8f9fa; cursor: pointer; transition: background-color 0.2s ease;"
-                                ondragover="event.preventDefault(); this.style.backgroundColor='#e2e6ea';"
-                                ondragleave="this.style.backgroundColor='#f8f9fa';"
-                                ondrop="handleFileDrop(event)">
-
-                                <i class="fas fa-file-pdf text-danger mb-2" style="font-size: 6.0rem;"></i>
-                                <h2 class="mb-2 text-secondary">Trascina qui il tuo file PDF</h2>
-                                <h5 class="text-muted mb-3">oppure</h5>
-                                
-                                <label for="pdfFileInput" class="btn btn-primary mb-0 px-4 py-2" style="cursor: pointer;">
-                                    <i class="fas fa-upload mr-1"></i> Seleziona PDF
-                                </label>
-                                <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;" onchange="handleFileSelect(this)">
-                                
-                            </div>
-
-
-
-                                <div id="pdfPreviewContainer" class="w-100 border rounded bg-white" style="display: none; margin: 24px 0; padding: 16px; box-sizing: border-box;">
+                                <div id="pdfPreviewContainer" class="w-100 border rounded bg-white" style="margin: 24px 0; padding: 16px; box-sizing: border-box;">
 
                                     <h1 id="pdfTitle" class="pt-title" style="margin-bottom: 20px; text-align: center;"></h1>
 
@@ -845,12 +810,30 @@
                 <h5 class="modal-title font-weight-bold text-white">Attenzione</h5>
             </div>
             <div class="modal-body text-white-50">
-                Questa operazione è irreversibile. Confermi di voler svuotare l'intero form ?
+                Confermi di voler svuotare l'intero form ?
             </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annulla</button>
                 <button type="button" class="btn btn-light text-danger font-weight-bold" onclick="confirmRemoveAll()">Conferma Svuota</button>
             </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="modal fade" id="confirmDeleteCertificateModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg modal-system-alert">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title font-weight-bold text-white">Attenzione</h5>
+                </div>
+                <div class="modal-body text-white-50">
+                    Confermi di voler eliminare questo certificate? Questa operazione è irreversibile.
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annulla</button>
+                    <!-- Added id="confirmDeleteBtn" -->
+                    <button type="button" id="confirmDeleteBtn" class="btn btn-light text-danger font-weight-bold">Conferma ed Elimina</button>
+                </div>
             </div>
         </div>
     </div>
@@ -891,12 +874,13 @@
                 // Make the variable globally available from the start
                 window.certificates = [];
                 window.uniquePatientId;
-                window.certificatetId;
-                window.fullNameNoPrefix;
+                window.certificateId;
+                window.certificateFilePath;
 
         </script>
 
         <script>
+
             // ---------------------------------------------------------------------------------
 
             function updateClinicianAvatar(userGender) {
@@ -990,6 +974,7 @@
 
             // ---------------------------------------------------------------------------------
             // Updates the age status badge of a patient with unified center alignments.
+            
             function updateAgeBadge(badgeElement, status) {
                 if (!badgeElement) return;
 
@@ -1021,7 +1006,8 @@
                     `;
                 }
             }
-           // ---------------------------------------------------------------------------------
+
+            // ---------------------------------------------------------------------------------
             // Updates the subscription date label with proper Italian gender agreement.
 
             function updateSubscriptionDate(target, date, gender) {
@@ -1055,15 +1041,17 @@
 
         <script>
 
+            // -------------------------------------------------------------------
+
             function confirmRemoveAll() {
                 
-           //     console.log("removal confirmed");
+                console.log("removal confirmed");
                 
                 // 1. Explicitly remove focus from the button that triggered the event
                 if (document.activeElement instanceof HTMLElement) {
                     document.activeElement.blur();
                 }
-
+                
                 // 1. Clear all standard inputs (text, date, number, etc.)
                 const allInputs = document.querySelectorAll('input');
                 allInputs.forEach(input => {
@@ -1072,7 +1060,7 @@
                     // Reset border styles (in case you added red borders for errors)
                     input.style.borderColor = '';
                 });
-
+                
                 // 2. Reset all selects to the first option (the "Seleziona..." one)
                 const allSelects = document.querySelectorAll('select');
                 allSelects.forEach(select => {
@@ -1080,22 +1068,7 @@
                     select.style.borderColor = '';
                 });
        
-                // clear pdf preview
-                const previewContainer = document.getElementById('pdfPreviewContainer');
-                const embedViewer = document.getElementById('pdfEmbedViewer');
-
-                // Clear the embed source to release the loaded PDF
-                embedViewer.setAttribute('src', '');
-
-                // Hide the preview
-                previewContainer.style.display = 'none';
-
-                // Re-insert a fresh clone of the drop zone right before the preview container
-                if (dropZoneClone) {
-                    const freshDropZone = dropZoneClone.cloneNode(true);
-                    previewContainer.parentNode.insertBefore(freshDropZone, previewContainer);
-                }
-
+       
           //      console.log("All elements cleared.");
                 
                 // 2. Move focus to the body to be safe
@@ -1109,6 +1082,35 @@
 
         <script>
             
+            // -------------------------------------------------------------------
+
+            function injectFormattedDate(dateInputData) {
+                if (!dateInputData) return;
+                
+                // Force it to be a string
+                let dateString = String(dateInputData).trim();
+                let formattedDate = dateString;
+                
+                // Check if it contains slashes (e.g. DD/MM/YYYY)
+                if (dateString.includes('/')) {
+                    const parts = dateString.split('/');
+                    if (parts.length === 3) {
+                        let day = parts[0].padStart(2, '0');
+                        let month = parts[1].padStart(2, '0');
+                        let year = parts[2];
+
+                        if (year.length === 2) {
+                            year = '20' + year;
+                        }
+                        // Reconstruct safely
+                        formattedDate = year + '-' + month + '-' + day;
+                    }
+                }
+                return formattedDate;
+            }
+        
+            // ------------------------------------------------------------------------------
+
             function validateForm()  {
                 
                 // Title check
@@ -1117,40 +1119,24 @@
                     titleInput.reportValidity(); // Displays the native browser warning popup
                     return false; 
                 }
-                
+
                 // Entitiy check
                 const entityInput = document.getElementById('formEntity');
                 if (!entityInput.checkValidity() || !entityInput.value.trim()) {
                     entityInput.reportValidity(); // Displays the native browser warning popup
                     return false; 
                 }
-                
+
                 // Date check
                 const dateInput = document.getElementById('clinicalDate');
                 if (!dateInput.checkValidity()) {
                     dateInput.reportValidity();
                     return false;
                 }
-      
-                // Step B: Get active patient ID
-                const activePatientId = getValidPatientId();
-                if (!activePatientId) {
-                    alert("Nessun paziente attivo trovato!");
-                    return;
-                }
-                
+
                 const pdfTitle = document.getElementById('pdfTitle');
-            //    console.log(pdfTitle.textContent);
-                // 1. Create a unique file path for storage (e.g., patientId/timestamp-filename.pdf)
-                const fileExt = pdfTitle.textContent.split('.').pop();
-                const fileName = `${activePatientId}.${fileExt}`;
-                const pdfTitleNoExt = pdfTitle.textContent.replace(/\.[^/.]+$/, "");
-                const fullNameNoPrefix = `${window.globalPatientData.name}${window.globalPatientData.surname}-${pdfTitleNoExt}`;
-                const filePath = `${fullNameNoPrefix}/${fileName}`;
-                    
-                console.log(filePath);
-    
-                // 5. Build fresh protocol payload
+
+                // Build fresh protocol payload
                 const newCertificate = {
                     uniqueId: crypto.randomUUID(),
                     timestamp: new Date().toISOString(),
@@ -1158,20 +1144,23 @@
                     entityName: entityInput.value.trim(),
                     evaluationDate: dateInput.value,
                     italian_date : new Date(dateInput.value).toLocaleDateString('it-IT'),
-                    filePath: filePath
+                    filePath: window.certificateFilePath,
+                    fileName: pdfTitle.textContent
                 };
-
-  //              console.log("Certificate Payload Ready:", newCertificate);
+  
+            //    console.log("Certificate Payload Ready:", newCertificate);
+  
                 return newCertificate;
-                
             }
         
         </script>
 
         <script>
 
+                /*
                 async function submitCertificate()
                 {
+                    
                     // Step A: Validate and build certificate payload
                     const newCertificate = validateForm();
                     if (!newCertificate) return; // Validation failed, browser popup shown, abort.
@@ -1184,7 +1173,6 @@
                     }
 
                     try {
-             
                      //   console.log("saving");
                                                     
                         // Use consistent Supabase client reference
@@ -1199,6 +1187,8 @@
 
                         if (fetchError) throw fetchError;
                         
+                        console.log(newCertificate);
+                        
                         // Step D: Prepare updated structure safely
                         // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
                         let currentActivity = patient?.activity 
@@ -1211,13 +1201,14 @@
                             currentActivity.Certificates = [];
                         }
 
-                       // console.log(currentActivity.Certificates);
-
+                        console.log(currentActivity.Certificates);
+                        
                         // Prepend new assessment to top of array
                         currentActivity.Certificates.unshift(newCertificate);
 
-                     //   console.log(currentActivity.Certificates);
-                        
+                        console.log(currentActivity.Certificates);
+                     
+                     
                         // Step E: Save back to Supabase (using supabaseClient)
                         const { data,error: updateError } = await supabaseClient
                             .from("Clients")
@@ -1233,63 +1224,243 @@
                         
                         // Redirect back to the patient list
                         window.location.href = 'lista_certificati.html';
+                        
                     } catch (err) {
                         console.error("Errore durante il salvataggio:", err);
                     }
                         
                 }
+                */
 
+                // -------------------------------------------------------------------
+
+                async function RemoveAssessment(assessmentId)
+                {
+                    console.log("remove certificate function");
+                    /*                    
+                    if (!assessmentId) {
+                        console.error("No uniqueId provided for deletion.");
+                        return;
+                    }
+
+                    // Get active patient ID (adjust this selector/function based on how your app tracks the current patient)
+                    const activePatientId = typeof getValidPatientId === 'function' ? getValidPatientId() : window.currentPatientId;
+                    if (!activePatientId) {
+                        alert("Nessun paziente attivo trovato!");
+                        return;
+                    }
+                    
+                    try {
+                        
+                        console.log("Deleting assessment with ID:", assessmentId);
+                            
+                        const supabaseClient = window.supabase;
+
+                        // 1. Fetch existing patient activity column from Supabase
+                        const { data: patient, error: fetchError } = await supabaseClient
+                            .from("Clients")
+                            .select("activity")
+                            .eq("id", activePatientId)
+                            .single();
+
+                        if (fetchError) throw fetchError;
+
+                        console.log(patient);
+                        
+                        // 2. Parse current activity structure safely
+                        let currentActivity = patient?.activity 
+                            ? JSON.parse(JSON.stringify(patient.activity)) 
+                            : { Assessments: [], Certificates: [], Therapies: [] };
+
+                        if (!Array.isArray(currentActivity.Assessments)) {
+                            currentActivity.Assessments = [];
+                        }
+
+                        // 3. Filter out the assessment matching the target uniqueId
+                        currentActivity.Assessments = currentActivity.Assessments.filter(
+                            item => item.uniqueId !== assessmentId.trim()
+                        );
+
+                        console.log(currentActivity);
+                        
+                        // Optional: Update local global arrays if your app uses them
+                        if (window.assessments && Array.isArray(window.assessments)) {
+                            window.assessments = window.assessments.filter(
+                                item => item.uniqueId !==  assessmentId.trim()
+                            );
+                        }
+
+                        
+                        // 4. Save the filtered array back to Supabase
+                        const { data, error: updateError } = await supabaseClient
+                            .from("Clients")
+                            .update({ activity: currentActivity })
+                            .eq("id", activePatientId)
+                            .select(); 
+
+                        if (updateError) throw updateError;
+
+                        console.log("Assessment deleted successfully!", data);
+                        
+                    // 5. Redirect to the patient list view
+                        window.location.href = 'lista_assessments.html';
+
+                    } catch (err) {
+                        console.error("Errore durante l'eliminazione:", err);
+                        alert("Errore durante l'eliminazione dell'assessment.");
+                    }
+                        */
+                }
+
+                // -------------------------------------------------------------------
+                // Direct Save Handler (Async)
+
+                async function submitCertificate() {
+
+                    // Step A: Validate and build certificate payload
+                    const newCertificate = validateForm();
+                    if (!newCertificate) return; // Validation failed, browser popup shown, abort.
+
+                    // Ensure the global ID exists
+                    if (!window.certificateId) {
+                        console.error("window.certificateId is undefined!");
+                        return;
+                    }
+                    
+                    // Step B: Find the index of the existing certificate in the global array
+                    const targetId = window.certificateId.trim();
+                    const index = window.certificates.findIndex(item => item.uniqueId === targetId);
+                    
+                    if (index !== -1) {
+                        // Replace the old certificate with the new updated payload
+                        window.certificates[index] = newCertificate;
+                        console.log("Replaced existing certificate at index:", index);
+                    } else {
+                        console.warn("Certificate not found in local array, pushing as new.");
+                        window.certificates.unshift(newCertificate);
+                    }
+                    
+                    // Step C: Get active patient ID
+                    const activePatientId = getValidPatientId();
+                    if (!activePatientId) {
+                        alert("Nessun paziente attivo trovato!");
+                        return;
+                    }
+
+                    try {
+                        const supabaseClient = window.supabase;
+
+                        // Step D: Fetch existing patient activity column to preserve other arrays (Assessments, Therapies)
+                        const { data: patient, error: fetchError } = await supabaseClient
+                            .from("Clients")
+                            .select("activity")
+                            .eq("id", activePatientId)
+                            .single();
+
+                        if (fetchError) throw fetchError;
+                        
+                        // Prepare updated structure safely
+                        let currentActivity = patient?.activity 
+                            ? JSON.parse(JSON.stringify(patient.activity)) 
+                            : { Assessments: [], Certificates: [], Therapies: [] };
+                            
+                        // Update the Certificates array with your modified window.certificates
+                        currentActivity.Certificates = window.certificates;
+                        
+                        // Step E: Save back to Supabase
+                        const { data, error: updateError } = await supabaseClient
+                            .from("Clients")
+                            .update({ activity: currentActivity })
+                            .eq("id", activePatientId)
+                            .select(); 
+
+                        if (updateError) throw updateError;
+                            
+                        // Redirect back to the certificate list
+                        window.location.href = 'lista_certificati.html';
+
+                    } catch (err) {
+                        console.error("Errore durante il salvataggio:", err);
+                    }
+                }
+            
         </script>
 
         <script>
 
-            let dropZoneClone = null; // keeps a reusable copy of the original drop zone
+            // -------------------------------------------------------------------
 
-            function handleFileSelect(input) {
-                const file = input.files[0];
-                if (file) processFile(file);
-            }
+            async function FillForm(certificateId) {
+           
+            //    console.log("Looking for certificateId:", certificateId);
+            //    console.log("Current window.certificates array:", window.certificates);
+                
+              
+                // Run the search
+                const certificate= window.certificates.find(item => item.uniqueId === certificateId.trim());
 
-            function handleFileDrop(event) {
-                event.preventDefault();
-                event.currentTarget.style.backgroundColor = '#f8f9fa';
-                const file = event.dataTransfer.files[0];
-                if (file) processFile(file);
-            }
+             //   console.log("Found result:", certificate);
 
-            function processFile(file) {
-                if (file.type !== 'application/pdf') {
-                    alert('Per favore carica solo file PDF.');
-                    return;
+                // Title check
+                const titleInput = document.getElementById('formTitle');
+                if (titleInput) {
+                    titleInput.value = certificate.title || ""; 
                 }
 
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const dropZone = document.getElementById('dropZone');
-                    const previewContainer = document.getElementById('pdfPreviewContainer');
-                    const embedViewer = document.getElementById('pdfEmbedViewer');
-                    const pdfTitle = document.getElementById('pdfTitle');
+                // Entitiy check
+                const entityInput = document.getElementById('formEntity');
+                if (entityInput) {
+                    entityInput.value = certificate.entityName; 
+                }
+                
+                // date name check
+                const dateInput = document.getElementById('clinicalDate');
+                if (dateInput) {
+                    dateInput.value = injectFormattedDate(certificate.italian_date); 
+                }
 
-                    // Save a clone of the drop zone before removing it
-                    if (dropZone) {
-                        dropZoneClone = dropZone.cloneNode(true);
+                //console.log(certificate.filePath);
+
+                // save certificate file path 
+                window.certificateFilePath=certificate.filePath;
+                
+             //   console.log(window.certificateFilePath);
+
+                try {
+                    
+                    // 1. Generate a temporary signed URL from Supabase Storage (valid for 60 seconds)
+                    const { data, error } = await window.supabase.storage
+                        .from('patient-pdf')
+                        .createSignedUrl(window.certificateFilePath, 60);
+
+                    if (error) {
+                        console.error("Errore nella generazione dell'URL firmato:", error.message);
+                        alert("Impossibile caricare l'anteprima del PDF.");
+                        return;
+                    }
+                    
+                    // 2. Grab your embed viewer element
+                    const pdfViewer = document.getElementById('pdfEmbedViewer');
+                    const previewContainer = document.getElementById('pdfPreviewContainer');
+
+                    if (pdfViewer && data && data.signedUrl) {
+                        // 3. Set the source to the secure Supabase URL
+                        pdfViewer.src = data.signedUrl;
                     }
 
-                    // Load the PDF into the embed
-                    embedViewer.setAttribute('src', e.target.result);
+                    // Display your custom form title right above the viewer container
+                    const viewerHeader = document.getElementById('pdfTitle'); // Or whatever your heading element ID is
+                    if (viewerHeader) {
+                        viewerHeader.innerText = certificate.fileName || "Documento Clinico";
+                    }
 
-                    // Swap the heading text to the file name
-                    pdfTitle.textContent = file.name;
+                } catch (err) {
+                    console.error("Errore imprevisto durante il caricamento del PDF:", err);
+                }
 
-                    // Remove the drop zone, show preview in its place
-                    if (dropZone) dropZone.remove();
-                    previewContainer.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
             }
 
         </script>
-
 
         <!-- Main -->
         <script type="module">
@@ -1369,25 +1540,55 @@
                     return;
                 }
 
-          //      console.log("Selected Patient Id : ", activePatientId);
-
-                const dismissBtn = document.getElementById("svuota-btn");
-                if (dismissBtn) {
-                        dismissBtn.addEventListener('click', function(e) {
-                            event.preventDefault();
-                            console.log("Rimuovi anteprima clicked!");
+                // --- Sidebar Assign Certificate Click Handler ---
+                const assignBtn = document.getElementById("assegna-btn");
+                if (assignBtn) {
+                    assignBtn.addEventListener("click", function(e) {
+                        e.preventDefault(); // Uncoment if you want to stop default navigation
+                  //      console.log("Assegna Certificato clicked!");
+                        submitCertificate();
+                    });
+                }
+                
+                const emptyBtn = document.getElementById("svuota-btn");
+                if (emptyBtn) {
+                    emptyBtn.addEventListener("click", function(e) {
+                        e.preventDefault(); // Uncoment if you want to stop default navigation
+                        //console.log("Svuota Certificato clicked!");
                         // Trigger the Bootstrap modal to show
                         $('#confirmClearModal').modal('show');
                     });
                 }
 
-                // --- Sidebar Assign Assessment Click Handler ---
-                const assignBtn = document.getElementById("assegna-btn");
-                if (assignBtn) {
-                    assignBtn.addEventListener("click", function(e) {
+                const fillBtn = document.getElementById("riempi-btn");
+                if (fillBtn) {
+                    fillBtn.addEventListener("click", function(e) {
                         e.preventDefault(); // Uncoment if you want to stop default navigation
-                     //   console.log("Assegna Certificato clicked!");
-                        submitCertificate();
+                        //console.log("Riempi Assessment clicked!");
+                        FillForm(window.certificateId);
+                    });
+                }
+
+                 const removeBtn = document.getElementById("elimina-btn");
+                if (removeBtn) {
+                    removeBtn.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        
+                        // Assume you have the assessment ID available here (e.g., window.assessmentId or a local variable)
+                        const currentId = window.certificateId; 
+                        
+                        if (!currentId) {
+                            console.error("No assessment ID found for deletion.");
+                            return;
+                        }
+                        
+                        // Dynamically set the onclick attribute with your parameter
+                        const confirmBtn = document.getElementById("confirmDeleteBtn");
+                        confirmBtn.setAttribute("onclick", `RemoveCertificate('${currentId}')`);
+                        
+                        // Show the dedicated modal
+                        $('#confirmDeleteCertificateModal').modal('show');
+                        
                     });
                 }
 
@@ -1441,11 +1642,10 @@
                     const patientActivity = patientData.activity || { Assessments: [], Certificates: [], Therapies: [] };
                    //     console.log("Activity:", patientActivity);
                     window.certificates = patientActivity.Certificates || [];
-                    window.assessmentId=activeCertificateId;
-                    window.fullNameNoPrefix=fullNameNoPrefix;
-
-                    console.log(window.certificates);
-
+                    window.certificateId = activeCertificateId;
+                    
+                    // fill certificate form
+                    FillForm(window.certificateId);
 
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
