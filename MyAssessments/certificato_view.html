@@ -814,25 +814,25 @@
             </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annulla</button>
-                <button type="button" class="btn btn-light text-danger font-weight-bold" onclick="confirmRemoveAll()">Conferma Svuota</button>
+                <button type="button" class="btn btn-light text-danger font-weight-bold" onclick="confirmRemoveAll()">Conferma e Svuota</button>
             </div>
             </div>
         </div>
     </div>
 
-        <div class="modal fade" id="confirmDeleteCertificateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content border-0 shadow-lg modal-system-alert">
                 <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title font-weight-bold text-white">Attenzione</h5>
                 </div>
                 <div class="modal-body text-white-50">
-                    Confermi di voler eliminare questo certificate? Questa operazione è irreversibile.
+                    Confermi di voler eliminare questo certificato? Questa operazione è irreversibile.
                 </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-outline-light" data-dismiss="modal">Annulla</button>
-                    <!-- Added id="confirmDeleteBtn" -->
                     <button type="button" id="confirmDeleteBtn" class="btn btn-light text-danger font-weight-bold">Conferma ed Elimina</button>
+            
                 </div>
             </div>
         </div>
@@ -1041,17 +1041,47 @@
 
         <script>
 
+            function EmptyForm() {
+                // 1. Clear standard inputs
+                const allInputs = document.querySelectorAll('input');
+                allInputs.forEach(input => {
+                    input.value = '';
+                    input.style.borderColor = '';
+                    if (input.type === 'file') input.value = '';
+                });
+                
+                // 2. Reset selects
+                const allSelects = document.querySelectorAll('select');
+                allSelects.forEach(select => {
+                    select.selectedIndex = 0; 
+                    select.style.borderColor = '';
+                });
+
+                // 3. Clear the PDF viewer element in your HTML
+                const pdfViewer = document.getElementById('yourPdfViewerId'); // Replace with your viewer's ID
+                if (pdfViewer) {
+                    pdfViewer.src = '';
+                }
+
+                // 4. Revoke the object URL safely if it exists
+                if (window.certificateFilePath && window.certificateFilePath.startsWith('blob:')) {
+                    URL.revokeObjectURL(window.certificateFilePath);
+                }
+                window.certificateFilePath = null;
+            }
+
+
             // -------------------------------------------------------------------
 
             function confirmRemoveAll() {
                 
-                console.log("removal confirmed");
+//                console.log("removal confirmed");
                 
                 // 1. Explicitly remove focus from the button that triggered the event
                 if (document.activeElement instanceof HTMLElement) {
                     document.activeElement.blur();
                 }
-                
+
                 // 1. Clear all standard inputs (text, date, number, etc.)
                 const allInputs = document.querySelectorAll('input');
                 allInputs.forEach(input => {
@@ -1067,10 +1097,7 @@
                     select.selectedIndex = 0; 
                     select.style.borderColor = '';
                 });
-       
-       
-          //      console.log("All elements cleared.");
-                
+            
                 // 2. Move focus to the body to be safe
                 document.body.focus();
 
@@ -1157,15 +1184,24 @@
 
         <script>
 
-                /*
-                async function submitCertificate()
-                {
-                    
-                    // Step A: Validate and build certificate payload
-                    const newCertificate = validateForm();
-                    if (!newCertificate) return; // Validation failed, browser popup shown, abort.
+                // -------------------------------------------------------------------
 
-                    // Step B: Get active patient ID
+                async function RemoveCertificate(certificateId)
+                {
+
+                    // 1. Close the modal exactly like your working template
+                    $('#confirmDeleteModal').modal('hide');
+                    // 2. Put your deletion logic here
+                    console.log("Deletion triggered!");
+
+                    // 3. Run your deletion logic using the test ID
+                    const targetId = window.certificateId.trim();
+                    const certificateToDelete = window.certificates.find(item => item.uniqueId === targetId);
+
+                    //console.log(certificateToDelete);
+
+                    window.certificates = window.certificates.filter(item => item.uniqueId !== targetId);
+
                     const activePatientId = getValidPatientId();
                     if (!activePatientId) {
                         alert("Nessun paziente attivo trovato!");
@@ -1173,12 +1209,18 @@
                     }
 
                     try {
-                     //   console.log("saving");
-                                                    
-                        // Use consistent Supabase client reference
                         const supabaseClient = window.supabase;
 
-                        // Step C: Fetch existing patient activity column
+                        if (certificateToDelete && certificateToDelete.filePath) {
+                            const { error: storageError } = await supabaseClient.storage
+                                .from('patient-pdf')
+                                .remove([certificateToDelete.filePath]);
+
+                            if (storageError) {
+                                console.error("Errore storage:", storageError.message);
+                            }
+                        }
+
                         const { data: patient, error: fetchError } = await supabaseClient
                             .from("Clients")
                             .select("activity")
@@ -1186,130 +1228,34 @@
                             .single();
 
                         if (fetchError) throw fetchError;
-                        
-                        console.log(newCertificate);
-                        
-                        // Step D: Prepare updated structure safely
-                        // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
+
                         let currentActivity = patient?.activity 
                             ? JSON.parse(JSON.stringify(patient.activity)) 
                             : { Assessments: [], Certificates: [], Therapies: [] };
 
-                      //  console.log(currentActivity);
+                        currentActivity.Certificates = window.certificates;
 
-                        if (!Array.isArray(currentActivity.Certificates)) {
-                            currentActivity.Certificates = [];
-                        }
-
-                        console.log(currentActivity.Certificates);
-                        
-                        // Prepend new assessment to top of array
-                        currentActivity.Certificates.unshift(newCertificate);
-
-                        console.log(currentActivity.Certificates);
-                     
-                     
-                        // Step E: Save back to Supabase (using supabaseClient)
-                        const { data,error: updateError } = await supabaseClient
+                        const { error: updateError } = await supabaseClient
                             .from("Clients")
                             .update({ activity: currentActivity })
-                            .eq("id", activePatientId)
-                            .select(); // <--- Adding .select() returns the updated row to verify
-                    
-                     //       console.log("Updated row result:", data);
+                            .eq("id", activePatientId);
 
                         if (updateError) throw updateError;
 
-                   //     console.log("Saved successfully!");
-                        
-                        // Redirect back to the patient list
+                        console.log("Certificato eliminato con successo.");
+//                        location.reload(); // Refresh to see changes
+
+                        // empty form
+                        EmptyForm();
+                        // Inside RemoveCertificate(), right before or after window.location.href:
+                        localStorage.removeItem('selectedCertificateId'); 
+
+                        // Redirect back to the certificate list
                         window.location.href = 'lista_certificati.html';
-                        
-                    } catch (err) {
-                        console.error("Errore durante il salvataggio:", err);
-                    }
-                        
-                }
-                */
-
-                // -------------------------------------------------------------------
-
-                async function RemoveAssessment(assessmentId)
-                {
-                    console.log("remove certificate function");
-                    /*                    
-                    if (!assessmentId) {
-                        console.error("No uniqueId provided for deletion.");
-                        return;
-                    }
-
-                    // Get active patient ID (adjust this selector/function based on how your app tracks the current patient)
-                    const activePatientId = typeof getValidPatientId === 'function' ? getValidPatientId() : window.currentPatientId;
-                    if (!activePatientId) {
-                        alert("Nessun paziente attivo trovato!");
-                        return;
-                    }
-                    
-                    try {
-                        
-                        console.log("Deleting assessment with ID:", assessmentId);
-                            
-                        const supabaseClient = window.supabase;
-
-                        // 1. Fetch existing patient activity column from Supabase
-                        const { data: patient, error: fetchError } = await supabaseClient
-                            .from("Clients")
-                            .select("activity")
-                            .eq("id", activePatientId)
-                            .single();
-
-                        if (fetchError) throw fetchError;
-
-                        console.log(patient);
-                        
-                        // 2. Parse current activity structure safely
-                        let currentActivity = patient?.activity 
-                            ? JSON.parse(JSON.stringify(patient.activity)) 
-                            : { Assessments: [], Certificates: [], Therapies: [] };
-
-                        if (!Array.isArray(currentActivity.Assessments)) {
-                            currentActivity.Assessments = [];
-                        }
-
-                        // 3. Filter out the assessment matching the target uniqueId
-                        currentActivity.Assessments = currentActivity.Assessments.filter(
-                            item => item.uniqueId !== assessmentId.trim()
-                        );
-
-                        console.log(currentActivity);
-                        
-                        // Optional: Update local global arrays if your app uses them
-                        if (window.assessments && Array.isArray(window.assessments)) {
-                            window.assessments = window.assessments.filter(
-                                item => item.uniqueId !==  assessmentId.trim()
-                            );
-                        }
-
-                        
-                        // 4. Save the filtered array back to Supabase
-                        const { data, error: updateError } = await supabaseClient
-                            .from("Clients")
-                            .update({ activity: currentActivity })
-                            .eq("id", activePatientId)
-                            .select(); 
-
-                        if (updateError) throw updateError;
-
-                        console.log("Assessment deleted successfully!", data);
-                        
-                    // 5. Redirect to the patient list view
-                        window.location.href = 'lista_assessments.html';
 
                     } catch (err) {
                         console.error("Errore durante l'eliminazione:", err);
-                        alert("Errore durante l'eliminazione dell'assessment.");
                     }
-                        */
                 }
 
                 // -------------------------------------------------------------------
@@ -1375,9 +1321,14 @@
                             .select(); 
 
                         if (updateError) throw updateError;
-                            
+               
+                        // Inside RemoveCertificate(), right before or after window.location.href:
+                        localStorage.removeItem('selectedCertificateId'); 
+
+                        EmptyForm();
                         // Redirect back to the certificate list
                         window.location.href = 'lista_certificati.html';
+
 
                     } catch (err) {
                         console.error("Errore durante il salvataggio:", err);
@@ -1395,7 +1346,6 @@
             //    console.log("Looking for certificateId:", certificateId);
             //    console.log("Current window.certificates array:", window.certificates);
                 
-              
                 // Run the search
                 const certificate= window.certificates.find(item => item.uniqueId === certificateId.trim());
 
@@ -1527,7 +1477,7 @@
 
                 if (!activePatientId) {
                     alert("Nessun paziente selezionato. Ritorno alla lista...");
-                    window.location.replace("lista_pazienti6.html"); // Cambia con la tua pagina lista pazienti
+                    window.location.replace("lista_pazienti_6.html"); // Cambia con la tua pagina lista pazienti
                     return;
                 }
                 
@@ -1535,8 +1485,8 @@
 
                 // ✅ Correct validation for a UUID string
                 if (!activeCertificateId || activeCertificateId === 'null' || activeCertificateId === 'undefined' || activeCertificateId.trim() === '') {
-                    alert("Nessun certificato selezionato. Ritorno alla lista...");
-                    window.location.replace("lista_pazienti6.html");
+                 //   alert("Nessun certificato selezionato. Ritorno alla lista...");
+                    window.location.replace("lista_pazienti_6.html");
                     return;
                 }
 
@@ -1569,8 +1519,9 @@
                     });
                 }
 
-                 const removeBtn = document.getElementById("elimina-btn");
+                const removeBtn = document.getElementById("elimina-btn");
                 if (removeBtn) {
+                    
                     removeBtn.addEventListener("click", function(e) {
                         e.preventDefault();
                         
@@ -1585,9 +1536,8 @@
                         // Dynamically set the onclick attribute with your parameter
                         const confirmBtn = document.getElementById("confirmDeleteBtn");
                         confirmBtn.setAttribute("onclick", `RemoveCertificate('${currentId}')`);
-                        
                         // Show the dedicated modal
-                        $('#confirmDeleteCertificateModal').modal('show');
+                        $('#confirmDeleteModal').modal('show');
                         
                     });
                 }

@@ -1080,8 +1080,7 @@
 
             async function saveToSupabase(filePath) {
                 if (!currentUploadedFile) {
-                    alert("Nessun file selezionato.");
-                    return;
+                    return false;
                 }
 
                 const { data, error } = await window.supabase.storage
@@ -1216,7 +1215,13 @@
 
                         // uploads pdf int the supabase storage bucket
                        // 1. Wait for the PDF to fully upload to the storage bucket first
-                        await saveToSupabase(newCertificate.filePath);
+                        const isUploaded = await saveToSupabase(newCertificate.filePath);
+
+                        if (isUploaded === false) {
+                            console.error("Interrotto: caricamento del file PDF sullo storage fallito.");
+                            alert("Impossibile salvare il certificato: errore durante il caricamento del file.");
+                            return; // Aborts entirely, preventing database insertion
+                        }
 
                      //   console.log(currentActivity.Certificates);
 
