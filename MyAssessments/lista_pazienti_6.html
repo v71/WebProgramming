@@ -1250,17 +1250,29 @@
                      window.location.href = 'lista_assessments.html';
                 });
 
-               // Event listener for the assessment button
+               // Event listener for the certificate button
                 $('#tableBody').on('click', '#add-certificate', function(e) {
                     e.stopPropagation(); // Prevents the row click event from triggering
                     const selectedPatientId = $(this).closest('tr').data('id');
                     // Save the patient ID to localStorage
                     localStorage.setItem('selectedPatientId', selectedPatientId);
-                    console.log('Certioficate button clicked for patient ID:', selectedPatientId);
+              //      console.log('Certioficate button clicked for patient ID:', selectedPatientId);
                     // Add your redirection or action logic here
                      window.location.href = 'lista_certificati.html';
                 });
 
+                
+                // Event listener for the assessment button
+                $('#tableBody').on('click', '#add-therapy', function(e) {
+                    e.stopPropagation(); // Prevents the row click event from triggering
+                    const selectedPatientId = $(this).closest('tr').data('id');
+                    // Save the patient ID to localStorage
+                    localStorage.setItem('selectedPatientId', selectedPatientId);
+                    console.log('Therapy button clicked for patient ID:', selectedPatientId);
+                    // Add your redirection or action logic here
+                     window.location.href = 'lista_terapie.html';
+                });
+                    
 
                 $('#tableSearchInput').on('keyup input', function() {
                     const searchTerm = $(this).val().toLowerCase().trim();

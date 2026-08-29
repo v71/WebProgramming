@@ -795,7 +795,7 @@
                     </button>
 
                     <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
-                        Dashboard - Lista Certificati
+                        Dashboard - Lista Terapie
                     </h1>
 
                     <ul class="navbar-nav ml-auto">
@@ -946,7 +946,7 @@
             <div class="d-flex align-items-center" style="min-width: 0; width: 100%;">
                 <i class="fas fa-users text-primary mr-2" style="flex-shrink: 0;"></i>
                 <h6 class="m-0 font-weight-bold text-gray-800" style="min-width: 0; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    Lista Certificati <span id="totalUsersCount">
+                    Lista Terapie <span id="totalUsersCount">
                         <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.85rem;"></i>
                     </span>
                 </h6>
@@ -957,7 +957,7 @@
                 
                 <!-- Search Input with a 1px solid blue border -->
                 <div class="input-group input-group-sm search-box w-100" style="max-width: 250px; border: 1px solid #dddfeb; border-radius: 0.45rem; overflow: hidden; height: 31px;">
-                    <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small h-100" placeholder="Cerca Certificati..." aria-label="Search">
+                    <input type="text" id="tableSearchInput" class="form-control bg-light border-0 small h-100" placeholder="Cerca Terapie..." aria-label="Search">
                     <div class="input-group-append h-100">
                         <button class="btn btn-primary h-100 py-0 d-flex align-items-center justify-content-center" type="button" disabled style="width: 32px;">
                             <i class="fas fa-search fa-sm"></i>
@@ -977,7 +977,7 @@
             <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem; border-width: 0.4em;">
                 <span class="sr-only">Caricamento...</span>
             </div>
-            <h5 class="mt-3 text-gray-600">Caricamento Certificati...</h5>
+            <h5 class="mt-3 text-gray-600">Caricamento Terapie...</h5>
         </div>
                  
         <!-- Responsive Table Wrapper (Scrolls internally only if data exceeds height) -->
@@ -990,7 +990,7 @@
                             <span class="fas fa-hashtag mr-1" style="font-size: 0.75em; color: #4e73df;"></span>
                         </th>
                         <th data-sort="title" class="sortable text-center">
-                            <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Titolo Certificato <i class="fas fa-sort sort-icon ml-1"></i>
+                            <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Titolo Modulo Potenziamento <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
                         <th data-sort="italian_date" class="sortable text-center">
                             <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Emissione <i class="fas fa-sort sort-icon ml-1"></i>
@@ -1081,7 +1081,7 @@
             window.extractDate = extractDate;
 
             // Make the variable globally available from the start
-            window.certificati = [];
+            window.terapie = [];
 
     </script>
 
@@ -1250,6 +1250,7 @@
         // Global function to initialize or refresh the table with dynamic data
         window.initTableWithData = function(dataSource) 
         {
+            console.log("init terapie");
             
             const $tableContainer = $('#tableResponsiveContainer');
             const $cardBody = $('#tableCardContainer .card-body');
@@ -1265,6 +1266,8 @@
             
             function populateTable(data) {
                   
+                console.log(data);
+
                 const $tbody = $('#tableBody');
                 $tbody.empty();
                 
@@ -1274,12 +1277,14 @@
                     $tbody.append(`
                         <tr class="no-data-row">
                             <td colspan="6" class="text-center py-4 text-muted">
-                                Nessun certificato trovato.
+                                Nessun modulo di potenziamento trovato.
                             </td>
                         </tr>
                     `);
                 } else {
+                    
                     data.forEach((item, index) => {
+                        
                         const id = index;
                         const title = item.title;
                         const italian_date = item.italian_date;
@@ -1309,6 +1314,8 @@
                         } else {
                             ageStr = age.years + " Anni";
                         }
+
+                        console.log(ageStr);
 
                     //    console.log(age.years);
                     //    console.log(age.months);
@@ -1343,7 +1350,7 @@
                 }
                 currentPage = 1;
                 recalculateLayout();
-            
+                            
             }
             
             // ---------------------------------------------------------------------------------
@@ -1494,18 +1501,18 @@
                 updateHeaderIcons(key, currentSortOrder);
             }
             
-            
             // ---------------------------------------------------------------------------------
             // Event listeners
 
             $('#tableBody').on('click', 'tr', function(e) {
+                /*
                 if ($(e.target).closest('a, button, input, .dropdown').length) return;
                 
-                if ( window.certificati.length===0) 
+                if ( window.terapie.length===0) 
                     return;
 
                 const tableIndex = $(this).data('id');
-                const selectedCertificateId = window.certificati[tableIndex].uniqueId;
+                const selectedCertificateId = window.terapie[tableIndex].uniqueId;
                 const selectedPatientId = getValidPatientId();
                 
                 // Save both the patient ID and the specific certificate index to localStorage
@@ -1520,9 +1527,11 @@
                     // Optional: Redirect to the editing or detail page
                     window.location.href = 'certificato_view.html';
                 }
+                */
             });
 
             $(document).on('click', '#btnAddAssessmentMain', function(e) {
+                /*
                 e.preventDefault();
                 console.log('Aggiungi Nuovo Assessment button clicked via .on()!');
 
@@ -1530,7 +1539,8 @@
                // console.log('Patient Id:', activePatientId);
 
                 // Add your redirection or action logic here
-                window.location.href = 'certificati_add_new.html';
+                window.location.href = 'terapie_add_new.html';
+                */
             });
 
             $('#tableSearchInput').on('keyup input', function() {
@@ -1584,12 +1594,12 @@
         // Automatically trigger if window.certificcati is already populated
 
         $(document).ready(function() {
-            if (window.certificati && window.certificati.length > 0) {
-                window.initTableWithData(window.certificati);
+            if (window.terapie && window.terapie.length > 0) {
+                window.initTableWithData(window.terapie);
             }
         });
-      
-    </script>
+
+</script>
 
     <script type="module">
         
@@ -1617,13 +1627,34 @@
                     const patientActivity = patientData.activity || { Assessments: [], Certificates: [], Therapies: [] };
                     console.log("Activity:", patientActivity);
 
-                    window.certificati = patientActivity.Certificates || [];
-                    
-                    console.log("Certificati:", window.certificati);
-                    
+                    window.terapie = patientActivity.Therapies || [];
+
+                    window.terapie = [
+                    {
+                        title: "Fisioterapia Motoria",
+                        italian_date: "12/08/2026",
+                        entityName: "Centro Riabilitazione Nord",
+                        age: "45 anni"
+                    },
+                    {
+                        title: "Terapia Occupazionale",
+                        italian_date: "14/08/2026",
+                        entityName: "Studio Clinico San Marco",
+                        age: "45 anni"
+                    },
+                    {
+                        title: "Supporto Psicologico",
+                        italian_date: "20/08/2026",
+                        entityName: "Poliambulatorio Centrale",
+                        age: "45 anni"
+                    }
+                ];
+
+                 //   console.log("terapie:", window.terapie);
+
                     // 3. Trigger initial table load if function exists
                     if (typeof initTableWithData === 'function') {
-                        initTableWithData(window.certificati);
+                        initTableWithData(window.terapie);
                     }
                     
                 } catch (err) {

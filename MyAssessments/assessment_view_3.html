@@ -1632,8 +1632,35 @@
 
         <script>
 
+           function EmptyForm() {
+                // 1. Clear all standard inputs
+                const allInputs = document.querySelectorAll('input');
+                allInputs.forEach(input => {
+                    input.value = '';
+                    input.style.borderColor = '';
+                    if (input.type === 'file') input.value = '';
+                });
+                
+                // 2. Reset all selects
+                const allSelects = document.querySelectorAll('select');
+                allSelects.forEach(select => {
+                    select.selectedIndex = 0; 
+                    select.style.borderColor = '';
+                });
+
+                // 3. Clear file reference/string properly
+                if (window.fullNameNoPrefix && typeof window.fullNameNoPrefix === 'string' && window.fullNameNoPrefix.startsWith('blob:')) {
+                    URL.revokeObjectURL(window.fullNameNoPrefix);
+                }
+                window.fullNameNoPrefix = null;
+            }
+
+        </script>
+
+        <script>
+
             function confirmRemoveAll() {
-            //    console.log("removal confirmed");
+                //    console.log("removal confirmed");
                 
                 // 1. Explicitly remove focus from the button that triggered the event
                 if (document.activeElement instanceof HTMLElement) {
@@ -1849,7 +1876,7 @@
                 // Step B: Get active patient ID
                 const activePatientId = getValidPatientId();
                 if (!activePatientId) {
-                    alert("Nessun paziente attivo trovato!");
+                 //   alert("Nessun paziente attivo trovato!");
                     return;
                 }
 
@@ -1888,7 +1915,12 @@
                         if (updateError) throw updateError;
 
                     //    console.log("Saved successfully!", data);
-                        
+
+                        // empty form
+                        EmptyForm();
+                        // Inside RemoveCertificate(), right before or after window.location.href:
+                        localStorage.removeItem('selectedAssessmentId'); 
+
                         // Redirect back to the patient list
                         window.location.href = 'lista_assessments.html';
 
@@ -2064,7 +2096,7 @@
         // Get active patient ID (adjust this selector/function based on how your app tracks the current patient)
         const activePatientId = typeof getValidPatientId === 'function' ? getValidPatientId() : window.currentPatientId;
         if (!activePatientId) {
-            alert("Nessun paziente attivo trovato!");
+           // alert("Nessun paziente attivo trovato!");
             return;
         }
         
@@ -2107,7 +2139,6 @@
                     item => item.uniqueId !==  assessmentId.trim()
                 );
             }
-
             
             // 4. Save the filtered array back to Supabase
             const { data, error: updateError } = await supabaseClient
@@ -2119,7 +2150,12 @@
             if (updateError) throw updateError;
 
             console.log("Assessment deleted successfully!", data);
-            
+
+            // empty form
+            EmptyForm();
+            // Inside RemoveCertificate(), right before or after window.location.href:
+            localStorage.removeItem('selectedAssessmentId'); 
+
            // 5. Redirect to the patient list view
             window.location.href = 'lista_assessments.html';
 
@@ -2195,8 +2231,8 @@
                 // ------------------------
 
                 if (!activePatientId) {
-                    alert("Nessun paziente selezionato. Ritorno alla lista...");
-                    window.location.replace("lista_pazienti6.html"); // Cambia con la tua pagina lista pazienti
+                  //  alert("Nessun paziente selezionato. Ritorno alla lista...");
+                    window.location.replace("lista_pazienti_6.html"); // Cambia con la tua pagina lista pazienti
                     return;
                 }
 
@@ -2204,8 +2240,8 @@
 
                 // ✅ Correct validation for a UUID string
                 if (!activeAssessmentId || activeAssessmentId === 'null' || activeAssessmentId === 'undefined' || activeAssessmentId.trim() === '') {
-                    alert("Nessun assessment selezionato. Ritorno alla lista...");
-                    window.location.replace("lista_pazienti6.html");
+               //     alert("Nessun assessment selezionato. Ritorno alla lista...");
+                    window.location.replace("lista_pazienti_6.html");
                     return;
                 }
 
