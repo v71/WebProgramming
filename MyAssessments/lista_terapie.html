@@ -657,8 +657,8 @@
   
   #tableResponsiveContainer th:nth-child(1) { width: 2%; }   
   #tableResponsiveContainer th:nth-child(2) { width: 25%; }  
-  #tableResponsiveContainer th:nth-child(3) { width: 10%; }   
-  #tableResponsiveContainer th:nth-child(4) { width: 8%; }   
+  #tableResponsiveContainer th:nth-child(3) { width: 12%; }   
+  #tableResponsiveContainer th:nth-child(4) { width: 12%; }   
   #tableResponsiveContainer th:nth-child(5) { width: 12%; }  
 
   /* Keep long text contained without stretching columns */
@@ -990,16 +990,13 @@
                             <span class="fas fa-hashtag mr-1" style="font-size: 0.75em; color: #4e73df;"></span>
                         </th>
                         <th data-sort="title" class="sortable text-center">
-                            <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Titolo Modulo Potenziamento <i class="fas fa-sort sort-icon ml-1"></i>
+                            <i class="fas fa-layer-group text-primary mr-1" style="font-size: 0.75em;"></i> Titolo Modulo di Potenziamento <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
                         <th data-sort="italian_date" class="sortable text-center">
                             <i class="fas fa-calendar-check text-primary mr-1" style="font-size: 0.75em;"></i> Data di Emissione <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
-                        <th data-sort="entityName" class="sortable text-center">
-                            <i class="fas fa-shield-alt text-primary mr-1" style="font-size: 0.75em;"></i> Ente di Emissione <i class="fas fa-sort sort-icon ml-1"></i>
-                        </th>
-                        <th data-sort="age" class="sortable text-center">
-                            <i class="fas fa-clock text-primary mr-1" style="font-size: 0.75em;"></i> Età Documento <i class="fas fa-sort sort-icon ml-1"></i>
+                        <th data-sort="state" class="sortable text-center">
+                            <i class="fas fa-clock text-primary mr-1" style="font-size: 0.75em;"></i> Stato Modulo di Potenziamento <i class="fas fa-sort sort-icon ml-1"></i>
                         </th>
                     </tr>
                 </thead>
@@ -1250,8 +1247,6 @@
         // Global function to initialize or refresh the table with dynamic data
         window.initTableWithData = function(dataSource) 
         {
-            console.log("init terapie");
-            
             const $tableContainer = $('#tableResponsiveContainer');
             const $cardBody = $('#tableCardContainer .card-body');
             const $spinner = $('#loadingSpinner');
@@ -1266,8 +1261,6 @@
             
             function populateTable(data) {
                   
-                console.log(data);
-
                 const $tbody = $('#tableBody');
                 $tbody.empty();
                 
@@ -1284,57 +1277,48 @@
                 } else {
                     
                     data.forEach((item, index) => {
-                        
                         const id = index;
                         const title = item.title;
                         const italian_date = item.italian_date;
-                        const entityName= item.entityName;
-                        // qui il valore 'true' inverte la data
-                        // per effettuare il parsing corretto
-                        const age=calculateAgeWithMonths(italian_date,true);
-                     
-                         // Enrich the objects in memory with the sortable value
-                        item.ageSortKey = (age.years * 12) + (age.months || 0);
-                        
-                        let ageStr = "";
-                        if (age.years === 0 && age.months === 0) {
-                            if (age.days === 0) {
-                                ageStr = "Oggi";
-                            } else if (age.days === 1) {
-                                ageStr = "1 giorno";
-                            } else {
-                                ageStr = age.days + " giorni";
-                            }
-                        } else if (age.months !== 0) {
-                            if (age.years !== 0) {
-                                ageStr = age.years + " Anni e " + age.months + " mesi";
-                            } else {
-                                ageStr = age.months + " mesi";
-                            }
-                        } else {
-                            ageStr = age.years + " Anni";
+                        const state=item.state;
+                        let stateStr="";
+                        let stateIcon = "";
+                        let stateColor = "";
+
+                        if (state === 0) {
+                            stateStr = "In Corso";
+                           stateIcon = "fa-redo-alt";
+                            stateColor = "text-primary";
+                        } else if (state === 1) {
+                            stateStr = "Sospeso   ";
+                            stateIcon = "fa-pause-circle";
+                            stateColor = "text-warning";
+                        } else if (state === 2) {
+                            stateStr = "Interrotto";
+                            stateIcon = "fa-exclamation-circle";
+                            stateColor = "text-danger";
+                        } else if (state === 3) {
+                            stateStr = "Completato";
+                            stateIcon = "fa-check-circle";
+                            stateColor = "text-success";
                         }
 
-                        console.log(ageStr);
+                  const rowHtml = `
+                        <tr data-id="${id}">
+                            <td class="align-middle text-center">${index + 1}</td>
+                            <td class="align-middle text-center">${title || '-'}</td>
+                            <td class="align-middle text-center">${italian_date || '-'}</td>
+                            <td class="align-middle text-center">
+                                <div class="d-inline-flex align-items-center justify-content-center" style="width: 150px;">
+                                    <span style="width: 30px;" class="text-center flex-shrink-0">
+                                        ${stateIcon ? `<i class="fas ${stateIcon} ${stateColor}" style="font-size: 1.5rem;"></i>` : ''}
+                                    </span>
+                                    <span class="ml-2 text-left flex-grow-1">${stateStr || '-'}</span>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
 
-                    //    console.log(age.years);
-                    //    console.log(age.months);
-                    //    console.log(age.days);
-                    //    console.log(id);
-                    //    console.log(titolo);
-                    //    console.log(data_emissione);
-                    //    console.log(ente_emettitore);
-                    //    console.log(ageStr);
-                            
-                        const rowHtml = `
-                            <tr data-id="${id}">
-                                <td class="align-middle text-center">${index + 1}</td>
-                                <td class="align-middle text-center">${title || '-'}</td>
-                                <td class="align-middle text-center">${italian_date || '-'}</td>
-                                <td class="align-middle text-center">${entityName || '-'}</td>
-                                <td class="align-middle text-center">${ageStr || '-'}</td>
-                            </tr>
-                        `;
                         $tbody.append(rowHtml);
                     });
                     
@@ -1350,7 +1334,6 @@
                 }
                 currentPage = 1;
                 recalculateLayout();
-                            
             }
             
             // ---------------------------------------------------------------------------------
@@ -1475,7 +1458,8 @@
                 data.sort((a, b) => {
 
                     // If the sorting key is 'age', look at 'ageSortKey' instead
-                    const lookupKey = (key === 'age') ? 'ageSortKey' : key;
+                   // const lookupKey = (key === 'age') ? 'ageSortKey' : key;
+                    const lookupKey = key;
                     
                     let valA = a[lookupKey] ?? '';
                     let valB = b[lookupKey] ?? '';
@@ -1633,21 +1617,24 @@
                     {
                         title: "Fisioterapia Motoria",
                         italian_date: "12/08/2026",
-                        entityName: "Centro Riabilitazione Nord",
-                        age: "45 anni"
+                        state : 0
                     },
                     {
                         title: "Terapia Occupazionale",
                         italian_date: "14/08/2026",
-                        entityName: "Studio Clinico San Marco",
-                        age: "45 anni"
+                        state : 1
                     },
                     {
                         title: "Supporto Psicologico",
                         italian_date: "20/08/2026",
-                        entityName: "Poliambulatorio Centrale",
-                        age: "45 anni"
+                        state : 2
+                    },
+                    {
+                        title: "Supporto in legno",
+                        italian_date: "20/08/2026",
+                        state : 3
                     }
+
                 ];
 
                  //   console.log("terapie:", window.terapie);
