@@ -477,28 +477,28 @@
             <li class="nav-item fade-on-load">
                 <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-circle-plus"></i>
-                    <span>Aggiorna Assessment</span>
+                    <span>Aggiorna</span>
                 </a>
             </li>
 
             <li class="nav-item fade-on-load">
                 <a id="riempi-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-arrows-rotate"></i>
-                    <span>Ripristina Assessment</span>
+                    <span>Ripristina</span>
                 </a>
             </li>
 
             <li class="nav-item fade-on-load">
                 <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-broom"></i>
-                    <span>Svuota Form Assessment</span>
+                    <span>Svuota Form</span>
                 </a>
             </li>
 
             <li class="nav-item fade-on-load">
                 <a id="elimina-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-circle-xmark"></i>
-                    <span>Elimina Assessment</span>
+                    <span>Elimina</span>
                 </a>
             </li>
 
@@ -2068,10 +2068,10 @@
             setInputValue(input9,assessment.prova_f.capacità_working_memory);         
 
             const select1 = document.getElementById('CoRiiSelect1');
-            setSelectByText(select1,assessment.prova_g.risoluzione_e_algoritmo);
+            setSelectByText(select1,assessment.prova_g.isolamento_dei_dati_rilevanti);
     
             const select2 = document.getElementById('CoRiiSelect2');
-            setSelectByText(select2,assessment.prova_g.isolamento_dei_dati_rilevanti);
+            setSelectByText(select2,assessment.prova_g.risoluzione_e_algoritmo);
     
             // save patient Id
             window.uniquePatientId=assessment.uniqueId;

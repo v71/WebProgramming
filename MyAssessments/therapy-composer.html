@@ -514,7 +514,6 @@
     
 <style>
 
-
     #sb-sortable-list {
     display: flex;
     flex-wrap: nowrap;
@@ -540,15 +539,6 @@
 
 </style>
 
-<style>
-
-
-#therapy-name {
-    background-color: #f8f9fc;      /* Very subtle light background */
-    border-radius: 8px 8px 8px 8px;     /* Rounded right side only */
-}
-
-</style>
 
 <!---------------------------------------------------------------------------->
 
@@ -1057,8 +1047,9 @@
         </script>
 
         <script>
-            
+            /*
                 $(document).ready(function() {
+                        
                     var listContainer = document.getElementById('sb-sortable-list');
 
                     if (listContainer) {
@@ -1097,7 +1088,7 @@
                         });
                     }
                 });
-
+                    */
         </script>
 
         <script>
@@ -1188,7 +1179,7 @@
 
                 // We combine the standard image element with our new checkmark overlay element
                 container.innerHTML += `
-                    <div class="${cardClass}" style="flex: 0 0 calc(33.333% - 14px); border-radius: 12px; overflow: hidden; margin-bottom: 20px;">
+                    <div class="${cardClass}" style="flex: 0 0 calc(33.333% - 14px); border-radius: 6px; overflow: hidden; margin-bottom: 20px;">
                         
                         <div class="selection-overlay-icon">
                             <i class="fas fa-check"></i>

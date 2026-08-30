@@ -146,7 +146,6 @@
 
     </style>
 
-
     <style>
 
         .btn-muted {
@@ -428,6 +427,432 @@
 
 </style>
 
+
+    <style>
+        
+        /* 1. Navigation Styling */
+        .modern-pills .nav-link {
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .modern-pills .nav-link.active {
+            color: #3b82f6;
+            border-bottom-color: #3b82f6;
+            background: transparent;
+        }
+
+        /* 2. Spaced Button Styling */
+        .spaced-action-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            text-decoration: none !important;
+            background: #ffffff;
+            border: 1px solid #f1f5f9; /* Subtle border */
+            border-radius: 12px; /* Rounded corners */
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .spaced-action-item:hover {
+            background-color: #f8fafc;
+            border-color: #e2e8f0;
+            transform: translateX(4px); /* Subtle slide effect */
+        }
+
+        .action-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #334155;
+        }
+
+        /* 3. Small Modern Icons */
+        .icon-box {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Soft Colors */
+        .bg-blue-soft { background-color: #eff6ff; }
+        .bg-red-soft { background-color: #fef2f2; }
+        .bg-purple-soft { background-color: #f5f3ff; }
+        .bg-green-soft { background-color: #ecfdf5; }
+        .text-purple { color: #8b5cf6; }
+        
+        .ms-auto { margin-left: auto; }
+
+
+    </style>
+
+    <style>
+
+        @media (max-width: 768px) {
+            .card-grid-container > .card {
+                flex: 0 0 100% !important; /* 1 card per row on mobile */
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1199px) {
+            .card-grid-container > .card {
+                flex: 0 0 calc(50% - 10px) !important; /* 2 cards per row on tablet */
+            }
+        }
+
+    </style>
+
+    <style>
+
+        .inner-action-btn {
+            flex: 1;
+            min-width: 100px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #ffffff;
+            border: 1px solid #d1e9ff;
+            border-radius: 8px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+            text-decoration: none !important;
+            cursor: pointer;
+            color: #4a4a4a;
+        }
+
+        .inner-action-btn:hover {
+            background-color: #ffffff;
+            border-color: #4e73df;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.08);
+        }
+
+        .inner-action-btn:active {
+            transform: translateY(0);
+        }
+
+        .inner-action-btn i {
+            margin-right: 6px;
+            font-size: 0.8rem;
+        }
+        
+        /* The 'Muted' state for your custom button */
+        .inner-action-btn.disabled {
+            opacity: 0.5;
+            pointer-events: none;    /* Physically prevents clicking */
+            cursor: not-allowed;
+            filter: grayscale(1);    /* Optional: makes the green icon look grey */
+            text-decoration: none;
+        }
+
+    </style>
+
+    <style>
+
+        .card-grid-container .card {
+            transition: transform 0.3s ease, border 0.3s ease, box-shadow 0.3s ease !important;
+            border: 2px solid transparent !important;
+            cursor: pointer;
+            backface-visibility: hidden;
+            -webkit-font-smoothing: subpixel-antialiased;
+        }
+
+        /* Hover effect restricted to the grid container */
+        .card-grid-container .card:hover {
+            border: 2px solid rgb(0,0,255) !important;
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+    </style>
+
+    <style>
+
+        /* Styling for the mini-cards in the selection list */
+        #selected-list .card {
+            flex: 0 0 200px; /* Fixed small width */
+            height: 120px;   /* Reduced height */
+            font-size: 0.8rem;
+            position: relative;
+        }
+
+        #selected-list {
+            display: flex;
+            overflow-x: auto;
+            overflow-y: hidden; /* Prevent vertical scroll if content is small */
+            padding-bottom: 8px;
+            gap: 15px;
+            scrollbar-width: thin;
+            
+            /* ADD THIS: Set this to match your card height + padding */
+            min-height: 150px; 
+            
+            /* Optional: Center the message vertically */
+            align-items: center; 
+        }
+
+        #selected-list .card img {
+            height: 60px !important; /* Smaller image */
+        }
+
+        #selected-list .card-body {
+            padding: 8px !important;
+        }
+
+        #selected-list .card-title {
+            font-size: 0.9rem;
+            margin-bottom: 2px !important;
+        }
+
+        /* Close button positioning for the mini-card */
+        .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 50%;
+            padding: 2px 6px;
+            cursor: pointer;
+        }
+
+    </style>
+
+    <style>
+
+        /* Disable the browser's attempt to adjust scroll position when content grows/shrinks */
+        html {
+            overflow-anchor: none;
+        }
+        /* Ensure the tab content area is always at least the height of the screen minus your header */
+        .tab-content {
+            min-height: calc(100vh - 200px); /* Adjust 200px to match your header/navbar height */
+        }
+
+    </style>
+
+    <style>
+
+        /* The default card state */
+        .card-grid-item {
+            border: 2px solid transparent; 
+            transition: border-color 0.2s ease;
+        }
+
+        /* The highlighted state */
+        .card-grid-item.selected {
+            border-color: #4e73df; /* Your primary blue color */
+        }
+
+    </style>
+
+
+    <style>
+
+        /* Ensure the border exists from the start so adding it doesn't shift the layout */
+        /*
+        .card {
+            border: 2px solid transparent !important; 
+            transition: all 0.2s ease-in-out;
+        }
+        */
+
+    </style>
+
+    <style>
+
+        /* Ensure the card can act as a container for absolute positioning */
+        .card-grid-container .card {
+            position: relative; /* <-- CRUCIAL */
+        }
+
+        /* The style for the large, large, overlay checkmark */
+        .selection-overlay-icon {
+            display: none; /* Hide by default */
+            position: absolute;
+            top: 15px; /* Adjust as needed */
+            right: 15px; /* Adjust as needed */
+            font-size: 30px; /* Make it nice and large! */
+            color: #ffffff; /* Bootstrap Green */
+            background-color: rgb(0,200,0); /* White background for visibility */
+            border-radius: 50%; /* Make the background round */
+            width: 50px; /* Container size */
+            height: 50px; /* Container size */
+            display: flex; /* Centers the icon */
+            align-items: center; /* Centers the icon */
+            justify-content: center; /* Centers the icon */
+            z-index: 10; /* Ensure it stays above everything, including hover states */
+            opacity: 0; /* Smooth transition start */
+            transition: all 0.2s ease; /* Smooth fade in/out */
+        }
+
+        /* Only show the checkmark WHEN THE CARD IS SELECTED */
+        .card.selected .selection-overlay-icon {
+            display: flex; /* Reveal */
+            opacity: 1; /* Fade in */
+        }
+
+        /* Ensure that when the checkmark is present, hover interactions on the 
+        CHECKMARK itself don't trigger unwanted behavior */
+        .selection-overlay-icon:hover {
+            pointer-events: none; 
+        }
+
+        /* The card should NOT have a blue border by default */
+        /*
+        .card {
+            transition: all 0.2s ease;
+            border: 2px solid transparent !important; 
+        }
+        */
+        /* Ensure the overlay icon shows up */
+        .card.selected .selection-overlay-icon {
+            display: flex;
+            opacity: 1;
+        }
+
+    </style>
+
+    <style>
+
+        .btn-muted {
+            opacity: 0.3 !important;
+            pointer-events: none !important; /* Disables clicking */
+            cursor: default !important;
+        }
+
+    </style>
+
+    <style>
+
+        /* 1. Track Container Sizing Controls */
+        .sb-horizontal-scroll-container {
+            display: flex;
+            flex-direction: row;
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            padding: 15px 5px;
+            gap: 16px;
+            -webkit-overflow-scrolling: touch; /* Momentum scrolling fallback for iOS */
+        }
+
+        /* Scrollbar customization matches SB Admin palette */
+        .sb-horizontal-scroll-container::-webkit-scrollbar {
+            height: 6px;
+        }
+        .sb-horizontal-scroll-container::-webkit-scrollbar-track {
+            background: #f1f3f9;
+            border-radius: 4px;
+        }
+        .sb-horizontal-scroll-container::-webkit-scrollbar-thumb {
+            background: #dddfeb;
+            border-radius: 4px;
+        }
+
+        /* 2. Card Wrapper Setup */
+        .sb-draggable-item {
+            flex-shrink: 0; 
+            width: 270px;
+            user-select: none;
+            -webkit-user-select: none; 
+            /* Let standard touch actions work on the card body so swipes scroll the list smoothly */
+            touch-action: pan-x pan-y; 
+        }
+        
+        /* 3. The Isolated Mobile Drag Grip Handle */
+        .drag-handle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fc;
+            border-bottom: 1px solid #e3e6f0;
+            padding: 8px 0;
+            cursor: move;
+            cursor: -webkit-grabbing;
+            color: #b7b9cc;
+            /* CRUCIAL: Tell the mobile browser that touching this handle IMMEDIATELY passes control to JS */
+            touch-action: none; 
+        }
+        .drag-handle:hover {
+            background-color: #eaecf4;
+            color: #4e73df;
+        }
+
+        /* Kill native animations explicitly while sorting states are active */
+        .sb-draggable-item.sb-sortable-chosen,
+        .sb-draggable-item.sb-sortable-ghost,
+        .sb-draggable-item:active {
+            transition: none !important;
+            -webkit-transition: none !important;
+        }
+
+        /* 4. Dynamic SortableJS Target Identifiers */
+        .sb-sortable-ghost {
+            opacity: 0.3;
+            border: 2px dashed #4e73df !important;
+            background-color: #f8f9fc !important;
+        }
+
+        .sb-sortable-chosen {
+            transform: scale(1.01);
+        }
+
+        .sb-sortable-fallback {
+            opacity: 0.95;
+            box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.15) !important;
+        }
+
+        /* Define the colors for the border-left utilities */
+        .border-left-primary { border-left: .25rem solid #4e73df !important; }
+        .border-left-success { border-left: .25rem solid #1cc88a !important; }
+        .border-left-warning { border-left: .25rem solid #f6c23e !important; }
+        .border-left-danger  { border-left: .25rem solid #e74a3b !important; }
+        .border-left-info    { border-left: .25rem solid #36b9cc !important; }
+
+    </style>
+    
+<style>
+
+    #sb-sortable-list {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center; 
+    min-height: 300px; 
+    border-radius: 8px;
+    padding: 10px;
+    
+}
+
+/* Apply the border on hover OR when the item is being dragged */
+.sb-draggable-item:hover,
+.sb-draggable-item.sb-sortable-chosen,
+.sb-draggable-item.sb-sortable-ghost {
+    border: 1px solid rgb(0, 0, 255) !important;
+}
+
+/* Ensure smooth transition */
+.sb-draggable-item {
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    border: 1px solid transparent !important; /* Start transparent */
+}
+
+</style>
+
+
 </head>
 
 <body id="page-top">
@@ -503,7 +928,7 @@
                     </button>
 
                     <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
-                        Dashboard - Aggiungi un nuovo Certificato
+                        Dashboard - Aggiungi un nuovo Modulo di Potenziamento
                     </h1>
 
                     <ul class="navbar-nav ml-auto">
@@ -571,188 +996,117 @@
                             <!-- Outer Container: Added style="gap: 12px;" -->
                             <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
-
-<!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
-<div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
-
-    <h2 class="sr-only">muted h2</h2>
-    <h3 class="sr-only">muted h3</h3>
-    <h4 class="sr-only">muted h4</h4>
-    <h5 class="sr-only">muted h5</h5>
-    
-    <div class="card-header bg-white py-2 px-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-        <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
-        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
-    </div>
-
-    <!-- Locked body min-height to match fully loaded content -->
-    <div class="card-body px-3 py-2 d-flex overflow-hidden" style="min-width: 0; min-height: 105px;">
-        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-center w-100 mb-2" style="min-width: 0; gap: 12px;">
-
-            <!-- Compacted Avatar (60px) -->
-            <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
-                <div id="avatarContainer2" 
-                    class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
-                    style="border: 1px solid #0000FF !important;"
-                    role="img" 
-                    aria-label="Contenitore foto profilo">
-                    <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
-                    <img id="profileAvatar2" 
-                        src="assets/sb-admin-2/img/undraw_profile.svg"
-                        class="img-fluid rounded-circle d-none" 
-                        width="80" 
-                        height="80" 
-                        alt="Foto profilo"
-                        style="object-fit: cover;">
-                </div>
-            </div>
-
-            <!-- Text Content Wrapper with exact vertical spacing reservation -->
-            <div class="d-flex flex-column flex-grow-1 overflow-hidden text-center text-md-left" style="min-width: 0; width: 100%; gap: 6px;">
-                <!-- Patient Full Name -->
-                <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
-                    <span class="sr-only">Loading...</span>
-                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
-                </h5>
-
-                <!-- Badges Stacked Underneath -->
-                <div class="d-flex align-items-center justify-content-center justify-content-md-start flex-wrap" style="min-width: 0; min-height: 27px;">
-                    <span id="patientMinorOrMajor" 
-                        class="badge badge-status-minor d-inline-flex align-items-center justify-content-center text-truncate" 
-                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #858796; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
-                        <span class="sr-only">Loading status...</span>
-                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
-                    </span>
-                </div>
-
-                <!-- Subscription Date -->
-                <div class="text-truncate" style="min-width: 0; min-height: 18px;">
-                    <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
-                        <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
-                        <span id="patientSubDate"> 
-                            <span class="sr-only">Loading date...</span>
-                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
-                        </span>   
-                    </small>
-                </div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-
-
-
-
-
-
-<!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
-<div class="card shadow-sm d-flex flex-column" style="height: 100%; border-radius: 12px; overflow: hidden; border: none; margin-bottom: 16px;">
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-12 col-lg-12">
-                
-                <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
-
-                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                       
-                        <div style="min-width: 750px;">
-                            
-                            <article class="pt-container" style="text-align: center;">
-
-                                <div id="dropZone" class="d-flex flex-column justify-content-center align-items-center flex-grow-1 mx-auto" style="width: 100%; max-width: 1400px; min-height: 350px; border: 2px dashed #6c757d; border-radius: 8px; padding: 100px; background-color: #f8f9fa; cursor: pointer; transition: background-color 0.2s ease;"
-                                    ondragover="event.preventDefault(); this.style.backgroundColor='#e2e6ea';"
-                                    ondragleave="this.style.backgroundColor='#f8f9fa';"
-                                    ondrop="handleFileDrop(event)">
-
-                                    <i class="fas fa-file-pdf text-danger mb-1" style="font-size: 5.0rem;"></i>
-                                    <h2 class="mb-1 text-secondary">Trascina qui il tuo file PDF</h2>
-                                    <h5 class="text-muted mb-1">oppure</h5>
+                                <!-- FIRST SECTION -->
+                                <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                    <h2 class="sr-only">muted h2</h2>
+                                    <h3 class="sr-only">muted h3</h3>
+                                    <h4 class="sr-only">muted h4</h4>
+                                    <h5 class="sr-only">muted h5</h5>
                                     
-                                    <label for="pdfFileInput" class="btn btn-primary mb-2 px-4 py-2" style="cursor: pointer;">
-                                        <i class="fas fa-upload mr-1"></i> Seleziona PDF
-                                    </label>
-                                    <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;" onchange="handleFileSelect(this)">
-                                    
+                                    <div class="card-header bg-white py-2 px-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
+                                    </div>
+
+                                    <div class="card-body px-3 py-2 d-flex overflow-hidden" style="min-width: 0; min-height: 105px;">
+                                        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-center w-100 mb-2" style="min-width: 0; gap: 12px;">
+                                            <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
+                                                <div id="avatarContainer2" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 1px solid #0000FF !important;" role="img" aria-label="Contenitore foto profilo">
+                                                    <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
+                                                    <img id="profileAvatar2" src="assets/sb-admin-2/img/undraw_profile.svg" class="img-fluid rounded-circle d-none" width="80" height="80" alt="Foto profilo" style="object-fit: cover;">
+                                                </div>
+                                            </div>
+
+                                            <div class="d-flex flex-column flex-grow-1 overflow-hidden text-center text-md-left" style="min-width: 0; width: 100%; gap: 6px;">
+                                                <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
+                                                    <span class="sr-only">Loading...</span>
+                                                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
+                                                </h5>
+
+                                                <div class="d-flex align-items-center justify-content-center justify-content-md-start flex-wrap" style="min-width: 0; min-height: 27px;">
+                                                    <span id="patientMinorOrMajor" class="badge badge-status-minor d-inline-flex align-items-center justify-content-center text-truncate" style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #858796; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
+                                                        <span class="sr-only">Loading status...</span>
+                                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
+                                                    </span>
+                                                </div>
+
+                                                <div class="text-truncate" style="min-width: 0; min-height: 18px;">
+                                                    <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
+                                                        <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
+                                                        <span id="patientSubDate"> 
+                                                            <span class="sr-only">Loading date...</span>
+                                                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
+                                                        </span>   
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div id="pdfPreviewContainer" class="w-100 border rounded bg-white" style="display: none; margin: 24px 0; padding: 16px; box-sizing: border-box;">
-
-                                    <h1 id="pdfTitle" class="pt-title" style="margin-bottom: 20px; text-align: center;"></h1>
-
-                                    <div class="container-fluid mt-2 mb-4">
-
-                                        <div class="row border-top border-left border-right m-0">
-                                            <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Titolo Fascicolo</div>
-                                            <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Ente Emettitore</div>
-                                            <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Data Valutazione</div>
-                                            
+                                <!-- SECOND SECTION -->
+                                <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                    <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Moduli selezionati</h6>
+                                    </div>
+                                    <div id="selection-header-1" class="card-body p-3">
+                                        <div id="sb-sortable-list" class="sb-horizontal-scroll-container">
                                         </div>
+                                    </div>
+                                </div>
 
-                                        <div class="row border m-0">
-                                            <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
-                                                <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Titolo Fascicolo" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
-                                            </div>
-                                            <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
-                                                <input type="text" id="formEntity" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Ente Emettitore" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
+                                <!-- THIRD SECTION -->
+                                <div class="card shadow-sm mb-3" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                    <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Lista Moduli Selezionati</h6>
+                                    </div>
+
+                                    <div class="card-header bg-white p-0">
+                                        <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link active" id="cat-1-tab" data-toggle="tab" href="#cat1" role="tab">Dislessia</a>
+                                            </li>
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link" id="cat-2-tab" data-toggle="tab" href="#cat2" role="tab">Disgrafia</a>
+                                            </li>
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link" id="cat-3-tab" data-toggle="tab" href="#cat3" role="tab">Discalculia</a>
+                                            </li>
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link" id="cat-4-tab" data-toggle="tab" href="#cat4" role="tab">Disortografia</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="tab-content">
+
+                                            <div class="tab-pane fade show active" id="cat1" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
                                             </div>
 
-                                            <div class="col-4 p-2 border-right">
-                                                <div id="dateGroup" class="input-group" style="width: 100%;">
-                                                    <input type="date" id="clinicalDate" class="form-control shadow-none" required max="" style="height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; background-color: transparent;">
-                                                    <div class="input-group-append">
-                                                        <button id="oggiBtn" class="btn btn-outline-secondary" type="button" onclick="injectCurrentDate()" style="height: 40px; padding: 0 15px; border-radius: 0 6px 6px 0; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-left: none !important; background-color: transparent;">
-                                                            Oggi
-                                                        </button>
-                                                    </div>
+                                            <div class="tab-pane fade" id="cat2" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                                                 </div>
                                             </div>
                                         
-                                            <script>
-                                                const dateGroup = document.getElementById('dateGroup');
-                                                const clinicalDate = document.getElementById('clinicalDate');
-                                                const oggiBtn = document.getElementById('oggiBtn');
-
-                                                dateGroup.addEventListener('mouseenter', function() {
-                                                    clinicalDate.style.borderColor = 'rgba(209, 211, 226, 1.0)';
-                                                    oggiBtn.style.borderColor = 'rgba(209, 211, 226, 1.0)';
-                                                });
-
-                                                dateGroup.addEventListener('mouseleave', function() {
-                                                    clinicalDate.style.borderColor = 'rgba(209, 211, 226, 1.0)';
-                                                    oggiBtn.style.borderColor = 'rgba(209, 211, 226, 1.0)';
-                                                });
-
-                                                function injectCurrentDate() {
-                                                    const today = new Date().toISOString().split('T')[0];
-                                                    clinicalDate.value = today;
-                                                }
-                                            </script>
-
+                                            <div class="tab-pane fade" id="cat3" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="cat4" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
                                         </div>
-
                                     </div>
 
-                                    <embed id="pdfEmbedViewer" type="application/pdf" width="100%" style="max-width: 96.9%; height: 1200px; display: block; margin: 0 auto;" />
-
                                 </div>
-
-                            </article>
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-    </div>
-</div>
 
                         </div>
                     </div>
@@ -772,7 +1126,6 @@
 
         </div><!-- content-wrapper -->
     </div><!-- Wrapper -->
-
 
     <style>
     
@@ -851,7 +1204,9 @@
         <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
         <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>-->
-    
+        <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
+
         <script type="module">
 
                 // init supabase
@@ -873,6 +1228,374 @@
                 window.fullNameNoPrefix;
 
         </script>
+
+           <script>
+
+                // Global array to store selections
+                let selectedProtocols = [];
+
+                const categoryColorMap = {
+                    'Dislessia': '#1cc88a', // Success
+                    'Disgrafia': '#4e73df', // Primary
+                    'Discalculia': '#f6c23e', // Warning
+                    'Disortografia': '#36b9cc'  // Danger
+                };
+
+                const DislessiaData = [
+                {
+                    title: "Traccia A1",
+                    category: "Dislessia",
+                    badge: "Dislessia",
+                    badgeColor: "badge-success", // Classe Bootstrap per il verde
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia A2",
+                    category: "Dislessia",
+                    badge: "Dislessia",
+                    badgeColor: "badge-success", // Classe Bootstrap per il verde
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia A3",
+                    category: "Dislessia",
+                    badge: "Dislessia",
+                    badgeColor: "badge-success", // Classe Bootstrap per il verde
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia A4",
+                    category: "Dislessia",
+                    badge: "Dislessia",
+                    badgeColor: "badge-success", // Classe Bootstrap per il verde
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+            ];
+
+            const DisgrafiaData = [
+                {
+                    title: "Traccia B1",
+                    category: "Disgrafia",
+                    badge: "Disgrafia",
+                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia B2",
+                    category: "Disgrafia",
+                    badge: "Disgrafia",
+                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia B3",
+                    category: "Disgrafia",
+                    badge: "Disgrafia",
+                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia B4",
+                    category: "Disgrafia",
+                    badge: "Disgrafia",
+                    badgeColor: "badge-primary", // Classe Bootstrap per il blu
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+
+            ];
+
+            const DiscalculiaData = [
+                {
+                    title: "Traccia C1",
+                    category: "Discalculia",
+                    badge: "Discalculia",
+                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia C2",
+                    category: "Discalculia",
+                    badge: "Discalculia",
+                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia C3",
+                    category: "Discalculia",
+                    badge: "Discalculia",
+                    badgeColor: "badge-warning", // Classe Bootstrap per il blu
+                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    image: "assets/img/place-holder.jpg"
+                },
+
+            ];
+
+            const DisortografiaData = [
+                {
+                    title: "Traccia D1",
+                    category: "Disortografia",
+                    badge: "Disortografia",
+                    badgeColor: "badge-info", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                {
+                    title: "Traccia D2",
+                    category: "Disortografia",
+                    badge: "Disortografia",
+                    badgeColor: "badge-info", // Classe Bootstrap per il blu
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
+                    image: "assets/img/place-holder.jpg"
+                },
+                
+            ];
+
+        </script>
+
+         <script>
+            
+                $(document).ready(function() {
+                    var listContainer = document.getElementById('sb-sortable-list');
+
+                    if (listContainer) {
+                        Sortable.create(listContainer, {
+                            direction: 'horizontal',
+                            animation: 200,
+                            
+                            // Route mobile mechanics to the top grip block specifically
+                            handle: '.drag-handle', 
+                            
+                            ghostClass: 'sb-sortable-ghost',
+                            chosenClass: 'sb-sortable-chosen',
+                            fallbackClass: 'sb-sortable-fallback',
+                            
+                            // Fallback virtualization bypasses native browser mobile bugs completely
+                            forceFallback: true,        
+                            fallbackTolerance: 1, // Start calculating drag changes instantly upon single pixel shifts
+                            
+                            // Since handle completely separates panning from dragging, we can safely set delay to 0!
+                            delay: 0,                   
+                            delayOnTouchOnly: false,
+
+                            scroll: true,
+                            bubbleScroll: true,
+                            scrollSensitivity: 40,
+                            scrollSpeed: 10,
+
+                            onEnd: function(evt) {
+                                console.log("Reordered from position index " + evt.oldIndex + " to " + evt.newIndex);
+                                    const item = selectedProtocols.splice(evt.oldIndex, 1)[0];
+                                    selectedProtocols.splice(evt.newIndex, 0, item);
+                                    
+                                    // Optional: Log to verify the array is now matching the UI
+                                    console.log("Array updated to match DOM:", selectedProtocols.map(p => p.title));
+                                }
+                        });
+                    }
+                });
+
+        </script>
+
+        <script>
+
+        /* populate grid */
+        function populateGrid(containerSelector, dataArray) {
+            const container = document.querySelector(containerSelector);
+            if (!container) return; 
+
+            container.innerHTML = ''; 
+
+            dataArray.forEach(item => {
+                // Safe check for selectedProtocols list
+                const currentList = (typeof selectedProtocols !== 'undefined') ? selectedProtocols : [];
+                const isSelected = currentList.some(p => p.title === item.title);
+                
+                // Use the standard card classes but add 'selected' conditionally
+                const cardClass = `card shadow-sm border-0 h-100 ${isSelected ? 'selected' : ''}`;
+                
+                // Define button text, state, and styles based on selection
+                const btnText = isSelected ? '<i class="fas fa-check-circle text-success"></i> Aggiunto' : '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
+                const btnStyle = isSelected ? 'pointer-events: none; opacity: 0.6;' : '';
+
+                // We combine the standard image element with our new checkmark overlay element
+                container.innerHTML += `
+                    <div class="${cardClass}" style="flex: 0 0 calc(33.333% - 14px); border-radius: 6px; overflow: hidden; margin-bottom: 20px;">
+                        
+                        <div class="selection-overlay-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div style="height: 140px; overflow: hidden; border-radius: 12px 12px 0 0;">
+                            <img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                        </div>
+                        
+                        <div class="card-body p-4">
+                            <h5 class="card-title text-dark mb-2">${item.title}</h5>
+                            <div class="mb-2">
+                                <span class="badge ${item.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
+                                        ${item.badge}
+                                </span>
+                            </div>
+              
+                            <p class="card-text text-muted mb-3" style="font-size: 0.9rem;">${item.description}</p>
+                            
+                            <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
+                                <a href="#" class="inner-action-btn demo-btn"><i class="fas fa-play text-primary"></i> Demo</a>
+                               
+                                 <a href="#" 
+                                    class="inner-action-btn add-btn" 
+                                    onclick="event.preventDefault(); handleCardClick(this)"
+                                    style="${btnStyle}"
+                                    data-item='${JSON.stringify(item).replace(/'/g, "&quot;")}'>
+                                    ${btnText}
+                                </a>
+
+                                <a href="#" class="inner-action-btn trash-btn ${isSelected ? '' : 'btn-muted'}"
+                                    onclick="event.preventDefault(); removeProtocol(this, '${item.title}')">
+                                    <i class="fas fa-trash text-danger"></i> Rimuovi
+                                </a>
+
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        </script>
+
+<script>
+
+    // Update selection header
+    function updateSelectionHeader() {
+        const list = document.getElementById('sb-sortable-list');
+        
+        if (selectedProtocols.length === 0) {
+            list.innerHTML = `
+
+                <div class="card-body d-flex flex-column h-100 align-items-center justify-content-center text-center w-100">
+                    <h3 class="font-weight-bold text-gray-600">
+                        Nessun Elemento Selezionato
+                    </h3>
+                    <p>Clicca su un elemento per inserirlo nella lista</p>
+                </div>
+
+            `;
+        } else {
+            
+            list.innerHTML = selectedProtocols.map(p => `
+                <div class="card sb-draggable-item shadow-sm overflow-hidden">
+                    <div class="drag-handle">
+                        <i class="fas fa-grip-horizontal"></i>
+                    </div>
+                    <div class="position-relative" style="height: 80px; overflow: hidden; border-radius: 5px 5px 0 0;">
+                        <img src="${p.image}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="remove-btn text-white bg-danger" 
+                            style="position: absolute; top: 5px; right: 5px; cursor: pointer; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.8;"
+                            onclick="removeProtocol(null,'${p.title.replace(/'/g, "\\'")}')">
+                            <i class="fas fa-times"></i>
+                        </div>
+                    </div>
+                    <div class="card-body p-2">
+                        <h6 class="card-title font-weight-bold mb-1" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            ${p.title}
+                        </h6>
+                        <div class="mb-2">
+                            <span class="badge ${p.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
+                                    ${p.badge}
+                            </span>
+                        </div>
+                        <p class="card-text text-muted mb-3" 
+                            style="font-size: 0.9rem; white-space: normal; word-wrap: break-word; display: block;">
+                            ${p.description}
+                        </p>
+                        <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
+                            <a href="#" class="inner-action-btn demo-btn"><i class="fas fa-play text-primary"></i> Demo</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+            
+        }
+
+//        updateSvuotaButtonState();
+    }
+
+    
+    function handleCardClick(addBtn) {
+        // 1. Data Logic
+        const item = JSON.parse(addBtn.getAttribute('data-item'));
+        if (selectedProtocols.some(p => p.title === item.title)) return; // Guard clause
+        selectedProtocols.push(item);
+
+        // 2. Local UI Logic (Card highlight, button state)
+        const card = addBtn.closest('.card');
+        card.classList.add('selected');
+
+        // 2. Mute the Aggiungi button
+        addBtn.classList.add('btn-muted');
+
+        // 3. Unmute the Trash button
+        const trashBtn = addBtn.parentElement.querySelector('.trash-btn');
+        if (trashBtn) trashBtn.classList.remove('btn-muted');
+
+        // 3. Global UI Logic (Header) - Perfect placement
+        updateSelectionHeader();
+    }
+
+    // remove protocol
+    function removeProtocol(trashBtn, title) {
+        // 1. Remove from array
+        selectedProtocols = selectedProtocols.filter(p => p.title !== title);
+
+        // 2. Mute the clicked button immediately
+        if (trashBtn) {
+            trashBtn.classList.add('btn-muted');
+        }
+
+        // 3. Single loop to update the UI (Grid)
+        document.querySelectorAll('.card').forEach(card => {
+            const titleElement = card.querySelector('.card-title');
+            
+            if (titleElement && titleElement.innerText === title) {
+                // Remove highlight
+                card.classList.remove('selected');
+                
+                // Re-enable Add button
+                const addBtn = card.querySelector('.add-btn');
+                if (addBtn) {
+                    addBtn.classList.remove('btn-muted');
+                    addBtn.style.pointerEvents = 'auto';
+                    addBtn.style.opacity = '1';
+                    addBtn.innerHTML = '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
+                }
+
+                // Mute Grid Trash button
+                const gridTrashBtn = card.querySelector('.trash-btn');
+                if (gridTrashBtn) {
+                    gridTrashBtn.classList.add('btn-muted');
+                }
+            }
+        });
+
+        // Update the Header 
+        updateSelectionHeader();
+    
+    }
+
+
+</script>
+
 
         <script>
 
@@ -1022,293 +1745,6 @@
 
         </script>
 
-        <script>
-
-            function confirmRemoveAll() {
-                
-           //     console.log("removal confirmed");
-                
-                // 1. Explicitly remove focus from the button that triggered the event
-                if (document.activeElement instanceof HTMLElement) {
-                    document.activeElement.blur();
-                }
-
-                // 1. Clear all standard inputs (text, date, number, etc.)
-                const allInputs = document.querySelectorAll('input');
-                allInputs.forEach(input => {
-                    // Reset value
-                    input.value = '';
-                    // Reset border styles (in case you added red borders for errors)
-                    input.style.borderColor = '';
-                });
-
-                // 2. Reset all selects to the first option (the "Seleziona..." one)
-                const allSelects = document.querySelectorAll('select');
-                allSelects.forEach(select => {
-                    select.selectedIndex = 0; 
-                    select.style.borderColor = '';
-                });
-       
-                // clear pdf preview
-                const previewContainer = document.getElementById('pdfPreviewContainer');
-                const embedViewer = document.getElementById('pdfEmbedViewer');
-
-                // Clear the embed source to release the loaded PDF
-                embedViewer.setAttribute('src', '');
-
-                // Hide the preview
-                previewContainer.style.display = 'none';
-
-                // Re-insert a fresh clone of the drop zone right before the preview container
-                if (dropZoneClone) {
-                    const freshDropZone = dropZoneClone.cloneNode(true);
-                    previewContainer.parentNode.insertBefore(freshDropZone, previewContainer);
-                }
-
-          //      console.log("All elements cleared.");
-                
-                // 2. Move focus to the body to be safe
-                document.body.focus();
-
-                // 3. Close the modal
-                $('#confirmClearModal').modal('hide');
-            }
-
-        </script>
-
-        <script>
-
-            async function saveToSupabase(filePath) {
-                if (!currentUploadedFile) {
-                    return false;
-                }
-
-                const { data, error } = await window.supabase.storage
-                    .from('patient-pdf')
-                    .upload(filePath, currentUploadedFile, {
-                        cacheControl: '3600',
-                        upsert: false
-                    });
-
-                if (error) {
-                    console.error("Errore durante il caricamento:", error.message);
-                    alert("Errore nel salvataggio: " + error.message);
-                    return false;
-                }
-
-                console.log("PDF salvato con successo!", data);
-
-                return true;
-            }
-        
-        </script>
- 
-        <script>
-            
-            function validateForm()  {
-                
-                // Title check
-                const titleInput = document.getElementById('formTitle');
-                if (!titleInput.checkValidity() || !titleInput.value.trim()) {
-                    titleInput.reportValidity(); // Displays the native browser warning popup
-                    return false; 
-                }
-                
-                // Entitiy check
-                const entityInput = document.getElementById('formEntity');
-                if (!entityInput.checkValidity() || !entityInput.value.trim()) {
-                    entityInput.reportValidity(); // Displays the native browser warning popup
-                    return false; 
-                }
-                
-                // Date check
-                const dateInput = document.getElementById('clinicalDate');
-                if (!dateInput.checkValidity()) {
-                    dateInput.reportValidity();
-                    return false;
-                }
-      
-                // Step B: Get active patient ID
-                const activePatientId = getValidPatientId();
-                if (!activePatientId) {
-                    alert("Nessun paziente attivo trovato!");
-                    return;
-                }
-                
-                const pdfTitle = document.getElementById('pdfTitle');
-                const fileExt = pdfTitle.textContent.split('.').pop();
-                // 1. Get title without extension and sanitize it to use as the folder/file name
-                const pdfTitleNoExt = pdfTitle.textContent.replace(/\.[^/.]+$/, "");
-                const sanitizedFileName = sanitizeFilename(pdfTitleNoExt);
-                // 2. Generate the timestamp
-                const timestamp = Date.now();
-                // 3. Construct the file path: fullNameNoPrefix / filename / timestamp.fileExt
-                const filePath = `${window.fullNameNoPrefix}/${sanitizedFileName}/${timestamp}.${fileExt}`;
-
-                // 5. Build fresh protocol payload
-                const newCertificate = {
-                    uniqueId: crypto.randomUUID(),
-                    timestamp: new Date().toISOString(),
-                    title: titleInput.value.trim(),
-                    entityName: entityInput.value.trim(),
-                    evaluationDate: dateInput.value,
-                    italian_date : new Date(dateInput.value).toLocaleDateString('it-IT'),
-                    filePath: filePath,
-                    fileName: pdfTitle.textContent
-                };
-
-  //              console.log("Certificate Payload Ready:", newCertificate);
-                return newCertificate;
-                
-            }
-        
-        </script>
-
-        <script>
-
-                async function submitCertificate()
-                {
-                    
-                    // Step A: Validate and build certificate payload
-                    const newCertificate = validateForm();
-                    if (!newCertificate) return; // Validation failed, browser popup shown, abort.
-
-               //     console.log(newCertificate);
-
-                    // Step B: Get active patient ID
-                    const activePatientId = getValidPatientId();
-                    if (!activePatientId) {
-                        alert("Nessun paziente attivo trovato!");
-                        return;
-                    }
-
-                    try {
-             
-                     //   console.log("saving");
-                                                    
-                        // Use consistent Supabase client reference
-                        const supabaseClient = window.supabase;
-
-                        // Step C: Fetch existing patient activity column
-                        const { data: patient, error: fetchError } = await supabaseClient
-                            .from("Clients")
-                            .select("activity")
-                            .eq("id", activePatientId)
-                            .single();
-
-                        if (fetchError) throw fetchError;
-                        
-                        // Step D: Prepare updated structure safely
-                        // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
-                        let currentActivity = patient?.activity 
-                            ? JSON.parse(JSON.stringify(patient.activity)) 
-                            : { Assessments: [], Certificates: [], Therapies: [] };
-
-                      //  console.log(currentActivity);
-
-                        if (!Array.isArray(currentActivity.Certificates)) {
-                            currentActivity.Certificates = [];
-                        }
-
-                        // Prepend new assessment to top of array
-                        currentActivity.Certificates.unshift(newCertificate);
-
-                        // uploads pdf int the supabase storage bucket
-                       // 1. Wait for the PDF to fully upload to the storage bucket first
-                        const isUploaded = await saveToSupabase(newCertificate.filePath);
-
-                        if (isUploaded === false) {
-                            console.error("Interrotto: caricamento del file PDF sullo storage fallito.");
-                            alert("Impossibile salvare il certificato: errore durante il caricamento del file.");
-                            return; // Aborts entirely, preventing database insertion
-                        }
-
-                     //   console.log(currentActivity.Certificates);
-
-                        try {
-                                const { data, error: updateError } = await supabaseClient
-                                    .from("Clients")
-                                    .update({ activity: currentActivity })
-                                    .eq("id", activePatientId)
-                                    .select();
-
-                                if (updateError) {
-                                    console.error("Errore nell'aggiornamento della tabella Clients:", updateError.message);
-                                    return; // Stops here if the database update fails
-                                }
-                                
-                         //       console.log("Tabella Clients aggiornata con successo:", data);
-
-                                // Redirect back to the patient list
-                                window.location.href = 'lista_certificati.html';
-
-                            } catch (err) {
-                                    console.error("Eccezione durante l'aggiornamento DB:", err);
-                                }
-
-                        } catch (err) {
-                            console.error("Errore durante il salvataggio:", err);
-                        }
-                }
-
-        </script>
-
-        <script>
-
-            let dropZoneClone = null; // keeps a reusable copy of the original drop zone
-            let currentUploadedFile = null;
-
-            function handleFileSelect(input) {
-                const file = input.files[0];
-                if (file) processFile(file);
-            }
-
-            function handleFileDrop(event) {
-                event.preventDefault();
-                event.currentTarget.style.backgroundColor = '#f8f9fa';
-                const file = event.dataTransfer.files[0];
-                if (file) processFile(file);
-            }
-
-            function processFile(file) {
-                if (file.type !== 'application/pdf') {
-                    document.getElementById('invalidFileName').textContent = file.name;
-                    // Trigger the new modal ID
-                    $('#noPdfModal').modal('show');
-                    return;
-                }
-
-                // Save the file bytes globally so we can use it during the Supabase upload
-                currentUploadedFile = file;
-
-                // read in the pdf file
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const dropZone = document.getElementById('dropZone');
-                    const previewContainer = document.getElementById('pdfPreviewContainer');
-                    const embedViewer = document.getElementById('pdfEmbedViewer');
-                    const pdfTitle = document.getElementById('pdfTitle');
-
-                    // Save a clone of the drop zone before removing it
-                    if (dropZone) {
-                        dropZoneClone = dropZone.cloneNode(true);
-                    }
-
-                    // Load the PDF into the embed
-                    embedViewer.setAttribute('src', e.target.result);
-
-                    // Swap the heading text to the file name
-                    pdfTitle.textContent = file.name;
-
-                    // Remove the drop zone, show preview in its place
-                    if (dropZone) dropZone.remove();
-                    previewContainer.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-
-        </script>
-
         <!-- Main -->
         <script type="module">
         
@@ -1380,6 +1816,7 @@
                 
           //      console.log("Selected Patient Id : ", activePatientId);
 
+                /*
                 const dismissBtn = document.getElementById("svuota-btn");
                 if (dismissBtn) {
                         dismissBtn.addEventListener('click', function(e) {
@@ -1399,7 +1836,7 @@
                         submitCertificate();
                     });
                 }
-
+                */
                 try {
                    
                     // Esegui la query per il paziente attivo
@@ -1431,14 +1868,6 @@
                     // Save the whole object globally
                     window.fullNameNoPrefix=fullNameNoPrefix;
 
-                //    console.log(name);
-                //    console.log(surname);
-                //    console.log(genre);
-                //    console.log(fullNameNoPrefix);
-                //    console.log(bdate);
-                //    console.log(minor_or_major);
-                //    console.log(age);
-
                     //patientFullName
                     const patientFullNameId = document.getElementById("patientFullName");
                     patientFullNameId.textContent = fullNameNoPrefix;
@@ -1448,6 +1877,8 @@
                     updateSubscriptionDate(document.getElementById("patientSubDate"), subDateItalianFormat, gender);
                     updateUserAvatar(gender);
                  
+                    // Call this immediately to render the 'Nessuna card selezionata' message
+                    updateSelectionHeader();
 
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
@@ -1457,6 +1888,38 @@
 
         </script>
 
+
+        <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Initial load
+            populateGrid('#cat1 .card-grid-container', DislessiaData);
+            
+            document.querySelector('#cat1 .card-grid-container').dataset.loaded = "true";
+
+            $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+
+                const target = $(e.target).attr("href");
+                const container = document.querySelector(target + ' .card-grid-container');
+
+                // Check if this container has our custom 'loaded' attribute
+                if (container && container.dataset.loaded !== "true") {
+
+                    if (target === '#cat2') {
+                        populateGrid(target + ' .card-grid-container', DisgrafiaData);
+                    } else if (target === '#cat3') {
+                        populateGrid(target + ' .card-grid-container', DiscalculiaData);
+                    } else if (target === '#cat4') {
+                        populateGrid(target + ' .card-grid-container', DisortografiaData);
+                    }
+                    // Mark as loaded
+                    container.dataset.loaded = "true";
+                }
+            });
+        });
+
+        </script>
 
          <script>
 
