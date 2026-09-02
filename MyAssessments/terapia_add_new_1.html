@@ -1059,7 +1059,7 @@
                                            </div>
 
                                             <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
-                                                <input type="text" id="timingTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Durata in minuti" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
+                                                <input type="text" id="timingTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Durata in minuti" readonly required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease; cursor: default;">
                                             </div>
 
                                            <div class="col-2 p-2 border-right">
@@ -1086,29 +1086,29 @@
                                         <div id="sb-sortable-list" class="sb-horizontal-scroll-container">
                                         </div>
                                     </div>
-
                                 </div>
 
-                                <!-- THIRD SECTION -->
-                                <div class="card shadow-sm mb-3" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                <!-- DSA SECTION -->
+                                <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                   
                                     <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
                                         <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
-                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Lista Moduli</h6>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Lista Moduli per DSA</h6>
                                     </div>
 
                                     <div class="card-header bg-white p-0">
                                         <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
                                             <li class="nav-item flex-fill text-center">
-                                                <a class="nav-link active" id="cat-1-tab" data-toggle="tab" href="#cat1" role="tab">Dislessia</a>
+                                                <a class="nav-link active" id="dsa-1-tab" data-toggle="tab" href="#dsa_1" role="tab">Dislessia</a>
                                             </li>
                                             <li class="nav-item flex-fill text-center">
-                                                <a class="nav-link" id="cat-2-tab" data-toggle="tab" href="#cat2" role="tab">Disgrafia</a>
+                                                <a class="nav-link" id="dsa-2-tab" data-toggle="tab" href="#dsa_2" role="tab">Disgrafia</a>
                                             </li>
                                             <li class="nav-item flex-fill text-center">
-                                                <a class="nav-link" id="cat-3-tab" data-toggle="tab" href="#cat3" role="tab">Discalculia</a>
+                                                <a class="nav-link" id="dsa-3-tab" data-toggle="tab" href="#dsa_3" role="tab">Discalculia</a>
                                             </li>
                                             <li class="nav-item flex-fill text-center">
-                                                <a class="nav-link" id="cat-4-tab" data-toggle="tab" href="#cat4" role="tab">Disortografia</a>
+                                                <a class="nav-link" id="dsa-4-tab" data-toggle="tab" href="#dsa_4" role="tab">Disortografia</a>
                                             </li>
                                         </ul>
                                     </div>
@@ -1116,22 +1116,22 @@
                                     <div class="card-body">
                                         <div class="tab-content">
 
-                                            <div class="tab-pane fade show active" id="cat1" role="tabpanel">
+                                            <div class="tab-pane fade show active" id="dsa_1" role="tabpanel">
                                                 <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                                                 </div>
                                             </div>
 
-                                            <div class="tab-pane fade" id="cat2" role="tabpanel">
+                                            <div class="tab-pane fade" id="dsa_2" role="tabpanel">
                                             <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                                                 </div>
                                             </div>
                                         
-                                            <div class="tab-pane fade" id="cat3" role="tabpanel">
+                                            <div class="tab-pane fade" id="dsa_3" role="tabpanel">
                                                 <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                                                 </div>
                                             </div>
                                         
-                                            <div class="tab-pane fade" id="cat4" role="tabpanel">
+                                            <div class="tab-pane fade" id="dsa_4" role="tabpanel">
                                             <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
                                                 </div>
                                             </div>
@@ -1140,6 +1140,204 @@
                                     </div>
 
                                 </div>
+
+                                <!-- ADHD SECTION -->
+                                <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                   
+                                    <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Lista Moduli per ADHD</h6>
+                                    </div>
+
+                                    <div class="card-header bg-white p-0">
+                                        <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link active" id="adhd-1-tab" data-toggle="tab" href="#adhd_1" role="tab">ADHD 1</a>
+                                            </li>
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link" id="adhd-2-tab" data-toggle="tab" href="#adhd_2" role="tab">ADHD 2</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="tab-content">
+
+                                            <div class="tab-pane fade show active" id="adhd_1" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane fade" id="adhd_2" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="adhd_3" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="adhd_4" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                                <!-- IPOATTENTIVE SECTION -->
+                                <div class="card shadow-sm mb-3" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                   
+                                    <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Lista Moduli per Sindrome Ipoazttentiva</h6>
+                                    </div>
+
+                                    <div class="card-header bg-white p-0">
+                                        <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link active" id="adhd-1-tab" data-toggle="tab" href="#ipo_1" role="tab">IPO 1</a>
+                                            </li>
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link" id="adhd-2-tab" data-toggle="tab" href="#ipo_2" role="tab">IPO 2</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="tab-content">
+
+                                            <div class="tab-pane fade show active" id="ipo_1" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane fade" id="ipo_2" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="ipo_3" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="ipo_4" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- IPERATTENTIVE SECTION -->
+                                <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                   
+                                    <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Lista Moduli per Sindrome Iperattiva</h6>
+                                    </div>
+
+                                    <div class="card-header bg-white p-0">
+                                        <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link active" id="adhd-1-tab" data-toggle="tab" href="#iper_1" role="tab">IPER 1</a>
+                                            </li>
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link" id="adhd-2-tab" data-toggle="tab" href="#iper_2" role="tab">IPER 2</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="tab-content">
+
+                                            <div class="tab-pane fade show active" id="iper_1" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane fade" id="iper_2" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="iper_3" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="iper_4" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <!-- COMBINED SECTION -->
+                                <div class="card shadow-sm mb-3" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                   
+                                    <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Lista Moduli per Sindrome Combinata</h6>
+                                    </div>
+
+                                    <div class="card-header bg-white p-0">
+                                        <ul class="nav nav-tabs modern-pills" role="tablist" style="border-bottom: 1px solid #f1f5f9;">
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link active" id="adhd-1-tab" data-toggle="tab" href="#comb_1" role="tab">COMB 1</a>
+                                            </li>
+                                            <li class="nav-item flex-fill text-center">
+                                                <a class="nav-link" id="adhd-2-tab" data-toggle="tab" href="#comb_2" role="tab">COMB 2</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <div class="card-body">
+                                        <div class="tab-content">
+
+                                            <div class="tab-pane fade show active" id="comb_1" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+
+                                            <div class="tab-pane fade" id="comb_2" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="comb_3" role="tabpanel">
+                                                <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                            <div class="tab-pane fade" id="comb_4" role="tabpanel">
+                                            <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
+                                                </div>
+                                            </div>
+                                        
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+
+
+
 
                         </div>
                     </div>
@@ -1280,17 +1478,14 @@
                 // Global array to store selections
                 let selectedProtocols = [];
 
-                const categoryColorMap = {
-                    'Dislessia': '#1cc88a', // Success
-                    'Disgrafia': '#4e73df', // Primary
-                    'Discalculia': '#f6c23e', // Warning
-                    'Disortografia': '#36b9cc'  // Danger
-                };
+            </script>
+
+           <script>
 
                 const DislessiaData = [
                 {
-                    title: "Traccia A1",
-                    category: "Dislessia",
+                    title: "DSA A1",
+                    category: "Group1",
                     badge: "Dislessia",
                     badgeColor: "badge-success", // Classe Bootstrap per il verde
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
@@ -1298,8 +1493,8 @@
                     timing : 10
                 },
                 {
-                    title: "Traccia A2",
-                    category: "Dislessia",
+                    title: "DSA A2",
+                    category: "Group1",
                     badge: "Dislessia",
                     badgeColor: "badge-success", // Classe Bootstrap per il verde
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
@@ -1308,8 +1503,8 @@
          
                 },
                 {
-                    title: "Traccia A3",
-                    category: "Dislessia",
+                    title: "DSA A3",
+                    category: "Group1",
                     badge: "Dislessia",
                     badgeColor: "badge-success", // Classe Bootstrap per il verde
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
@@ -1317,8 +1512,8 @@
                     timing : 30
                 },
                 {
-                    title: "Traccia A4",
-                    category: "Dislessia",
+                    title: "DSA A4",
+                    category: "Group1",
                     badge: "Dislessia",
                     badgeColor: "badge-success", // Classe Bootstrap per il verde
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
@@ -1329,8 +1524,8 @@
 
             const DisgrafiaData = [
                 {
-                    title: "Traccia B1",
-                    category: "Disgrafia",
+                    title: "DSA B1",
+                    category: "Group2",
                     badge: "Disgrafia",
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
@@ -1338,8 +1533,8 @@
                     timing : 10
                 },
                 {
-                    title: "Traccia B2",
-                    category: "Disgrafia",
+                    title: "DSA B2",
+                    category: "Group2",
                     badge: "Disgrafia",
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
@@ -1347,8 +1542,8 @@
                     timing : 20
                 },
                 {
-                    title: "Traccia B3",
-                    category: "Disgrafia",
+                    title: "DSA B3",
+                    category: "Group2",
                     badge: "Disgrafia",
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
@@ -1356,8 +1551,8 @@
                     timing : 30
                 },
                 {
-                    title: "Traccia B4",
-                    category: "Disgrafia",
+                    title: "DSA B4",
+                    category: "Group2",
                     badge: "Disgrafia",
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
@@ -1369,8 +1564,8 @@
 
             const DiscalculiaData = [
                 {
-                    title: "Traccia C1",
-                    category: "Discalculia",
+                    title: "DSA C1",
+                    category: "Group3",
                     badge: "Discalculia",
                     badgeColor: "badge-warning", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
@@ -1378,8 +1573,8 @@
                     timing : 10
                 },
                 {
-                    title: "Traccia C2",
-                    category: "Discalculia",
+                    title: "DSA C2",
+                    category: "Group3",
                     badge: "Discalculia",
                     badgeColor: "badge-warning", // Classe Bootstrap per il blu
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
@@ -1387,8 +1582,8 @@
                     timing : 20
                 },
                 {
-                    title: "Traccia C3",
-                    category: "Discalculia",
+                    title: "DSA C3",
+                    category: "Group3",
                     badge: "Discalculia",
                     badgeColor: "badge-warning", // Classe Bootstrap per il blu
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
@@ -1400,8 +1595,8 @@
 
             const DisortografiaData = [
                 {
-                    title: "Traccia D1",
-                    category: "Disortografia",
+                    title: "DSA D1",
+                    category: "Group4",
                     badge: "Disortografia",
                     badgeColor: "badge-info", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
@@ -1409,8 +1604,8 @@
                     timing : 10
                 },
                 {
-                    title: "Traccia D2",
-                    category: "Disortografia",
+                    title: "DSA D2",
+                    category: "Group4",
                     badge: "Disortografia",
                     badgeColor: "badge-info", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
@@ -1422,7 +1617,343 @@
 
         </script>
 
+        <script>
+
+                const ADHD_1 = [
+                    {
+                        title: "ADHD1 A1",
+                        category: "Group1",
+                        badge: "Adhd1 1",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par adhd1 1.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 10
+                    },
+                    {
+                        title: "ADHD1 A2",
+                        category: "Group1",
+                        badge: "Adhd1 2",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par adhd1 2.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 20
+                    },
+                    {
+                        title: "ADHD1 A3",
+                        category: "Group1",
+                        badge: "Adhd1 3",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par adhd1 3.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 15
+                    },
+                    {
+                        title: "ADHD1 A4",
+                        category: "Group1",
+                        badge: "Adhd1 4",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par adhd1 4.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 25
+                    },
+
+                ];
+
+                const ADHD_2 = [
+                    {
+                        title: "ADHD2 A1",
+                        category: "Group2",
+                        badge: "Adhd2 1",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par adhd2 1.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 10
+                    },
+                    {
+                        title: "ADHD2 A2",
+                        category: "Group2",
+                        badge: "Adhd2 2",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par adhd2 2.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 20
+                    },
+                    {
+                        title: "ADHD2 A3",
+                        category: "Group2",
+                        badge: "Adhd2 3",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par adhd2 3.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 15
+                    },
+                    {
+                        title: "ADHD2 A4",
+                        category: "Group2",
+                        badge: "Adhd2 4",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par adhd2 4.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 25
+                    },
+
+                ];
+                
+        </script>
+
+        <script>
+
+                const IPOATTENTIVO_1 = [
+                    {
+                        title: "IPOATTENTIVO A1",
+                        category: "Group1",
+                        badge: "Ipoattentivo1 1",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome ipoattentiva1 1.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 10
+                    },
+                    {
+                        title: "IPOATTENTIVO A2",
+                        category: "Group1",
+                        badge: "Ipoattentivo1 2",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome ipoattentiva1 2.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 20
+                    },
+                    {
+                        title: "IPOATTENTIVO A3",
+                        category: "Group1",
+                        badge: "Ipoattentivo1 3",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome ipoattentiva1 3.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 15
+                    },
+                    {
+                        title: "IPOATTENTIVO A4",
+                        category: "Group1",
+                        badge: "Ipoattentivo1 4",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome ipoattentiva1 4.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 25
+                    },
+
+                ];
+
+                const IPOATTENTIVO_2 = [
+                    {
+                        title: "IPOATTENTIVO2 A1",
+                        category: "Group2",
+                        badge: "Ipoattentivo2 1",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome ipoattentiva2 1.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 10
+                    },
+                    {
+                        title: "IPOATTENTIVO2 A2",
+                        category: "Group2",
+                        badge: "Ipoattentivo2 2",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome ipoattentiva2 2.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 20
+                    },
+                    {
+                        title: "IPOATTENTIVO2 A3",
+                        category: "Group2",
+                        badge: "Ipoattentivo2 3",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome ipoattentiva2 3.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 15
+                    },
+                    {
+                        title: "IPOATTENTIVO2 A4",
+                        category: "Group2",
+                        badge: "Ipoattentivo2 4",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome ipoattentiva2 4.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 25
+                    },
+
+                ];
+
+        </script>
+
          <script>
+
+                const IPERATTIVO_1 = [
+                    {
+                        title: "IPERATTIVO1 A1",
+                        category: "Group1",
+                        badge: "iperattivo1 1",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome iperattiva1 1.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 10
+                    },
+                    {
+                        title: "IPERATTIVO1 A2",
+                        category: "Group1",
+                        badge: "iperattivo1 2",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome iperattiva1 2.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 20
+                    },
+                    {
+                        title: "IPERATTIVO1 A3",
+                        category: "Group1",
+                        badge: "iperattivo1 3",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome iperattiva1 3.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 15
+                    },
+                    {
+                        title: "IPERATTIVO1 A4",
+                        category: "Group1",
+                        badge: "iperattivo1 4",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome iperattiva1 4.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 25
+                    },
+
+                ];
+
+                const IPERATTIVO_2 = [
+                    {
+                        title: "IPERATTIVO2 A1",
+                        category: "Group2",
+                        badge: "iperattivo2 1",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome iperattiva2 1.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 10
+                    },
+                    {
+                        title: "IPERATTIVO2 A2",
+                        category: "Group2",
+                        badge: "iperattivo2 2",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome iperattiva2 2.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 20
+                    },
+                    {
+                        title: "IPERATTIVO2 A3",
+                        category: "Group2",
+                        badge: "iperattivo2 3",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome iperattiva2 3.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 15
+                    },
+                    {
+                        title: "IPERATTIVO2 A4",
+                        category: "Group2",
+                        badge: "iperattivo2 4",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome iperattiva2 4.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 25
+                    },
+
+                ];
+
+        </script>
+
+         <script>
+
+                const COMBINATO_1 = [
+                    {
+                        title: "COMBINATO1 A1",
+                        category: "Group1",
+                        badge: "Combinato1 1",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome combinata1 1.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 10
+                    },
+                    {
+                        title: "COMBINATO1 A2",
+                        category: "Group1",
+                        badge: "Combinato1 2",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome combinata1 2.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 20
+                    },
+                    {
+                        title: "COMBINATO1 A3",
+                        category: "Group1",
+                        badge: "Combinato1 3",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome combinata1 3.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 15
+                    },
+                    {
+                        title: "COMBINATO1 A4",
+                        category: "Group1",
+                        badge: "Combinato1 4",
+                        badgeColor: "badge-success", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome combinata1 4.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 25
+                    },
+
+                ];
+
+                const COMBINATO_2 = [
+                    {
+                        title: "COMBINATO2 A1",
+                        category: "Group2",
+                        badge: "Combinato2 1",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome combinata2 1.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 10
+                    },
+                    {
+                        title: "COMBINATO2 A2",
+                        category: "Group2",
+                        badge: "Combinato2 2",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome combinata2 2.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 20
+                    },
+                    {
+                        title: "COMBINATO2 A3",
+                        category: "Group2",
+                        badge: "Combinato2 3",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome combinata2 3.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 15
+                    },
+                    {
+                        title: "COMBINATO2 A4",
+                        category: "Group2",
+                        badge: "Combinato 4",
+                        badgeColor: "badge-primary", // Classe Bootstrap per il verde
+                        description: "Modulo di potenziamento par sindrome combinata2 4.",
+                        image: "assets/img/place-holder.jpg",
+                        timing : 25
+                    },
+
+                ];
+
+        </script>
+
+        <script>
             
                 $(document).ready(function() {
                     var listContainer = document.getElementById('sb-sortable-list');
@@ -1545,139 +2076,198 @@
             });
         }
 
-        </script>
+    </script>
 
-<script>
+    <script>
 
-    // Update selection header
-    function updateSelectionHeader() {
-        const list = document.getElementById('sb-sortable-list');
-        
-        if (selectedProtocols.length === 0) {
-            list.innerHTML = `
-
-               <div class="card-body d-flex flex-column h-100 align-items-center justify-content-center text-center w-100 position-relative">
-                    <h3 class="font-weight-bold text-gray-600">
-                        Nessun Elemento Selezionato
-                    </h3>
-                    <p class="mb-2">Clicca su un elemento per inserirlo nella lista</p>
-                    
-                    <!-- Hidden input positioned directly under the text container to cleanly anchor the validation popup -->
-                    <input type="text" id="hiddenValidator" required style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 1px; height: 1px; opacity: 0; border: none; padding: 0;">
-                </div>
-
-            `;
-        } else {
+        // Update selection header
+        function updateSelectionHeader() {
+            const list = document.getElementById('sb-sortable-list');
             
-            list.innerHTML = selectedProtocols.map(p => `
-                <div class="card sb-draggable-item shadow-sm overflow-hidden">
-                    <div class="drag-handle">
-                        <i class="fas fa-grip-horizontal"></i>
-                    </div>
-                    <div class="position-relative" style="height: 80px; overflow: hidden; border-radius: 5px 5px 0 0;">
-                        <img src="${p.image}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
-                        <div class="remove-btn text-white bg-danger" 
-                            style="position: absolute; top: 5px; right: 5px; cursor: pointer; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.8;"
-                            onclick="removeProtocol(null,'${p.title.replace(/'/g, "\\'")}')">
-                            <i class="fas fa-times"></i>
-                        </div>
-                    </div>
-                    <div class="card-body p-2">
-                        <h6 class="card-title font-weight-bold mb-1" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                            ${p.title}
-                        </h6>
-                        <div class="mb-2">
-                            <span class="badge ${p.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
-                                    ${p.badge}
-                            </span>
-                        </div>
-                        <p class="card-text text-muted mb-3" 
-                            style="font-size: 0.9rem; white-space: normal; word-wrap: break-word; display: block;">
-                            ${p.description}
-                        </p>
-                        <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
-                            <a href="#" class="inner-action-btn demo-btn"><i class="fas fa-play text-primary"></i> Demo</a>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-            
-        }
+            if (selectedProtocols.length === 0) {
+                list.innerHTML = `
 
-    }
+                <div class="card-body d-flex flex-column h-100 align-items-center justify-content-center text-center w-100 position-relative">
+                        <h3 class="font-weight-bold text-gray-600">
+                            Nessun Elemento Selezionato
+                        </h3>
+                        <p class="mb-2">Clicca su un elemento per inserirlo nella lista</p>
+                        
+                        <!-- Hidden input positioned directly under the text container to cleanly anchor the validation popup -->
+                        <input type="text" id="hiddenValidator" required style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 1px; height: 1px; opacity: 0; border: none; padding: 0;">
+                    </div>
 
-    
-    function updateTimingTotal() {
-        let totalMinutes = 0;
-        
-        for (let i = 0; i < selectedProtocols.length; i++) {
-            totalMinutes += Number(selectedProtocols[i].timing) || 0;
-        }
-
-        const timingInput = document.getElementById('timingTitle');
-        if (timingInput) {
-            if (totalMinutes > 0) {
-                let displayText = `${totalMinutes} min`;
-                
-                if (totalMinutes >= 60) {
-                    const hours = Math.floor(totalMinutes / 60);
-                    const minutes = totalMinutes % 60;
-                    const hoursText = hours === 1 ? '1 ora' : `${hours} ore`;
-                    const minutesText = minutes > 0 ? ` e ${minutes} min` : '';
-                    
-                    displayText += ` ( ${hoursText}${minutesText} )`;
-                }
-                
-                timingInput.value = displayText;
+                `;
             } else {
-                timingInput.value = '';
+                
+                list.innerHTML = selectedProtocols.map(p => `
+                    <div class="card sb-draggable-item shadow-sm overflow-hidden">
+                        <div class="drag-handle">
+                            <i class="fas fa-grip-horizontal"></i>
+                        </div>
+                        <div class="position-relative" style="height: 80px; overflow: hidden; border-radius: 5px 5px 0 0;">
+                            <img src="${p.image}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                            <div class="remove-btn text-white bg-danger" 
+                                style="position: absolute; top: 5px; right: 5px; cursor: pointer; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.8;"
+                                onclick="removeProtocol(null,'${p.title.replace(/'/g, "\\'")}')">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>
+                        <div class="card-body p-2">
+                            <h6 class="card-title font-weight-bold mb-1" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                ${p.title}
+                            </h6>
+                            <div class="mb-2">
+                                <span class="badge ${p.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
+                                        ${p.badge}
+                                </span>
+                            </div>
+                            <p class="card-text text-muted mb-3" 
+                                style="font-size: 0.9rem; white-space: normal; word-wrap: break-word; display: block;">
+                                ${p.description}
+                            </p>
+                            <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
+                                <a href="#" class="inner-action-btn demo-btn"><i class="fas fa-play text-primary"></i> Demo</a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+            }
+
+        }
+        
+        function updateTimingTotal() {
+            let totalMinutes = 0;
+            
+            for (let i = 0; i < selectedProtocols.length; i++) {
+                totalMinutes += Number(selectedProtocols[i].timing) || 0;
+            }
+
+            const timingInput = document.getElementById('timingTitle');
+            if (timingInput) {
+                if (totalMinutes > 0) {
+                    let displayText = `${totalMinutes} min`;
+                    
+                    if (totalMinutes >= 60) {
+                        const hours = Math.floor(totalMinutes / 60);
+                        const minutes = totalMinutes % 60;
+                        const hoursText = hours === 1 ? '1 ora' : `${hours} ore`;
+                        const minutesText = minutes > 0 ? ` e ${minutes} min` : '';
+                        
+                        displayText += ` ( ${hoursText}${minutesText} )`;
+                    }
+                    
+                    timingInput.value = displayText;
+                } else {
+                    timingInput.value = '';
+                }
             }
         }
-    }
 
-    function handleCardClick(addBtn) {
-        // 1. Data Logic
-        const item = JSON.parse(addBtn.getAttribute('data-item'));
-        if (selectedProtocols.some(p => p.title === item.title)) return; // Guard clause
-        selectedProtocols.push(item);
+        function handleCardClick(addBtn) {
+            // 1. Data Logic
+            const item = JSON.parse(addBtn.getAttribute('data-item'));
+            if (selectedProtocols.some(p => p.title === item.title)) return; // Guard clause
+            selectedProtocols.push(item);
 
-        // 2. Local UI Logic (Card highlight, button state)
-        const card = addBtn.closest('.card');
-        card.classList.add('selected');
+            // 2. Local UI Logic (Card highlight, button state)
+            const card = addBtn.closest('.card');
+            card.classList.add('selected');
 
-        // 2. Mute the Aggiungi button
-        addBtn.classList.add('btn-muted');
+            // 2. Mute the Aggiungi button
+            addBtn.classList.add('btn-muted');
 
-        // 3. Unmute the Trash button
-        const trashBtn = addBtn.parentElement.querySelector('.trash-btn');
-        if (trashBtn) trashBtn.classList.remove('btn-muted');
+            // 3. Unmute the Trash button
+            const trashBtn = addBtn.parentElement.querySelector('.trash-btn');
+            if (trashBtn) trashBtn.classList.remove('btn-muted');
 
-        // 3. Global UI Logic (Header) - Perfect placement
-        updateSelectionHeader();
+            // 3. Global UI Logic (Header) - Perfect placement
+            updateSelectionHeader();
 
-        updateTimingTotal();
+            // update total timing
+            updateTimingTotal();
 
-    }
-
-    // remove protocol
-    function removeProtocol(trashBtn, title) {
-        // 1. Remove from array
-        selectedProtocols = selectedProtocols.filter(p => p.title !== title);
-
-        // 2. Mute the clicked button immediately
-        if (trashBtn) {
-            trashBtn.classList.add('btn-muted');
         }
 
-        // 3. Single loop to update the UI (Grid)
-        document.querySelectorAll('.card').forEach(card => {
-            const titleElement = card.querySelector('.card-title');
-            
-            if (titleElement && titleElement.innerText === title) {
-                // Remove highlight
-                card.classList.remove('selected');
+        // remove protocol
+        function removeProtocol(trashBtn, title) {
+            // 1. Remove from array
+            selectedProtocols = selectedProtocols.filter(p => p.title !== title);
+
+            // 2. Mute the clicked button immediately
+            if (trashBtn) {
+                trashBtn.classList.add('btn-muted');
+            }
+
+            // 3. Single loop to update the UI (Grid)
+            document.querySelectorAll('.card').forEach(card => {
+                const titleElement = card.querySelector('.card-title');
                 
-                // Re-enable Add button
+                if (titleElement && titleElement.innerText === title) {
+                    // Remove highlight
+                    card.classList.remove('selected');
+                    
+                    // Re-enable Add button
+                    const addBtn = card.querySelector('.add-btn');
+                    if (addBtn) {
+                        addBtn.classList.remove('btn-muted');
+                        addBtn.style.pointerEvents = 'auto';
+                        addBtn.style.opacity = '1';
+                        addBtn.innerHTML = '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
+                    }
+
+                    // Mute Grid Trash button
+                    const gridTrashBtn = card.querySelector('.trash-btn');
+                    if (gridTrashBtn) {
+                        gridTrashBtn.classList.add('btn-muted');
+                    }
+                }
+            });
+
+            // Update the Header 
+            updateSelectionHeader();
+
+            updateTimingTotal();
+
+        }
+
+    </script>
+
+    <script>
+
+        function confirmRemoveAll() 
+        {
+            // 1. Explicitly remove focus from the button that triggered the event
+            if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+            }
+
+            // 1. Clear all standard inputs (text, date, number, etc.)
+            const allInputs = document.querySelectorAll('input');
+            allInputs.forEach(input => {
+                // Reset value
+                input.value = '';
+                // Reset border styles (in case you added red borders for errors)
+                input.style.borderColor = '';
+            });
+
+            // 2. Reset all selects to the first option (the "Seleziona..." one)
+            const allSelects = document.querySelectorAll('select');
+            allSelects.forEach(select => {
+                select.selectedIndex = 0; 
+                select.style.borderColor = '';
+            });
+
+            // 1. Clear the entire array
+            selectedProtocols = [];
+
+            // 2. Iterate through all cards to reset the UI
+            document.querySelectorAll('.card').forEach(card => {
+                // Remove the highlight class
+                card.classList.remove('selected');
+
+                // Reset the 'Add' button
                 const addBtn = card.querySelector('.add-btn');
                 if (addBtn) {
                     addBtn.classList.remove('btn-muted');
@@ -1686,89 +2276,29 @@
                     addBtn.innerHTML = '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
                 }
 
-                // Mute Grid Trash button
+                // Mute/Reset the 'Trash' button in the grid
                 const gridTrashBtn = card.querySelector('.trash-btn');
                 if (gridTrashBtn) {
                     gridTrashBtn.classList.add('btn-muted');
                 }
-            }
-        });
+            });
 
-        // Update the Header 
-        updateSelectionHeader();
+            // 3. Update the Header (as per your existing implementation)
+            updateSelectionHeader();
+            
+            console.log("All protocols cleared.");
+    
+            // 2. Move focus to the body to be safe
+            document.body.focus();
 
-        // Update total timing
-        updateTimingTotal();
+            // 3. Close the modal
+            $('#confirmClearModal').modal('hide');
 
-    }
-
-</script>
-
-<script>
-
-    function confirmRemoveAll() 
-    {
-        // 1. Explicitly remove focus from the button that triggered the event
-        if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
         }
 
-        // 1. Clear all standard inputs (text, date, number, etc.)
-        const allInputs = document.querySelectorAll('input');
-        allInputs.forEach(input => {
-            // Reset value
-            input.value = '';
-            // Reset border styles (in case you added red borders for errors)
-            input.style.borderColor = '';
-        });
+    </script>
 
-        // 2. Reset all selects to the first option (the "Seleziona..." one)
-        const allSelects = document.querySelectorAll('select');
-        allSelects.forEach(select => {
-            select.selectedIndex = 0; 
-            select.style.borderColor = '';
-        });
-
-        // 1. Clear the entire array
-        selectedProtocols = [];
-
-        // 2. Iterate through all cards to reset the UI
-        document.querySelectorAll('.card').forEach(card => {
-            // Remove the highlight class
-            card.classList.remove('selected');
-
-            // Reset the 'Add' button
-            const addBtn = card.querySelector('.add-btn');
-            if (addBtn) {
-                addBtn.classList.remove('btn-muted');
-                addBtn.style.pointerEvents = 'auto';
-                addBtn.style.opacity = '1';
-                addBtn.innerHTML = '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
-            }
-
-            // Mute/Reset the 'Trash' button in the grid
-            const gridTrashBtn = card.querySelector('.trash-btn');
-            if (gridTrashBtn) {
-                gridTrashBtn.classList.add('btn-muted');
-            }
-        });
-
-        // 3. Update the Header (as per your existing implementation)
-        updateSelectionHeader();
-        
-        console.log("All protocols cleared.");
-  
-        // 2. Move focus to the body to be safe
-        document.body.focus();
-
-        // 3. Close the modal
-        $('#confirmClearModal').modal('hide');
-
-    }
-
-</script>
-
-        <script>
+    <script>
 
           function validateForm() {
 
@@ -1779,6 +2309,13 @@
                     return false; 
                 }
    
+                // total timine check
+                const totalTimeInput = document.getElementById('timingTitle');
+                if (!totalTimeInput.checkValidity()) {
+                    totalTimeInput.reportValidity();
+                    return false;
+                }
+                
                 // Date check
                 const dateInput = document.getElementById('clinicalDate');
                 if (!dateInput.checkValidity()) {
@@ -1788,10 +2325,12 @@
                 
                 // get the hidden UI element for signaling the empty therapy 
                 // array Use a safe numeric check (> 0)
-            //    console.log(window.therapies);
+             //    console.log(window.therapies);
 
                 const element = document.getElementById('hiddenValidator');
-                const hasSelectedItems = window.therapies > 0;
+                const hasSelectedItems = selectedProtocols.length > 0;
+
+                console.log(selectedProtocols.length);
 
                 if (!hasSelectedItems) {
                     if (element) {
@@ -1801,16 +2340,12 @@
                     }
                     return false;
                 }
-                else
-                {
-
-                }   
-
+                
                 // hide back the hidden eUI element
                 if (element) {
                     element.setCustomValidity('');
                 }
-            
+
                 // Build fresh protocol payload
                 const newTherapy = {
                     uniqueId: crypto.randomUUID(),
@@ -1818,10 +2353,11 @@
                     title: titleInput.value.trim(),
                     state:"Non Iniziata",
                     evaluationDate: dateInput.value,
+                    totalTiming: totalTimeInput.value,
                     italian_date : new Date(dateInput.value).toLocaleDateString('it-IT'),
+                    protocols: [...selectedProtocols]
                 };
 
-                console.log("Certificate Payload Ready:", newTherapy);
                 return newTherapy;
             }
 
@@ -1831,12 +2367,14 @@
                 const newTherapy = validateForm();
                 if (!newTherapy) return; // Validation failed, browser popup shown, abort.
 
+                console.log("Certificate Payload Ready:", newTherapy);
+
             
             }
 
-        </script>
+    </script>
 
-        <script>
+    <script>
 
             // ---------------------------------------------------------------------------------
 
@@ -1964,9 +2502,9 @@
                 element.textContent = `${label} ${formattedDate}`;
             }
             
-        </script>
+    </script>
         
-         <script>
+    <script>
 
             $(document).ready(function() {
                 // Intercept the Logout button click
@@ -1983,10 +2521,10 @@
                 });
             });
 
-        </script>
+    </script>
 
-        <!-- Main -->
-        <script type="module">
+    <!-- Main -->
+    <script type="module">
         
             // --- Event Listeners 
             document.addEventListener("DOMContentLoaded", async () => {
@@ -2131,17 +2669,31 @@
 
             });
 
-        </script>
+    </script>
 
-
-        <script>
+    <script>
 
         document.addEventListener('DOMContentLoaded', () => {
             
-            // Initial load
-            populateGrid('#cat1 .card-grid-container', DislessiaData);
-            
-            document.querySelector('#cat1 .card-grid-container').dataset.loaded = "true";
+            // Initial DSA load
+            populateGrid('#dsa_1 .card-grid-container', DislessiaData);
+            document.querySelector('#dsa_1 .card-grid-container').dataset.loaded = "true";
+       
+            // Initial ADHD load
+            populateGrid('#adhd_1 .card-grid-container', ADHD_1);
+            document.querySelector('#adhd_1 .card-grid-container').dataset.loaded = "true";
+       
+            // Initial IPO load
+            populateGrid('#ipo_1 .card-grid-container', IPOATTENTIVO_1);
+            document.querySelector('#ipo_1 .card-grid-container').dataset.loaded = "true";
+
+            // Initial IPER load
+            populateGrid('#iper_1 .card-grid-container', IPERATTIVO_1);
+            document.querySelector('#iper_1 .card-grid-container').dataset.loaded = "true";
+
+            // Initial COMBINED load
+            populateGrid('#comb_1 .card-grid-container', COMBINATO_1);
+            document.querySelector('#comb_1 .card-grid-container').dataset.loaded = "true";
 
             $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
 
@@ -2151,48 +2703,77 @@
                 // Check if this container has our custom 'loaded' attribute
                 if (container && container.dataset.loaded !== "true") {
 
-                    if (target === '#cat2') {
+                    // Load DSA data
+
+                    if (target === '#dsa_2') {
                         populateGrid(target + ' .card-grid-container', DisgrafiaData);
-                    } else if (target === '#cat3') {
+                    } else if (target === '#dsa_3') {
                         populateGrid(target + ' .card-grid-container', DiscalculiaData);
-                    } else if (target === '#cat4') {
+                    } else if (target === '#dsa_4') {
                         populateGrid(target + ' .card-grid-container', DisortografiaData);
                     }
+                    
+                    // Load ADHD data
+
+                    else if (target === '#adhd_2') { // Add your new section target here
+                        populateGrid(target + ' .card-grid-container', ADHD_2);
+                    }
+
+                    // Load IPOATTENTIVE data
+
+                    else if (target === '#ipo_2') { // Add your new section target here
+                        populateGrid(target + ' .card-grid-container', IPOATTENTIVO_2);
+                    }
+
+                    // Load IPERATTIVO data
+
+                    else if (target === '#iper_2') { // Add your new section target here
+                        populateGrid(target + ' .card-grid-container', IPERATTIVO_2);
+                    }
+
+                    // Load COMBINATO data
+
+                    else if (target === '#comb_2') { // Add your new section target here
+                        populateGrid(target + ' .card-grid-container', COMBINATO_2);
+                    }
+
                     // Mark as loaded
                     container.dataset.loaded = "true";
                 }
             });
         });
 
-        </script>
+    </script>
 
-         <script>
+    <script>
 
-            $(document).ready(function() {
-                // Intercept the Logout button click
-                $('#logoutBtn').on('click', function(e) {
-                    // 1. Stop the browser from immediately redirecting to index.html
-                    e.preventDefault();
-                    // 2. Run your application cleanup logic here
-                    console.log("Logging out... clearing patient session data.");
-                    // Clear your persistent patient storage so it doesn't hang around
-                    // If you need to clear all session tokens, you could do:
-                    localStorage.clear(); 
-                    // 3. Manually trigger the redirect now that the data is wiped
-                    window.location.href = $(this).attr('href'); 
-                });
+        $(document).ready(function() {
+            // Intercept the Logout button click
+            $('#logoutBtn').on('click', function(e) {
+                // 1. Stop the browser from immediately redirecting to index.html
+                e.preventDefault();
+                // 2. Run your application cleanup logic here
+                console.log("Logging out... clearing patient session data.");
+                // Clear your persistent patient storage so it doesn't hang around
+                // If you need to clear all session tokens, you could do:
+                localStorage.clear(); 
+                // 3. Manually trigger the redirect now that the data is wiped
+                window.location.href = $(this).attr('href'); 
             });
+        });
 
-        </script>
+    </script>
 
-         <script>
-                   // Sidebar Toggle Handler
-                    $("#sidebarToggleTop").on('click', function(e) {
-                        e.preventDefault();
-                        $("body").toggleClass("sidebar-toggled");
-                        $(".sidebar").toggleClass("toggled");
-                    });
-        </script>
+    <script>
+
+        // Sidebar Toggle Handler
+        $("#sidebarToggleTop").on('click', function(e) {
+            e.preventDefault();
+            $("body").toggleClass("sidebar-toggled");
+            $(".sidebar").toggleClass("toggled");
+        });
+
+    </script>
 
     <script>
 

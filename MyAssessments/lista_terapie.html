@@ -1243,7 +1243,6 @@
     <!-- Table Pagination & Filtering Script -->
     <script>
         
-        
         // Global function to initialize or refresh the table with dynamic data
         window.initTableWithData = function(dataSource) 
         {
@@ -1285,19 +1284,23 @@
                         let stateIcon = "";
                         let stateColor = "";
 
-                        if (state === 0) {
+                        if (state === "Non Iniziata") {
+                            stateStr = "Non Iniziata";
+                            stateIcon = "fa-clock";
+                            stateColor = "text-info";
+                        } else if (state === "In Corso") {
                             stateStr = "In Corso";
                            stateIcon = "fa-redo-alt";
                             stateColor = "text-primary";
-                        } else if (state === 1) {
-                            stateStr = "Sospeso   ";
+                        } else if (state === "Sospeso") {
+                            stateStr = "Sospeso";
                             stateIcon = "fa-pause-circle";
                             stateColor = "text-warning";
-                        } else if (state === 2) {
+                        } else if (state === "Interrotto") {
                             stateStr = "Interrotto";
                             stateIcon = "fa-exclamation-circle";
                             stateColor = "text-danger";
-                        } else if (state === 3) {
+                        } else if (state === "Completato") {
                             stateStr = "Completato";
                             stateIcon = "fa-check-circle";
                             stateColor = "text-success";
@@ -1617,24 +1620,28 @@
                     {
                         title: "Fisioterapia Motoria",
                         italian_date: "12/08/2026",
-                        state : 0
+                        state : "Non Iniziata"
                     },
                     {
                         title: "Terapia Occupazionale",
                         italian_date: "14/08/2026",
-                        state : 1
+                        state : "In Corso"
                     },
                     {
                         title: "Supporto Psicologico",
                         italian_date: "20/08/2026",
-                        state : 2
+                        state : "Sospeso"
                     },
                     {
                         title: "Supporto in legno",
                         italian_date: "20/08/2026",
-                        state : 3
+                        state : "Interrotto"
+                    },
+                    {
+                        title: "Terapia",
+                        italian_date: "20/08/2026",
+                        state : "Completato"
                     }
-
                 ];
 
                  //   console.log("terapie:", window.terapie);
