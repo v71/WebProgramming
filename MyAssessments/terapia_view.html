@@ -474,7 +474,7 @@
                 Azioni
             </div>
             
-            <li class="nav-item fade-on-load">
+            <!--<li class="nav-item fade-on-load">
                 <a id="assegna-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-circle-plus"></i>
                     <span>Aggiorna</span>
@@ -500,7 +500,7 @@
                     <i class="fas fa-circle-xmark"></i>
                     <span>Elimina</span>
                 </a>
-            </li>
+            </li>-->
 
         </ul>
         <!-- End of Sidebar -->
@@ -518,7 +518,7 @@
                     </button>
 
                     <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
-                        Dashboard - Revisiona Assessment
+                        Dashboard - Revisiona Terapia
                     </h1>
 
                     <ul class="navbar-nav ml-auto">
@@ -577,6 +577,7 @@
                         </li>
                     </ul>
                 </nav>
+
 
 
                 <div class="fade-on-load container-fluid">
@@ -656,672 +657,55 @@
     </div>
 </div>
 
-
-
-<!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
-<div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none; min-width: 0; margin-bottom: 16px;">
-
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-xl-12 col-lg-12">
-                
-                <!-- Outer Container -->
-                <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
-
-                    <!-- SCROLLABLE WRAPPER -->
-                    <div style="width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch;">
-                        
-                        <!-- INNER CONTENT CONTAINER (Forced min-width keeps desktop layout intact on mobile) -->
-                        <div style="min-width: 750px;">
+                    <div class="row">
+                        <div class="col-xl-12 col-lg-12">
                             
-                            <article class="pt-container" style="text-align: center;">
-                                <h1 class="pt-title" style="margin-bottom: 20px;">Fascicolo Screening DSA</h1>
-                                        
-                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                                    PROTOCOLLO CLINICO CON CUT-OFF NORMATIVI INTEGRATI (CONSENSUS CONFERENCE)
-                                </h2>
+                            <!-- Outer Container: Added style="gap: 12px;" -->
+                            <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
-                                <!--<button type="button" class="btn btn-warning btn-sm mb-3" onclick="autoFillFormDebug()">
-                                    ⚡ Debug Fill
-                                </button>-->
-
-                                <div class="container-fluid mt-2 mb-4">
-
-                                    <div class="row border-top border-left border-right m-0">
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                        style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Titolo Fascicolo</div>
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                        style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Ente Emettitore</div>
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center" 
-                                        style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Data Valutazione</div>
+                                <!-- SECOND SECTION -->
+                                <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                    <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Modulo corrente</h6>
                                     </div>
 
-                                    <div class="row border m-0">
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Titolo Fascicolo" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
-                                        </div>
-                                        <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input type="text" id="formEntity" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Ente Emettitore" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
-                                        </div>
-                                        <div class="col-4 p-2 border-right">
-                                            <div id="dateGroup" class="input-group" style="width: 100%;">
-                                                <input type="date" id="clinicalDate" class="form-control shadow-none" required max="" style="height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; background-color: transparent;">
-                                                <div class="input-group-append">
-                                                    <button id="oggiBtn" class="btn btn-outline-secondary" type="button" onclick="injectCurrentDate()" style="height: 40px; padding: 0 15px; border-radius: 0 6px 6px 0; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-left: none !important; background-color: transparent;">
-                                                        Oggi
-                                                    </button>
+                                    <div class="container-fluid">
+                                        <div class="row border m-0">
+                                            
+                                            <!-- Title Input (Full width on mobile, half width on desktop) -->
+                                            <div class="col-12 col-md-6 p-2 border-bottom border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
+                                                <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Titolo Fascicolo" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
+                                            </div>
+
+                                            <!-- Timing Input (Full width on mobile, 4 columns on desktop) -->
+                                            <div class="col-12 col-md-4 p-2 border-bottom border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
+                                                <input type="text" id="timingTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Durata in minuti" readonly required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease; cursor: default;">
+                                            </div>
+
+                                            <!-- Date Picker (Full width on mobile, 2 columns on desktop) -->
+                                            <div class="col-12 col-md-2 p-2">
+                                                <div id="dateGroup" class="input-group" style="width: 100%;">
+                                                    <input type="text" id="clinicalDate" class="form-control shadow-none bg-white" readonly style="height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; cursor: default; border-right: none !important;">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text bg-transparent text-muted" style="height: 40px; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-left: none !important; border-radius: 0 6px 6px 0;">
+                                                            <i class="far fa-calendar"></i>
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        
-                                        <script>
-                                            const dateGroup = document.getElementById('dateGroup');
-                                            const clinicalDate = document.getElementById('clinicalDate');
-                                            const oggiBtn = document.getElementById('oggiBtn');
 
-                                            dateGroup.addEventListener('mouseenter', function() {
-                                                clinicalDate.style.borderColor = 'rgba(209, 211, 226, 1.0)';
-                                                oggiBtn.style.borderColor = 'rgba(209, 211, 226, 1.0)';
-                                            });
-
-                                            dateGroup.addEventListener('mouseleave', function() {
-                                                clinicalDate.style.borderColor = 'rgba(209, 211, 226, 1.0)';
-                                                oggiBtn.style.borderColor = 'rgba(209, 211, 226, 1.0)';
-                                            });
-
-                                            function injectCurrentDate() {
-                                                const today = new Date().toISOString().split('T')[0];
-                                                clinicalDate.value = today;
-                                            }
-                                        </script>
-
-                                    </div>
-
-                                </div>
-
-                                <p class="note-box">
-                                    <strong>Guida alla Valutazione:</strong> Questo fascicolo unisce gli stimoli alternativi della Forma B ai criteri diagnostici ufficiali italiani. 
-                                    Per ciascuna prova sono riportate le fasce di performance: 
-                                    <span class="badge-co">CO</span> Criterio di Competenza (Norma), 
-                                    <span class="badge-ra">RA</span> Richiesta di Attenzione (Borderline), e
-                                    <span class="badge-rii">RII</span> Richiesta di Intervento Immediato (Sospetto Deficit).
-                                </p>
-
-                                <div class="container-fluid mt-4">
-
-                                    <div class="row border-top border-left border-right m-0">
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Nome e Cognome</div>
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center" 
-                                            style="font-size: 1.2rem; color: #6c757d; font-weight: 600;">Classe Scolastica</div>
-                                    </div>
-
-                                    <div class="row border m-0">
-
-                                        <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input type="text" id="formPatientName" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Nome e Cognome" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
-                                        </div>
-
-                                        <!-- Just add the "arrow-select" class to any <select> you want this behavior on -->
-                                        <div class="col-6 p-2 border-right">
-                                            <select id="scuolaSelect" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
-                                                <option value="" disabled selected hidden>Seleziona classe...</option>
-                                                <optgroup label="Scuola Primaria">
-                                                    <option>2ª classe Scuola Primaria</option>
-                                                    <option>3ª classe Scuola Primaria</option>
-                                                    <option>4ª classe Scuola Primaria</option>
-                                                    <option>5ª classe Scuola Primaria</option>
-                                                </optgroup>
-                                                <optgroup label="Scuola Secondaria di 1º Grado">
-                                                    <option>1ª classe Scuola Secondaria di 1º Grado</option>
-                                                    <option>2ª classe Scuola Secondaria di 1º Grado</option>
-                                                    <option>3ª classe Scuola Secondaria di 1º Grado</option>
-                                                </optgroup>
-                                                <optgroup label="Scuola Secondaria di 2º Grado">
-                                                    <option>1ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>2ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>3ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>4ª classe Scuola Secondaria di 2º Grado</option>
-                                                    <option>5ª classe Scuola Secondaria di 2º Grado</option>
-                                                </optgroup>
-                                            </select>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="container-fluid mt-4 mb-4">
-                                    <div class="row m-0">
-                                        <div class="col-12 p-3" style="background-color: #181e4e; color: #ffffff; display: flex; align-items: center; justify-content: center; border-radius: 8px 8px 8px 8px;">
-                                            <h4 class="m-0 font-weight-bold" style="letter-spacing: 1px;">
-                                                SEZIONE I: PROVE DI PRIMO LIVELLO (AUTOMATIZZAZIONE)
-                                            </h4>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                                    PROVA A: LETTURA DI NON-PAROLE
-                                </h2>
-                                
-                                <div class="container-fluid mt-1 mb-4">
-                                    <!-- Header Row (5 Columns, Read-Only) -->
-                                
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            PARAMETRO RILEVATO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            DATO GREZZO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-co">CO</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-ra">RA</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-rii">RII</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Data Row (5 Columns, Editable) -->
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Accuratezza (N° errori)
-                                        </div>
-                                    
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input id="prova_a_1" type="number" 
-                                                                class="form-control text-center" 
-                                                                placeholder="0 - 15" 
-                                                                min="0" 
-                                                                step="1",
-                                                                max="15" 
-                                                                required 
-                                                                style="width: 80px; font-size: 0.85rem;"
-                                                                aria-label="Valore"
-                                                                name="valore_input">
-                                        </div>
-                                    
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            0 - 2
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            3
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &ge; 4
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Velocità (Tempo totale)
-                                        </div>
-
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input id="prova_a_2" type="number" 
-                                                                class="form-control text-center no-spinner" 
-                                                                placeholder="0.0" 
-                                                                min="0" 
-                                                                step="0.1" 
-                                                                required 
-                                                                style="width: 120px; font-size: 0.85rem;"
-                                                                aria-label="Secondi">
-                                        </div>
-
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &le; 2.4s
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            2.5s - 3.4s
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &ge; 3.5
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-
-                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                                    PROVA B: DETTATO ORTOGRAFICO
-                                </h2>
-                        
-                                <div class="container-fluid mt-1 mb-4">
-                                    <!-- Header Row (5 Columns, Read-Only) -->
-                                
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            PARAMETRO RILEVATO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            DATO GREZZO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-co">CO</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-ra">RA</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-rii">RII</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Data Row (5 Columns, Editable) -->
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Errori Ortografici Totali
-                                        </div>
-                            
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input id="prova_b_1" type="number" 
-                                                                class="form-control text-center" 
-                                                                placeholder="0 - 73" 
-                                                                min="0" 
-                                                                step="1",
-                                                                max="73" 
-                                                                required 
-                                                                style="width: 80px; font-size: 0.85rem;"
-                                                                aria-label="Valore"
-                                                                name="valore_input">
-                                        </div>
-
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            0 - 4
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            5 - 7
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &ge; 8
                                         </div>
                                     </div>
 
                                 </div>
 
-                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                                    PROVA C: LETTURA E COMPRENSIONE DEL TESTO
-                                </h2>
-                        
-                                <div class="container-fluid mt-1 mb-4">
-                                    <!-- Header Row (5 Columns, Read-Only) -->
-                                
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            PARAMETRO RILEVATO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            DATO GREZZO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-co">CO</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-ra">RA</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-rii">RII</span>
-                                        </div>
-                                    </div>
 
-                                    <!-- Data Row (5 Columns, Editable) -->
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Risposte Corrette
-                                        </div>
-
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input id="prova_c_1" type="number" 
-                                                                class="form-control text-center" 
-                                                                placeholder="0 - 3" 
-                                                                min="0" 
-                                                                step="1",
-                                                                max="3" 
-                                                                required 
-                                                                style="width: 80px; font-size: 0.85rem;"
-                                                                aria-label="Valore"
-                                                                name="valore_input">
-                                        </div>
-
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        3 Risposte
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        2 Risposte
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        &le; 1 Risposte
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                                    PROVA D: CALCOLO E COGNIZIONE NUMERICA
-                                </h2>
-                                
-                                <h5 class="mb-3" style="font-size: 1.0rem; font-weight:600">1. Dettato di Numeri (Sintassi)</h5>
-
-                                <div class="container-fluid mt-1 mb-4">
-                                    <!-- Header Row (5 Columns, Read-Only) -->
-                                
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            PARAMETRO RILEVATO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            DATO GREZZO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-co">CO</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-rii">RII</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Data Row (5 Columns, Editable) -->
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Risposte Corrette
-                                        </div>
-
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input id="prova_d_1" type="number" 
-                                                                class="form-control text-center" 
-                                                                placeholder="0 - 4" 
-                                                                min="0" 
-                                                                step="1",
-                                                                max="4" 
-                                                                required 
-                                                                style="width: 80px; font-size: 0.85rem;"
-                                                                aria-label="Valore"
-                                                                name="valore_input">
-                                        </div>
-
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        0 Errori
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        &ge; 1 Errore
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <h5 class="mb-3" style="font-size: 1.0rem; font-weight:600">2. Calcolo Mentale Rapido e Frazioni</h5>
-
-                                <div class="container-fluid mt-1 mb-4">
-                                    <!-- Header Row (5 Columns, Read-Only) -->
-                                
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            SUB-PROVA
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            PUNTEGGIO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-co">CO</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-ra">RA</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-rii">RII</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Data Row (5 Columns, Editable) -->
-                                <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        Fatti Numerici / Calcolo Rapido
-                                        </div>
-                            
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input id="prova_d_2" type="number" 
-                                                                class="form-control text-center" 
-                                                                placeholder="0 - 4" 
-                                                                min="0" 
-                                                                step="1",
-                                                                max="4" 
-                                                                required 
-                                                                style="width: 80px; font-size: 0.85rem;"
-                                                                aria-label="Valore"
-                                                                name="valore_input">
-                                        </div>
-
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            4
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            3
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &le; 2
-                                        </div>
-                                    </div>
-
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Grandezza Frazionaria
-                                        </div>
-                                        
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                            <input id="prova_d_3" type="number" 
-                                                                class="form-control text-center" 
-                                                                placeholder="0 - 2" 
-                                                                min="0" 
-                                                                step="1",
-                                                                max="2" 
-                                                                required 
-                                                                style="width: 80px; font-size: 0.85rem;"
-                                                                aria-label="Valore"
-                                                                name="valore_input">
-                                        </div>
-
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            2
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            —
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &le; 1
-                                        </div>
-                                    </div>
-                                    
-                                </div>
-
-                                <div class="container-fluid mt-4 mb-4">
-                                    <div class="row m-0">
-                                        <div class="col-12 p-3" style="background-color: #181e4e; color: #ffffff; display: flex; align-items: center; justify-content: center; border-radius: 8px 8px 8px 8px;">
-                                            <h4 class="m-0 font-weight-bold" style="letter-spacing: 1px;">
-                                            SEZIONE II: PROVE DI SECONDO LIVELLO (PROCESSI COGNITIVI)
-                                            </h4>
-                                        </div>
-                                    </div>
-                                </div>
-            
-                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                                    PROVA E: DECISIONE LESSICALE ORTOGRAFICA
-                                </h2>
-
-                                <div class="container-fluid mt-1 mb-4">
-                                    <!-- Header Row (5 Columns, Read-Only) -->
-                                
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            PARAMETRO RILEVATO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            DATO GREZZO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-co">CO</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-ra">RA</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-rii">RII</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Data Row (5 Columns, Editable) -->
-                                <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Errori di Precisione
-                                        </div>
-                                        
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                        <input id="prova_e_1" type="number" 
-                                                                class="form-control text-center" 
-                                                                placeholder="0 - 6" 
-                                                                min="0" 
-                                                                step="1",
-                                                                max="6" 
-                                                                required 
-                                                                style="width: 80px; font-size: 0.85rem;"
-                                                                aria-label="Valore"
-                                                                name="valore_input">
-                                        </div>
-
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            0
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            1
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &ge; 2
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                                PROVA F: MEMORIA DI LAVORO (DIGIT SPAN INVERSO)
-                                </h2>
-                            
-                                <div class="container-fluid mt-1 mb-4">
-                                    <!-- Header Row (5 Columns, Read-Only) -->
-                                
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            PARAMETRO RILEVATO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            DATO GREZZO
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-co">CO</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-ra">RA</span>
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        <span class="badge-rii">RII</span>
-                                        </div>
-                                    </div>
-
-                                    <!-- Data Row (5 Columns, Editable) -->
-                                <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Capacità Working Memory
-                                        </div>
-                                        
-                                        <div class="col p-2 border-right d-flex align-items-center justify-content-center">
-                                        <input id="prova_f_1" type="number" 
-                                                                class="form-control text-center" 
-                                                                placeholder="0 - 4" 
-                                                                min="0" 
-                                                                step="1",
-                                                                max="4" 
-                                                                required 
-                                                                style="width: 80px; font-size: 0.85rem;"
-                                                                aria-label="Valore"
-                                                                name="valore_input">
-                                        </div>
-
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &ge; 4
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            3
-                                        </div>
-                                        <div class="col p-2 font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            &le; 2
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                                <h2 class="pt-section-title" style="border-bottom: 4px solid #4ba37f; padding-bottom: 24px; display: inline-block; width: 100%;">
-                                    PROVA G: PROBLEM SOLVING ARITMETICO GUIDATO
-                                </h2>
-                            
-                                <div class="container-fluid mt-1 mb-4">
-                                    <!-- Header Row (5 Columns, Read-Only) -->
-                                
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            COMPONENTE LOGICA MONITORATA
-                                        </div>
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        INDICATORI QUALITATIVI E CLINICI (CONSENSUS)
-                                        </div>
-                                    </div>
-
-                                    <!-- Data Row (5 Columns, Editable) -->
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            Isolamento dei Dati Rilevanti
-                                        </div>
-
-                                        <!-- Another select reusing the same behavior, zero extra code needed -->
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            <select id="CoRiiSelect1" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
-                                                <option value="" disabled selected hidden>Seleziona...</option>
-                                                 <option value="CO">CO</option>
-                                                 <option value="RII">RII</option>
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                    
-                                    <div class="row m-0 border" style="background-color: #f8f9fa; border-color: #dee2e6; min-height: 50px;">
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                        Risoluzione e Algoritmo
-                                        </div>
-                                      
-                                        <!-- Another select reusing the same behavior, zero extra code needed -->
-                                        <div class="col p-2 border-right font-weight-bold text-dark d-flex align-items-center justify-content-center" style="font-size: 0.85rem;">
-                                            <select id="CoRiiSelect2" class="form-control arrow-select" required style="height: 40px; font-size: 1rem; border-radius: 6px;">
-                                                <option value="" disabled selected hidden>Seleziona...</option>
-                                                 <option value="CO">CO</option>
-                                                 <option value="RII">RII</option>
-                                            </select>
-                                        </div>
-
-                                    </div>
-                                    
-                                </div>
-
-                            </article>
-
-                        </div>
                     </div>
-
                 </div>
-
             </div>
-        </div>
-    </div>
-</div>
+
+
 
                         </div>
                     </div>
@@ -1439,9 +823,9 @@
                 window.calculateAgeWithMonths = calculateAgeWithMonths;
 
                 // Make the variable globally available from the start
-                window.assessments = [];
+                window.terapies = [];
                 window.uniquePatientId;
-                window.assessmentId;
+                window.therapyId;
                 window.fullNameNoPrefix;
 
         </script>
@@ -1529,9 +913,9 @@
                 return activeId.trim();
             }
 
-           function getValidAssessmentId() {
+           function getValidTherapyId() {
                 // 1. Read the UUID string from localStorage
-                const targetId = localStorage.getItem('selectedAssessmentId');
+                const targetId = localStorage.getItem('selectedTherapyId');
                 // 2. Validate that it exists and isn't empty/null/undefined
                 if (!targetId || targetId === 'null' || targetId === 'undefined' || targetId.trim() === '') {
                     return null;
@@ -1605,7 +989,7 @@
         </script>
 
         <script>
-
+            /*
            function EmptyForm() {
                 // 1. Clear all standard inputs
                 const allInputs = document.querySelectorAll('input');
@@ -1628,11 +1012,11 @@
                 }
                 window.fullNameNoPrefix = null;
             }
-
+            */
         </script>
 
         <script>
-
+            /*
             function confirmRemoveAll() {
                 //    console.log("removal confirmed");
                 
@@ -1665,11 +1049,11 @@
                 // 3. Close the modal
                 $('#confirmClearModal').modal('hide');
             }
-            
+            */
         </script>
 
         <script>
-            
+            /*
             function validateForm()  {
                 // Title check
                 const titleInput = document.getElementById('formTitle');
@@ -1820,10 +1204,10 @@
          //       console.log("Assessment Payload Ready:", newAssessment);
                 return newAssessment;
             }
-
+            */
             // Direct Save Handler (Async)
-            async function submitAssessment() {
-               
+            async function submitTherapy() {
+               /*
                 // Step A: Validate and build assessment payload
                 const newAssessment = validateForm();
                 if (!newAssessment) return; // Validation failed, abort.
@@ -1901,7 +1285,7 @@
                 } catch (err) {
                     console.error("Errore durante il salvataggio:", err);
                 }
-                
+                */
             }
             
     </script>
@@ -1936,7 +1320,7 @@
         }
 
         // -------------------------------------------------------------------
-
+        /*
         function setSelectByText(selectElement, targetText) {
 
             if (!selectElement) return;
@@ -1959,107 +1343,47 @@
                 console.warn(`Option matching "${targetText}" not found.`);
             }
         }
-  
+        */
         // -------------------------------------------------------------------
 
-        function setInputValue(inputElement,value) {
-            if (inputElement) {
-                inputElement.value = value;
-                
-                // Optional: Trigger an 'input' or 'change' event if your app 
-                // has listeners watching for changes on this field
-                inputElement.dispatchEvent(new Event('input', { bubbles: true }));
-            } else {
-                console.warn("Input element #prova_a_1 not found.");
-            }
-        }
-
-        // -------------------------------------------------------------------
-
-        function FillForm(assessmentId,fullNameNoPrefix) {
+        function FillForm(therapyId,fullNameNoPrefix) {
               
-            //   console.log("Looking for assessmentId:", assessmentId);
-            //   console.log("Current window.assessments array:", window.assessments);
+        //    console.log("Looking for therapy:", therapyId);
+        //    console.log("Current window.tyherapies array:", window.therapies);
 
             // Run the search
-            const assessment = window.assessments.find(item => item.uniqueId === assessmentId.trim());
+            const therapy = window.therapies.find(item => item.uniqueId === therapyId.trim());
 
-            //  console.log("Found result:", assessment);
-
+            console.log("Found result:", therapy);
+            
             // Title check
             const titleInput = document.getElementById('formTitle');
             if (titleInput) {
-                titleInput.value = assessment.title || ""; 
+                titleInput.value = therapy.title || ""; 
             }
 
-            // Entitiy check
-            const entityInput = document.getElementById('formEntity');
-            if (entityInput) {
-                entityInput.value = assessment.entityName; 
+            // Timing check
+            const timingnput = document.getElementById('timingTitle');
+            if (timingnput) {
+                timingnput.value = therapy.totalTiming || ""; 
             }
 
-            // Patient name check
-            const nameInput = document.getElementById('formPatientName');
-            if (nameInput) {
-                nameInput.value = fullNameNoPrefix; 
-            }
-
+            // Date check
             const dateInput = document.getElementById('clinicalDate');
             if (dateInput) {
-                dateInput.value = injectFormattedDate(assessment.italian_date); 
+                dateInput.value = therapy.italian_date; 
             }
-
-            // console.log(assessment.education.text);
-
-            const scuolaSelect = document.getElementById('scuolaSelect');
-            setSelectByText(scuolaSelect,assessment.education.text);
-
-            const input1 = document.getElementById('prova_a_1');
-            setInputValue(input1,assessment.prova_a.accuratezza);         
-
-            const input2 = document.getElementById('prova_a_2');
-            setInputValue(input2,assessment.prova_a.velocita);         
-
-            const input3 = document.getElementById('prova_b_1');
-            setInputValue(input3,assessment.prova_b.errori_ortografici_totali);         
-
-            const input4 = document.getElementById('prova_c_1');
-            setInputValue(input4,assessment.prova_c.lettura_e_comprensione_del_testo);         
-
-            const input5 = document.getElementById('prova_d_1');
-            setInputValue(input5,assessment.prova_d.dettato_di_numeri);       
-
-            const input6 = document.getElementById('prova_d_2');
-            setInputValue(input6,assessment.prova_d.fatti_numerici_calcolo_rapido);    
-
-            const input7 = document.getElementById('prova_d_3');
-            setInputValue(input7,assessment.prova_d.grandezza_frazionaria);         
-
-            const input8 = document.getElementById('prova_e_1');
-            setInputValue(input8,assessment.prova_e.errori_di_decisione);         
-
-            const input9 = document.getElementById('prova_f_1');
-            setInputValue(input9,assessment.prova_f.capacità_working_memory);         
-
-            const select1 = document.getElementById('CoRiiSelect1');
-            setSelectByText(select1,assessment.prova_g.isolamento_dei_dati_rilevanti);
-    
-            const select2 = document.getElementById('CoRiiSelect2');
-            setSelectByText(select2,assessment.prova_g.risoluzione_e_algoritmo);
-    
-            // save patient Id
-            window.uniquePatientId=assessment.uniqueId;
-
-      //      console.log("Assessment Index:", assessment.uniqueId);
-
+            
         }
 
 </script>
 
 <script>
 
-    async function RemoveAssessment(assessmentId)
+    
+    async function RemoveTherapy(therapyId)
     {
+    /*
         console.log("remove assessment function");
         
         if (!assessmentId) {
@@ -2137,8 +1461,9 @@
             console.error("Errore durante l'eliminazione:", err);
             alert("Errore durante l'eliminazione dell'assessment.");
         }
+    */
     }
-
+   
 </script>
     
         <!-- Main -->
@@ -2210,18 +1535,19 @@
                     return;
                 }
 
-                const activeAssessmentId = getValidAssessmentId();
+                const activeTherapyId = getValidTherapyId();
 
                 // ✅ Correct validation for a UUID string
-                if (!activeAssessmentId || activeAssessmentId === 'null' || activeAssessmentId === 'undefined' || activeAssessmentId.trim() === '') {
+                if (!activeTherapyId || activeTherapyId === 'null' || activeTherapyId === 'undefined' || activeTherapyId.trim() === '') {
                //     alert("Nessun assessment selezionato. Ritorno alla lista...");
                     window.location.replace("lista_pazienti_6.html");
                     return;
                 }
-
-          //      console.log("Selected Patient Id : ", activePatientId);
-          //      console.log("Selected Assessmnet Id : ", activeAssessmentId);
+                                
+                console.log("Selected Patient Id : ", activePatientId);
+                console.log("Selected Therapy Id : ", activeTherapyId);
         
+                /*
                 // --- Sidebar Assign Assessment Click Handler ---
                 const assignBtn = document.getElementById("assegna-btn");
                 if (assignBtn) {
@@ -2252,6 +1578,7 @@
                 }
 
                 const removeBtn = document.getElementById("elimina-btn");
+                
                 if (removeBtn) {
                     removeBtn.addEventListener("click", function(e) {
                         e.preventDefault();
@@ -2272,7 +1599,7 @@
                         $('#confirmDeleteAssessmentModal').modal('show');
                     });
                 }
-
+                */
                 try {
                    
                     // Esegui la query per il paziente attivo
@@ -2322,15 +1649,15 @@
                     // Fallback sicuro nel caso in cui la colonna sia NULL nel database
                     const patientActivity = patientData.activity || { Assessments: [], Certificates: [], Therapies: [] };
                //     console.log("Activity:", patientActivity);
-                    window.assessments = patientActivity.Assessments || [];
-                    window.assessmentId=activeAssessmentId;
+                    window.therapies = patientActivity.Therapies || [];
+                    window.therapyId=activeTherapyId;
                     window.fullNameNoPrefix=fullNameNoPrefix;
 
             //        console.log("Assessments:", window.assessments);
             
                     // fill form with patient selected assessment
-                    FillForm(window.assessmentId,window.fullNameNoPrefix);
-
+                    FillForm(window.therapyId,window.fullNameNoPrefix);
+                        
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
                 }

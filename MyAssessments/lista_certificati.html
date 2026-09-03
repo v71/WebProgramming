@@ -1522,17 +1522,6 @@
                 }
             });
 
-            $(document).on('click', '#btnAddAssessmentMain', function(e) {
-                e.preventDefault();
-                console.log('Aggiungi Nuovo Certificato button clicked via .on()!');
-
-               // const activePatientId = getValidPatientId();
-               // console.log('Patient Id:', activePatientId);
-
-                // Add your redirection or action logic here
-                window.location.href = 'certificati_add_new.html';
-            });
-
             $('#tableSearchInput').on('keyup input', function() {
                 const searchTerm = $(this).val().toLowerCase().trim();
                 if (searchTerm === '') {

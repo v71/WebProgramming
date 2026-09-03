@@ -773,7 +773,7 @@
                 Azioni
             </div>
             <li class="nav-item fade-on-load">
-                <a class="nav-link nav-link-blue" href="certificato_add_new.html">
+                <a class="nav-link nav-link-blue" href="terapia_add_new_1.html">
                     <i class="fas fa-circle-plus"></i>
                     <span>Nuovo</span>
                 </a>
@@ -1242,8 +1242,10 @@
 
     <!-- Table Pagination & Filtering Script -->
     <script>
-        
+
+        // ---------------------------------------------------------------------------------
         // Global function to initialize or refresh the table with dynamic data
+        
         window.initTableWithData = function(dataSource) 
         {
             const $tableContainer = $('#tableResponsiveContainer');
@@ -1255,9 +1257,7 @@
             let rowsPerPage = 5;
             let totalPages = 1;
             let currentPage = 1;
-            
-            // ---------------------------------------------------------------------------------
-            
+           
             function populateTable(data) {
                   
                 const $tbody = $('#tableBody');
@@ -1284,22 +1284,14 @@
                         let stateIcon = "";
                         let stateColor = "";
 
-                        if (state === "Non Iniziata") {
-                            stateStr = "Non Iniziata";
+                        if (state === "Consegnata") {
+                            stateStr = "Consegnata";
                             stateIcon = "fa-clock";
-                            stateColor = "text-info";
+                            stateColor = "text-warning";
                         } else if (state === "In Corso") {
                             stateStr = "In Corso";
                            stateIcon = "fa-redo-alt";
                             stateColor = "text-primary";
-                        } else if (state === "Sospeso") {
-                            stateStr = "Sospeso";
-                            stateIcon = "fa-pause-circle";
-                            stateColor = "text-warning";
-                        } else if (state === "Interrotto") {
-                            stateStr = "Interrotto";
-                            stateIcon = "fa-exclamation-circle";
-                            stateColor = "text-danger";
                         } else if (state === "Completato") {
                             stateStr = "Completato";
                             stateIcon = "fa-check-circle";
@@ -1492,42 +1484,31 @@
             // Event listeners
 
             $('#tableBody').on('click', 'tr', function(e) {
-                /*
+                
                 if ($(e.target).closest('a, button, input, .dropdown').length) return;
                 
                 if ( window.terapie.length===0) 
                     return;
 
                 const tableIndex = $(this).data('id');
-                const selectedCertificateId = window.terapie[tableIndex].uniqueId;
+                const selectedTherapyId = window.terapie[tableIndex].uniqueId;
                 const selectedPatientId = getValidPatientId();
-                
-                // Save both the patient ID and the specific certificate index to localStorage
 
-                if (selectedPatientId !== undefined && selectedCertificateId !== undefined) {
+                console.log(window.terapie[tableIndex]);
+
+                // Save both the patient ID and the specific therapy index to localStorage
+
+                if (selectedPatientId !== undefined && selectedTherapyId !== undefined) {
                     localStorage.setItem('selectedPatientId', selectedPatientId);
-                    localStorage.setItem('selectedCertificateId', selectedCertificateId);
+                    localStorage.setItem('selectedTherapyId', selectedTherapyId);
                     
                     console.log("PatientId : ",selectedPatientId);
-                    console.log("CertificateId :",selectedCertificateId);
+                    console.log("TherapyId : ",selectedTherapyId);
                     
                     // Optional: Redirect to the editing or detail page
-                    window.location.href = 'certificato_view.html';
+                    window.location.href = 'terapia_view.html';
                 }
-                */
-            });
-
-            $(document).on('click', '#btnAddAssessmentMain', function(e) {
-                /*
-                e.preventDefault();
-                console.log('Aggiungi Nuovo Assessment button clicked via .on()!');
-
-               // const activePatientId = getValidPatientId();
-               // console.log('Patient Id:', activePatientId);
-
-                // Add your redirection or action logic here
-                window.location.href = 'terapie_add_new.html';
-                */
+                
             });
 
             $('#tableSearchInput').on('keyup input', function() {
@@ -1616,11 +1597,12 @@
 
                     window.terapie = patientActivity.Therapies || [];
 
+                    /*                    
                     window.terapie = [
                     {
                         title: "Fisioterapia Motoria",
                         italian_date: "12/08/2026",
-                        state : "Non Iniziata"
+                        state : "Consegnata"
                     },
                     {
                         title: "Terapia Occupazionale",
@@ -1628,23 +1610,13 @@
                         state : "In Corso"
                     },
                     {
-                        title: "Supporto Psicologico",
-                        italian_date: "20/08/2026",
-                        state : "Sospeso"
-                    },
-                    {
-                        title: "Supporto in legno",
-                        italian_date: "20/08/2026",
-                        state : "Interrotto"
-                    },
-                    {
                         title: "Terapia",
                         italian_date: "20/08/2026",
                         state : "Completato"
                     }
                 ];
-
-                 //   console.log("terapie:", window.terapie);
+                    */
+                    console.log("terapie:", window.terapie);
 
                     // 3. Trigger initial table load if function exists
                     if (typeof initTableWithData === 'function') {

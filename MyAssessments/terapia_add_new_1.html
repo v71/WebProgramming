@@ -1053,31 +1053,34 @@
 
                                     <div class="container-fluid">
                                         <div class="row border m-0">
-                                           
-                                           <div class="col-6 p-2 border-right d-flex align-items-center justify-content-center">
+                                            
+                                            <!-- Title Input (Full width on mobile, half width on desktop) -->
+                                            <div class="col-12 col-md-6 p-2 border-bottom border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
                                                 <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Titolo Fascicolo" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
-                                           </div>
+                                            </div>
 
-                                            <div class="col-4 p-2 border-right d-flex align-items-center justify-content-center">
+                                            <!-- Timing Input (Full width on mobile, 4 columns on desktop) -->
+                                            <div class="col-12 col-md-4 p-2 border-bottom border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
                                                 <input type="text" id="timingTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Durata in minuti" readonly required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease; cursor: default;">
                                             </div>
 
-                                           <div class="col-2 p-2 border-right">
-                                               <div id="dateGroup" class="input-group" style="width: 100%;">
-                                                  <input type="text" id="clinicalDate" class="form-control shadow-none bg-white" readonly style="height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; cursor: default; border-right: none !important;">
-                                                   <div class="input-group-append">
-                                                       <span class="input-group-text bg-transparent text-muted" style="height: 40px; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-left: none !important; border-radius: 0 6px 6px 0;">
-                                                           <i class="far fa-calendar"></i>
-                                                       </span>
-                                                   </div>
-                                               </div>
-                                           </div>
+                                            <!-- Date Picker (Full width on mobile, 2 columns on desktop) -->
+                                            <div class="col-12 col-md-2 p-2">
+                                                <div id="dateGroup" class="input-group" style="width: 100%;">
+                                                    <input type="text" id="clinicalDate" class="form-control shadow-none bg-white" readonly style="height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; cursor: default; border-right: none !important;">
+                                                    <div class="input-group-append">
+                                                        <span class="input-group-text bg-transparent text-muted" style="height: 40px; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-left: none !important; border-radius: 0 6px 6px 0;">
+                                                            <i class="far fa-calendar"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                                           <script>
-                                               const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-                                               const currentDate = new Date().toLocaleDateString('it-IT', options);
-                                               document.getElementById('clinicalDate').value = currentDate;
-                                           </script>
+                                            <script>
+                                                const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                                                const currentDate = new Date().toLocaleDateString('it-IT', options);
+                                                document.getElementById('clinicalDate').value = currentDate;
+                                            </script>
 
                                         </div>
                                     </div>
@@ -1086,6 +1089,7 @@
                                         <div id="sb-sortable-list" class="sb-horizontal-scroll-container">
                                         </div>
                                     </div>
+
                                 </div>
 
                                 <!-- DSA SECTION -->
@@ -1490,7 +1494,8 @@
                     badgeColor: "badge-success", // Classe Bootstrap per il verde
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 10
+                    timing : 10,
+                    metadata: {}
                 },
                 {
                     title: "DSA A2",
@@ -1499,8 +1504,8 @@
                     badgeColor: "badge-success", // Classe Bootstrap per il verde
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 20
-         
+                    timing : 20,
+                    metadata: {}
                 },
                 {
                     title: "DSA A3",
@@ -1509,7 +1514,8 @@
                     badgeColor: "badge-success", // Classe Bootstrap per il verde
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 30
+                    timing : 30,
+                    metadata: {}
                 },
                 {
                     title: "DSA A4",
@@ -1518,7 +1524,8 @@
                     badgeColor: "badge-success", // Classe Bootstrap per il verde
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 40
+                    timing : 40,
+                    metadata: {}
                 },
             ];
 
@@ -1530,7 +1537,8 @@
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 10
+                    timing : 10,
+                    metadata: {}
                 },
                 {
                     title: "DSA B2",
@@ -1539,7 +1547,8 @@
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 20
+                    timing : 20,
+                    metadata: {}
                 },
                 {
                     title: "DSA B3",
@@ -1548,7 +1557,8 @@
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 30
+                    timing : 30,
+                    metadata: {}
                 },
                 {
                     title: "DSA B4",
@@ -1557,7 +1567,8 @@
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 40
+                    timing : 40,
+                    metadata: {}
                 },
 
             ];
@@ -1570,7 +1581,8 @@
                     badgeColor: "badge-warning", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 10
+                    timing : 10,
+                    metadata: {}
                 },
                 {
                     title: "DSA C2",
@@ -1579,7 +1591,8 @@
                     badgeColor: "badge-warning", // Classe Bootstrap per il blu
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 20
+                    timing : 20,
+                    metadata: {}
                 },
                 {
                     title: "DSA C3",
@@ -1588,7 +1601,8 @@
                     badgeColor: "badge-warning", // Classe Bootstrap per il blu
                     description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 30
+                    timing : 30,
+                    metadata: {}
                 },
 
             ];
@@ -1601,7 +1615,8 @@
                     badgeColor: "badge-info", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 10
+                    timing : 10,
+                    metadata: {}
                 },
                 {
                     title: "DSA D2",
@@ -1610,7 +1625,8 @@
                     badgeColor: "badge-info", // Classe Bootstrap per il blu
                     description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg",
-                    timing : 20
+                    timing : 20,
+                    metadata: {}
                 },
                 
             ];
@@ -1627,7 +1643,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par adhd1 1.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 10
+                        timing : 10,
+                        metadata: {}
                     },
                     {
                         title: "ADHD1 A2",
@@ -1636,7 +1653,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par adhd1 2.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 20
+                        timing : 20,
+                        metadata: {}
                     },
                     {
                         title: "ADHD1 A3",
@@ -1645,7 +1663,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par adhd1 3.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 15
+                        timing : 15,
+                        metadata: {}
                     },
                     {
                         title: "ADHD1 A4",
@@ -1654,7 +1673,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par adhd1 4.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 25
+                        timing : 25,
+                        metadata: {}
                     },
 
                 ];
@@ -1667,7 +1687,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par adhd2 1.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 10
+                        timing : 10,
+                        metadata: {}
                     },
                     {
                         title: "ADHD2 A2",
@@ -1676,7 +1697,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par adhd2 2.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 20
+                        timing : 20,
+                        metadata: {}
                     },
                     {
                         title: "ADHD2 A3",
@@ -1685,7 +1707,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par adhd2 3.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 15
+                        timing : 15,
+                        metadata: {}
                     },
                     {
                         title: "ADHD2 A4",
@@ -1694,7 +1717,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par adhd2 4.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 25
+                        timing : 25,
+                        metadata: {}
                     },
 
                 ];
@@ -1711,7 +1735,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome ipoattentiva1 1.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 10
+                        timing : 10,
+                        metadata: {}
                     },
                     {
                         title: "IPOATTENTIVO A2",
@@ -1720,7 +1745,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome ipoattentiva1 2.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 20
+                        timing : 20,
+                        metadata: {}
                     },
                     {
                         title: "IPOATTENTIVO A3",
@@ -1729,7 +1755,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome ipoattentiva1 3.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 15
+                        timing : 15,
+                        metadata: {}
                     },
                     {
                         title: "IPOATTENTIVO A4",
@@ -1738,7 +1765,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome ipoattentiva1 4.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 25
+                        timing : 25,
+                        metadata: {}
                     },
 
                 ];
@@ -1751,7 +1779,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome ipoattentiva2 1.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 10
+                        timing : 10,
+                        metadata: {}
                     },
                     {
                         title: "IPOATTENTIVO2 A2",
@@ -1760,7 +1789,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome ipoattentiva2 2.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 20
+                        timing : 20,
+                        metadata: {}
                     },
                     {
                         title: "IPOATTENTIVO2 A3",
@@ -1769,7 +1799,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome ipoattentiva2 3.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 15
+                        timing : 15,
+                        metadata: {}
                     },
                     {
                         title: "IPOATTENTIVO2 A4",
@@ -1778,7 +1809,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome ipoattentiva2 4.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 25
+                        timing : 25,
+                        metadata: {}
                     },
 
                 ];
@@ -1795,7 +1827,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome iperattiva1 1.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 10
+                        timing : 10,
+                        metadata: {}
                     },
                     {
                         title: "IPERATTIVO1 A2",
@@ -1804,7 +1837,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome iperattiva1 2.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 20
+                        timing : 20,
+                        metadata: {}
                     },
                     {
                         title: "IPERATTIVO1 A3",
@@ -1813,7 +1847,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome iperattiva1 3.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 15
+                        timing : 15,
+                        metadata: {}
                     },
                     {
                         title: "IPERATTIVO1 A4",
@@ -1822,7 +1857,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome iperattiva1 4.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 25
+                        timing : 25,
+                        metadata: {}
                     },
 
                 ];
@@ -1835,7 +1871,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome iperattiva2 1.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 10
+                        timing : 10,
+                        metadata: {}
                     },
                     {
                         title: "IPERATTIVO2 A2",
@@ -1844,7 +1881,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome iperattiva2 2.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 20
+                        timing : 20,
+                        metadata: {}
                     },
                     {
                         title: "IPERATTIVO2 A3",
@@ -1853,7 +1891,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome iperattiva2 3.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 15
+                        timing : 15,
+                        metadata: {}
                     },
                     {
                         title: "IPERATTIVO2 A4",
@@ -1862,7 +1901,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome iperattiva2 4.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 25
+                        timing : 25,
+                        metadata: {}
                     },
 
                 ];
@@ -1879,7 +1919,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome combinata1 1.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 10
+                        timing : 10,
+                        metadata: {}
                     },
                     {
                         title: "COMBINATO1 A2",
@@ -1888,7 +1929,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome combinata1 2.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 20
+                        timing : 20,
+                        metadata: {}
                     },
                     {
                         title: "COMBINATO1 A3",
@@ -1897,7 +1939,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome combinata1 3.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 15
+                        timing : 15,
+                        metadata: {}
                     },
                     {
                         title: "COMBINATO1 A4",
@@ -1906,7 +1949,8 @@
                         badgeColor: "badge-success", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome combinata1 4.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 25
+                        timing : 25,
+                        metadata: {}
                     },
 
                 ];
@@ -1919,7 +1963,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome combinata2 1.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 10
+                        timing : 10,
+                        metadata: {}
                     },
                     {
                         title: "COMBINATO2 A2",
@@ -1928,7 +1973,9 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome combinata2 2.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 20
+                        timing : 20,
+                        metadata: {}
+
                     },
                     {
                         title: "COMBINATO2 A3",
@@ -1937,7 +1984,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome combinata2 3.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 15
+                        timing : 15,
+                        metadata: {}
                     },
                     {
                         title: "COMBINATO2 A4",
@@ -1946,7 +1994,8 @@
                         badgeColor: "badge-primary", // Classe Bootstrap per il verde
                         description: "Modulo di potenziamento par sindrome combinata2 4.",
                         image: "assets/img/place-holder.jpg",
-                        timing : 25
+                        timing : 25,
+                        metadata: {}
                     },
 
                 ];
@@ -2080,7 +2129,9 @@
 
     <script>
 
+        // --------------------------------------------------------------------------------------
         // Update selection header
+
         function updateSelectionHeader() {
             const list = document.getElementById('sb-sortable-list');
             
@@ -2136,7 +2187,9 @@
             }
 
         }
-        
+
+        // --------------------------------------------------------------------------------------
+
         function updateTimingTotal() {
             let totalMinutes = 0;
             
@@ -2165,6 +2218,8 @@
             }
         }
 
+        // --------------------------------------------------------------------------------------
+
         function handleCardClick(addBtn) {
             // 1. Data Logic
             const item = JSON.parse(addBtn.getAttribute('data-item'));
@@ -2190,7 +2245,9 @@
 
         }
 
+        // --------------------------------------------------------------------------------------
         // remove protocol
+
         function removeProtocol(trashBtn, title) {
             // 1. Remove from array
             selectedProtocols = selectedProtocols.filter(p => p.title !== title);
@@ -2235,6 +2292,8 @@
     </script>
 
     <script>
+
+        // --------------------------------------------------------------------------------------
 
         function confirmRemoveAll() 
         {
@@ -2300,6 +2359,8 @@
 
     <script>
 
+          // --------------------------------------------------------------------------------------
+            
           function validateForm() {
 
                 // Title check
@@ -2351,25 +2412,83 @@
                     uniqueId: crypto.randomUUID(),
                     timestamp: new Date().toISOString(),
                     title: titleInput.value.trim(),
-                    state:"Non Iniziata",
+                    state:"Consegnata",
                     evaluationDate: dateInput.value,
                     totalTiming: totalTimeInput.value,
-                    italian_date : new Date(dateInput.value).toLocaleDateString('it-IT'),
+                    italian_date : dateInput.value,        // date is already trasnformed into locale date
                     protocols: [...selectedProtocols]
                 };
 
                 return newTherapy;
             }
 
+            // --------------------------------------------------------------------------------------
+
             async function submitModule()
             {
-                // Step A: Validate and build certificate payload
+                // Step A: Validate and build therapy payload
                 const newTherapy = validateForm();
                 if (!newTherapy) return; // Validation failed, browser popup shown, abort.
 
-                console.log("Certificate Payload Ready:", newTherapy);
+                console.log("Therapy Payload Ready:", newTherapy);
 
-            
+                // Step B: Get active patient ID
+                const activePatientId = getValidPatientId();
+                if (!activePatientId) {
+                    alert("Nessun paziente attivo trovato!");
+                    return;
+                }
+        
+                try {
+             
+                    console.log("saving");
+                        
+                    // Use consistent Supabase client reference
+                    const supabaseClient = window.supabase;
+
+                    // Step C: Fetch existing patient activity column
+                    const { data: patient, error: fetchError } = await supabaseClient
+                        .from("Clients")
+                        .select("activity")
+                        .eq("id", activePatientId)
+                        .single();
+
+                    if (fetchError) throw fetchError;
+
+                    // Step D: Prepare updated structure safely
+                    // Ensure we clone/initialize a fresh object if patient.activity is null/undefined
+                    let currentActivity = patient?.activity 
+                        ? JSON.parse(JSON.stringify(patient.activity)) 
+                        : { Assessments: [], Certificates: [], Therapies: [] };
+
+                    if (!Array.isArray(currentActivity.Therapies)) {
+                        currentActivity.Therapies = [];
+                    }
+
+                    console.log(currentActivity);
+
+                    // Prepend new assessment to top of array
+                    currentActivity.Therapies.unshift(newTherapy);
+                    
+                    // Step E: Save back to Supabase (using supabaseClient)
+                    const { data,error: updateError } = await supabaseClient
+                        .from("Clients")
+                        .update({ activity: currentActivity })
+                        .eq("id", activePatientId)
+                        .select(); // <--- Adding .select() returns the updated row to verify
+                
+                    console.log("Updated row result:", data);
+
+                    if (updateError) throw updateError;
+
+                    console.log("Saved successfully!");
+                    
+                    // Redirect back to the patient list
+                    window.location.href = 'lista_terapie.html';
+                    
+                } catch (err) {
+                    console.error("Errore durante il salvataggio:", err);
+                }
             }
 
     </script>
@@ -2459,6 +2578,7 @@
 
             // ---------------------------------------------------------------------------------
             // Updates the age status badge of a patient with unified center alignments.
+
             function updateAgeBadge(badgeElement, status) {
                 if (!badgeElement) return;
 
