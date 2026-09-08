@@ -408,25 +408,6 @@
 
 </style>
 
-<style>
-
-.arrow-select {
-    padding-right: 2.75rem;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    background-repeat: no-repeat;
-    background-position: right 0.65rem center;
-    background-size: 22px;
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3e%3cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3e%3c/svg%3e");
-}
-
-.arrow-select.open {
-    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666'%3e%3cpath fill-rule='evenodd' d='M14.77 12.79a.75.75 0 01-1.06-.02L10 8.81l-3.71 3.96a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z' clip-rule='evenodd'/%3e%3c/svg%3e");
-}
-
-</style>
-
 
     <style>
         
@@ -1055,12 +1036,12 @@
                                         <div class="row border m-0">
                                             
                                             <!-- Title Input (Full width on mobile, half width on desktop) -->
-                                            <div class="col-12 col-md-6 p-2 border-bottom border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
+                                            <div class="col-12 col-md-6 p-2 border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
                                                 <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Titolo Fascicolo" required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease;">
                                             </div>
 
                                             <!-- Timing Input (Full width on mobile, 4 columns on desktop) -->
-                                            <div class="col-12 col-md-4 p-2 border-bottom border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
+                                            <div class="col-12 col-md-4 p-2 border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
                                                 <input type="text" id="timingTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Durata in minuti" readonly required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease; cursor: default;">
                                             </div>
 
@@ -1083,6 +1064,13 @@
                                             </script>
 
                                         </div>
+
+                                       <div class="mb-4 col-12 col-md-12 p-2 border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center flex-wrap w-100" style="gap: 8px;">
+                                            <button type="button" class="btn btn-sm btn-outline-success status-debug-btn" data-active-class="btn-success" onclick="setDebugStatus(this)">Consegnata</button>
+                                            <button type="button" class="btn btn-sm btn-outline-primary status-debug-btn" data-active-class="btn-primary" onclick="setDebugStatus(this)">Avviata</button>
+                                            <button type="button" class="btn btn-sm btn-outline-warning status-debug-btn" data-active-class="btn-warning" onclick="setDebugStatus(this)">Completata</button>
+                                        </div>
+
                                     </div>
 
                                     <div id="selection-header-1" class="card-body pt-0 pb-3 px-3">
@@ -1191,8 +1179,6 @@
                                     </div>
 
                                 </div>
-
-
 
                                 <!-- IPOATTENTIVE SECTION -->
                                 <div class="card shadow-sm mb-3" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
@@ -1337,12 +1323,6 @@
 
                                 </div>
 
-
-
-
-
-
-
                         </div>
                     </div>
                 </div>
@@ -1477,12 +1457,12 @@
 
         </script>
 
-           <script>
+        <script>
 
-                // Global array to store selections
-                let selectedProtocols = [];
+            // Global array to store selections
+            let selectedProtocols = [];
 
-            </script>
+        </script>
 
            <script>
 
@@ -2048,84 +2028,125 @@
 
         <script>
 
-        // The populateGrid function dynamically builds and renders a list of cards inside your grid container based on a provided array of data (dataArray).
-        // What selectedProtocols does:
-        // selectedProtocols acts as the master state tracker array for items the user has already chosen or added. Within this function, 
-        // it serves three critical roles:
-        //    Checking State (isSelected): It checks the global array to see if the current item's 
-        //    title already exists inside selectedProtocols (currentList.some(...)), letting the
-        //    UI know whether this specific item is currently active/selected.
-        //    
-        //    Conditional Styling: If an item is found in selectedProtocols, the function adds a 
-        //    CSS class (selected) to the card and disables the "Aggiungi" (Add) button so users cannot add the same item twice.
-        //    
-        //    Button Toggle & Actions: It dynamically adjusts the UI controls—showing the "Aggiunto" 
-        //    (Added) status and enabling the trash/remove button only for items that live inside selectedProtocols.
+            // The populateGrid function dynamically builds and renders a list of cards inside your grid container based on a provided array of data (dataArray).
+            // What selectedProtocols does:
+            // selectedProtocols acts as the master state tracker array for items the user has already chosen or added. Within this function, 
+            // it serves three critical roles:
+            //    Checking State (isSelected): It checks the global array to see if the current item's 
+            //    title already exists inside selectedProtocols (currentList.some(...)), letting the
+            //    UI know whether this specific item is currently active/selected.
+            //    
+            //    Conditional Styling: If an item is found in selectedProtocols, the function adds a 
+            //    CSS class (selected) to the card and disables the "Aggiungi" (Add) button so users cannot add the same item twice.
+            //    
+            //    Button Toggle & Actions: It dynamically adjusts the UI controls—showing the "Aggiunto" 
+            //    (Added) status and enabling the trash/remove button only for items that live inside selectedProtocols.
 
-        function populateGrid(containerSelector, dataArray) {
-            const container = document.querySelector(containerSelector);
-            if (!container) return; 
+            function populateGrid(containerSelector, dataArray) {
+                const container = document.querySelector(containerSelector);
+                if (!container) return; 
 
-            container.innerHTML = ''; 
+                container.innerHTML = ''; 
 
-            dataArray.forEach(item => {
-                // Safe check for selectedProtocols list
-                const currentList = (typeof selectedProtocols !== 'undefined') ? selectedProtocols : [];
-                const isSelected = currentList.some(p => p.title === item.title);
-                
-                // Use the standard card classes but add 'selected' conditionally
-                const cardClass = `card shadow-sm border-0 h-100 ${isSelected ? 'selected' : ''}`;
-                
-                // Define button text, state, and styles based on selection
-                const btnText = isSelected ? '<i class="fas fa-check-circle text-success"></i> Aggiunto' : '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
-                const btnStyle = isSelected ? 'pointer-events: none; opacity: 0.6;' : '';
+                dataArray.forEach(item => {
+                    // Safe check for selectedProtocols list
+                    const currentList = (typeof selectedProtocols !== 'undefined') ? selectedProtocols : [];
+                    const isSelected = currentList.some(p => p.title === item.title);
+                    
+                    // Use the standard card classes but add 'selected' conditionally
+                    const cardClass = `card shadow-sm border-0 h-100 ${isSelected ? 'selected' : ''}`;
+                    
+                    // Define button text, state, and styles based on selection
+                    const btnText = isSelected ? '<i class="fas fa-check-circle text-success"></i> Aggiunto' : '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
+                    const btnStyle = isSelected ? 'pointer-events: none; opacity: 0.6;' : '';
 
-                // We combine the standard image element with our new checkmark overlay element
-                container.innerHTML += `
-                    <div class="${cardClass}" style="flex: 0 0 calc(33.333% - 14px); border-radius: 6px; overflow: hidden; margin-bottom: 20px;">
-                        
-                        <div class="selection-overlay-icon">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div style="height: 140px; overflow: hidden; border-radius: 12px 12px 0 0;">
-                            <img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                        </div>
-                        
-                        <div class="card-body p-4">
-                            <h5 class="card-title text-dark mb-2">${item.title}</h5>
-                            <div class="mb-2">
-                                <span class="badge ${item.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
-                                        ${item.badge}
-                                </span>
-                            </div>
-              
-                            <p class="card-text text-muted mb-3" style="font-size: 0.9rem;">${item.description}</p>
+                    // Extract timing (supporting both timing or totalTiming properties)
+                    const timingValue = item.timing;
+
+                    // We combine the standard image element with our new checkmark overlay element
+                    container.innerHTML += `
+                        <div class="${cardClass}" style="flex: 0 0 calc(33.333% - 14px); border-radius: 6px; overflow: hidden; margin-bottom: 20px;">
                             
-                            <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
-                                <a href="#" class="inner-action-btn demo-btn"><i class="fas fa-play text-primary"></i> Demo</a>
-                               
-                                 <a href="#" 
-                                    class="inner-action-btn add-btn" 
-                                    onclick="event.preventDefault(); handleCardClick(this)"
-                                    style="${btnStyle}"
-                                    data-item='${JSON.stringify(item).replace(/'/g, "&quot;")}'>
-                                    ${btnText}
-                                </a>
+                            <div class="selection-overlay-icon">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div style="height: 140px; overflow: hidden; border-radius: 12px 12px 0 0;">
+                                <img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                            </div>
+                            
+                            <div class="card-body p-4">
+                                <!-- Flex container putting text details on the left and timing on the right -->
+                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                    <div style="flex: 1; min-width: 0; padding-right: 15px;">
+                                        <h5 class="card-title text-dark mb-2">${item.title}</h5>
+                                        <div class="mb-2">
+                                            <span class="badge ${item.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
+                                                ${item.badge}
+                                            </span>
+                                        </div>
+                                        <p class="card-text text-muted mb-1" style="font-size: 0.9rem;">${item.description}</p>
 
-                                <a href="#" class="inner-action-btn trash-btn ${isSelected ? '' : 'btn-muted'}"
-                                    onclick="event.preventDefault(); removeProtocol(this, '${item.title}')">
-                                    <i class="fas fa-trash text-danger"></i> Rimuovi
-                                </a>
+                                        <div class="text-left text-nowrap">
+                                            <h5 class="card-title text-dark mb-0">  <i class="fas fa-clock text-success" style="font-size: 1.2rem;"></i> Durata :
+                                                 <span class="font-weight-bold text-dark" style="font-size: 1.5rem;">${timingValue} <span style="font-size: 0.9rem; font-weight: normal;" class="text-dark">min</span></span>
+                                            </h5>
+                                        </div>
+
+                                    </div>
+                                    
+                                    <!--<div class="text-right text-nowrap">
+                                        <i class="fas fa-clock text-success" style="font-size: 1.2rem;"></i>
+                                        <span class="font-weight-bold text-dark" style="font-size: 1.5rem;">${timingValue} <span style="font-size: 0.9rem; font-weight: normal;" class="text-muted">min</span></span>
+                                    </div>-->
+
+                                </div>
+
+                                <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
+                                <a href="#" class="inner-action-btn demo-btn"><i class="fas fa-play text-primary"></i> Demo</a>
+                                <a href="#" 
+                                        class="inner-action-btn add-btn" 
+                                        onclick="event.preventDefault(); handleCardClick(this)"
+                                        style="${btnStyle}"
+                                        data-item='${JSON.stringify(item).replace(/'/g, "&quot;")}'>
+                                        ${btnText}
+                                    </a>
+
+                                    <a href="#" class="inner-action-btn trash-btn ${isSelected ? '' : 'btn-muted'}"
+                                        onclick="event.preventDefault(); removeProtocol(this, '${item.title}')">
+                                        <i class="fas fa-trash text-danger"></i> Rimuovi
+                                    </a>
+                                    
+                                </div>
 
                             </div>
-
                         </div>
-                    </div>
-                `;
-            });
-        }
+                    `;
+                });
+            }
 
     </script>
+
+    <script>
+
+        function setDebugStatus(button) {
+            const container = button.parentElement;
+            
+            // Reset all buttons in the group back to their outline states
+            container.querySelectorAll('.status-debug-btn').forEach(btn => {
+                const activeClass = btn.getAttribute('data-active-class');
+                const outlineClass = activeClass.replace('btn-', 'btn-outline-');
+                btn.classList.remove('active', activeClass);
+                btn.classList.add(outlineClass);
+            });
+            
+            // Activate the clicked button with its solid color
+            const targetActive = button.getAttribute('data-active-class');
+            const targetOutline = targetActive.replace('btn-', 'btn-outline-');
+            button.classList.remove(targetOutline);
+            button.classList.add('active', targetActive);
+        }
+
+   </script>
 
     <script>
 
@@ -2143,7 +2164,6 @@
                             Nessun Elemento Selezionato
                         </h3>
                         <p class="mb-2">Clicca su un elemento per inserirlo nella lista</p>
-                        
                         <!-- Hidden input positioned directly under the text container to cleanly anchor the validation popup -->
                         <input type="text" id="hiddenValidator" required style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 1px; height: 1px; opacity: 0; border: none; padding: 0;">
                     </div>
@@ -2152,36 +2172,55 @@
             } else {
                 
                 list.innerHTML = selectedProtocols.map(p => `
-                    <div class="card sb-draggable-item shadow-sm overflow-hidden">
-                        <div class="drag-handle">
-                            <i class="fas fa-grip-horizontal"></i>
+
+                <div class="card sb-draggable-item shadow-sm overflow-hidden">
+                    <div class="drag-handle">
+                        <i class="fas fa-grip-horizontal"></i>
+                    </div>
+                    <div class="position-relative" style="height: 80px; overflow: hidden; border-radius: 5px 5px 0 0;">
+                        <img src="${p.image}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
+                        <div class="remove-btn text-white bg-danger" 
+                            style="position: absolute; top: 5px; right: 5px; cursor: pointer; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.8;"
+                            onclick="removeProtocol(null,'${p.title.replace(/'/g, "\\'")}')">
+                            <i class="fas fa-times"></i>
                         </div>
-                        <div class="position-relative" style="height: 80px; overflow: hidden; border-radius: 5px 5px 0 0;">
-                            <img src="${p.image}" alt="${p.title}" style="width: 100%; height: 100%; object-fit: cover;">
-                            <div class="remove-btn text-white bg-danger" 
-                                style="position: absolute; top: 5px; right: 5px; cursor: pointer; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-size: 10px; opacity: 0.8;"
-                                onclick="removeProtocol(null,'${p.title.replace(/'/g, "\\'")}')">
-                                <i class="fas fa-times"></i>
+                    </div>
+                    <div class="card-body p-2">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div style="flex: 1; min-width: 0; padding-right: 10px;">
+                                <h6 class="card-title font-weight-bold mb-1" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                                    ${p.title}
+                                </h6>
+                                <div class="mb-2">
+                                        <span class="badge ${p.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
+                                            ${p.badge}
+                                        </span>
+                                </div>
+                                    <p class="card-text text-muted mb-0" 
+                                        style="font-size: 0.9rem; white-space: normal; word-wrap: break-word; display: block;">
+                                        ${p.description}
+                                    </p>
+
+                                <div class="text-left text-nowrap">
+                                    <h5 class="card-title text-dark mb-2">  <i class="fas fa-clock text-success" style="font-size: 1.2rem;"></i> Durata :
+                                        <span class="font-weight-bold text-dark" style="font-size: 1.5rem;">${p.timing} <span style="font-size: 0.9rem; font-weight: normal;" class="text-dark">min</span></span>
+                                    </h5>
+                                </div>
+
+
                             </div>
+
+                            <!--<div class="text-right text-nowrap flex-shrink-0">
+                                <i class="fas fa-clock text-success" style="font-size: 1.2rem;"></i>
+                                <span class="font-weight-bold text-dark" style="font-size: 1.2rem;">${p.timing} <span style="font-size: 0.8rem; font-weight: normal;" class="text-muted">min</span></span>
+                            </div>-->
+                        
                         </div>
-                        <div class="card-body p-2">
-                            <h6 class="card-title font-weight-bold mb-1" style="font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                                ${p.title}
-                            </h6>
-                            <div class="mb-2">
-                                <span class="badge ${p.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
-                                        ${p.badge}
-                                </span>
-                            </div>
-                            <p class="card-text text-muted mb-3" 
-                                style="font-size: 0.9rem; white-space: normal; word-wrap: break-word; display: block;">
-                                ${p.description}
-                            </p>
                             <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 8px;">
                                 <a href="#" class="inner-action-btn demo-btn"><i class="fas fa-play text-primary"></i> Demo</a>
                             </div>
-                        </div>
                     </div>
+                </div>
                 `).join('');
                 
             }
@@ -2391,7 +2430,7 @@
                 const element = document.getElementById('hiddenValidator');
                 const hasSelectedItems = selectedProtocols.length > 0;
 
-                console.log(selectedProtocols.length);
+             //   console.log(selectedProtocols.length);
 
                 if (!hasSelectedItems) {
                     if (element) {
@@ -2407,12 +2446,22 @@
                     element.setCustomValidity('');
                 }
 
+                // In production the 3 debug buttons will be commented out, but
+                // because activeButton returns null, the if (activeButton)
+                // condition evaluates to false, safely skipping the block entirely and 
+                // preventing any runtime errors from being thrown.
+
+                const activeButton = document.querySelector('.status-debug-btn.active');
+                const currentStatus = activeButton ? activeButton.textContent.trim() : 'Consegnata';
+
+                //console.log(currentStatus);
+
                 // Build fresh protocol payload
                 const newTherapy = {
                     uniqueId: crypto.randomUUID(),
                     timestamp: new Date().toISOString(),
                     title: titleInput.value.trim(),
-                    state:"Consegnata",
+                    state: currentStatus,
                     evaluationDate: dateInput.value,
                     totalTiming: totalTimeInput.value,
                     italian_date : dateInput.value,        // date is already trasnformed into locale date
@@ -2429,8 +2478,8 @@
                 // Step A: Validate and build therapy payload
                 const newTherapy = validateForm();
                 if (!newTherapy) return; // Validation failed, browser popup shown, abort.
-
-                console.log("Therapy Payload Ready:", newTherapy);
+                
+            //    console.log("Therapy Payload Ready:", newTherapy);
 
                 // Step B: Get active patient ID
                 const activePatientId = getValidPatientId();
@@ -2783,6 +2832,13 @@
                     // Call this immediately to render the 'Nessuna card selezionata' message
                     updateSelectionHeader();
 
+                    // Example: Programmatically select "Avviata" when loading form data
+                    const buttons = document.querySelectorAll('.status-debug-btn');
+                    // Index 0: Consegnata, Index 1: Avviata, Index 2: Completata
+                    if (buttons[0]) {
+                        setDebugStatus(buttons[0]);
+                    }
+
             } catch (err) {
                     console.error("Eccezione durante il recupero dati paziente:", err.message);
                 }
@@ -2921,8 +2977,6 @@
         });
     
     </script>
-
-
 
 </body>
 </html>

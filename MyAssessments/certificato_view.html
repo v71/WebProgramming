@@ -1195,7 +1195,10 @@
 
                     //console.log(certificateToDelete);
 
+                    // remove certificte from current array
                     window.certificates = window.certificates.filter(item => item.uniqueId !== targetId);
+
+                    // get patient id
 
                     const activePatientId = getValidPatientId();
                     if (!activePatientId) {
@@ -1480,7 +1483,7 @@
 
                 // ✅ Correct validation for a UUID string
                 if (!activeCertificateId || activeCertificateId === 'null' || activeCertificateId === 'undefined' || activeCertificateId.trim() === '') {
-                 //   alert("Nessun certificato selezionato. Ritorno alla lista...");
+                    alert("Nessun certificato selezionato. Ritorno alla lista...");
                     window.location.replace("lista_pazienti_6.html");
                     return;
                 }
@@ -1600,8 +1603,7 @@
 
         </script>
 
-
-         <script>
+        <script>
 
             $(document).ready(function() {
                 // Intercept the Logout button click
@@ -1620,7 +1622,7 @@
 
         </script>
 
-         <script>
+        <script>
                    // Sidebar Toggle Handler
                     $("#sidebarToggleTop").on('click', function(e) {
                         e.preventDefault();
@@ -1655,8 +1657,6 @@
         });
     
     </script>
-
-
 
 </body>
 </html>

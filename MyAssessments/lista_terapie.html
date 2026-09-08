@@ -726,6 +726,34 @@
 </style>
 
 
+    <style>
+    
+        /* Make the modal feel 'outside' the normal UI flow */
+        .modal-system-alert {
+            background-color: #1e293b !important; /* Dark Slate Blue/Gray */
+            border-radius: 16px !important;
+            padding: 10px;
+        }
+
+        /* Optional: Make the backdrop darker to focus all attention */
+        .modal-backdrop.show {
+            opacity: 0.85 !important;
+            background-color: #0f172a !important;
+        }
+
+        /* Custom styling for buttons to match the dark theme */
+        .btn-outline-light {
+            border-color: rgba(255,255,255,0.2) !important;
+            color: #fff !important;
+        }
+
+        .btn-outline-light:hover {
+            background-color: rgba(255,255,255,0.1) !important;
+        }
+
+    </style>
+
+
 </head>
 
 <body id="page-top">
@@ -772,8 +800,16 @@
             <div class=" fade-on-load sidebar-heading" style="font-size: 0.85rem; font-weight: 700;">
                 Azioni
             </div>
-            <li class="nav-item fade-on-load">
+
+            <!--<li class="nav-item fade-on-load">
                 <a class="nav-link nav-link-blue" href="terapia_add_new_1.html">
+                    <i class="fas fa-circle-plus"></i>
+                    <span>Nuovo</span>
+                </a>
+            </li>-->
+
+           <li class="nav-item fade-on-load">
+                <a id="nuovoNavBtn" class="nav-link nav-link-blue" href="terapia_add_new_1.html">
                     <i class="fas fa-circle-plus"></i>
                     <span>Nuovo</span>
                 </a>
@@ -1042,20 +1078,32 @@
         </div><!-- content-wrapper -->
     </div><!-- Wrapper -->
 
+
+        <div class="modal fade" id="confirmClearModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content border-0 shadow-lg modal-system-alert">
+                    <div class="modal-header border-0 pb-0">
+                        <h5 class="modal-title font-weight-bold text-white">Attenzione</h5>
+                    </div>
+                    <div class="modal-body text-white-50">
+                        Non è possibile assegnare un nuovo Modulo di Potenziamento
+                        se sono presenti moduli non ancora completati.
+                    </div>
+                    <div class="modal-footer border-0 justify-content-center">
+                        <button type="button" class="btn btn-outline-light px-4" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         <script src="assets/sb-admin-2/vendor/jquery/jquery.min.js"></script>
         <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
         <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
-        <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>        
         <script src="assets/sb-admin-2/js/sb-admin-2.min.js"></script>
+        <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
+  
 
-        
-    <script src="assets/sb-admin-2/vendor/datatables/jquery.dataTables.js"></script>
-    <!--<script src="assets/sb-admin-2/vendor/datatables/dataTables.bootstrap4.min.js"></script>
-    <script src="assets/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
-    <script src="assets/sb-admin-2/vendor/chart.js/Chart.min.js"></script>-->
-    
      <script type="module">
 
              // init supabase
@@ -1079,6 +1127,13 @@
 
             // Make the variable globally available from the start
             window.terapie = [];
+
+            // Debug flag for adding new therapy only if there are no
+            // no completed therapys actually on going
+            // set this flag to the same values in the
+            // terapia_view.html' file as well
+
+            window.debugMode = false;
 
     </script>
 
@@ -1288,12 +1343,12 @@
                             stateStr = "Consegnata";
                             stateIcon = "fa-clock";
                             stateColor = "text-warning";
-                        } else if (state === "In Corso") {
-                            stateStr = "In Corso";
+                        } else if (state === "Avviata") {
+                            stateStr = "Avviata";
                            stateIcon = "fa-redo-alt";
                             stateColor = "text-primary";
-                        } else if (state === "Completato") {
-                            stateStr = "Completato";
+                        } else if (state === "Completata") {
+                            stateStr = "Completata";
                             stateIcon = "fa-check-circle";
                             stateColor = "text-success";
                         }
@@ -1319,7 +1374,7 @@
                     
                 }
 
-                // update assessment count
+                // update therapies count
                 $allRows = $('#tableBody tr');
                 $filteredRows = $allRows;
                 if (nofound === 0) {
@@ -1391,7 +1446,6 @@
                     }
                 });
             }
-
             
             // ---------------------------------------------------------------------------------
 
@@ -1479,7 +1533,7 @@
                 populateTable(data);
                 updateHeaderIcons(key, currentSortOrder);
             }
-            
+
             // ---------------------------------------------------------------------------------
             // Event listeners
 
@@ -1557,7 +1611,7 @@
             $tableContainer.addClass('table-ready');
             
         };
-        
+
         // ---------------------------------------------------------------------------------
         // Automatically trigger if window.certificcati is already populated
 
@@ -1632,6 +1686,44 @@
         
     </script>
 
+    <script>
+
+        // Use event delegation to handle dynamically loaded nav items, 
+        // checking both data arrays and the rendered card DOM states.
+        // Add a new therapy only if all therapies have been flagged as completed
+        
+        document.addEventListener('click', (event) => {
+            const nuovoBtn = event.target.closest('#nuovoNavBtn') || event.target.closest('a[href*="terapia_add_new"]');
+            if (!nuovoBtn) return;
+            
+            event.preventDefault();
+
+            // Explicitly remove focus from the clicked element to clear lingering focus rings
+            if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+            }
+            
+            // Ensure this matches your actual global data array name terapie
+            const therapies = window.terapie || [];
+        //    console.log(therapies);
+            const allCompleted = therapies.every(item => item.state === 'Completata');
+
+            if ( window.debugMode === false)
+            {
+                if (!allCompleted && therapies.length > 0) {
+                    $('#confirmClearModal').modal('show');
+                    return;
+                }
+            }
+ 
+            // Directly navigate away without redundant modal hide calls
+            window.location.href = nuovoBtn.href;
+            
+        });
+
+    </script>
+
+
         <!-- Main -->
         <script type="module">
 
@@ -1702,7 +1794,7 @@
                 }
                 
                 // console.log("Selected Patient Id : ", activePatientId);
-        
+
                 try {
                     
                     // Esegui la query per il paziente attivo
@@ -1755,6 +1847,7 @@
             });
 
         </script>
+
 
 
     <script>
