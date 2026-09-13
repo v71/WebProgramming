@@ -477,277 +477,204 @@ body {
                 <!-- muted h5 level just to stop the html valdiator to complain-->
                 <h5 class="sr-only">muted h3</h5>
 
+
                 
-                <!-- container-fluid -->
-                <div class="fade-on-load container-fluid full-height-container">
-                    <!-- row -->
+                <div class="fade-on-load container-fluid">
                     <div class="row">
-             
-                        <!-- col-xl-3 col-lg-4 -->
-                            <div class="col-xl-3 col-lg-4 d-flex flex-column">
-                            <!-- card mb-4 shadow-sm text-center border-0 -->
-                            <div class="card mb-3 shadow-sm flex-grow-1" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px; min-width: 0;">
+                        <div class="col-xl-12 col-lg-12">
+                            
+                            <!-- Outer Container: Added style="gap: 12px;" -->
+                            <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
-                                <!-- Added w-100 and style="min-width: 0;" to allow flex container constraints -->
-                                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
-                                    <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
-                                    <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Profilo Paziente</h6>
+                                <!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
+                                <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
+
+                                    <h2 class="sr-only">muted h2</h2>
+                                    <h3 class="sr-only">muted h3</h3>
+                                    <h4 class="sr-only">muted h4</h4>
+                                    <h5 class="sr-only">muted h5</h5>
+                                    
+                                    <div class="card-header bg-white py-2 px-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                        <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
+                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
+                                    </div>
+
+
+                                    <!-- Locked body min-height to match fully loaded content -->
+                                    <div class="card-body px-3 py-2 d-flex overflow-hidden" style="min-width: 0; min-height: 105px;">
+                                        <!-- Responsive flex container: stacks vertically on mobile/tablet (flex-column), side-by-side on desktop (flex-lg-row) -->
+                                        <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center w-100 mb-2" style="min-width: 0; gap: 12px;">
+
+                                        <!-- Left Group: Avatar and Patient Details kept together -->
+                                        <div class="d-flex flex-row align-items-center" style="min-width: 0; gap: 12px;">
+
+                                            <!-- Compacted Avatar (80px as defined) -->
+                                            <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
+                                                <div id="avatarContainer0" 
+                                                    class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                                                    style="border: 1px solid #0000FF !important;"
+                                                    role="img" 
+                                                    aria-label="Contenitore foto profilo">
+                                                    <i id="avatarSpinnerIcon0" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
+                                                    <img id="profileAvatar0" 
+                                                        src="assets/sb-admin-2/img/undraw_profile.svg"
+                                                        class="img-fluid rounded-circle d-none" 
+                                                        width="80" 
+                                                        height="80" 
+                                                        alt="Foto profilo"
+                                                        style="object-fit: cover;">
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Text Content Wrapper -->
+                                            <div class="d-flex flex-column overflow-hidden text-left" style="min-width: 0; gap: 6px;">
+                                        
+                                                <!-- Patient Full Name -->
+                                                <h5 id="userAvatarName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
+                                                    <span class="sr-only">Loading...</span>
+                                                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
+                                                </h5>
+
+                                                <!-- Badges Stacked Underneath -->
+                                                <div class="d-flex align-items-center justify-content-start flex-wrap" style="min-width: 0; min-height: 27px;">
+                                                    <span id="userMinorOrMajor" 
+                                                        class="badge badge-status-minor d-inline-flex align-items-center justify-content-center text-truncate" 
+                                                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #858796; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
+                                                        <span class="sr-only">Loading status...</span>
+                                                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
+                                                    </span>
+                                                </div>
+
+                                                <!-- Subscription Date -->
+                                                <div class="text-truncate" style="min-width: 0; min-height: 18px;">
+                                                    <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
+                                                        <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
+                                                        <span id="userSubDate"> 
+                                                            <span class="sr-only">Loading date...</span>
+                                                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
+                                                        </span>  
+                                                    </small>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+
+                                    <!-- Right Panel: Image, Speech Bubble, and Fade Toggle Button inline -->
+                                    <div class="ml-lg-auto d-flex flex-row align-items-center w-100" style="max-width: 530px; min-width: 0; gap: 12px;">
+                                        
+                                        <!-- Fading Content Wrapper with CSS transition rules -->
+                                        <div class="d-flex flex-row align-items-center flex-grow-1 fade-panel" id="infoPanelSection" style="min-width: 0; gap: 12px;">
+
+                                            <!-- Secondary Image/Avatar -->
+                                            <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
+                                                <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                                                    style="border: 1px solid #0000FF !important;"
+                                                    role="img" 
+                                                    aria-label="Contenitore foto secondaria">
+                                                    <img src="assets/img/registrazione/doc2.png"
+                                                        class="img-fluid rounded-circle" 
+                                                        width="80" 
+                                                        height="80" 
+                                                        alt="Foto profilo"
+                                                        style="object-fit: cover;">
+                                                </div>
+                                            </div>
+
+                                            <!-- Speech Bubble Wrapper with pointer arrow pointing left to the avatar -->
+                                            <div class="flex-grow-1 position-relative speech-bubble-wrapper" style="min-width: 0;">
+                                                
+                                                <style>
+                                                    .speech-bubble-wrapper::before {
+                                                        content: "";
+                                                        position: absolute;
+                                                        top: 50%;
+                                                        left: -8px;
+                                                        transform: translateY(-50%);
+                                                        border-top: 8px solid transparent;
+                                                        border-bottom: 8px solid transparent;
+                                                        border-right: 8px solid #4e73df;
+                                                        z-index: 2;
+                                                    }
+                                                    /* Smooth fade styling */
+                                                    .fade-panel {
+                                                        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+                                                        opacity: 1;
+                                                        visibility: visible;
+                                                    }
+                                                    .fade-panel.is-faded {
+                                                        opacity: 0;
+                                                        visibility: hidden;
+                                                        pointer-events: none;
+                                                    }
+                                                </style>
+
+                                                <div id="patientNotesInfo" class="form-control shadow-none w-100 h-auto p-2" style="font-size: 0.9rem; border: 2px solid #4e73df !important; border-radius: 12px; background-color: #ffffff; min-height: calc(1.5em * 2 + 1rem); word-break: break-word; overflow-wrap: break-word;">
+                                                    <div class="mb-4">Attenzione: una volta avviato questo Modulo di Potenziamento, 
+                                                        non potrà essere interrotto, ricaricato o chiuso senza compromettere 
+                                                        l'accuratezza del calcolo dei risultati.<br>
+                                                        Assicurati di poter completare la sessione senza interruzioni prima di procedere.</div>
+                                                
+                                                     <style>
+                                                        .btn-glyphicon {
+                                                            padding: 8px;
+                                                            background: #ffffff;
+                                                            margin-right: 4px;
+                                                        }
+                                                        .icon-btn {
+                                                            padding: 1px 15px 3px 2px;
+                                                            border-radius: 50px;
+                                                        }    
+                                                    </style>
+
+                                                    <a class="mb-2 btn icon-btn btn-success d-inline-flex align-items-center align-self-center py-1 pl-1 pr-3 flex-shrink-0" href="#" style="width: fit-content; white-space: nowrap; font-size: 0.95rem;">
+                                                        <span class="btn-glyphicon rounded-circle text-success d-flex align-items-center justify-content-center mr-2 flex-shrink-0" style="width: 28px; height: 28px; padding: 0;">
+                                                            <i class="fas fa-play" style="font-size: 0.8rem;"></i>
+                                                        </span>
+                                                        Inizia Subito
+                                                    </a>
+                                                    
+                                                
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+
+                                        </div>
+                                    </div>
                                 </div>
-
-                                <!-- card-body: Increased padding for verticality -->
-                                <div class="card-body px-4 pb-5 pt-4">
-                                    <!-- Profile Section -->
-                                    <div class="text-center">
-                               
-                                        <div class="position-relative d-inline-block mb-3" style="width: 140px; height: 140px;">
-                                            <div id="avatarContainer0" class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" style="border: 2px solid #0000FF !important;">
-                                                <i id="avatarSpinnerIcon0" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1.5rem;"></i>
-                                                <img id="profileAvatar0" 
-                                                    src="assets/sb-admin-2/img/undraw_profile.svg"
-                                                    class="img-fluid rounded-circle d-none" 
-                                                    width="140"
-                                                    height="140" 
-                                                    alt="Foto profilo"
-                                                    style="object-fit: cover;">
-                                            </div>
-                                        </div>
-
-                                        <!-- Added w-100, text-center, text-nowrap, text-truncate, and min-width constraint -->
-                                        <h5 id="userAvatarName" class="text-dark mb-2 font-weight-bold w-100 text-center text-nowrap" style="min-width: 0;">
-                                            <i class="fas fa-circle-notch fa-spin text-muted"></i>
-                                                <span class="sr-only">Caricamento...</span>
-                                        </h5>
-                               
-                                        <!-- Fixed the syntax error on justify-content inside the style attribute -->
-                                        <div class="mb-2 d-flex justify-content-center text-center w-100" style="min-width: 0;">
-                                            <span class="badge mx-auto text-nowrap text-truncate" style="
-                                                border-radius: 50px; 
-                                                font-size: 0.75rem; 
-                                                padding: 5px 15px; 
-                                                background-color: #4e73df;
-                                                color: #fff; 
-                                                border: none; 
-                                                font-weight: 600;
-                                                display: inline-flex;
-                                                align-items: center;
-                                                justify-content: center;
-                                                max-width: 100%;
-                                                min-width: 0;">
-                                                <i class="fas fa-check-circle mr-1" style="flex-shrink: 0;"></i> 
-                                                <span class="text-truncate">Utente Verificato</span>
-                                            </span>
-                                        </div>
-
-                                        <!-- Fixed the syntax error on justify-content inside the style attribute -->
-                                        <div class="d-flex justify-content-center text-center w-100" style="min-width: 0;">
-                                            <span id="userMinorOrMajor" class="badge mx-auto text-nowrap text-truncate" style="
-                                                border-radius: 50px; 
-                                                font-size: 0.75rem; 
-                                                padding: 5px 15px; 
-                                                background-color: #4e73df;
-                                                color: #fff; 
-                                                border: none; 
-                                                font-weight: 600;
-                                                display: inline-flex;
-                                                align-items: center;
-                                                justify-content: center;
-                                                max-width: 100%;
-                                                min-width: 0;">
-                                                 <i class="fas fa-circle-notch fa-spin" style="font-size: 0.65rem; color: #ffffff; flex-shrink: 0;"></i> 
-                                            </span>
-                                        </div>
-
-                                         <div class="mt-3 mb-4 d-flex align-items-center justify-content-center w-100 text-nowrap mx-auto" style="min-width: 0; line-height: 1;">
-                                            <small class="text-muted d-flex align-items-center m-0 p-0" style="font-size: 0.75rem; flex-shrink: 0;">
-                                                <i class="far fa-calendar mr-1"></i>
-                                            </small>
-                                            <!-- Flex wrapper locks down the layout box size completely -->
-                                            <div class="d-inline-flex align-items-center" style="height: 14px; min-width: 0; vertical-align: middle;">
-                                                <span id="userSubDate" class="text-muted small text-truncate m-0 p-0" 
-                                                    style="font-size: 0.75rem; line-height: 1; display: block;">
-                                                    <i class="fas fa-circle-notch fa-spin m-0 p-0" 
-                                                    style="font-size: 0.75rem; display: inline-block; line-height: 1; vertical-align: 0;"></i>
-                                                </span>
-                                            </div>
-                                        </div>
-
-                                    </div>  <!-- Profile Section -->
-                           
-                                    <!-- Information Stack (No Columns) -->
-                                    <div class="px-2">
-                                        <!-- Group: Personal Details -->
-                                        <div class="mb-2">
-
-                                            <div class="mb-1 mt-2">
-                                                <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">NOME</span>
-                                                <div id="userName" class="small font-weight-bold text-primary text-truncate">
-                                                </div>
-                                                <hr class="mt-1" ></hr>
-                                            </div>
-
-                                            <div class="mb-1 mt-2">
-                                                <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">EMAIL</span>
-                                                <div id="userEmail" class="small font-weight-bold text-primary text-truncate">
-                                                </div>
-                                                <hr class="mt-1" ></hr>
-                                            </div>
-
-                                            <div class="mb-1 mt-2">
-                                                <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">DATA DI NASCITA</span>
-                                                <div id="userBirthDate" class="small font-weight-bold text-primary text-truncate">
-                                                </div>
-                                                <hr class="mt-1" ></hr>
-                                            </div>
-
-                                             <div class="mb-1 mt-2">
-                                                <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">ETA' ANAGRAFICA</span>
-                                                <div id="userAge" class="small font-weight-bold text-primary text-truncate">
-                                                </div>
-                                                <hr class="mt-1" ></hr>
-                                            </div>
-
-                                            <div class="mt-2">
-                                                <span class="text-xs font-weight-bold text-muted text-truncate d-block w-100">REGIONE</span>
-                                                <div id="userRegion" class="small font-weight-bold text-primary text-truncate">
-                                                </div>
-                                                <hr class="mt-1" ></hr>
-                                            </div>
-
-                                        </div> <!-- card-body: Increased padding for verticality -->
-
-                                    </div>  <!-- Information Stack (No Columns) -->
-                                </div> <!-- card-body: Increased padding for verticality -->
-
-                            </div> <!-- card mb-4 shadow-sm text-center border-0 -->
-
-                        </div><!-- col-xl-3 col-lg-4 -->
-
-                         <!-- col-->   
-                        <div class="col-xl-9 col-lg-8 d-flex flex-column">
-
-                            <!-- card -->
-                            <div class="card mb-3 shadow-sm h-100 d-flex flex-column" style="border-radius: 12px; overflow: hidden; border: none; min-width: 5px;">
-
-                                <div class="card-header bg-white d-flex align-items-center py-2 mb-4" style="border-bottom: 0px solid #eaecf4; height: 45px;">
-                                    <i class="fas fa-chart-line text-primary mr-2"></i> 
-                                    <h6 class="m-0 font-weight-bold text-dark mr-2">Modulo di Potenziamento</h6>
-                                </div>
+                            </div>
 
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12">
                                 
+                                        <!-- Outer Container: Added style="gap: 12px;" -->
                                         <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
+                                            <!-- SECOND SECTION -->
+                                            <div class="card shadow-sm mb-3" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                                
+                                                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                                    <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
+                                                    <h6 id="protocolsCountId" class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">
+                                                        <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
+                                                    </h6>
+                                                </div>
+
                                                 <div class="container-fluid">
-
-
-
-
-
-            <!-- Right Panel: Image, Speech Bubble, and Fade Toggle Button inline -->
-            <div class="d-flex flex-row align-items-center w-100 mb-4" style="max-width: 50calc(100% - 15px); min-width: 0; gap: 12px;">    
-                <!-- Fading Content Wrapper with CSS transition rules -->
-                <div class="d-flex flex-row align-items-center flex-grow-1 fade-panel" id="infoPanelSection" style="min-width: 0; gap: 12px;">
-
-                    <!-- Secondary Image/Avatar -->
-                    <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
-                        <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
-                            style="border: 1px solid #0000FF !important;"
-                            role="img" 
-                            aria-label="Contenitore foto secondaria">
-                            <img src="assets/img/registrazione/doc2.png"
-                                class="img-fluid rounded-circle" 
-                                width="80" 
-                                height="80" 
-                                alt="Foto profilo"
-                                style="object-fit: cover;">
-                        </div>
-                    </div>
-
-                    <!-- Speech Bubble Wrapper with pointer arrow pointing left to the avatar -->
-                    <div class="flex-grow-1 position-relative speech-bubble-wrapper" style="min-width: 0;">
-                        
-                        <style>
-                            .speech-bubble-wrapper::before {
-                                content: "";
-                                position: absolute;
-                                top: 50%;
-                                left: -8px;
-                                transform: translateY(-50%);
-                                border-top: 8px solid transparent;
-                                border-bottom: 8px solid transparent;
-                                border-right: 8px solid #4e73df;
-                                z-index: 2;
-                            }
-                            /* Smooth fade styling */
-                            .fade-panel {
-                                transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-                                opacity: 1;
-                                visibility: visible;
-                            }
-                            .fade-panel.is-faded {
-                                opacity: 0;
-                                visibility: hidden;
-                                pointer-events: none;
-                            }
-                        </style>
-
-                       <div id="patientNotesInfo" class="form-control shadow-none w-100 h-auto p-2 d-flex flex-column justify-content-between" style="font-size: 0.9rem; border: 2px solid #4e73df !important; border-radius: 12px; background-color: #ffffff; min-height: calc(1.5em * 2 + 1rem); word-break: break-word; overflow-wrap: break-word;">
-                                <div class="mb-4">Attenzione: una volta avviato questo Modulo di Potenziamento, non potrà essere interrotto, ricaricato o chiuso senza compromettere l'accuratezza del calcolo dei risultati. Assicurati di poter completare la sessione senza interruzioni prima di procedere.</div>
-     
-                                <style>
-                                .btn-glyphicon {
-                                    padding: 8px;
-                                    background: #ffffff;
-                                    margin-right: 4px;
-                                }
-                                .icon-btn {
-                                    padding: 1px 15px 3px 2px;
-                                    border-radius: 50px;
-                                }    
-                                </style>
-
-                                <a class="mb-2 btn icon-btn btn-primary d-inline-flex align-items-center align-self-center py-1 pl-1 pr-3 flex-shrink-0" href="#" style="width: fit-content; white-space: nowrap; font-size: 0.95rem;">
-                                    <span class="btn-glyphicon rounded-circle text-primary d-flex align-items-center justify-content-center mr-2 flex-shrink-0" style="width: 28px; height: 28px; padding: 0;">
-                                        <i class="fas fa-play" style="font-size: 0.8rem;"></i>
-                                    </span>
-                                    Inizia Subito
-                                </a>
-
-
-                            </div>
-                        </div>
-
-                </div>
-
-            </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                     <div class="row border m-0">
                                                         
-                                                        <div class="col-12 col-md-5 p-2 border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
+                                                        <div class="col-12 col-md-4 p-2 border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
                                                             <input type="text" id="formTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Inserire Titolo Modulo di Potenziamento" readonly required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease; cursor: default;">
                                                         </div>
 
-                                                        <div class="col-12 col-md-5 p-2 border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
+                                                        <div class="col-12 col-md-4 p-2 border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
                                                             <input type="text" id="timingTitle" class="form-control bg-transparent text-center shadow-none p-2" placeholder="Durata in minuti" readonly required style="font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; transition: border-color 0.2s ease; cursor: default;">
                                                         </div>
 
                                                         <div class="col-12 col-md-2 p-2">
                                                             <div id="dateGroup" class="input-group" style="width: 100%;">
-                                                                <input type="text" id="clinicalDate" class="form-control shadow-none bg-white" readonly style="height: 40px; font-weight: 600; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; cursor: default; border-right: none !important;">
+                                                                <input type="text" id="clinicalDate" class="form-control shadow-none bg-white" readonly style="font-weight: 600; height: 40px; font-size: 1rem; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-radius: 6px 0 0 6px; cursor: default; border-right: none !important;">
                                                                 <div class="input-group-append">
                                                                     <span class="input-group-text bg-transparent text-muted" style="height: 40px; border: 1px solid rgba(209, 211, 226, 1.0) !important; border-left: none !important; border-radius: 0 6px 6px 0;">
                                                                         <i class="far fa-calendar"></i>
@@ -755,28 +682,39 @@ body {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-
-                                                    <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
-                                                        <div id="selection-header-1" class="card-body pt-3 pb-3 px-0" style="min-width: fit-content;">
-                                                            <div id="sb-sortable-list">
+                                
+                                                        <div class="col-12 col-md-2 p-2 d-flex align-items-center justify-content-center">
+                                                            <div class="form-control bg-transparent d-flex align-items-center justify-content-center shadow-none p-2" style="width: 400px; max-width: 100%; gap: 8px; font-weight: 600; font-size: 1.0rem; color: #7b80a7; border: 1px solid rgba(0, 0, 0, 0.12); border-radius: 6px; cursor: default;">
+                                                                <i id="statusIcon" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
+                                                                <span id="statusText">Stato</span>
                                                             </div>
                                                         </div>
+
                                                     </div>
+                                                 </div>
 
-                                            </div>
-                                         </div>
-                                    </div>
-                                </div>
+                                                <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+                                                    <div id="selection-header-1" class="card-body pt-3 pb-3 px-4" style="min-width: fit-content;">
+                                                        <div id="sb-sortable-list">
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                            </div>
+                                             </div>
+    
+                                        </div>
+                                     </div>
+                                 </div>
 
-                        </div> <!-- /card -->
-                    </div> <!-- card -->
 
-                    </div> <!-- row -->
-                </div> <!-- contentainer fluid -->
-            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
                 <!-- Footer -->
                 <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
@@ -1168,6 +1106,12 @@ body {
                 if (DataId) {
                     DataId.value = firstConsegnata.italian_date;
                 }
+
+                const protocolsCountId = document.getElementById('protocolsCountId');
+                if (protocolsCountId) {
+                    protocolsCountId.textContent = "Moduli Selezionati (" + selectedProtocols.length +" )";
+                }
+
 
               //  console.log("Clinician Email:", clinicianEmail);
 
