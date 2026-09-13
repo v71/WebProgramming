@@ -565,7 +565,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <h1 class="h4 mb-0 text-gray-800 text-truncate text-sm-left" style="font-size: 1.8rem !important; line-height: 1.4; height: auto !important; min-height: auto !important;">
+                    <h1 class="h4 mb-0 text-gray-800 text-truncate text-nowrap" style="min-width: 0; line-height: 1.4; padding-bottom: 2px;">
                         Dashboard - Revisiona Modulo di Potenziamento
                     </h1>
 
@@ -758,8 +758,8 @@
                         </style>
 
                         <div id="patientNotesInfo" class="form-control shadow-none w-100 h-auto p-2" style="font-size: 0.9rem; border: 2px solid #4e73df !important; border-radius: 12px; background-color: #ffffff; min-height: calc(1.5em * 2 + 1rem); word-break: break-word; overflow-wrap: break-word;">
-                            Qui puoi ispezionare il Modulo di Potenziamento selezionato, visualizzando un dimostrativo per ogni modulo.
-                            Cliccando su 'Svuota' il Modulo verrà eliminato, solamente un modulo completato può essere eliminato e l'operazione è irreversibile.
+                            Qui puoi ispezionare il Modulo di Potenziamento selezionato.
+                            Cliccando su 'Elimina' il Modulo verrà eliminato, solamente un modulo completato può essere eliminato e l'operazione è irreversibile.
                         </div>
 
                     </div>
@@ -1611,6 +1611,14 @@
                 });
             });
 
+    </script>
+
+    <script>
+        // Event delegation ensures it works even if elements are loaded dynamically
+        $(document).on('click', '#fadeToggleBtn', function () {
+            $('#infoPanelSection').toggleClass('is-faded');
+            $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+        });
     </script>
 
     <script>
