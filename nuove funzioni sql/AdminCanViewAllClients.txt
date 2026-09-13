@@ -1,0 +1,11 @@
+CREATE POLICY "Admin can view all clients"
+ON public."Clients"
+FOR SELECT
+TO authenticated
+USING (
+  EXISTS (
+    SELECT 1
+    FROM "Admins"
+    WHERE "Admins".id = auth.uid()
+  )
+);

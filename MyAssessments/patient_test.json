@@ -1,9 +1,0 @@
-{
-  "Assessments": [],
-  "Certificates": [
-    { "id": 1, "title": "Certificato Medico 2026" }
-  ],
-  "Therapies": [
-    { "id": 101, "name": "Logopedia" }
-  ]
-}

@@ -494,7 +494,7 @@
             <li class="nav-item fade-on-load">
                 <a id="svuota-btn" class="nav-link nav-link-blue" href="#">
                     <i class="fas fa-broom"></i>
-                    <span>Svuota Form</span>
+                    <span>Svuota</span>
                 </a>
             </li>
 
@@ -590,6 +590,8 @@
                             <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
 
+
+                                
 <!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
 <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none; min-width: 0;">
 
@@ -605,54 +607,129 @@
 
     <!-- Locked body min-height to match fully loaded content -->
     <div class="card-body px-3 py-2 d-flex overflow-hidden" style="min-width: 0; min-height: 105px;">
-        <div class="d-flex flex-column flex-md-row align-items-center align-items-md-center w-100 mb-2" style="min-width: 0; gap: 12px;">
+        <!-- Responsive flex container: stacks vertically on mobile/tablet (flex-column), side-by-side on desktop (flex-lg-row) -->
+        <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center w-100 mb-2" style="min-width: 0; gap: 12px;">
 
-            <!-- Compacted Avatar (60px) -->
-            <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
-                <div id="avatarContainer2" 
-                    class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
-                    style="border: 1px solid #0000FF !important;"
-                    role="img" 
-                    aria-label="Contenitore foto profilo">
-                    <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
-                    <img id="profileAvatar2" 
-                        src="assets/sb-admin-2/img/undraw_profile.svg"
-                        class="img-fluid rounded-circle d-none" 
-                        width="80" 
-                        height="80" 
-                        alt="Foto profilo"
-                        style="object-fit: cover;">
+            <!-- Left Group: Avatar and Patient Details kept together -->
+            <div class="d-flex flex-row align-items-center" style="min-width: 0; gap: 12px;">
+
+                <!-- Compacted Avatar (80px as defined) -->
+                <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
+                    <div id="avatarContainer2" 
+                        class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                        style="border: 1px solid #0000FF !important;"
+                        role="img" 
+                        aria-label="Contenitore foto profilo">
+                        <i id="avatarSpinnerIcon2" class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;"></i>
+                        <img id="profileAvatar2" 
+                            src="assets/sb-admin-2/img/undraw_profile.svg"
+                            class="img-fluid rounded-circle d-none" 
+                            width="80" 
+                            height="80" 
+                            alt="Foto profilo"
+                            style="object-fit: cover;">
+                    </div>
                 </div>
+
+                <!-- Text Content Wrapper -->
+                <div class="d-flex flex-column overflow-hidden text-left" style="min-width: 0; gap: 6px;">
+                    
+                    <!-- Patient Full Name -->
+                    <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
+                        <span class="sr-only">Loading...</span>
+                        <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
+                    </h5>
+
+                    <!-- Badges Stacked Underneath -->
+                    <div class="d-flex align-items-center justify-content-start flex-wrap" style="min-width: 0; min-height: 27px;">
+                        <span id="patientMinorOrMajor" 
+                            class="badge badge-status-minor d-inline-flex align-items-center justify-content-center text-truncate" 
+                            style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #858796; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
+                            <span class="sr-only">Loading status...</span>
+                            <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
+                        </span>
+                    </div>
+
+                    <!-- Subscription Date -->
+                    <div class="text-truncate" style="min-width: 0; min-height: 18px;">
+                        <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
+                            <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
+                            <span id="patientSubDate"> 
+                                <span class="sr-only">Loading date...</span>
+                                <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
+                            </span>  
+                        </small>
+                    </div>
+
+                </div>
+
             </div>
 
-            <!-- Text Content Wrapper with exact vertical spacing reservation -->
-            <div class="d-flex flex-column flex-grow-1 overflow-hidden text-center text-md-left" style="min-width: 0; width: 100%; gap: 6px;">
-                <!-- Patient Full Name -->
-                <h5 id="patientFullName" class="text-dark m-0 font-weight-bold text-truncate" style="font-size: 1.15rem; line-height: 1.2; min-width: 0; min-height: 22px;">
-                    <span class="sr-only">Loading...</span>
-                    <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
-                </h5>
+            <!-- Right Panel: Image, Speech Bubble, and Fade Toggle Button inline -->
+            <div class="ml-lg-auto d-flex flex-row align-items-center w-100" style="max-width: 530px; min-width: 0; gap: 12px;">
+                
+                <!-- Fading Content Wrapper with CSS transition rules -->
+                <div class="d-flex flex-row align-items-center flex-grow-1 fade-panel" id="infoPanelSection" style="min-width: 0; gap: 12px;">
 
-                <!-- Badges Stacked Underneath -->
-                <div class="d-flex align-items-center justify-content-center justify-content-md-start flex-wrap" style="min-width: 0; min-height: 27px;">
-                    <span id="patientMinorOrMajor" 
-                        class="badge badge-status-minor d-inline-flex align-items-center justify-content-center text-truncate" 
-                        style="border-radius: 50px; font-size: 0.75rem; padding: 6px 12px; background-color: #858796; color: #fff; font-weight: 600; max-width: 100%; min-width: 0; overflow: hidden;">
-                        <span class="sr-only">Loading status...</span>
-                        <i class="fas fa-circle-notch fa-spin" style="font-size: 0.75rem; color: #ffffff;" aria-hidden="true"></i>
-                    </span>
+                    <!-- Secondary Image/Avatar -->
+                    <div class="position-relative d-inline-block flex-shrink-0" style="width: 80px; height: 80px;">
+                        <div class="w-100 h-100 d-flex align-items-center justify-content-center bg-light rounded-circle border" 
+                            style="border: 1px solid #0000FF !important;"
+                            role="img" 
+                            aria-label="Contenitore foto secondaria">
+                            <img src="assets/img/registrazione/doc2.png"
+                                class="img-fluid rounded-circle" 
+                                width="80" 
+                                height="80" 
+                                alt="Foto profilo"
+                                style="object-fit: cover;">
+                        </div>
+                    </div>
+
+                    <!-- Speech Bubble Wrapper with pointer arrow pointing left to the avatar -->
+                    <div class="flex-grow-1 position-relative speech-bubble-wrapper" style="min-width: 0;">
+                        
+                        <style>
+                            .speech-bubble-wrapper::before {
+                                content: "";
+                                position: absolute;
+                                top: 50%;
+                                left: -8px;
+                                transform: translateY(-50%);
+                                border-top: 8px solid transparent;
+                                border-bottom: 8px solid transparent;
+                                border-right: 8px solid #4e73df;
+                                z-index: 2;
+                            }
+                            /* Smooth fade styling */
+                            .fade-panel {
+                                transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+                                opacity: 1;
+                                visibility: visible;
+                            }
+                            .fade-panel.is-faded {
+                                opacity: 0;
+                                visibility: hidden;
+                                pointer-events: none;
+                            }
+                        </style>
+
+                        <div id="patientNotesInfo" class="form-control shadow-none w-100 h-auto p-2" style="font-size: 0.9rem; border: 2px solid #4e73df !important; border-radius: 12px; background-color: #ffffff; min-height: calc(1.5em * 2 + 1rem); word-break: break-word; overflow-wrap: break-word;">
+                            Cliccando su 'Aggiorna' i dati del form verranno sovrascritti.
+                            Cliccando su 'Ripristina' i dati del form verranno riprisitinati con i dati originari.
+                            Cliccando su 'Svuota' i dati verranno cancellati.
+                            Cliccando su 'Elimina' il file verrà rimosso, l'operazione è irreversibile.
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <!-- Subscription Date -->
-                <div class="text-truncate" style="min-width: 0; min-height: 18px;">
-                    <small class="text-muted text-truncate d-block" style="font-size: 0.75rem; min-width: 0;">
-                        <i class="far fa-calendar mr-1" aria-hidden="true"></i> 
-                        <span id="patientSubDate"> 
-                            <span class="sr-only">Loading date...</span>
-                            <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 0.75rem;" aria-hidden="true"></i>
-                        </span>   
-                    </small>
-                </div>
+                <!-- Fade Toggle Button with a green rounded info icon -->
+                <button class="btn btn-sm btn-light border-0 bg-transparent shadow-none flex-shrink-0 p-0 text-muted d-flex align-items-center justify-content-center" type="button" id="fadeToggleBtn" title="Mostra/Nascondi i suggerimenti" style="width: 34px; height: 34px;">
+                    <i class="fas fa-info-circle text-success" style="font-size: 2.0rem;"></i>
+                </button>
+
             </div>
 
         </div>
@@ -660,7 +737,7 @@
 </div>
 
 
-<!-- FIRST SECTION (Strictly locked dimensions to prevent any layout shift) -->
+<!-- SECOND SECTION (Strictly locked dimensions to prevent any layout shift) -->
 <div class="card shadow-sm d-flex flex-column" style="height: 100%; border-radius: 12px; overflow: hidden; border: none; margin-bottom: 16px;">
 
     <div class="container-fluid">
@@ -1629,6 +1706,14 @@
                         $("body").toggleClass("sidebar-toggled");
                         $(".sidebar").toggleClass("toggled");
                     });
+        </script>
+
+        <script>
+            // Event delegation ensures it works even if elements are loaded dynamically
+            $(document).on('click', '#fadeToggleBtn', function () {
+                $('#infoPanelSection').toggleClass('is-faded');
+                $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+            });
         </script>
 
     <script>

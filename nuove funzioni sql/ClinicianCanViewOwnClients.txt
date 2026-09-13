@@ -1,0 +1,8 @@
+CREATE POLICY "Clinician can view own clients"
+ON public."Clients"
+FOR SELECT
+TO authenticated
+USING (
+  clinical_id = auth.uid()
+);
+

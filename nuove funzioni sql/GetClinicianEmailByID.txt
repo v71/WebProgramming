@@ -1,0 +1,24 @@
+-- 1. Drop both potential conflicting functions
+DROP FUNCTION IF EXISTS public.get_clinician_email(UUID);
+DROP FUNCTION IF EXISTS public.get_clinician_auth_email(UUID);
+
+-- 2. Create with a fresh, unique name
+CREATE FUNCTION public.get_clinician_auth_email(p_clinician_id UUID)
+RETURNS TABLE (email TEXT)
+SECURITY DEFINER 
+SET search_path = public, auth
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT CAST(u.email AS TEXT)
+    FROM public."Clinicals" c
+    JOIN auth.users u ON c.id = u.id
+    WHERE c.id = p_clinician_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 3. Grant permissions
+GRANT EXECUTE ON FUNCTION public.get_clinician_auth_email(UUID) TO authenticated, anon;
+
+-- 4. Force reload
+NOTIFY pgrst, 'reload schema';

@@ -1,0 +1,9 @@
+-- 1. Drop the old problematic policy signature
+DROP POLICY IF EXISTS "Select own user profile" ON public."Clients";
+
+-- 2. Create the clean, streamlined production version
+CREATE POLICY "Select own user profile"
+ON public."Clients"
+FOR SELECT
+TO authenticated -- 🚀 Security best practice: Protects your clinical app from public web traffic
+USING ( auth.uid() = id );

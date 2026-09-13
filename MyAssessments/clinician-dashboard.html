@@ -318,8 +318,9 @@
                                         </div>
 
                                         <div class="mb-4 d-flex align-items-center justify-content-center w-100 text-nowrap mx-auto" style="min-width: 0; line-height: 1;">
-                                            <small class="text-muted d-flex align-items-center m-0 p-0 mr-1" style="font-size: 0.75rem; flex-shrink: 0;">
-                                                <i class="far fa-calendar mr-1"></i>Iscritto il
+                                            
+                                            <small class="text-muted d-flex align-items-center m-0 p-0" style="font-size: 0.75rem; flex-shrink: 0;">
+                                                <i id="iscrizioneId" class="far fa-calendar mr-1"></i>
                                             </small>
                                             <!-- Flex wrapper locks down the layout box size completely -->
                                             <div class="d-inline-flex align-items-center" style="height: 14px; min-width: 0; vertical-align: middle;">
@@ -329,6 +330,7 @@
                                                     style="font-size: 0.75rem; display: inline-block; line-height: 1; vertical-align: 0;"></i>
                                                 </span>
                                             </div>
+
                                         </div>
                                     </div><!-- Profile Section -->
 
@@ -448,13 +450,6 @@
                                                             <span>Acquista Crediti</span>
                                                         </button>
                                                     </div>
-                                                    
-                                                   <!-- <a href="pricing.html" 
-                                                    class="btn btn-outline-primary shadow-none d-inline-flex align-items-center justify-content-center" 
-                                                    style="font-size: clamp(0.7rem, 2.5vw, 0.85rem); padding: 0.5rem 0.75rem; height: fit-content; max-width: 100%; min-width: 0;">
-                                                        <i class="fas fa-plus-circle mr-2" style="flex-shrink: 0;"></i>
-                                                        <span class="text-truncate" style="min-width: 0;">Acquista Crediti</span>
-                                                    </a> -->
 
                                                 </div>
 
@@ -467,7 +462,7 @@
                                                 ">
 
                                                 <!-- Card 1: Totali -->
-                                                <div class="text-center p-2 p-sm-3 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-width: 0;">
+                                                <!--div class="text-center p-2 p-sm-3 rounded" style="background-color: #fafbfe; border: 1px solid #d1d9e6; min-width: 0;">
                                                     <div class="w-100 d-flex justify-content-center align-items-center">
                                                         <div class="d-inline-flex align-items-center px-4 py-2" 
                                                             style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 20px; max-width: 100%;">
@@ -484,8 +479,7 @@
                                                             <span class="sr-only">Caricamento...</span>
                                                         </h3>
                                                     </div>
-
-                                                </div>
+                                                </div>-->
 
                                                 <!-- Hidden accessibility headers -->
                                                 <h4 class="sr-only">Statistiche Crediti</h4>
@@ -553,7 +547,7 @@
                                                     <!-- border-top: 1px solid #40bdcf;-->
                                                     <!-- Centered Header Label -->
                                                     <h6 class="text-dark font-weight-bold text-uppercase text-center mb-1" style="font-size: 0.85rem; letter-spacing: 1px;">
-                                                        <i class="fas fa-fingerprint mr-2 text-primary"></i>Email da comunicare al Paziente
+                                                        <i class="fas fa-envelope mr-2 text-primary"></i>Email da comunicare al Paziente
                                                     </h6>
                                                     <!-- NEW: Centered Subtitle Label -->
                                                     <p class="text-muted text-center small mb-4" style="font-size: 0.9rem;">
@@ -581,7 +575,7 @@
                                                                 justify-content: center; 
                                                                 flex-shrink: 0;
                                                             ">
-                                                                <i class="fas fa-fingerprint text-white"></i>
+                                                                <i class="fas fa-envelope text-white"></i>
                                                             </div>
 
                                                             <div id="clientRegNum" style="
@@ -606,11 +600,11 @@
 
                                                     <div class="d-flex justify-content-center w-100 mb-4">
                                                         <div class="d-flex gap-2">
-                                                            <button id="copyBtn" onclick="copyCode()" class="btn btn-primary btn-sm shadow-sm mr-2">
+                                                            <button id="copyBtn" onclick="copyCode()" class="btn btn-primary btn-sm mr-2">
                                                                 <span class="icon text-white"><i class="fas fa-copy"></i></span>
                                                                 <span class="text">Copia Email</span>
                                                             </button>
-                                                            <button  onclick="downloadPDF()" class="btn btn-outline-danger btn-sm shadow-sm">
+                                                            <button  onclick="downloadPDF()" class="btn btn-outline-danger btn-sm ">
                                                                 <span class="icon text-red"><i class="fas fa-copy"></i></span>
                                                                 <span class="text">Salva Voucher PDF</span>
                                                             </button>
@@ -957,53 +951,29 @@
                 }
 
                 // COSTRUZIONE DATI UI
-                const name         = `${profile.name}`;
-                const surname      = `${profile.surname}`;
-                const birthDate    = profile.birth_date;
-                const genre        = profile.genre;
-                const region       = profile.region;
-                const regNum       = profile.registration_number;
-                const regDate      = convertToItalianFormat(extractDate(profile.creation_date));
-                const age          = calculateAgeWithMonths(birthDate);
-                const userId       = user.id;
-                let totalCredits   = profile.total_credits;
-                let usedCredits    = profile.used_credits;
-                const subType      = profile.sub_type;
-                let prefix = genre === "Femminile" ? "Dott.ssa" : "Dott.";
-                const title = prefix + " " +formatName(surname,name);
+                const name             = profile.name;
+                const surname          = profile.surname;
+                const birthDate        = profile.birth_date;
+                const genre            = profile.genre;
+                const region           = profile.region;
+                const regNum           = profile.registration_number;
+                const regDate          = convertToItalianFormat(extractDate(profile.creation_date));
+                const age              = calculateAgeWithMonths(birthDate);
+                const userId           = user.id;
+                const subType          = profile.sub_type;
+                let prefix             = genre === "Femminile" ? "Dott.ssa" : "Dott.";
+                const title            = prefix + " " +formatName(surname,name);
                 const fullNameNoPrefix = `${name} ${surname}`;
-                const fullName = `${prefix} ${name} ${surname}`;
+                const fullName         = `${prefix} ${name} ${surname}`;
+                const clinicianId      = profile.id; 
 
-                totalCredits=200;
-                usedCredits=40;
+                // yes this is called total credits, but actually this field
+                // is decreased each time a new therapy is assigned
+
+                let remainingCredits   = profile.total_credits;        
+                let usedCredits        = profile.used_credits;
+                let totalCredits       = remainingCredits + usedCredits;
                 
-                const totalPerc = Math.round((totalCredits-usedCredits)*100/totalCredits);
-                const usedPerc=100-totalPerc;
-
-                const clinicianId = profile.id; 
-
-                console.log(clinicianId);
-
-               /*
-               console.log(totalCredits);
-               console.log(usedCredits);
-               console.log(totalPerc+"%");
-               console.log(usedPerc+"%");
-               console.log(fullName);
-               console.log(birthDate);
-               console.log(genre);
-               console.log(region);
-               console.log(regDate);
-               console.log(age);
-               console.log(name);
-               console.log(surname);
-               console.log(userId);
-               console.log(totalCredits);
-               console.log(usedCredits);
-               console.log(subType);
-               console.log(email);
-                */
-               
                // --- Nome ---
                 const userNameElement = document.getElementById("userName");
                 if (userNameElement) {
@@ -1019,18 +989,24 @@
                 // --- Data inizio abbonamento ---
                 const clinicianDivStartDate = document.getElementById("userSubDate");
                 if (clinicianDivStartDate) {
-                    clinicianDivStartDate.textContent = regDate;
-                }
+                    if ( genre==="Femminile")
+                        clinicianDivStartDate.textContent = "Iscritta il "+ regDate;
+                    else if ( genre==="Maschile")
+                        clinicianDivStartDate.textContent = "Iscritto il "+ regDate;
+                    }
                 
                 // --- Età ---
                 const clinicianDivAge = document.getElementById("userAge");
                 if (clinicianDivAge) {
-                    if (age.months!=0)
-                        clinicianDivAge.textContent = age.years+ " Anni e " +age.months+ " mesi";
-                    else
-                        clinicianDivAge.textContent = age.years+ " Anni";
+                    const yearStr = age.years === 1 ? "1 Anno" : `${age.years} Anni`;
+                    if (age.months > 0) {
+                        const monthStr = age.months === 1 ? "1 mese" : `${age.months} mesi`;
+                        clinicianDivAge.textContent = `${yearStr} e ${monthStr}`;
+                    } else {
+                        clinicianDivAge.textContent = yearStr;
+                    }
                 }
-                
+
                 // --- Genere ---
                 const clinicianDivGenre = document.getElementById("userGender");
                 if (clinicianDivGenre) {
@@ -1073,12 +1049,6 @@
                     clinicianDivEmail.textContent = email;
                 }
 
-                // --- Crediti --
-                const clinicianDivCredits = document.getElementById("userCredits");
-                if (clinicianDivCredits) {
-                    clinicianDivCredits.textContent = totalCredits-usedCredits+ "/" + totalCredits;
-                }
-                
                 // --- Codice sezione inferiore cliente ---
                 const clinicianUserId = document.getElementById("clientRegNum");
                 if (clinicianUserId) {
@@ -1087,16 +1057,19 @@
 
                 // update avatar in the navbar
                 updateUserAvatar(genre);
-        
+               
+           //     console.log("Used credits: ", usedCredits);
+           //     console.log("Credits left: ",remainingCredits);
+           //     console.log("Total: ",totalCredits);
+                
                 // Aggiorna legenda dinamica
-                const remainingCredits = Math.max(0, totalCredits - usedCredits);
-                const initialCreditsEl = document.getElementById("initialCredits");
+             //   const initialCreditsEl = document.getElementById("initialCredits");
                 const creditsRemainingEl = document.getElementById("creditsRemaining");
                 const creditsUsedEl = document.getElementById("creditsUsed");
 
                 if (creditsRemainingEl) creditsRemainingEl.textContent = `${remainingCredits}`;
                 if (creditsUsedEl) creditsUsedEl.textContent = `${usedCredits}`;
-                if (initialCreditsEl) initialCreditsEl.textContent= `${totalCredits}`;
+            //    if (initialCreditsEl) initialCreditsEl.textContent= `${totalCredits1}`;
 
                 // Richiama la funzione del grafico a torta
                 renderClinicianPieChart(totalCredits, usedCredits);

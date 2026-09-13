@@ -1405,10 +1405,10 @@
                 }
 
                 // 5. COSTRUZIONE DATI UI
-                const name             = `${profile.name}`;
-                const surname          = `${profile.surname}`;
+                const name             = profile.name;
+                const surname          = profile.surname;
+                const gender           = profile.genre;
                 const fullNameNoPrefix = `${name} ${surname}`;
-                const gender           = `${profile.genre}`;
                     
                 // --- Nome nella NavBar ---
                 const userFullNameElement = document.getElementById("userFullName");
