@@ -648,6 +648,33 @@
 
 </style>
 
+<style>
+
+    /* Ensure the tab content area is always at least the height of the screen minus your header */
+.tab-content {
+    min-height: calc(100vh - 200px);
+}
+
+</style>
+
+<style>
+
+    .protocol-card {
+        transition: transform 0.3s ease, border 0.3s ease, box-shadow 0.3s ease !important;
+        border: 2px solid transparent !important;
+        cursor: pointer;
+        backface-visibility: hidden;
+        -webkit-font-smoothing: subpixel-antialiased;
+    }
+
+    /* Hover effect restricted to the grid container */
+    .protocol-card:hover {
+        border: 2px solid rgb(0,0,255) !important;
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+</style>
 
 </head>
 
@@ -942,7 +969,7 @@
                                 <div class="card shadow-sm" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
                                     <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
                                         <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
-                                        <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Moduli selezionati</h6>
+                                        <h6 id="protocolsCountId" class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Caricamento...</h6>
                                     </div>
 
                                     <div class="container-fluid">
@@ -987,9 +1014,10 @@
                                     </div>
 
                                     <div id="selection-header-1" class="card-body pt-0 pb-3 px-3">
-                                        <div id="sb-sortable-list" class="sb-horizontal-scroll-container">
+                                        <div id="sb-sortable-list" class="sb-horizontal-scroll-container" style="min-height: 370px;">
                                         </div>
                                     </div>
+
 
                                 </div>
 
@@ -1019,7 +1047,7 @@
                                     </div>
                                     
                                     <div class="card-body">
-                                        <div class="tab-content">
+                                        <div class="tab-content" style="min-height: 0;">
 
                                             <div class="tab-pane fade show active" id="dsa_1" role="tabpanel">
                                                 <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
@@ -1066,7 +1094,7 @@
                                     </div>
                                     
                                     <div class="card-body">
-                                        <div class="tab-content">
+                                         <div class="tab-content" style="min-height: 0;">
 
                                             <div class="tab-pane fade show active" id="adhd_1" role="tabpanel">
                                                 <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
@@ -1113,7 +1141,7 @@
                                     </div>
                                     
                                     <div class="card-body">
-                                        <div class="tab-content">
+                                         <div class="tab-content" style="min-height: 0;">
 
                                             <div class="tab-pane fade show active" id="ipo_1" role="tabpanel">
                                                 <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
@@ -1161,7 +1189,7 @@
                                     </div>
                                     
                                     <div class="card-body">
-                                        <div class="tab-content">
+                                         <div class="tab-content" style="min-height: 0;">
 
                                             <div class="tab-pane fade show active" id="iper_1" role="tabpanel">
                                                 <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
@@ -1209,7 +1237,7 @@
                                     </div>
                                     
                                     <div class="card-body">
-                                        <div class="tab-content">
+                                         <div class="tab-content" style="min-height: 0;">
 
                                             <div class="tab-pane fade show active" id="comb_1" role="tabpanel">
                                                 <div class="card-grid-container" style="display: flex; flex-wrap: wrap; gap: 20px; padding: 20px;">
@@ -1445,7 +1473,7 @@
                     category: "Group2",
                     badge: "Disgrafia",
                     badgeColor: "badge-primary", // Classe Bootstrap per il blu
-                    description: "Esercizi di riabilitazione fisica per il recupero della mobilità.",
+                    description: "Percorso intensivo mirato al miglioramento delle funzioni esecutive.",
                     image: "assets/img/place-holder.jpg",
                     timing : 20,
                     metadata: {}
@@ -2039,77 +2067,77 @@
             */
 
             function populateGrid(containerSelector, dataArray) {
-    const container = document.querySelector(containerSelector);
-    if (!container) return; 
+                const container = document.querySelector(containerSelector);
+                if (!container) return; 
 
-    container.innerHTML = ''; 
+                container.innerHTML = ''; 
 
-    // Set up the container as a proper flex grid with consistent gap
-    container.style.display = 'flex';
-    container.style.flexWrap = 'wrap';
-    container.style.gap = '16px';
+                // Set up the container as a proper flex grid with consistent gap
+                container.style.display = 'flex';
+                container.style.flexWrap = 'wrap';
+                container.style.gap = '16px';
 
-    dataArray.forEach(item => {
-        const currentList = (typeof selectedProtocols !== 'undefined') ? selectedProtocols : [];
-        const isSelected = currentList.some(p => p.title === item.title);
+                dataArray.forEach(item => {
+                    const currentList = (typeof selectedProtocols !== 'undefined') ? selectedProtocols : [];
+                    const isSelected = currentList.some(p => p.title === item.title);
 
-        const cardClass = `card shadow-sm border-0 h-100 ${isSelected ? 'selected' : ''}`;
+                    const cardClass = `card shadow-sm border-0 h-100 ${isSelected ? 'selected' : ''}`;
 
-        const btnText = isSelected ? '<i class="fas fa-check-circle text-success"></i> Aggiunto' : '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
-        const btnStyle = isSelected ? 'pointer-events: none; opacity: 0.6;' : '';
+                    const btnText = isSelected ? '<i class="fas fa-check-circle text-success"></i> Aggiunto' : '<i class="fas fa-plus-circle text-success"></i> Aggiungi';
+                    const btnStyle = isSelected ? 'pointer-events: none; opacity: 0.6;' : '';
 
-        const timingValue = item.timing;
+                    const timingValue = item.timing;
 
-        container.innerHTML += `
+                    container.innerHTML += `
 
-            <div class="${cardClass}" style="flex: 0 0 calc(33.333% - 11px); border-radius: 6px; overflow: hidden; margin-bottom: 0;">
+                    <div class="${cardClass}" style="flex: 0 0 calc(33.333% - 11px); border-radius: 6px; overflow: hidden; margin-bottom: 0;">
 
-                <div class="selection-overlay-icon">
-                    <i class="fas fa-check"></i>
-                </div>
-                <div style="height: 90px; overflow: hidden; border-radius: 10px 10px 0 0;">
-                    <img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
-                </div>
+                        <div class="selection-overlay-icon">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <div style="height: 90px; overflow: hidden; border-radius: 10px 10px 0 0;">
+                            <img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                        </div>
 
-                <div class="card-body p-2">
+                        <div class="card-body p-2">
 
-                    <div class="d-flex justify-content-between align-items-start mb-2">
-                        <div style="flex: 1; min-width: 0;">
-                            <h6 class="card-title text-dark mb-1" style="font-size: 0.95rem;">${item.title}</h6>
-                            <div class="mb-1">
-                                <span class="badge ${item.badgeColor} rounded-pill" style="font-size: 0.65rem; padding: 3px 8px;">
-                                    ${item.badge}
-                                </span>
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div style="flex: 1; min-width: 0;">
+                                    <h6 class="card-title text-dark mb-1" style="font-size: 0.95rem;">${item.title}</h6>
+                                    <div class="mb-1">
+                                        <span class="badge ${item.badgeColor} rounded-pill" style="font-size: 0.65rem; padding: 3px 8px;">
+                                            ${item.badge}
+                                        </span>
+                                    </div>
+                                    <p class="card-text text-muted mb-1" style="font-size: 0.75rem;">${item.description}</p>
+                                    <div class="text-left text-nowrap mt-2 pt-1 border-top">
+                                        <h6 class="card-title text-dark mb-0"><i class="fas fa-clock text-success" style="font-size: 0.9rem;"></i> Durata :
+                                            <span class="font-weight-bold text-dark" style="font-size: 1.1rem;">${timingValue} <span style="font-size: 0.7rem; font-weight: normal;" class="text-dark">min</span></span>
+                                        </h6>
+                                    </div>
+                                </div>
                             </div>
-                            <p class="card-text text-muted mb-1" style="font-size: 0.75rem;">${item.description}</p>
-                            <div class="text-left text-nowrap mt-2 pt-1 border-top">
-                                <h6 class="card-title text-dark mb-0"><i class="fas fa-clock text-success" style="font-size: 0.9rem;"></i> Durata :
-                                    <span class="font-weight-bold text-dark" style="font-size: 1.1rem;">${timingValue} <span style="font-size: 0.7rem; font-weight: normal;" class="text-dark">min</span></span>
-                                </h6>
+
+                            <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 6px;">
+                                <a href="#" class="inner-action-btn demo-btn" style="font-size: 0.8rem;"><i class="fas fa-play text-primary"></i>Demo</a>
+                                <a href="#" 
+                                        class="inner-action-btn add-btn" 
+                                        onclick="event.preventDefault(); handleCardClick(this)"
+                                        style="${btnStyle} font-size: 0.8rem;"
+                                        data-item='${JSON.stringify(item).replace(/'/g, "&quot;")}'>
+                                        ${btnText}
+                                </a>
+                                <a href="#" class="inner-action-btn trash-btn ${isSelected ? '' : 'btn-muted'}" style="font-size: 0.8rem;"
+                                    onclick="event.preventDefault(); removeProtocol(this, '${item.title}')">
+                                    <i class="fas fa-trash text-danger"></i>Rimuovi
+                                </a>
                             </div>
+
                         </div>
                     </div>
-
-                    <div class="d-flex flex-wrap align-items-center justify-content-center" style="gap: 6px;">
-                        <a href="#" class="inner-action-btn demo-btn" style="font-size: 0.8rem;"><i class="fas fa-play text-primary"></i>Demo</a>
-                        <a href="#" 
-                                class="inner-action-btn add-btn" 
-                                onclick="event.preventDefault(); handleCardClick(this)"
-                                style="${btnStyle} font-size: 0.8rem;"
-                                data-item='${JSON.stringify(item).replace(/'/g, "&quot;")}'>
-                                ${btnText}
-                        </a>
-                        <a href="#" class="inner-action-btn trash-btn ${isSelected ? '' : 'btn-muted'}" style="font-size: 0.8rem;"
-                            onclick="event.preventDefault(); removeProtocol(this, '${item.title}')">
-                            <i class="fas fa-trash text-danger"></i>Rimuovi
-                        </a>
-                    </div>
-
-                </div>
-            </div>
-        `;
-    });
-}
+                `;
+            });
+        }
     </script>
 
     <script>
@@ -2140,26 +2168,30 @@
         // Update selection header
 
         function updateSelectionHeader() {
-            const list = document.getElementById('sb-sortable-list');
-            
-            if (selectedProtocols.length === 0) {
-                list.innerHTML = `
 
-                <div class="card-body d-flex flex-column h-100 align-items-center justify-content-center text-center w-100 position-relative">
+            const protocolsCountId = document.getElementById('protocolsCountId');
+            if (protocolsCountId) {
+                protocolsCountId.textContent = "Moduli Selezionati ( " + selectedProtocols.length +" )";
+            }
+
+            const list = document.getElementById('sb-sortable-list');
+
+            if (!selectedProtocols || selectedProtocols.length === 0) {
+                list.innerHTML = `
+                    <div class="card-body d-flex flex-column align-items-center justify-content-center text-center w-100 position-relative" style="min-height: 270px;">
                         <h3 class="font-weight-bold text-gray-600">
                             Nessun Elemento Selezionato
                         </h3>
                         <p class="mb-2">Clicca su un elemento per inserirlo nella lista</p>
-                        <!-- Hidden input positioned directly under the text container to cleanly anchor the validation popup -->
                         <input type="text" id="hiddenValidator" required style="position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 1px; height: 1px; opacity: 0; border: none; padding: 0;">
                     </div>
-
                 `;
-            } else {
-                
+            }
+            else {
+
                 list.innerHTML = selectedProtocols.map(p => `
 
-                <div class="card sb-draggable-item shadow-sm overflow-hidden">
+                <div class="protocol-card border rounded sb-draggable-item shadow-sm overflow-hidden">
                     <div class="drag-handle">
                         <i class="fas fa-grip-horizontal"></i>
                     </div>

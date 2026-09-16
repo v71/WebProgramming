@@ -158,134 +158,6 @@
 
 <!---------------------------------------------------------------------------->
 
-<!-- Google Fonts -->
-
-<style>
-
-    .pt-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 50px 20px;
-        color: #2a2a2a;
-        line-height: 1.8;
-    }
-
-    .pt-title {
-        font-size: 2.0rem;
-        font-weight: 600;
-        line-height: 1.25;
-        margin-bottom: 10px;
-        color: #0f0f0f;
-    }
-
-    .pt-meta {
-        font-size: 0.92rem;
-        color: #666;
-        margin-bottom: 35px;
-        border-bottom: 1px solid #e0e0e0;
-        padding-bottom: 15px;
-    }
-
-    .pt-section-title {
-        font-size: 1.0rem;
-        font-weight: 600;
-        margin-bottom: 15px;
-        color: #4ba37f;
-    }
-
-    .pt-subtitle {
-        font-size: 1.15rem;
-        color: #555;
-        line-height: 1.5;
-        margin-bottom: 35px;
-    }
-
-    .pt-quote {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.25rem;
-        background: #f4f7ff;
-        padding: 25px 30px;
-        border-left: 5px solid #005bbb;
-        margin: 40px 0;
-        color: #233;
-    }
-
-    .pt-list {
-        list-style: disc;
-        padding-left: 1.25rem;
-        margin-bottom: 1rem;
-    }
-
-    .pt-list li {
-        margin-bottom: .5rem;
-    }
-
-    .pt-highlight-box {
-        background: #fafafa;
-        border: 1px solid #e6e6e6;
-        padding: 20px 25px;
-        border-radius: 6px;
-        margin: 35px 0;
-    }
-
-    .pt-highlight-box strong {
-        color: #005bbb;
-    }
-    
-
-    .pt-section-title {
-    margin-bottom: 30px;
-    }
-
-    .ef-item p {
-    text-align: center;
-    }
-
-    .section-title {
-    font-weight: 700;
-    color: #2c3e50;
-    }
-
-</style>
-
-<style>
-
-.note-box {
-    background-color: #f0f7f4; /* Light, soft background color */
-    padding: 15px 20px;
-    border-radius: 4px;
-    color: #2e7d32; /* Darker text for readability */
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0px 0;
-}
-
-/* Shared styling for all badges */
-.note-box span[class^="badge-"] {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-weight: 700;
-    margin: 0 4px;
-    font-size: 0.9em;
-}
-
-/* Specific colors for each category */
-.badge-co {
-    background-color: #d1e7dd; /* Light Green */
-    color: #0f5132;
-}
-
-.badge-ra {
-    background-color: #fff3cd; /* Light Yellow/Orange */
-    color: #856404;
-}
-
-.badge-rii {
-    background-color: #f8d7da; /* Light Red */
-    color: #842029;
-}
-</style>
-
 <style>
 
     /* Custom focus state for your date input */
@@ -300,40 +172,6 @@
         border-color: #86b7fe;
         box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
     }
-</style>
-
-<style>
-
-    .badge-co {
-    background-color: #d1e7dd; /* Light Green */
-    color: #0f5132;
-    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
-    border-radius: 30px;       /* This creates the pill shape */
-    font-size: 0.75rem;        /* Slightly smaller to look proportional */
-    font-weight: bold;
-    display: inline-block;     /* Essential for padding to work correctly on a span */
-}
-
-.badge-ra {
-    background-color: #fff3cd; /* Light Yellow/Orange */
-    color: #856404;
-    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
-    border-radius: 30px;       /* This creates the pill shape */
-    font-size: 0.75rem;        /* Slightly smaller to look proportional */
-    font-weight: bold;
-    display: inline-block;     /* Essential for padding to work correctly on a span */
-}
-
-.badge-rii {
-    background-color: #f8d7da; /* Light Red */
-    color: #842029;
-    padding: 4px 12px;         /* Vertical 4px, Horizontal 12px - more horizontal space! */
-    border-radius: 30px;       /* This creates the pill shape */
-    font-size: 0.75rem;        /* Slightly smaller to look proportional */
-    font-weight: bold;
-    display: inline-block;     /* Essential for padding to work correctly on a span */
-}
-
 </style>
 
 <style>
@@ -775,23 +613,26 @@
     </div>
 </div>
 
-                                <div class="row">
+                                
+
+                                <div class="row" style="flex: 1; min-height: 0;">
                                     <div class="col-xl-12 col-lg-12">
                                 
-                                        <!-- Outer Container: Added style="gap: 12px;" -->
+                                        <!-- Outer Container -->
                                         <div class="d-flex flex-column h-100 w-100" style="gap: 24px;">
 
                                             <!-- SECOND SECTION -->
-                                            <div class="card shadow-sm mb-3" style="min-height: fit-content; border-radius: 12px; overflow: hidden; border: none;">
+                                            <div class="card shadow-sm mb-3" style="flex: 1; min-height: 0; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden; border: none;">
                                                 
-                                                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0;">
+                                                <div class="card-header bg-white py-3 d-flex align-items-center w-100" style="border-bottom: 0px solid #f8f9fc; min-width: 0; flex-shrink: 0;">
                                                     <i class="fas fa-file-medical-alt text-primary mr-2" style="flex-shrink: 0;"></i>
                                                     <h6 id="protocolsCountId" class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">
                                                         <i class="fas fa-circle-notch fa-spin text-muted" style="font-size: 1rem;" aria-hidden="true"></i>
                                                     </h6>
                                                 </div>
 
-                                                <div class="container-fluid">
+                                                <!-- Override the global .container-fluid { flex:1; display:flex; ... } rule, which does not belong on this inner wrapper -->
+                                                <div class="container-fluid" style="flex: 0 0 auto; display: block; padding-top: 0; padding-bottom: 0;">
                                                     <div class="row border m-0">
                                                         
                                                         <div class="col-12 col-md-4 p-2 border-md-bottom-0 border-md-right d-flex align-items-center justify-content-center">
@@ -823,7 +664,7 @@
                                                     </div>
                                                  </div>
 
-                                                <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%;">
+                                                <div style="overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; flex: 1; min-height: 0;">
                                                     <div id="selection-header-1" class="card-body pt-3 pb-3 px-4" style="min-width: fit-content;">
                                                         <div id="sb-sortable-list">
                                                         </div>
@@ -1328,7 +1169,7 @@ function renderSelectedProtocolsList() {
             
             const protocolsCountId = document.getElementById('protocolsCountId');
             if (protocolsCountId) {
-                protocolsCountId.textContent = "Moduli Selezionati (" + selectedProtocols.length +" )";
+                protocolsCountId.textContent = "Moduli Selezionati ( " + selectedProtocols.length +" )";
             }
 
             renderSelectedProtocolsList();
