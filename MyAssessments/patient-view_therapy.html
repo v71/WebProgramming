@@ -376,6 +376,27 @@ body {
         
     </style>
 
+
+<style>
+
+    .protocol-card {
+        transition: transform 0.3s ease, border 0.3s ease, box-shadow 0.3s ease !important;
+        border: 2px solid transparent !important;
+        cursor: pointer;
+        backface-visibility: hidden;
+        -webkit-font-smoothing: subpixel-antialiased;
+    }
+
+    /* Hover effect restricted to the grid container */
+    .protocol-card:hover {
+        border: 2px solid rgb(0,0,255) !important;
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+</style>
+
+
 </head>
 
 <body id="page-top">
@@ -477,8 +498,6 @@ body {
                 <!-- muted h5 level just to stop the html valdiator to complain-->
                 <h5 class="sr-only">muted h3</h5>
 
-
-                
                 <div class="fade-on-load container-fluid">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
@@ -498,7 +517,6 @@ body {
                                         <i class="fas fa-user-circle text-primary mr-2" style="flex-shrink: 0;"></i>
                                         <h6 class="m-0 font-weight-bold text-dark text-nowrap text-truncate" style="min-width: 0;">Paziente Selezionato</h6>
                                     </div>
-
 
                                     <!-- Locked body min-height to match fully loaded content -->
                                     <div class="card-body px-3 py-2 d-flex overflow-hidden" style="min-width: 0; min-height: 105px;">
@@ -613,34 +631,19 @@ body {
                                                         non potrà essere interrotto, ricaricato o chiuso senza compromettere 
                                                         l'accuratezza del calcolo dei risultati.<br>
                                                         Assicurati di poter completare la sessione senza interruzioni prima di procedere.</div>
-                                                
-                                                     <style>
-                                                        .btn-glyphicon {
-                                                            padding: 8px;
-                                                            background: #ffffff;
-                                                            margin-right: 4px;
-                                                        }
-                                                        .icon-btn {
-                                                            padding: 1px 15px 3px 2px;
-                                                            border-radius: 50px;
-                                                        }    
-                                                    </style>
-
-                                                    <a class="mb-2 btn icon-btn btn-success d-inline-flex align-items-center align-self-center py-1 pl-1 pr-3 flex-shrink-0" href="#" style="width: fit-content; white-space: nowrap; font-size: 0.95rem;">
-                                                        <span class="btn-glyphicon rounded-circle text-success d-flex align-items-center justify-content-center mr-2 flex-shrink-0" style="width: 28px; height: 28px; padding: 0;">
-                                                            <i class="fas fa-play" style="font-size: 0.8rem;"></i>
-                                                        </span>
-                                                        Inizia Subito
-                                                    </a>
                                                     
-                                                
+                                                    <!-- Button fits tightly right below the text block -->
+                                                    <a href="patient-view_therapy.html" class="btn btn-primary shadow-none d-inline-flex align-items-center justify-content-center" style="font-size: clamp(0.75rem, 2.5vw, 0.85rem); padding: 0.5rem 1.25rem; border-radius: 8px;">
+                                                        <i class="fas fa-play-circle mr-2"></i>
+                                                        <span>Inizia Subito</span>
+                                                    </a>
+
+                                                    </div>
                                                 </div>
 
-                                            </div>
+                                             </div>
 
-                                        </div>
-
-                                        </div>
+                                       </div>
                                     </div>
                                 </div>
                             </div>
@@ -705,8 +708,6 @@ body {
                                         </div>
                                      </div>
                                  </div>
-
-
 
                         </div>
                     </div>
@@ -833,6 +834,7 @@ body {
 
         <script>
 
+/*
             function renderSelectedProtocolsList() {
                 const listContainer = document.getElementById('sb-sortable-list');
                 if (!listContainer) return;
@@ -852,7 +854,8 @@ body {
 
                 // Replace flexbox with CSS Grid auto-fit to eliminate trailing gaps
                 listContainer.className = "list-unstyled p-0";
-                listContainer.style.cssText = "display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;";
+                
+               // listContainer.style.cssText = "display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px;";
 
                 // Loop through each item in the array and build responsive grid cards
                 selectedProtocols.forEach((item, index) => {
@@ -891,6 +894,72 @@ body {
                 });
                 
             }
+*/
+
+
+
+function renderSelectedProtocolsList() {
+            const listContainer = document.getElementById('sb-sortable-list');
+            if (!listContainer) return;
+
+            // Clear existing items
+            listContainer.innerHTML = '';
+
+            // Guard if array is empty
+            if (!selectedProtocols || selectedProtocols.length === 0) {
+                listContainer.innerHTML = `
+                    <li class="list-group-item text-center text-muted py-3 border-0 w-100" style="font-size: 0.95rem;">
+                        Nessun protocollo selezionato
+                    </li>
+                `;
+                return;
+            }
+
+            // Increased gap from 15px to 30px to give more horizontal breathing room ("air") between cards
+            listContainer.className = "list-group d-flex flex-row flex-wrap p-0";
+            listContainer.style.gap = "28px";
+
+            // Loop through each item in the array and build the cards with a fixed, uniform width
+            selectedProtocols.forEach((item, index) => {
+                
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item px-3 py-3 border rounded shadow-sm protocol-card';
+                listItem.style.cssText = 'font-size: 0.95rem; width: 375px; flex: 0 0 375px;';
+
+                listItem.innerHTML = `
+
+                    <div style="height: 140px; overflow: hidden; border-radius: 12px 12px 0 0;">
+                        <img src="${item.image}" alt="${item.title}" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    </div>
+                                    
+                    <div class="card-body p-4">
+                        
+                        <!-- Flex container putting text details on the left and timing on the right -->
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div style="flex: 1; min-width: 0; padding-right: 15px;">
+                                <h5 class="card-title text-dark mb-2">${item.title}</h5>
+                                <div class="mb-2">
+                                    <span class="badge ${item.badgeColor} rounded-pill" style="font-size: 0.75rem; padding: 4px 12px;">
+                                        ${item.badge}
+                                    </span>
+                                </div>
+
+                                <p class="card-text text-muted mb-1" style="font-size: 0.9rem;">${item.description}</p>
+
+                                 <div class="text-left text-nowrap mt-3 pt-2 border-top">
+                                    <h5 class="card-title text-dark">  <i class="fas fa-clock text-success" style="font-size: 1.2rem;"></i> Durata :
+                                        <span class="font-weight-bold text-dark" style="font-size: 1.5rem;">${item.timing} <span style="font-size: 0.9rem; font-weight: normal;" class="text-dark">min</span></span>
+                                    </h5>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+
+                listContainer.appendChild(listItem);
+            });
+        }
 
         </script>
 
@@ -963,7 +1032,7 @@ body {
             
             selectedProtocols = firstConsegnata.protocols;
 
-            console.log(selectedProtocols);
+         //   console.log(selectedProtocols);
 
         //    console.log(fullName);
         //    console.log(birthDate);
@@ -1107,6 +1176,38 @@ body {
                     DataId.value = firstConsegnata.italian_date;
                 }
 
+                const state = firstConsegnata.state;
+
+                let stateStr = "";
+                let stateIcon = "";
+                let stateColor = "";
+
+                if (state === "Consegnata") {
+                    stateStr = "Consegnata";
+                    stateIcon = "fa-clock";
+                    stateColor = "text-warning";
+                } else if (state === "Avviata") {
+                    stateStr = "Avviata";
+                    stateIcon = "fa-redo-alt";
+                    stateColor = "text-primary";
+                } else if (state === "Completata") {
+                    stateStr = "Completata";
+                    stateIcon = "fa-check-circle";
+                    stateColor = "text-success";
+                }
+                
+                // Update the input value
+                const statusInput = document.getElementById('statusText');
+                if (statusInput) {
+                    statusInput.textContent = stateStr; 
+                }
+                
+                // Update the icon class and color dynamically
+                const statusIconEl = document.getElementById('statusIcon');
+                if (statusIconEl) {
+                    statusIconEl.className = `fas ${stateIcon} ${stateColor}`;
+                }
+                
                 const protocolsCountId = document.getElementById('protocolsCountId');
                 if (protocolsCountId) {
                     protocolsCountId.textContent = "Moduli Selezionati (" + selectedProtocols.length +" )";

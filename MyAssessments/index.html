@@ -8,17 +8,8 @@
   <meta name="description" content="">
   <meta name="keywords" content="">
 
-  <!-- Favicons -->
-  <!--<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png?v=2">
-  <link rel="icon" href="favicon.ico" type="image/x-icon">
-  <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">
-  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">-->
-
   <!-- Standard favicon -->
   <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicon.png?v=1">
-  <!-- Fallback for older browsers -->
-  <!--<link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon">-->
-  <!-- Apple (iPhone/iPad home screen) -->
   <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png?v=1">
 
   <!-- Fonts -->
@@ -46,7 +37,6 @@
 
   <!-- Include Google Font with lighter weight -->
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Montserrat:wght@500;700&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
-
   <!--mappa-->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     
@@ -75,131 +65,133 @@
 
   </style>
 
-<style>
-    /* Combine the main wrappers */
-    .init-swiper-1,
-    .init-swiper-2,
-    .init-swiper-3 {
-      position: relative;
-      cursor: pointer;
-    }
+  <style>
 
-    /* Frecce sovrapposte */
-    .init-swiper-1 .swiper-button-next, .init-swiper-1 .swiper-button-prev,
-    .init-swiper-2 .swiper-button-next, .init-swiper-2 .swiper-button-prev,
-    .init-swiper-3 .swiper-button-next, .init-swiper-3 .swiper-button-prev {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
-      background: rgba(255, 255, 255, 0.85);
-      border-radius: 50%;
-      box-shadow: 0 4px 4px rgba(0,0,0,0.12);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+      /* Combine the main wrappers */
+      .init-swiper-1,
+      .init-swiper-2,
+      .init-swiper-3 {
+        position: relative;
+        cursor: pointer;
+      }
 
-    /* Rimuove il contenuto di default */
-    .init-swiper-1 .swiper-button-next::after, .init-swiper-1 .swiper-button-prev::after,
-    .init-swiper-2 .swiper-button-next::after, .init-swiper-2 .swiper-button-prev::after,
-    .init-swiper-3 .swiper-button-next::after, .init-swiper-3 .swiper-button-prev::after {
-      content: '';
-    }
-
-    /* Aggiungi freccia con CSS puro - SUCCESSIVE */
-    .init-swiper-1 .swiper-button-next::before,
-    .init-swiper-2 .swiper-button-next::before,
-    .init-swiper-3 .swiper-button-next::before {
-      content: '❯';
-      font-size: 20px;
-      color: rgb(0,0,255) !important;
-      font-weight: bold;
-    }
-    
-    /* Aggiungi freccia con CSS puro - PRECEDENTI */
-    .init-swiper-1 .swiper-button-prev::before,
-    .init-swiper-2 .swiper-button-prev::before,
-    .init-swiper-3 .swiper-button-prev::before {
-      content: '❮';
-      font-size: 20px;
-      color: rgb(0,0,255) !important;
-      font-weight: bold;
-    }
-
-    /* Hover leggero */
-    .init-swiper-1 .swiper-button-next:hover, .init-swiper-1 .swiper-button-prev:hover,
-    .init-swiper-2 .swiper-button-next:hover, .init-swiper-2 .swiper-button-prev:hover,
-    .init-swiper-3 .swiper-button-next:hover, .init-swiper-3 .swiper-button-prev:hover {
-      transform: translateY(-50%) scale(1.15);
-    }
-
-    /* Posizione orizzontale */
-    .init-swiper-1 .swiper-button-prev,
-    .init-swiper-2 .swiper-button-prev,
-    .init-swiper-3 .swiper-button-prev { left: 10px; }
-
-    .init-swiper-1 .swiper-button-next,
-    .init-swiper-2 .swiper-button-next,
-    .init-swiper-3 .swiper-button-next { right: 10px; }
-
-    /* Mobile Responsive Viewports */
-    @media (max-width: 768px) {
+      /* Frecce sovrapposte */
       .init-swiper-1 .swiper-button-next, .init-swiper-1 .swiper-button-prev,
       .init-swiper-2 .swiper-button-next, .init-swiper-2 .swiper-button-prev,
       .init-swiper-3 .swiper-button-next, .init-swiper-3 .swiper-button-prev {
-        width: 32px;
-        height: 32px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 50%;
+        box-shadow: 0 4px 4px rgba(0,0,0,0.12);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 10;
+        cursor: pointer;
+        transition: all 0.3s ease;
       }
-      .init-swiper-1 .swiper-button-next::before, .init-swiper-1 .swiper-button-prev::before,
-      .init-swiper-2 .swiper-button-next::before, .init-swiper-2 .swiper-button-prev::before,
-      .init-swiper-3 .swiper-button-next::before, .init-swiper-3 .swiper-button-prev::before {
-        font-size: 16px;
+
+      /* Rimuove il contenuto di default */
+      .init-swiper-1 .swiper-button-next::after, .init-swiper-1 .swiper-button-prev::after,
+      .init-swiper-2 .swiper-button-next::after, .init-swiper-2 .swiper-button-prev::after,
+      .init-swiper-3 .swiper-button-next::after, .init-swiper-3 .swiper-button-prev::after {
+        content: '';
       }
-    }
-    
-    /* Container swiper paginazione globale */
-    .init-swiper-1 .swiper-pagination,
-    .init-swiper-2 .swiper-pagination,
-    .init-swiper-3 .swiper-pagination {
-      bottom: 12px;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-    }
 
-    /* Bullet base universale */
-    .init-swiper-1 .swiper-pagination-bullet,
-    .init-swiper-2 .swiper-pagination-bullet,
-    .init-swiper-3 .swiper-pagination-bullet {
-      width: 12px;
-      height: 12px;
-      background: rgba(0, 0, 255, 0.3);
-      border-radius: 50%;
-      transition: all 0.3s ease;
-      transform: scale(1);
-    }
+      /* Aggiungi freccia con CSS puro - SUCCESSIVE */
+      .init-swiper-1 .swiper-button-next::before,
+      .init-swiper-2 .swiper-button-next::before,
+      .init-swiper-3 .swiper-button-next::before {
+        content: '❯';
+        font-size: 20px;
+        color: rgb(0,0,255) !important;
+        font-weight: bold;
+      }
+      
+      /* Aggiungi freccia con CSS puro - PRECEDENTI */
+      .init-swiper-1 .swiper-button-prev::before,
+      .init-swiper-2 .swiper-button-prev::before,
+      .init-swiper-3 .swiper-button-prev::before {
+        content: '❮';
+        font-size: 20px;
+        color: rgb(0,0,255) !important;
+        font-weight: bold;
+      }
 
-    /* Bullet attivo universale */
-    .init-swiper-1 .swiper-pagination-bullet-active,
-    .init-swiper-2 .swiper-pagination-bullet-active,
-    .init-swiper-3 .swiper-pagination-bullet-active {
-      background: rgb(0,0,255) !important;
-      transform: scale(1.4);
-      box-shadow: 0 0 6px rgba(0, 0, 255, 0.5) !important;
-    }
+      /* Hover leggero */
+      .init-swiper-1 .swiper-button-next:hover, .init-swiper-1 .swiper-button-prev:hover,
+      .init-swiper-2 .swiper-button-next:hover, .init-swiper-2 .swiper-button-prev:hover,
+      .init-swiper-3 .swiper-button-next:hover, .init-swiper-3 .swiper-button-prev:hover {
+        transform: translateY(-50%) scale(1.15);
+      }
 
-    /* Hover su bullet */
-    .init-swiper-1 .swiper-pagination-bullet:hover,
-    .init-swiper-2 .swiper-pagination-bullet:hover,
-    .init-swiper-3 .swiper-pagination-bullet:hover {
-      transform: scale(1.2);
-      background: rgba(0, 0, 255, 0.6) !important;
-    }
+      /* Posizione orizzontale */
+      .init-swiper-1 .swiper-button-prev,
+      .init-swiper-2 .swiper-button-prev,
+      .init-swiper-3 .swiper-button-prev { left: 10px; }
+
+      .init-swiper-1 .swiper-button-next,
+      .init-swiper-2 .swiper-button-next,
+      .init-swiper-3 .swiper-button-next { right: 10px; }
+
+      /* Mobile Responsive Viewports */
+      @media (max-width: 768px) {
+        .init-swiper-1 .swiper-button-next, .init-swiper-1 .swiper-button-prev,
+        .init-swiper-2 .swiper-button-next, .init-swiper-2 .swiper-button-prev,
+        .init-swiper-3 .swiper-button-next, .init-swiper-3 .swiper-button-prev {
+          width: 32px;
+          height: 32px;
+        }
+        .init-swiper-1 .swiper-button-next::before, .init-swiper-1 .swiper-button-prev::before,
+        .init-swiper-2 .swiper-button-next::before, .init-swiper-2 .swiper-button-prev::before,
+        .init-swiper-3 .swiper-button-next::before, .init-swiper-3 .swiper-button-prev::before {
+          font-size: 16px;
+        }
+      }
+      
+      /* Container swiper paginazione globale */
+      .init-swiper-1 .swiper-pagination,
+      .init-swiper-2 .swiper-pagination,
+      .init-swiper-3 .swiper-pagination {
+        bottom: 12px;
+        display: flex;
+        justify-content: center;
+        gap: 8px;
+      }
+
+      /* Bullet base universale */
+      .init-swiper-1 .swiper-pagination-bullet,
+      .init-swiper-2 .swiper-pagination-bullet,
+      .init-swiper-3 .swiper-pagination-bullet {
+        width: 12px;
+        height: 12px;
+        background: rgba(0, 0, 255, 0.3);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+        transform: scale(1);
+      }
+
+      /* Bullet attivo universale */
+      .init-swiper-1 .swiper-pagination-bullet-active,
+      .init-swiper-2 .swiper-pagination-bullet-active,
+      .init-swiper-3 .swiper-pagination-bullet-active {
+        background: rgb(0,0,255) !important;
+        transform: scale(1.4);
+        box-shadow: 0 0 6px rgba(0, 0, 255, 0.5) !important;
+      }
+
+      /* Hover su bullet */
+      .init-swiper-1 .swiper-pagination-bullet:hover,
+      .init-swiper-2 .swiper-pagination-bullet:hover,
+      .init-swiper-3 .swiper-pagination-bullet:hover {
+        transform: scale(1.2);
+        background: rgba(0, 0, 255, 0.6) !important;
+      }
+  
   </style>
 
   <!-- COLORE ICONE SEZIONE CONTATTI -->
@@ -208,6 +200,21 @@
     #contact i {
       color: #007bff; /* blu per tutte le icone nella sezione contatti */
     }
+
+  </style>
+
+  <!-- TESTO AFFIANCATO VICINO SLIDERS -->
+  <style>
+
+      .info {
+        text-align: left;
+      }
+
+      .info h3,
+      .info p {
+        margin-left: 0;
+        padding-left: 0;
+      }
 
   </style>
 
@@ -237,11 +244,6 @@
       pointer-events: auto;       /* cliccabile quando visibile */
     }
 
-</style>
-
-<!-- MESSAGGI DI ERRORE -->
-<style>
-
     .resend-fade {
       opacity: 0;
       transform: translateY(5px);
@@ -255,86 +257,71 @@
 
 </style>
 
-<!-- TESTO AFFIANCATO VICINO SLIDERS -->
+<style>
+
+    /* --- Sober Mission Styles --- */
+    .sober-heading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        
+        /* Typography */
+        font-size: clamp(1.75rem, 4vw, 2.25rem) !important;
+        font-weight: 600 !important;
+        color: #012970;
+        letter-spacing: -0.5px;
+        margin-bottom: 20px !important;
+        text-transform: none;
+        text-align: center;
+    }
+
+    /* The decorative lines */
+    .sober-heading::before,
+    .sober-heading::after {
+        content: "";
+        height: 2px;
+        width: 60px; /* Slightly longer for better balance */
+        background-color: #4154f1;
+        display: inline-block;
+        opacity: 0.4; /* Softens the blue to stay 'sober' */
+        border-radius: 2px;
+    }
+
+    .sober-mission {
+        font-size: clamp(1.05rem, 3vw, 1.2rem) !important;
+        line-height: 1.8;
+        color: #555;
+        max-width: 750px;
+        margin: 0 auto; /* Ensures it stays centered if you add more text */
+        font-weight: 400;
+        text-align: center;
+    }
+
+    /* Subtly highlights key terms */
+    .sober-mission .highlight {
+        color: #012970;
+      /* border-bottom: 1px solid rgba(65, 84, 241, 0.15);*/ /* Slightly thicker but lighter color */
+        padding-bottom: 1px;
+        font-weight: 600; /* Added a tiny bit of weight to the highlight */
+    }
+
+  </style>
+
   <style>
 
-    .info {
-      text-align: left;
+    /* Standard class to hide elements visually but keep them for SEO/Validators */
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
     }
-
-    .info h3,
-    .info p {
-      margin-left: 0;
-      padding-left: 0;
-    }
-
-</style>
-
-
-<style>
-
-/* --- Sober Mission Styles --- */
-.sober-heading {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    
-    /* Typography */
-    font-size: clamp(1.75rem, 4vw, 2.25rem) !important;
-    font-weight: 600 !important;
-    color: #012970;
-    letter-spacing: -0.5px;
-    margin-bottom: 20px !important;
-    text-transform: none;
-    text-align: center;
-}
-
-/* The decorative lines */
-.sober-heading::before,
-.sober-heading::after {
-    content: "";
-    height: 2px;
-    width: 60px; /* Slightly longer for better balance */
-    background-color: #4154f1;
-    display: inline-block;
-    opacity: 0.4; /* Softens the blue to stay 'sober' */
-    border-radius: 2px;
-}
-
-.sober-mission {
-    font-size: clamp(1.05rem, 3vw, 1.2rem) !important;
-    line-height: 1.8;
-    color: #555;
-    max-width: 750px;
-    margin: 0 auto; /* Ensures it stays centered if you add more text */
-    font-weight: 400;
-    text-align: center;
-}
-
-/* Subtly highlights key terms */
-.sober-mission .highlight {
-    color: #012970;
-   /* border-bottom: 1px solid rgba(65, 84, 241, 0.15);*/ /* Slightly thicker but lighter color */
-    padding-bottom: 1px;
-    font-weight: 600; /* Added a tiny bit of weight to the highlight */
-}
-</style>
-
-<style>
-
-  /* Standard class to hide elements visually but keep them for SEO/Validators */
-  .visually-hidden {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
 
 </style>
 
@@ -398,12 +385,17 @@
     object-position: center top !important; 
 }
 
+@media (max-width: 768px) {
+    #hero img {
+        object-position: center center !important; /* Adjust if 'center top' crops badly on mobile */
+    }
+}
+
 </style>
 
 </head>
 
 <body class="index-page">
-<h1 class="visually-hidden">MyAssessments - Neurodivergenze ,adhd, dsa, disgrafia, discalculia</h1>
 
 <!-- Inizio header -->
 <header id="header" class="header d-flex align-items-center fixed-top">
@@ -1524,29 +1516,6 @@
          </form>
           </div>
           </div>
-
-           <!--Mappa-->
-                <div id="map" style="border: 1px solid rgb(255, 255, 255); border-radius: 8px;" data-aos="fade-up" data-aos-delay="100">
-                  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-                  <script>
-                    // Center map at reggio di calabria
-                    const map = L.map('map').setView([38.09053861074554, 15.642876710825037], 13);
-
-                    // OpenStreetMap tiles
-                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                      attribution: '&copy; OpenStreetMap contributors',
-                      maxZoom: 19,
-                    }).addTo(map);
-
-                    // Add marker
-                    L.marker([38.09053861074554, 15.642876710825037])
-                      .addTo(map)
-                      .bindPopup("<b>Noi siamo Qui")
-                      .openPopup();
-                  </script>
-                </div>
-         <!--Fine Mappa-->
-      
     </div>
   </div>
 </section>
@@ -1630,8 +1599,7 @@
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
-  <!-- Vendor JS Files -->
-<!--<script src="assets/vendor/php-email-form/validate.js"></script>-->
+<!-- Vendor JS Files -->
 <script src="assets/vendor/aos/aos.js"></script>
 <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
 <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
@@ -1784,7 +1752,7 @@
             );
 
             // LOG-OUT forzato (per sicurezza, evita accesso al login se già autenticato)
-            (async () => {
+            /*(async () => {
               try {
                 const { data: { session } } = await supabase.auth.getSession();
 
@@ -1798,6 +1766,35 @@
               } finally {
                 document.body.style.display = "block";
               }
+            })();
+            */
+
+            (async () => {
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+
+                    if (session) {
+                        console.log("⚠️ Logout automatico in corso...");
+                        
+                        // Create a 3-second timeout guard so signOut never freezes the app
+                        const timeoutPromise = new Promise((_, reject) => 
+                            setTimeout(() => reject(new Error('SignOut timeout')), 3000)
+                        );
+
+                        // Race the network signout against the timeout
+                        await Promise.race([
+                            supabase.auth.signOut({ scope: 'local' }), 
+                            timeoutPromise
+                        ]);
+                    }
+                } catch (err) {
+                    console.warn("Logout di rete scaduto o fallito, procedo con il sblocco UI:", err.message);
+                    // Fallback: Clear local auth storage manually if the network call hangs
+                    localStorage.removeItem('sb-bjbnkqgyibadjlrcjqfs-auth-token');
+                } finally {
+                    // This guarantees the page always renders, even if Supabase is offline
+                    document.body.style.display = "block";
+                }
             })();
 
             // ---------------------------------------------------------------------------------
