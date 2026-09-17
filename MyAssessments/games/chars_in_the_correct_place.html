@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-Time Shuffled Character Card Puzzle</title>
+    <style>
+        :root {
+            --bg-0: #0d0d14;
+            --bg-1: #15151f;
+            --bg-2: #1c1c29;
+            --accent: #7c5cff;
+            --accent-2: #4fd1c5;
+            --correct: #39d98a;
+            --wrong: #ff5c7c;
+            --text: #e8e8f0;
+            --text-dim: #9494a8;
+            --border: #2a2a3a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(124,92,255,0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(79,209,197,0.07), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 24px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 0 0 20px;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: #0d0d14;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: filter 0.15s ease;
+        }
+
+        button:hover {
+            filter: brightness(1.08);
+        }
+
+        button.secondary-btn {
+            background: transparent;
+            color: var(--accent-2);
+            border: 1px solid var(--border);
+        }
+
+        button.secondary-btn:hover {
+            filter: none;
+            border-color: var(--accent-2);
+        }
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        /* Container configurations */
+        .card-container {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 12px;
+            width: 100%;
+            overflow-x: auto;
+            min-height: clamp(120px, 18vh, 200px);
+            padding: 20px;
+            border-radius: 16px;
+            align-items: center;
+            box-sizing: border-box;
+            transition: border-color 0.2s, background-color 0.2s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        #source-container {
+            border: 2px dashed var(--border);
+            background-color: var(--bg-1);
+        }
+
+        #target-container {
+            border: 2px dashed var(--accent);
+            background-color: var(--bg-1);
+        }
+
+        .target-wrapper {
+            position: relative;
+        }
+
+        #reveal-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            padding: 20px;
+            border-radius: 16px;
+            background-color: var(--bg-1);
+            border: 2px solid var(--correct);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s ease;
+            overflow-x: auto;
+        }
+
+        #reveal-overlay.visible {
+            opacity: 1;
+        }
+
+        /* Reveal letters reuse the exact .card shape/size, just recolored green */
+        .card.reveal-letter {
+            border-color: var(--correct);
+            background-color: rgba(57, 217, 138, 0.15);
+            color: var(--correct);
+            cursor: default;
+            box-shadow: none;
+        }
+
+        .card.reveal-letter.space {
+            background-color: transparent;
+            border-style: dotted;
+        }
+
+        .card-container.drag-container-over {
+            border-color: var(--accent-2);
+            background-color: rgba(79, 209, 197, 0.06);
+        }
+
+        /* Individual Character Card */
+        .card {
+            flex-shrink: 0;
+            width: 70px;
+            height: 90px;
+            background-color: var(--bg-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+            transition: border-color 0.2s, transform 0.1s, background-color 0.15s;
+            touch-action: none;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .card:active {
+            cursor: grabbing;
+        }
+
+        .card.space {
+            border-style: dotted;
+            border-color: var(--border);
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        .card.dragging {
+            opacity: 0.3;
+        }
+
+        .card.drag-over {
+            border-color: var(--accent-2);
+            transform: scale(1.05);
+        }
+
+        /* Status Feedback Message (shared feedback style) */
+        #status-message {
+            margin-top: 4px;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            min-height: 22px;
+            text-align: center;
+        }
+
+        #status-message.correct-text {
+            color: var(--correct);
+        }
+
+        #status-message.wrong-text {
+            color: var(--wrong);
+        }
+
+        #game-stats {
+            margin: -10px 0 16px;
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-variant-numeric: tabular-nums;
+        }
+
+        #game-stats strong {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Real-Time Character Card Puzzle</h1>
+
+    <div id="game-stats">
+        <span>Time: <strong id="time-value">0s</strong></span>
+        <span>Moves: <strong id="moves-value">0</strong></span>
+    </div>
+
+    <div class="controls">
+        <button id="reveal-btn" class="secondary-btn">Hold to Reveal Word</button>
+    </div>
+
+    <div id="status-message"></div>
+
+    <div class="section-wrapper">
+        <div class="section-title">Source List (Randomly Shuffled)</div>
+        <div id="source-container" class="card-container"></div>
+    </div>
+
+    <div class="section-wrapper">
+        <div class="section-title">Drop Zone (Target List)</div>
+        <div class="target-wrapper">
+            <div id="target-container" class="card-container"></div>
+            <div id="reveal-overlay" aria-hidden="true"></div>
+        </div>
+    </div>
+
+    <script>
+        const revealBtn = document.getElementById('reveal-btn');
+        const revealOverlay = document.getElementById('reveal-overlay');
+        const sourceContainer = document.getElementById('source-container');
+        const targetContainer = document.getElementById('target-container');
+        const statusMessage = document.getElementById('status-message');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+
+        /* -----------------------------------------------------------
+           The puzzle word is set here, in code — not from a visible
+           input field — so the answer is never shown to the player
+           anywhere in the UI except via the intentional Reveal button.
+           A host platform can set this dynamically, e.g.:
+             puzzleEl.dataset.word = "SOME WORD";
+           or by editing this constant directly per deployment.
+        ----------------------------------------------------------- */
+        const PUZZLE_WORD = "HELLO WORLD";
+
+        let originalTextString = "";
+        let draggedCard = null;
+
+        // Elapsed-time tracking: purely informational (how long the
+        // player has been at it), not a countdown or a scoring factor.
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let gameCompleted = false;
+        // Set once the puzzle is solved — holds how many seconds the
+        // player took, for the host platform to read/store/report.
+        let completionTimeSeconds = null;
+
+        // Move counter: every card dropped into the target zone or
+        // reordered within it counts as one move.
+        let moveCount = 0;
+        // Set once the puzzle is solved — holds how many moves it took.
+        let completionMoveCount = null;
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function updateMovesDisplay() {
+            movesValueEl.textContent = moveCount;
+        }
+
+        function registerMove() {
+            if (gameCompleted) return; // don't keep counting after a win
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initializeGame(text) {
+            sourceContainer.innerHTML = ''; 
+            targetContainer.innerHTML = ''; 
+            statusMessage.textContent = '';
+            statusMessage.className = '';
+            gameCompleted = false;
+            completionTimeSeconds = null;
+            completionMoveCount = null;
+            moveCount = 0;
+            updateMovesDisplay();
+            startElapsedTimer();
+            
+            originalTextString = text;
+            const charArray = Array.from(originalTextString);
+            if (charArray.length === 0) return;
+
+            const shuffledChars = shuffleArray(charArray);
+
+            shuffledChars.forEach(char => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                
+                card.dataset.char = char;
+
+                if (char === ' ') {
+                    card.classList.add('space');
+                    card.innerHTML = '&nbsp;';
+                } else {
+                    card.textContent = char;
+                }
+
+                card.setAttribute('draggable', 'true');
+                addDragAndDropEvents(card);
+                sourceContainer.appendChild(card);
+            });
+            
+            checkArrangement();
+        }
+
+        function addDragAndDropEvents(card) {
+            card.addEventListener('dragstart', (e) => {
+                draggedCard = card;
+                setTimeout(() => card.classList.add('dragging'), 0);
+            });
+
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+                draggedCard = null;
+                document.querySelectorAll('.card').forEach(c => c.classList.remove('drag-over'));
+                document.querySelectorAll('.card-container').forEach(c => c.classList.remove('drag-container-over'));
+            });
+        }
+
+        [sourceContainer, targetContainer].forEach(container => {
+            container.addEventListener('dragover', (e) => {
+                e.preventDefault();
+            });
+
+            container.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                container.classList.add('drag-container-over');
+            });
+
+            container.addEventListener('dragleave', (e) => {
+                if (e.target === container) {
+                    container.classList.remove('drag-container-over');
+                }
+            });
+
+            container.addEventListener('drop', (e) => {
+                e.preventDefault();
+                container.classList.remove('drag-container-over');
+
+                if (draggedCard && e.target === container) {
+                    container.appendChild(draggedCard);
+                    registerMove();
+                    checkArrangement(); // Real-time check on drop
+                }
+            });
+        });
+
+        function attachCardDropZone() {
+            document.addEventListener('dragover', (e) => {
+                if (e.target.classList && e.target.classList.contains('card')) {
+                    e.preventDefault();
+                }
+            });
+
+            document.addEventListener('drop', (e) => {
+                if (e.target.classList && e.target.classList.contains('card') && draggedCard) {
+                    e.preventDefault();
+                    const targetCard = e.target;
+                    const targetParent = targetCard.parentNode;
+
+                    if (draggedCard !== targetCard) {
+                        const allCards = [...targetParent.querySelectorAll('.card')];
+                        const draggedPos = allCards.indexOf(draggedCard);
+                        const targetPos = allCards.indexOf(targetCard);
+
+                        if (draggedPos === -1 || draggedPos < targetPos) {
+                            targetParent.insertBefore(draggedCard, targetCard.nextSibling);
+                        } else {
+                            targetParent.insertBefore(draggedCard, targetCard);
+                        }
+                        registerMove();
+                        checkArrangement(); // Real-time check on reorder drop
+                    }
+                }
+            });
+        }
+
+        attachCardDropZone();
+
+        function checkArrangement() {
+            const targetCards = [...targetContainer.querySelectorAll('.card')];
+            const currentString = targetCards.map(card => card.dataset.char).join('');
+
+            if (targetCards.length === 0) {
+                statusMessage.className = 'wrong-text';
+                statusMessage.textContent = 'The target list is empty!';
+                return;
+            }
+
+            if (currentString === originalTextString) {
+                statusMessage.className = 'correct-text';
+                statusMessage.textContent = 'Success! The cards match the original text perfectly!';
+
+                if (!gameCompleted) {
+                    gameCompleted = true;
+                    stopElapsedTimer();
+                    completionTimeSeconds = elapsedSeconds;
+                    completionMoveCount = moveCount;
+                    console.log('Puzzle solved in', completionTimeSeconds, 'seconds and', completionMoveCount, 'moves.');
+                }
+            } else {
+                statusMessage.className = 'wrong-text';
+                statusMessage.textContent = `Current target arrangement: "${currentString}"`;
+            }
+        }
+
+        // Initialize on load — word comes from PUZZLE_WORD, set in code above.
+        initializeGame(PUZZLE_WORD);
+
+        // Reveal: shows the answer directly in the drop zone, only while
+        // the button is actively pressed. Released (or pointer/finger
+        // dragged away) = hidden again, no lingering trace of the answer.
+        function showReveal() {
+            revealOverlay.innerHTML = '';
+            Array.from(originalTextString).forEach((char) => {
+                const card = document.createElement('div');
+                card.classList.add('card', 'reveal-letter');
+                if (char === ' ') {
+                    card.classList.add('space');
+                    card.innerHTML = '&nbsp;';
+                } else {
+                    card.textContent = char;
+                }
+                revealOverlay.appendChild(card);
+            });
+            revealOverlay.classList.add('visible');
+        }
+        function hideReveal() {
+            revealOverlay.classList.remove('visible');
+        }
+
+        revealBtn.addEventListener('mousedown', showReveal);
+        revealBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // avoid emulated mouse events double-firing
+            showReveal();
+        }, { passive: false });
+
+        // Listen on the document (not just the button) so the word still
+        // hides correctly if the pointer/finger moves off the button
+        // before being released.
+        document.addEventListener('mouseup', hideReveal);
+        document.addEventListener('touchend', hideReveal);
+        document.addEventListener('touchcancel', hideReveal);
+    </script>
+</body>
+</html>

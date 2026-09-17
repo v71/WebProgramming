@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill in the Blanks</title>
+    <style>
+        :root {
+            --bg-0: #0d0d14;
+            --bg-1: #15151f;
+            --bg-2: #1c1c29;
+            --accent: #7c5cff;
+            --accent-2: #4fd1c5;
+            --correct: #39d98a;
+            --wrong: #ff5c7c;
+            --text: #e8e8f0;
+            --text-dim: #9494a8;
+            --border: #2a2a3a;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(124,92,255,0.08), transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(79,209,197,0.07), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 24px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        #game-stats {
+            margin: -2px 0 16px;
+            display: flex;
+            gap: 20px;
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            font-variant-numeric: tabular-nums;
+        }
+
+        #game-stats strong {
+            color: var(--accent-2);
+            font-weight: 600;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: #0d0d14;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: filter 0.15s ease;
+        }
+
+        button:hover {
+            filter: brightness(1.08);
+        }
+
+        button.secondary-btn {
+            background: transparent;
+            color: var(--accent-2);
+            border: 1px solid var(--border);
+        }
+
+        button.secondary-btn:hover {
+            filter: none;
+            border-color: var(--accent-2);
+        }
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        /* Word bank — same container language as the card-based puzzle,
+           but wraps onto multiple lines instead of scrolling sideways,
+           since a moderate paragraph can have a dozen+ blanks/words. */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+            min-height: clamp(80px, 12vh, 120px);
+            padding: 20px;
+            border-radius: 16px;
+            align-items: center;
+            box-sizing: border-box;
+            transition: border-color 0.2s, background-color 0.2s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        #word-bank {
+            border: 2px dashed var(--border);
+            background-color: var(--bg-1);
+        }
+
+        .card-container.drag-container-over {
+            border-color: var(--accent-2);
+            background-color: rgba(79, 209, 197, 0.06);
+        }
+
+        /* Draggable word chip — same visual language as the letter card,
+           but auto-width to fit a whole word instead of a fixed square */
+        .card {
+            background-color: var(--bg-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: grab;
+            user-select: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+            transition: border-color 0.2s, transform 0.1s, background-color 0.15s;
+            touch-action: none;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .card:active {
+            cursor: grabbing;
+        }
+
+        .card.dragging {
+            opacity: 0.3;
+        }
+
+        .card.word-card {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            height: auto;
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* The passage text, with inline blank slots */
+        .passage-box {
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            font-size: 1.1rem;
+            line-height: 2.6;
+            color: var(--text);
+        }
+
+        .blank-slot {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            min-height: 40px;
+            margin: 0 4px;
+            vertical-align: middle;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            background-color: var(--bg-2);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+
+        .blank-slot.filled {
+            border: none;
+            background: transparent;
+            min-width: 0;
+            min-height: 0;
+        }
+
+        .blank-slot.drag-container-over {
+            border-color: var(--accent-2);
+            background-color: rgba(79, 209, 197, 0.08);
+        }
+
+        /* Reveal overlay per-blank — solid background so it fully masks
+           whatever word (if any) currently occupies the slot */
+        .reveal-badge {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            background-color: var(--bg-1);
+            border: 2px solid var(--correct);
+            color: var(--correct);
+            font-weight: 700;
+            white-space: nowrap;
+            border-radius: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s ease;
+            z-index: 2;
+        }
+
+        .reveal-badge.visible {
+            opacity: 1;
+        }
+
+        /* Status feedback */
+        #status-message {
+            margin-top: 4px;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            min-height: 22px;
+            text-align: center;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        #status-message.correct-text {
+            color: var(--correct);
+        }
+
+        #status-message.wrong-text {
+            color: var(--wrong);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Fill in the Blanks</h1>
+
+    <div id="game-stats">
+        <span>Time: <strong id="time-value">0s</strong></span>
+        <span>Moves: <strong id="moves-value">0</strong></span>
+    </div>
+
+    <div class="controls">
+        <button id="reveal-btn" class="secondary-btn">Hold to Reveal Answers</button>
+    </div>
+
+    <div id="status-message"></div>
+
+    <div class="section-wrapper">
+        <div class="section-title">Word Bank</div>
+        <div id="word-bank" class="card-container"></div>
+    </div>
+
+    <div class="section-wrapper">
+        <div class="section-title">Complete the Text</div>
+        <div id="text-passage" class="passage-box"></div>
+    </div>
+
+    <script>
+        const revealBtn = document.getElementById('reveal-btn');
+        const wordBank = document.getElementById('word-bank');
+        const passageBox = document.getElementById('text-passage');
+        const statusMessage = document.getElementById('status-message');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+
+        /* -----------------------------------------------------------
+           The passage is set here, in code — a mix of plain text
+           segments and blanks, each blank naming its own correct
+           answer. A host platform can generate this array dynamically
+           per lesson/student instead of hard-coding it here.
+        ----------------------------------------------------------- */
+        const PUZZLE_SEGMENTS = [
+            { type: 'text', content: 'The ' },
+            { type: 'blank', id: 'b1', answer: 'quick' },
+            { type: 'text', content: ' brown ' },
+            { type: 'blank', id: 'b2', answer: 'fox' },
+            { type: 'text', content: ' jumps over the lazy ' },
+            { type: 'blank', id: 'b3', answer: 'dog' },
+            { type: 'text', content: ' near the ' },
+            { type: 'blank', id: 'b4', answer: 'river' },
+            { type: 'text', content: '.' }
+        ];
+
+        let blanksMeta = []; // [{ id, answer, element }]
+        let draggedCard = null;
+
+        // Elapsed-time tracking: purely informational, not a countdown.
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let gameCompleted = false;
+        let completionTimeSeconds = null;
+
+        // Move counter: every word dropped into a blank, swapped out of
+        // one, or returned to the bank counts as one move.
+        let moveCount = 0;
+        let completionMoveCount = null;
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function updateMovesDisplay() {
+            movesValueEl.textContent = moveCount;
+        }
+
+        function registerMove() {
+            if (gameCompleted) return;
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function createWordCard(word) {
+            const card = document.createElement('div');
+            card.className = 'card word-card';
+            card.textContent = word;
+            card.dataset.word = word;
+            card.setAttribute('draggable', 'true');
+            addDragAndDropEvents(card);
+            return card;
+        }
+
+        function addDragAndDropEvents(card) {
+            card.addEventListener('dragstart', () => {
+                draggedCard = card;
+                setTimeout(() => card.classList.add('dragging'), 0);
+            });
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+                draggedCard = null;
+                document.querySelectorAll('.blank-slot, #word-bank').forEach(el => el.classList.remove('drag-container-over'));
+            });
+        }
+
+        function attachBlankDropEvents(slot) {
+            slot.addEventListener('dragover', (e) => e.preventDefault());
+            slot.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                slot.classList.add('drag-container-over');
+            });
+            slot.addEventListener('dragleave', (e) => {
+                if (e.target === slot) slot.classList.remove('drag-container-over');
+            });
+            slot.addEventListener('drop', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                slot.classList.remove('drag-container-over');
+                if (!draggedCard || draggedCard.parentNode === slot) return;
+
+                // If this blank already holds a word, evict it back to the bank first
+                const occupant = slot.querySelector('.word-card');
+                if (occupant) {
+                    wordBank.appendChild(occupant);
+                }
+                slot.appendChild(draggedCard);
+                registerMove();
+                checkArrangement();
+            });
+        }
+
+        function attachWordBankDropEvents() {
+            wordBank.addEventListener('dragover', (e) => e.preventDefault());
+            wordBank.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                wordBank.classList.add('drag-container-over');
+            });
+            wordBank.addEventListener('dragleave', (e) => {
+                if (e.target === wordBank) wordBank.classList.remove('drag-container-over');
+            });
+            wordBank.addEventListener('drop', (e) => {
+                e.preventDefault();
+                wordBank.classList.remove('drag-container-over');
+                if (!draggedCard || draggedCard.parentNode === wordBank) return;
+                wordBank.appendChild(draggedCard);
+                registerMove();
+                checkArrangement();
+            });
+        }
+
+        function initializeGame(segments) {
+            passageBox.innerHTML = '';
+            wordBank.innerHTML = '';
+            statusMessage.textContent = '';
+            statusMessage.className = '';
+            gameCompleted = false;
+            completionTimeSeconds = null;
+            completionMoveCount = null;
+            moveCount = 0;
+            updateMovesDisplay();
+            startElapsedTimer();
+
+            blanksMeta = [];
+
+            segments.forEach((seg) => {
+                if (seg.type === 'text') {
+                    passageBox.appendChild(document.createTextNode(seg.content));
+                } else {
+                    const slot = document.createElement('span');
+                    slot.className = 'blank-slot';
+                    slot.dataset.blankId = seg.id;
+
+                    const badge = document.createElement('span');
+                    badge.className = 'reveal-badge';
+                    badge.textContent = seg.answer;
+                    slot.appendChild(badge);
+
+                    attachBlankDropEvents(slot);
+                    passageBox.appendChild(slot);
+                    blanksMeta.push({ id: seg.id, answer: seg.answer, element: slot });
+                }
+            });
+
+            const shuffledWords = shuffleArray(blanksMeta.map((b) => b.answer));
+            shuffledWords.forEach((word) => {
+                wordBank.appendChild(createWordCard(word));
+            });
+
+            checkArrangement();
+        }
+
+        function checkArrangement() {
+            let filledCount = 0;
+            let allCorrect = true;
+
+            blanksMeta.forEach((b) => {
+                const occupant = b.element.querySelector('.word-card');
+                b.element.classList.toggle('filled', !!occupant);
+                if (occupant) {
+                    filledCount++;
+                    if (occupant.dataset.word !== b.answer) allCorrect = false;
+                } else {
+                    allCorrect = false;
+                }
+            });
+
+            if (filledCount < blanksMeta.length) {
+                statusMessage.className = 'wrong-text';
+                statusMessage.textContent = `${filledCount} of ${blanksMeta.length} blanks filled.`;
+                return;
+            }
+
+            if (allCorrect) {
+                statusMessage.className = 'correct-text';
+                statusMessage.textContent = 'Success! All the words are in the right place!';
+
+                if (!gameCompleted) {
+                    gameCompleted = true;
+                    stopElapsedTimer();
+                    completionTimeSeconds = elapsedSeconds;
+                    completionMoveCount = moveCount;
+                    console.log('Puzzle solved in', completionTimeSeconds, 'seconds and', completionMoveCount, 'moves.');
+                }
+            } else {
+                statusMessage.className = 'wrong-text';
+                statusMessage.textContent = 'All blanks are filled, but some words are in the wrong place.';
+            }
+        }
+
+        // Reveal: shows each blank's correct word directly in place,
+        // only while the button is actively pressed.
+        function showReveal() {
+            document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.add('visible'));
+        }
+        function hideReveal() {
+            document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.remove('visible'));
+        }
+
+        revealBtn.addEventListener('mousedown', showReveal);
+        revealBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            showReveal();
+        }, { passive: false });
+
+        document.addEventListener('mouseup', hideReveal);
+        document.addEventListener('touchend', hideReveal);
+        document.addEventListener('touchcancel', hideReveal);
+
+        attachWordBankDropEvents();
+
+        // Initialize on load — segments come from PUZZLE_SEGMENTS, set in code above.
+        initializeGame(PUZZLE_SEGMENTS);
+    </script>
+</body>
+</html>
