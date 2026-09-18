@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Shuffled Character Card Puzzle</title>
+    <title>Multi-Word Character Card Puzzle</title>
     <style>
         :root {
             --bg-0: #0d0d14;
@@ -36,7 +36,7 @@
         }
 
         h1 {
-            margin: 0 0 20px;
+            margin: 0 0 10px;
             font-size: 1.6rem;
             letter-spacing: 0.5px;
             background: linear-gradient(90deg, var(--accent), var(--accent-2));
@@ -82,6 +82,12 @@
             border-color: var(--accent-2);
         }
 
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+        }
+
         .section-wrapper {
             width: 100%;
             max-width: 1100px;
@@ -95,7 +101,25 @@
             font-weight: 600;
         }
 
-        /* Container configurations */
+        /* Progress Bar Styles */
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
         .card-container {
             display: flex;
             flex-wrap: nowrap;
@@ -147,7 +171,6 @@
             opacity: 1;
         }
 
-        /* Reveal letters reuse the exact .card shape/size, just recolored green */
         .card.reveal-letter {
             border-color: var(--correct);
             background-color: rgba(57, 217, 138, 0.15);
@@ -166,7 +189,6 @@
             background-color: rgba(79, 209, 197, 0.06);
         }
 
-        /* Individual Character Card */
         .card {
             flex-shrink: 0;
             width: 70px;
@@ -207,16 +229,10 @@
             opacity: 0.3;
         }
 
-        .card.drag-over {
-            border-color: var(--accent-2);
-            transform: scale(1.05);
-        }
-
-        /* Status Feedback Message (shared feedback style) */
         #status-message {
             margin-top: 4px;
             margin-bottom: 16px;
-            font-size: 0.95rem;
+            font-size: 1rem;
             font-weight: 600;
             min-height: 22px;
             text-align: center;
@@ -231,7 +247,7 @@
         }
 
         #game-stats {
-            margin: -10px 0 16px;
+            margin: -5px 0 16px;
             display: flex;
             gap: 20px;
             font-size: 0.85rem;
@@ -243,37 +259,107 @@
             color: var(--accent-2);
             font-weight: 600;
         }
+
+        /* Results Summary Screen */
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 600px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--correct);
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
 
-    <h1>Real-Time Character Card Puzzle</h1>
-
+    <h1 id="game-title">Character Card Puzzle</h1>
+    
     <div id="game-stats">
+        <span>Word: <strong id="progress-value">1 / 4</strong></span>
         <span>Time: <strong id="time-value">0s</strong></span>
         <span>Moves: <strong id="moves-value">0</strong></span>
     </div>
 
-    <div class="controls">
+    <!-- Visual Progress Bar Element -->
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="check-btn">Check Word</button>
+        <button id="next-btn" style="display: none;">Next Word</button>
         <button id="reveal-btn" class="secondary-btn">Hold to Reveal Word</button>
     </div>
 
     <div id="status-message"></div>
 
-    <div class="section-wrapper">
-        <div class="section-title">Source List (Randomly Shuffled)</div>
-        <div id="source-container" class="card-container"></div>
-    </div>
+    <div id="puzzle-workspace" class="section-wrapper">
+        <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:20px;">
+            <div class="section-title">Source List (Randomly Shuffled)</div>
+            <div id="source-container" class="card-container"></div>
+        </div>
 
-    <div class="section-wrapper">
-        <div class="section-title">Drop Zone (Target List)</div>
-        <div class="target-wrapper">
-            <div id="target-container" class="card-container"></div>
-            <div id="reveal-overlay" aria-hidden="true"></div>
+        <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:0;">
+            <div class="section-title">Drop Zone (Target List)</div>
+            <div class="target-wrapper">
+                <div id="target-container" class="card-container"></div>
+                <div id="reveal-overlay" aria-hidden="true"></div>
+            </div>
         </div>
     </div>
 
+    <!-- Summary Screen for Memorized Results -->
+    <div id="summary-screen">
+        <h2>All Puzzles Completed! 🎉</h2>
+        <p>Here is your performance summary:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Word</th>
+                    <th>Time</th>
+                    <th>Moves</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+                <!-- Populated via JS -->
+            </tbody>
+        </table>
+        <button id="restart-btn">Play Again</button>
+    </div>
+
     <script>
+        const PUZZLE_WORDS = ["HELLO WORLD", "CODE PUZZLE", "JAVASCRIPT", "UI DESIGN"];
+        let currentWordIndex = 0;
+        let roundResults = [];
+
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
         const revealBtn = document.getElementById('reveal-btn');
         const revealOverlay = document.getElementById('reveal-overlay');
         const sourceContainer = document.getElementById('source-container');
@@ -281,34 +367,20 @@
         const statusMessage = document.getElementById('status-message');
         const timeValueEl = document.getElementById('time-value');
         const movesValueEl = document.getElementById('moves-value');
-
-        /* -----------------------------------------------------------
-           The puzzle word is set here, in code — not from a visible
-           input field — so the answer is never shown to the player
-           anywhere in the UI except via the intentional Reveal button.
-           A host platform can set this dynamically, e.g.:
-             puzzleEl.dataset.word = "SOME WORD";
-           or by editing this constant directly per deployment.
-        ----------------------------------------------------------- */
-        const PUZZLE_WORD = "HELLO WORLD";
+        const progressValueEl = document.getElementById('progress-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const puzzleWorkspace = document.getElementById('puzzle-workspace');
+        const actionControls = document.getElementById('action-controls');
+        const summaryScreen = document.getElementById('summary-screen');
+        const summaryTbody = document.getElementById('summary-tbody');
+        const restartBtn = document.getElementById('restart-btn');
 
         let originalTextString = "";
         let draggedCard = null;
-
-        // Elapsed-time tracking: purely informational (how long the
-        // player has been at it), not a countdown or a scoring factor.
         let elapsedSeconds = 0;
         let elapsedTimerInterval = null;
-        let gameCompleted = false;
-        // Set once the puzzle is solved — holds how many seconds the
-        // player took, for the host platform to read/store/report.
-        let completionTimeSeconds = null;
-
-        // Move counter: every card dropped into the target zone or
-        // reordered within it counts as one move.
         let moveCount = 0;
-        // Set once the puzzle is solved — holds how many moves it took.
-        let completionMoveCount = null;
+        let wordCompleted = false;
 
         function startElapsedTimer() {
             stopElapsedTimer();
@@ -336,7 +408,7 @@
         }
 
         function registerMove() {
-            if (gameCompleted) return; // don't keep counting after a win
+            if (wordCompleted) return;
             moveCount++;
             updateMovesDisplay();
         }
@@ -350,28 +422,39 @@
             return arr;
         }
 
-        function initializeGame(text) {
+        function loadWord(index) {
+            if (index >= PUZZLE_WORDS.length) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+                return;
+            }
+
+            // Update Progress Bar ratio width
+            const progressRatio = (index / PUZZLE_WORDS.length) * 100;
+            progressBarFill.style.width = progressRatio + '%';
+
+            originalTextString = PUZZLE_WORDS[index];
             sourceContainer.innerHTML = ''; 
             targetContainer.innerHTML = ''; 
             statusMessage.textContent = '';
             statusMessage.className = '';
-            gameCompleted = false;
-            completionTimeSeconds = null;
-            completionMoveCount = null;
+            wordCompleted = false;
             moveCount = 0;
+            
+            progressValueEl.textContent = `${index + 1} / ${PUZZLE_WORDS.length}`;
             updateMovesDisplay();
             startElapsedTimer();
-            
-            originalTextString = text;
-            const charArray = Array.from(originalTextString);
-            if (charArray.length === 0) return;
 
+            checkBtn.style.display = 'inline-block';
+            nextBtn.style.display = 'none';
+            revealBtn.disabled = false;
+
+            const charArray = Array.from(originalTextString);
             const shuffledChars = shuffleArray(charArray);
 
             shuffledChars.forEach(char => {
                 const card = document.createElement('div');
                 card.classList.add('card');
-                
                 card.dataset.char = char;
 
                 if (char === ' ') {
@@ -385,8 +468,6 @@
                 addDragAndDropEvents(card);
                 sourceContainer.appendChild(card);
             });
-            
-            checkArrangement();
         }
 
         function addDragAndDropEvents(card) {
@@ -404,9 +485,7 @@
         }
 
         [sourceContainer, targetContainer].forEach(container => {
-            container.addEventListener('dragover', (e) => {
-                e.preventDefault();
-            });
+            container.addEventListener('dragover', (e) => e.preventDefault());
 
             container.addEventListener('dragenter', (e) => {
                 e.preventDefault();
@@ -426,7 +505,6 @@
                 if (draggedCard && e.target === container) {
                     container.appendChild(draggedCard);
                     registerMove();
-                    checkArrangement(); // Real-time check on drop
                 }
             });
         });
@@ -455,7 +533,6 @@
                             targetParent.insertBefore(draggedCard, targetCard);
                         }
                         registerMove();
-                        checkArrangement(); // Real-time check on reorder drop
                     }
                 }
             });
@@ -463,40 +540,76 @@
 
         attachCardDropZone();
 
-        function checkArrangement() {
+        checkBtn.addEventListener('click', () => {
+            if (wordCompleted) return;
+
             const targetCards = [...targetContainer.querySelectorAll('.card')];
             const currentString = targetCards.map(card => card.dataset.char).join('');
 
             if (targetCards.length === 0) {
                 statusMessage.className = 'wrong-text';
-                statusMessage.textContent = 'The target list is empty!';
+                statusMessage.textContent = 'The drop zone is empty!';
                 return;
             }
 
             if (currentString === originalTextString) {
+                wordCompleted = true;
+                stopElapsedTimer();
+                
                 statusMessage.className = 'correct-text';
-                statusMessage.textContent = 'Success! The cards match the original text perfectly!';
+                statusMessage.textContent = 'Correct! Great job!';
 
-                if (!gameCompleted) {
-                    gameCompleted = true;
-                    stopElapsedTimer();
-                    completionTimeSeconds = elapsedSeconds;
-                    completionMoveCount = moveCount;
-                    console.log('Puzzle solved in', completionTimeSeconds, 'seconds and', completionMoveCount, 'moves.');
-                }
+                roundResults.push({
+                    word: originalTextString,
+                    time: elapsedSeconds + 's',
+                    moves: moveCount
+                });
+
+                checkBtn.style.display = 'none';
+                nextBtn.style.display = 'inline-block';
+                revealBtn.disabled = true;
             } else {
                 statusMessage.className = 'wrong-text';
-                statusMessage.textContent = `Current target arrangement: "${currentString}"`;
+                statusMessage.textContent = 'Incorrect arrangement. Try again!';
             }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            currentWordIndex++;
+            loadWord(currentWordIndex);
+        });
+
+        function showSummaryScreen() {
+            puzzleWorkspace.style.display = 'none';
+            document.getElementById('game-stats').style.display = 'none';
+            document.querySelector('.progress-bar-container').style.display = 'none';
+            actionControls.style.display = 'none';
+            statusMessage.style.display = 'none';
+            
+            summaryTbody.innerHTML = '';
+            roundResults.forEach(res => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td><strong>${res.word}</strong></td><td>${res.time}</td><td>${res.moves}</td>`;
+                summaryTbody.appendChild(row);
+            });
+
+            summaryScreen.style.display = 'block';
         }
 
-        // Initialize on load — word comes from PUZZLE_WORD, set in code above.
-        initializeGame(PUZZLE_WORD);
+        restartBtn.addEventListener('click', () => {
+            currentWordIndex = 0;
+            roundResults = [];
+            summaryScreen.style.display = 'none';
+            puzzleWorkspace.style.display = 'block';
+            document.getElementById('game-stats').style.display = 'flex';
+            document.querySelector('.progress-bar-container').style.display = 'block';
+            actionControls.style.display = 'flex';
+            statusMessage.style.display = 'block';
+            loadWord(currentWordIndex);
+        });
 
-        // Reveal: shows the answer directly in the drop zone, only while
-        // the button is actively pressed. Released (or pointer/finger
-        // dragged away) = hidden again, no lingering trace of the answer.
         function showReveal() {
+            if (wordCompleted) return;
             revealOverlay.innerHTML = '';
             Array.from(originalTextString).forEach((char) => {
                 const card = document.createElement('div');
@@ -511,22 +624,23 @@
             });
             revealOverlay.classList.add('visible');
         }
+
         function hideReveal() {
             revealOverlay.classList.remove('visible');
         }
 
         revealBtn.addEventListener('mousedown', showReveal);
         revealBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // avoid emulated mouse events double-firing
+            e.preventDefault();
             showReveal();
         }, { passive: false });
 
-        // Listen on the document (not just the button) so the word still
-        // hides correctly if the pointer/finger moves off the button
-        // before being released.
         document.addEventListener('mouseup', hideReveal);
         document.addEventListener('touchend', hideReveal);
         document.addEventListener('touchcancel', hideReveal);
+
+        // Initial Load
+        loadWord(currentWordIndex);
     </script>
 </body>
 </html>

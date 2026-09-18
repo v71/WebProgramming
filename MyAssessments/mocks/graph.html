@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time vs. Score Data Analysis</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .metric-value {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="py-4">
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Time vs. Score Relationship Analysis</h2>
+        <button id="btnRegenerate" class="btn btn-primary">Generate New Dataset</button>
+    </div>
+
+    <div class="row g-4">
+        <!-- Chart Column -->
+        <div class="col-lg-7">
+            <div class="card p-3 h-100">
+                <h5 class="card-title text-center text-muted">Cartesian Coordinate Plot</h5>
+                <div class="w-100 h-100 min-vh-50">
+                    <canvas id="scoreChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analytical Insights Column -->
+        <div class="col-lg-5">
+            <div class="card p-3 h-100">
+                <h5 class="card-title text-muted mb-3">Extracted Relationships & Metrics</h5>
+                
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Overall Trend (Linear Regression)</strong><br>
+                            <small class="text-muted" id="trendSlopeDesc">Slope & direction</small>
+                        </div>
+                        <span id="trendBadge" class="badge bg-secondary">--</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Average Rate of Change</strong><br>
+                            <small class="text-muted">Total Score Δ / Total Time Δ</small>
+                        </div>
+                        <span id="rateOfChange" class="metric-value text-dark">0.00</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Consistency / Volatility</strong><br>
+                            <small class="text-muted">Standard Deviation of Scores</small>
+                        </div>
+                        <span id="volatility" class="metric-value text-dark">0.00</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Score Range</strong><br>
+                            <small class="text-muted">Min and Max score observed</small>
+                        </div>
+                        <span id="scoreRange" class="metric-value text-dark">0 - 0</span>
+                    </li>
+
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>Detected Outliers</strong><br>
+                            <small class="text-muted">&gt; 2 StdDevs from Mean</small>
+                        </div>
+                        <span id="outlierCount" class="badge bg-secondary">None</span>
+                    </li>
+
+                    <li class="list-group-item">
+                        <strong>Trajectory / Curve Profile</strong>
+                        <p id="trajectoryDesc" class="small text-muted mb-0 mt-1">Analyzing shape...</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+let myChart = null;
+
+// Generate random Time vs Score dataset
+function generateData(pointsCount = 15) {
+    const data = [];
+    let baseScore = Math.floor(Math.random() * 40) + 30;
+    const trendFactor = (Math.random() - 0.45) * 4; // Slight upward bias
+
+    for (let i = 1; i <= pointsCount; i++) {
+        const noise = (Math.random() - 0.5) * 20;
+        const score = Math.max(0, Math.min(100, Math.round(baseScore + (i * trendFactor) + noise)));
+        data.push({ time: i, score: score });
+    }
+    return data;
+}
+
+// Statistical Helper Functions
+function calculateLinearRegression(data) {
+    const n = data.length;
+    let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+
+    data.forEach(d => {
+        sumX += d.time;
+        sumY += d.score;
+        sumXY += d.time * d.score;
+        sumXX += d.time * d.time;
+    });
+
+    const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+    const intercept = (sumY - slope * sumX) / n;
+    return { slope, intercept };
+}
+
+function calculateStats(data) {
+    const scores = data.map(d => d.score);
+    const mean = scores.reduce((a, b) => a + b, 0) / scores.length;
+    const variance = scores.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / scores.length;
+    const stdDev = Math.sqrt(variance);
+    const min = Math.min(...scores);
+    const max = Math.max(...scores);
+
+    // Identify Outliers (> 2 StdDev from mean)
+    const outliers = data.filter(d => Math.abs(d.score - mean) > 2 * stdDev);
+
+    return { mean, stdDev, min, max, outliers };
+}
+
+function analyzeTrajectory(data) {
+    const half = Math.floor(data.length / 2);
+    const firstHalf = data.slice(0, half);
+    const secondHalf = data.slice(half);
+
+    const reg1 = calculateLinearRegression(firstHalf);
+    const reg2 = calculateLinearRegression(secondHalf);
+
+    if (reg1.slope > 1 && reg2.slope < 0.2) {
+        return "Logarithmic (Plateauing): Rapid initial growth followed by slowing progress.";
+    } else if (reg1.slope < 0.5 && reg2.slope > 1.5) {
+        return "Exponential / Accelerating: Slow start followed by sharp increase in momentum.";
+    } else if (Math.abs(reg1.slope - reg2.slope) < 0.5) {
+        return "Linear / Steady: Consistent change rate throughout the observation period.";
+    } else {
+        return "Fluctuating / Irregular: Changing direction without a fixed curved pattern.";
+    }
+}
+
+// Main rendering function
+function updateDashboard() {
+    const rawData = generateData(20);
+    const times = rawData.map(d => `T+${d.time}`);
+    const scores = rawData.map(d => d.score);
+
+    // 1. Calculate Analytical Relationships
+    const regression = calculateLinearRegression(rawData);
+    const stats = calculateStats(rawData);
+    const trajectory = analyzeTrajectory(rawData);
+
+    // Generate Regression Line Data Points
+    const trendLinePoints = rawData.map(d => regression.slope * d.time + regression.intercept);
+
+    // 2. Update Metric UI
+    const trendBadge = document.getElementById('trendBadge');
+    if (regression.slope > 0.5) {
+        trendBadge.className = "badge bg-success";
+        trendBadge.innerText = `Upward (+${regression.slope.toFixed(2)} / t)`;
+    } else if (regression.slope < -0.5) {
+        trendBadge.className = "badge bg-danger";
+        trendBadge.innerText = `Downward (${regression.slope.toFixed(2)} / t)`;
+    } else {
+        trendBadge.className = "badge bg-warning text-dark";
+        trendBadge.innerText = `Flat (${regression.slope.toFixed(2)} / t)`;
+    }
+
+    const firstPoint = rawData[0];
+    const lastPoint = rawData[rawData.length - 1];
+    const overallRate = ((lastPoint.score - firstPoint.score) / (lastPoint.time - firstPoint.time)).toFixed(2);
+    document.getElementById('rateOfChange').innerText = `${overallRate > 0 ? '+' : ''}${overallRate} pts/t`;
+
+    document.getElementById('volatility').innerText = `±${stats.stdDev.toFixed(2)} pts`;
+    document.getElementById('scoreRange').innerText = `${stats.min} – ${stats.max}`;
+    
+    const outlierBadge = document.getElementById('outlierCount');
+    if (stats.outliers.length > 0) {
+        outlierBadge.className = "badge bg-warning text-dark";
+        outlierBadge.innerText = `${stats.outliers.length} Point(s)`;
+    } else {
+        outlierBadge.className = "badge bg-secondary";
+        outlierBadge.innerText = "None";
+    }
+
+    document.getElementById('trajectoryDesc').innerText = trajectory;
+
+    // 3. Render / Update Chart.js
+    const ctx = document.getElementById('scoreChart').getContext('2d');
+    
+    if (myChart) {
+        myChart.destroy();
+    }
+
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: times,
+            datasets: [
+                {
+                    label: 'Actual Score',
+                    data: scores,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    fill: true,
+                    tension: 0.2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
+                },
+                {
+                    label: 'Linear Trendline',
+                    data: trendLinePoints,
+                    borderColor: '#dc3545',
+                    borderDash: [5, 5],
+                    fill: false,
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    title: { display: true, text: 'Time Units (X-Axis)' }
+                },
+                y: {
+                    title: { display: true, text: 'Score (Y-Axis)' },
+                    min: 0,
+                    max: 100
+                }
+            },
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+}
+
+// Initial Run
+document.addEventListener('DOMContentLoaded', updateDashboard);
+document.getElementById('btnRegenerate').addEventListener('click', updateDashboard);
+</script>
+
+</body>
+</html>
