@@ -242,10 +242,6 @@
             color: var(--correct);
         }
 
-        #status-message.wrong-text {
-            color: var(--wrong);
-        }
-
         #game-stats {
             margin: -5px 0 16px;
             display: flex;
@@ -264,7 +260,7 @@
         #summary-screen {
             display: none;
             width: 100%;
-            max-width: 600px;
+            max-width: 650px;
             background: var(--bg-1);
             border: 1px solid var(--border);
             border-radius: 16px;
@@ -294,6 +290,20 @@
             color: var(--text-dim);
             font-size: 0.85rem;
         }
+
+        .summary-totals {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--bg-2);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.95rem;
+        }
+
+        .summary-totals strong {
+            color: var(--accent-2);
+        }
     </style>
 </head>
 <body>
@@ -304,6 +314,7 @@
         <span>Word: <strong id="progress-value">1 / 4</strong></span>
         <span>Time: <strong id="time-value">0s</strong></span>
         <span>Moves: <strong id="moves-value">0</strong></span>
+        <span>Reveals: <strong id="reveals-value">0</strong></span>
     </div>
 
     <!-- Visual Progress Bar Element -->
@@ -312,7 +323,6 @@
     </div>
 
     <div class="controls" id="action-controls">
-        <button id="check-btn">Check Word</button>
         <button id="next-btn" style="display: none;">Next Word</button>
         <button id="reveal-btn" class="secondary-btn">Hold to Reveal Word</button>
     </div>
@@ -337,20 +347,24 @@
     <!-- Summary Screen for Memorized Results -->
     <div id="summary-screen">
         <h2>All Puzzles Completed! 🎉</h2>
-        <p>Here is your performance summary:</p>
+        <p>Here is your performance report for analysis:</p>
         <table class="summary-table">
             <thead>
                 <tr>
                     <th>Word</th>
                     <th>Time</th>
                     <th>Moves</th>
+                    <th>Reveals</th>
+                    <th>Metric</th>
                 </tr>
             </thead>
             <tbody id="summary-tbody">
                 <!-- Populated via JS -->
             </tbody>
         </table>
-        <button id="restart-btn">Play Again</button>
+        <div class="summary-totals" id="summary-totals">
+            <!-- Populated via JS -->
+        </div>
     </div>
 
     <script>
@@ -358,7 +372,6 @@
         let currentWordIndex = 0;
         let roundResults = [];
 
-        const checkBtn = document.getElementById('check-btn');
         const nextBtn = document.getElementById('next-btn');
         const revealBtn = document.getElementById('reveal-btn');
         const revealOverlay = document.getElementById('reveal-overlay');
@@ -367,20 +380,23 @@
         const statusMessage = document.getElementById('status-message');
         const timeValueEl = document.getElementById('time-value');
         const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
         const progressValueEl = document.getElementById('progress-value');
         const progressBarFill = document.getElementById('progress-bar-fill');
         const puzzleWorkspace = document.getElementById('puzzle-workspace');
         const actionControls = document.getElementById('action-controls');
         const summaryScreen = document.getElementById('summary-screen');
         const summaryTbody = document.getElementById('summary-tbody');
-        const restartBtn = document.getElementById('restart-btn');
+        const summaryTotals = document.getElementById('summary-totals');
 
         let originalTextString = "";
         let draggedCard = null;
         let elapsedSeconds = 0;
         let elapsedTimerInterval = null;
         let moveCount = 0;
+        let revealCount = 0;
         let wordCompleted = false;
+        let isRevealing = false;
 
         function startElapsedTimer() {
             stopElapsedTimer();
@@ -407,10 +423,15 @@
             movesValueEl.textContent = moveCount;
         }
 
+        function updateRevealsDisplay() {
+            revealsValueEl.textContent = revealCount;
+        }
+
         function registerMove() {
             if (wordCompleted) return;
             moveCount++;
             updateMovesDisplay();
+            checkWordAutomatic();
         }
 
         function shuffleArray(array) {
@@ -429,7 +450,6 @@
                 return;
             }
 
-            // Update Progress Bar ratio width
             const progressRatio = (index / PUZZLE_WORDS.length) * 100;
             progressBarFill.style.width = progressRatio + '%';
 
@@ -440,12 +460,13 @@
             statusMessage.className = '';
             wordCompleted = false;
             moveCount = 0;
+            revealCount = 0;
             
             progressValueEl.textContent = `${index + 1} / ${PUZZLE_WORDS.length}`;
             updateMovesDisplay();
+            updateRevealsDisplay();
             startElapsedTimer();
 
-            checkBtn.style.display = 'inline-block';
             nextBtn.style.display = 'none';
             revealBtn.disabled = false;
 
@@ -540,43 +561,49 @@
 
         attachCardDropZone();
 
-        checkBtn.addEventListener('click', () => {
+        function checkWordAutomatic() {
             if (wordCompleted) return;
 
             const targetCards = [...targetContainer.querySelectorAll('.card')];
             const currentString = targetCards.map(card => card.dataset.char).join('');
 
-            if (targetCards.length === 0) {
-                statusMessage.className = 'wrong-text';
-                statusMessage.textContent = 'The drop zone is empty!';
-                return;
-            }
-
-            if (currentString === originalTextString) {
+            if (targetCards.length === originalTextString.length && currentString === originalTextString) {
                 wordCompleted = true;
                 stopElapsedTimer();
                 
                 statusMessage.className = 'correct-text';
                 statusMessage.textContent = 'Correct! Great job!';
 
+                const effectiveTime = Math.max(elapsedSeconds, 1);
+                const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+
                 roundResults.push({
                     word: originalTextString,
                     time: elapsedSeconds + 's',
-                    moves: moveCount
+                    moves: moveCount,
+                    reveals: revealCount,
+                    metric: metricValue
                 });
 
-                checkBtn.style.display = 'none';
+                if (currentWordIndex === PUZZLE_WORDS.length - 1) {
+                    nextBtn.textContent = "Done";
+                } else {
+                    nextBtn.textContent = "Next Word";
+                }
+
                 nextBtn.style.display = 'inline-block';
                 revealBtn.disabled = true;
-            } else {
-                statusMessage.className = 'wrong-text';
-                statusMessage.textContent = 'Incorrect arrangement. Try again!';
             }
-        });
+        }
 
         nextBtn.addEventListener('click', () => {
-            currentWordIndex++;
-            loadWord(currentWordIndex);
+            if (currentWordIndex === PUZZLE_WORDS.length - 1) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+            } else {
+                currentWordIndex++;
+                loadWord(currentWordIndex);
+            }
         });
 
         function showSummaryScreen() {
@@ -587,29 +614,36 @@
             statusMessage.style.display = 'none';
             
             summaryTbody.innerHTML = '';
+            let totalMetric = 0;
+
             roundResults.forEach(res => {
+                totalMetric += res.metric;
                 const row = document.createElement('tr');
-                row.innerHTML = `<td><strong>${res.word}</strong></td><td>${res.time}</td><td>${res.moves}</td>`;
+                row.innerHTML = `<td><strong>${res.word}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
                 summaryTbody.appendChild(row);
             });
+
+            // Calculate Overall Score (Average of metrics)
+            const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+            
+            // Normalize value (mapping a typical range like 0 to 5 into a 0 to 100 percentage scale)
+            const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+
+            summaryTotals.innerHTML = `
+                <div>Average Metric: <strong>${averageMetric.toFixed(2)}</strong></div>
+                <div>Normalized Score: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
+            `;
 
             summaryScreen.style.display = 'block';
         }
 
-        restartBtn.addEventListener('click', () => {
-            currentWordIndex = 0;
-            roundResults = [];
-            summaryScreen.style.display = 'none';
-            puzzleWorkspace.style.display = 'block';
-            document.getElementById('game-stats').style.display = 'flex';
-            document.querySelector('.progress-bar-container').style.display = 'block';
-            actionControls.style.display = 'flex';
-            statusMessage.style.display = 'block';
-            loadWord(currentWordIndex);
-        });
-
         function showReveal() {
-            if (wordCompleted) return;
+            if (wordCompleted || isRevealing) return;
+            isRevealing = true;
+            
+            revealCount++;
+            updateRevealsDisplay();
+
             revealOverlay.innerHTML = '';
             Array.from(originalTextString).forEach((char) => {
                 const card = document.createElement('div');
@@ -626,6 +660,8 @@
         }
 
         function hideReveal() {
+            if (!isRevealing) return;
+            isRevealing = false;
             revealOverlay.classList.remove('visible');
         }
 

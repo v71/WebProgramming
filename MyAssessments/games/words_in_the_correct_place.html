@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fill in the Blanks</title>
+    <title>Fill in the Blanks - Multi-Round</title>
     <style>
         :root {
             --bg-0: #0d0d14;
@@ -46,17 +46,39 @@
         }
 
         #game-stats {
-            margin: -2px 0 16px;
+            margin: -2px 0 12px;
             display: flex;
             gap: 20px;
             font-size: 0.85rem;
             color: var(--text-dim);
             font-variant-numeric: tabular-nums;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
         }
 
         #game-stats strong {
             color: var(--accent-2);
             font-weight: 600;
+        }
+
+        /* Progress Bar Styles */
+        .progress-container {
+            width: 100%;
+            max-width: 1100px;
+            height: 6px;
+            background: var(--bg-1);
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            width: 0%;
+            transition: width 0.4s ease;
         }
 
         .controls {
@@ -96,6 +118,18 @@
             border-color: var(--accent-2);
         }
 
+        button.secondary-btn:disabled {
+            color: var(--text-dim);
+            border-color: var(--border);
+            cursor: not-allowed;
+            filter: none;
+            opacity: 0.5;
+        }
+
+        button#next-round-btn {
+            display: none;
+        }
+
         .section-wrapper {
             width: 100%;
             max-width: 1100px;
@@ -109,9 +143,6 @@
             font-weight: 600;
         }
 
-        /* Word bank — same container language as the card-based puzzle,
-           but wraps onto multiple lines instead of scrolling sideways,
-           since a moderate paragraph can have a dozen+ blanks/words. */
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -136,8 +167,6 @@
             background-color: rgba(79, 209, 197, 0.06);
         }
 
-        /* Draggable word chip — same visual language as the letter card,
-           but auto-width to fit a whole word instead of a fixed square */
         .card {
             background-color: var(--bg-2);
             color: var(--text);
@@ -176,7 +205,6 @@
             flex-shrink: 0;
         }
 
-        /* The passage text, with inline blank slots */
         .passage-box {
             background: var(--bg-1);
             border: 1px solid var(--border);
@@ -215,8 +243,6 @@
             background-color: rgba(79, 209, 197, 0.08);
         }
 
-        /* Reveal overlay per-blank — solid background so it fully masks
-           whatever word (if any) currently occupies the slot */
         .reveal-badge {
             position: absolute;
             inset: 0;
@@ -240,7 +266,6 @@
             opacity: 1;
         }
 
-        /* Status feedback */
         #status-message {
             margin-top: 4px;
             margin-bottom: 16px;
@@ -259,6 +284,50 @@
         #status-message.wrong-text {
             color: var(--wrong);
         }
+
+        /* Summary Screen Styles */
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            text-align: center;
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--accent-2);
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-weight: 600;
+            background: var(--bg-2);
+        }
+
+        .summary-totals {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
@@ -266,65 +335,126 @@
     <h1>Fill in the Blanks</h1>
 
     <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 3</strong></span>
         <span>Time: <strong id="time-value">0s</strong></span>
         <span>Moves: <strong id="moves-value">0</strong></span>
+        <span>Reveals: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <div class="controls">
+    <!-- Visual Progress Bar -->
+    <div class="progress-container" id="progress-container-wrap">
+        <div id="progress-bar" class="progress-bar-fill"></div>
+    </div>
+
+    <div class="controls" id="game-controls">
+        <button id="next-round-btn">Next Round</button>
         <button id="reveal-btn" class="secondary-btn">Hold to Reveal Answers</button>
     </div>
 
     <div id="status-message"></div>
 
-    <div class="section-wrapper">
+    <div class="section-wrapper" id="word-bank-section">
         <div class="section-title">Word Bank</div>
         <div id="word-bank" class="card-container"></div>
     </div>
 
-    <div class="section-wrapper">
+    <div class="section-wrapper" id="passage-section">
         <div class="section-title">Complete the Text</div>
         <div id="text-passage" class="passage-box"></div>
     </div>
 
+    <!-- Summary Screen for Memorized Results -->
+    <div id="summary-screen">
+        <h2>All Puzzles Completed! 🎉</h2>
+        <p>Here is your performance report for analysis:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Text</th>
+                    <th>Time</th>
+                    <th>Moves</th>
+                    <th>Reveals</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+                <!-- Populated via JS -->
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+            <!-- Populated via JS -->
+        </div>
+        <div style="margin-top: 24px;">
+            <button id="restart-game-btn">Play Again</button>
+        </div>
+    </div>
+
     <script>
         const revealBtn = document.getElementById('reveal-btn');
+        const nextRoundBtn = document.getElementById('next-round-btn');
         const wordBank = document.getElementById('word-bank');
         const passageBox = document.getElementById('text-passage');
         const statusMessage = document.getElementById('status-message');
+        const roundValueEl = document.getElementById('round-value');
         const timeValueEl = document.getElementById('time-value');
         const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressBar = document.getElementById('progress-bar');
+        
+        // Layout wrappers for toggling summary screen
+        const progressContainerWrap = document.getElementById('progress-container-wrap');
+        const gameControls = document.getElementById('game-controls');
+        const wordBankSection = document.getElementById('word-bank-section');
+        const passageSection = document.getElementById('passage-section');
+        const gameStats = document.getElementById('game-stats');
+        const summaryScreen = document.getElementById('summary-screen');
+        const summaryTbody = document.getElementById('summary-tbody');
+        const summaryTotals = document.getElementById('summary-totals');
+        const restartGameBtn = document.getElementById('restart-game-btn');
 
-        /* -----------------------------------------------------------
-           The passage is set here, in code — a mix of plain text
-           segments and blanks, each blank naming its own correct
-           answer. A host platform can generate this array dynamically
-           per lesson/student instead of hard-coding it here.
-        ----------------------------------------------------------- */
-        const PUZZLE_SEGMENTS = [
-            { type: 'text', content: 'The ' },
-            { type: 'blank', id: 'b1', answer: 'quick' },
-            { type: 'text', content: ' brown ' },
-            { type: 'blank', id: 'b2', answer: 'fox' },
-            { type: 'text', content: ' jumps over the lazy ' },
-            { type: 'blank', id: 'b3', answer: 'dog' },
-            { type: 'text', content: ' near the ' },
-            { type: 'blank', id: 'b4', answer: 'river' },
-            { type: 'text', content: '.' }
+        const PUZZLE_ROUNDS = [
+            [
+                { type: 'text', content: 'The ' },
+                { type: 'blank', id: 'b1', answer: 'quick' },
+                { type: 'text', content: ' brown ' },
+                { type: 'blank', id: 'b2', answer: 'fox' },
+                { type: 'text', content: ' jumps over the lazy ' },
+                { type: 'blank', id: 'b3', answer: 'dog' },
+                { type: 'text', content: ' near the ' },
+                { type: 'blank', id: 'b4', answer: 'river' },
+                { type: 'text', content: '.' }
+            ],
+            [
+                { type: 'text', content: 'A ' },
+                { type: 'blank', id: 'b1', answer: 'journey' },
+                { type: 'text', content: ' of a thousand ' },
+                { type: 'blank', id: 'b2', answer: 'miles' },
+                { type: 'text', content: ' begins with a single ' },
+                { type: 'blank', id: 'b3', answer: 'step' },
+                { type: 'text', content: '.' }
+            ],
+            [
+                { type: 'text', content: 'To ' },
+                { type: 'blank', id: 'b1', answer: 'err' },
+                { type: 'text', content: ' is ' },
+                { type: 'blank', id: 'b2', answer: 'human' },
+                { type: 'text', content: ', to forgive ' },
+                { type: 'blank', id: 'b3', answer: 'divine' },
+                { type: 'text', content: '.' }
+            ]
         ];
 
-        let blanksMeta = []; // [{ id, answer, element }]
+        let currentRoundIndex = 0;
+        let blanksMeta = [];
         let draggedCard = null;
 
-        // Elapsed-time tracking: purely informational, not a countdown.
         let elapsedSeconds = 0;
         let elapsedTimerInterval = null;
         let gameCompleted = false;
-        let completionTimeSeconds = null;
 
-        // Move counter: every word dropped into a blank, swapped out of
-        // one, or returned to the bank counts as one move.
         let moveCount = 0;
-        let completionMoveCount = null;
+        let revealCount = 0;
+        let roundResults = [];
 
         function startElapsedTimer() {
             stopElapsedTimer();
@@ -349,6 +479,16 @@
 
         function updateMovesDisplay() {
             movesValueEl.textContent = moveCount;
+        }
+
+        function updateRevealsDisplay() {
+            revealsValueEl.textContent = revealCount;
+        }
+
+        function updateRoundDisplay() {
+            roundValueEl.textContent = `${currentRoundIndex + 1} / ${PUZZLE_ROUNDS.length}`;
+            const progressPercent = ((currentRoundIndex) / PUZZLE_ROUNDS.length) * 100;
+            progressBar.style.width = `${progressPercent}%`;
         }
 
         function registerMove() {
@@ -403,7 +543,6 @@
                 slot.classList.remove('drag-container-over');
                 if (!draggedCard || draggedCard.parentNode === slot) return;
 
-                // If this blank already holds a word, evict it back to the bank first
                 const occupant = slot.querySelector('.word-card');
                 if (occupant) {
                     wordBank.appendChild(occupant);
@@ -433,19 +572,30 @@
             });
         }
 
-        function initializeGame(segments) {
+        function initializeGame(roundIndex) {
+            summaryScreen.style.display = 'none';
+            progressContainerWrap.style.display = 'block';
+            gameControls.style.display = 'flex';
+            wordBankSection.style.display = 'block';
+            passageSection.style.display = 'block';
+            gameStats.style.display = 'flex';
+
             passageBox.innerHTML = '';
             wordBank.innerHTML = '';
             statusMessage.textContent = '';
             statusMessage.className = '';
             gameCompleted = false;
-            completionTimeSeconds = null;
-            completionMoveCount = null;
+            revealBtn.disabled = false;
+            nextRoundBtn.style.display = 'none';
             moveCount = 0;
+            revealCount = 0;
             updateMovesDisplay();
+            updateRevealsDisplay();
+            updateRoundDisplay();
             startElapsedTimer();
 
             blanksMeta = [];
+            const segments = PUZZLE_ROUNDS[roundIndex];
 
             segments.forEach((seg) => {
                 if (seg.type === 'text') {
@@ -490,21 +640,44 @@
             });
 
             if (filledCount < blanksMeta.length) {
-                statusMessage.className = 'wrong-text';
-                statusMessage.textContent = `${filledCount} of ${blanksMeta.length} blanks filled.`;
+                statusMessage.textContent = '';
+                statusMessage.className = '';
                 return;
             }
 
             if (allCorrect) {
                 statusMessage.className = 'correct-text';
-                statusMessage.textContent = 'Success! All the words are in the right place!';
-
                 if (!gameCompleted) {
                     gameCompleted = true;
                     stopElapsedTimer();
-                    completionTimeSeconds = elapsedSeconds;
-                    completionMoveCount = moveCount;
-                    console.log('Puzzle solved in', completionTimeSeconds, 'seconds and', completionMoveCount, 'moves.');
+                    revealBtn.disabled = true;
+
+                    // Reconstruct correct sentence directly from round definition
+                    const correctSentence = PUZZLE_ROUNDS[currentRoundIndex].map(seg => {
+                        return seg.type === 'text' ? seg.content : seg.answer;
+                    }).join('');
+
+                    const effectiveTime = Math.max(elapsedSeconds, 1);
+                    const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+
+                    roundResults.push({
+                        sentence: correctSentence,
+                        time: elapsedSeconds,
+                        moves: moveCount,
+                        reveals: revealCount,
+                        metric: metricValue
+                    });
+
+                    if (currentRoundIndex < PUZZLE_ROUNDS.length - 1) {
+                        statusMessage.textContent = 'Round Complete! Click "Next Round" to proceed.';
+                        nextRoundBtn.textContent = 'Next Round';
+                        nextRoundBtn.style.display = 'inline-block';
+                    } else {
+                        progressBar.style.width = '100%';
+                        statusMessage.textContent = 'All rounds completed! Click "Done" to view your report.';
+                        nextRoundBtn.textContent = 'Done';
+                        nextRoundBtn.style.display = 'inline-block';
+                    }
                 }
             } else {
                 statusMessage.className = 'wrong-text';
@@ -512,12 +685,66 @@
             }
         }
 
-        // Reveal: shows each blank's correct word directly in place,
-        // only while the button is actively pressed.
+        function showSummaryScreen() {
+            progressContainerWrap.style.display = 'none';
+            gameControls.style.display = 'none';
+            wordBankSection.style.display = 'none';
+            passageSection.style.display = 'none';
+            gameStats.style.display = 'none';
+            statusMessage.textContent = '';
+
+            summaryTbody.innerHTML = '';
+            let totalTime = 0;
+            let totalMoves = 0;
+            let totalReveals = 0;
+
+            roundResults.forEach((res) => {
+                totalTime += res.time;
+                totalMoves += res.moves;
+                totalReveals += res.reveals;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${res.sentence}</td>
+                    <td>${res.time}s</td>
+                    <td>${res.moves}</td>
+                    <td>${res.reveals}</td>
+                    <td>${res.metric}</td>
+                `;
+                summaryTbody.appendChild(row);
+            });
+
+            summaryTotals.innerHTML = `Total Time: ${totalTime}s &bull; Total Moves: ${totalMoves} &bull; Total Reveals: ${totalReveals}`;
+            summaryScreen.style.display = 'block';
+        }
+
+        nextRoundBtn.addEventListener('click', () => {
+            if (currentRoundIndex < PUZZLE_ROUNDS.length - 1) {
+                currentRoundIndex++;
+                initializeGame(currentRoundIndex);
+            } else {
+                showSummaryScreen();
+            }
+        });
+
+        restartGameBtn.addEventListener('click', () => {
+            currentRoundIndex = 0;
+            roundResults = [];
+            initializeGame(currentRoundIndex);
+        });
+
+        let isRevealing = false;
         function showReveal() {
+            if (gameCompleted || revealBtn.disabled) return;
+            if (!isRevealing) {
+                isRevealing = true;
+                revealCount++;
+                updateRevealsDisplay();
+            }
             document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.add('visible'));
         }
         function hideReveal() {
+            isRevealing = false;
             document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.remove('visible'));
         }
 
@@ -533,8 +760,8 @@
 
         attachWordBankDropEvents();
 
-        // Initialize on load — segments come from PUZZLE_SEGMENTS, set in code above.
-        initializeGame(PUZZLE_SEGMENTS);
+        // Start first round on load
+        initializeGame(currentRoundIndex);
     </script>
 </body>
 </html>
