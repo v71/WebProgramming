@@ -214,6 +214,12 @@
             font-size: 1.1rem;
             line-height: 2.6;
             color: var(--text);
+            border: 2px dashed var(--accent);
+            background-color: var(--bg-1);
+        }
+
+        .passage-box.revealed-state {
+            border: 2px solid var(--correct) !important;
         }
 
         .blank-slot {
@@ -329,6 +335,48 @@
             font-weight: 600;
         }
     </style>
+    
+    <style>
+
+.blank-slot {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 115px; 
+            height: 52px; /* Use a fixed height instead of min-height to force it */
+            margin: 0 4px;
+            vertical-align: middle;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            background-color: var(--bg-2);
+            transition: border-color 0.2s, background-color 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .blank-slot .word-card {
+            width: 100%;
+            height: 100%; /* Force the card to fill the slot's height nicely */
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blank-slot.filled {
+            border: 1px solid var(--border);
+            background: var(--bg-2);
+            /* Removed min-width: 0 so it keeps the exact same width as when empty */
+        }
+
+
+    </style>
 </head>
 <body>
 
@@ -359,7 +407,7 @@
     </div>
 
     <div class="section-wrapper" id="passage-section">
-        <div class="section-title">Complete the Text</div>
+        <div class="section-title">Drop Zone (Target List)</div>
         <div id="text-passage" class="passage-box"></div>
     </div>
 
@@ -389,7 +437,8 @@
         </div>
     </div>
 
-    <script>
+
+<script>
         const revealBtn = document.getElementById('reveal-btn');
         const nextRoundBtn = document.getElementById('next-round-btn');
         const wordBank = document.getElementById('word-bank');
@@ -401,7 +450,6 @@
         const revealsValueEl = document.getElementById('reveals-value');
         const progressBar = document.getElementById('progress-bar');
         
-        // Layout wrappers for toggling summary screen
         const progressContainerWrap = document.getElementById('progress-container-wrap');
         const gameControls = document.getElementById('game-controls');
         const wordBankSection = document.getElementById('word-bank-section');
@@ -487,7 +535,7 @@
 
         function updateRoundDisplay() {
             roundValueEl.textContent = `${currentRoundIndex + 1} / ${PUZZLE_ROUNDS.length}`;
-            const progressPercent = ((currentRoundIndex) / PUZZLE_ROUNDS.length) * 100;
+            const progressPercent = (currentRoundIndex / PUZZLE_ROUNDS.length) * 100;
             progressBar.style.width = `${progressPercent}%`;
         }
 
@@ -652,7 +700,6 @@
                     stopElapsedTimer();
                     revealBtn.disabled = true;
 
-                    // Reconstruct correct sentence directly from round definition
                     const correctSentence = PUZZLE_ROUNDS[currentRoundIndex].map(seg => {
                         return seg.type === 'text' ? seg.content : seg.answer;
                     }).join('');
@@ -733,35 +780,57 @@
             initializeGame(currentRoundIndex);
         });
 
-        let isRevealing = false;
+
         function showReveal() {
             if (gameCompleted || revealBtn.disabled) return;
-            if (!isRevealing) {
-                isRevealing = true;
+            if (!revealBtn.classList.contains('revealing-active')) {
+                revealBtn.classList.add('revealing-active');
+                revealCount++;
+                updateRevealsDisplay();
+            }
+            document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.add('visible'));
+            passageBox.classList.add('revealed-state'); // Add this line
+        }
+
+        function hideReveal() {
+            revealBtn.classList.remove('revealing-active');
+            document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.remove('visible'));
+            passageBox.classList.remove('revealed-state'); // Add this line
+        }
+        /*
+        function showReveal() {
+            if (gameCompleted || revealBtn.disabled) return;
+            if (!revealBtn.classList.contains('revealing-active')) {
+                revealBtn.classList.add('revealing-active');
                 revealCount++;
                 updateRevealsDisplay();
             }
             document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.add('visible'));
         }
+
         function hideReveal() {
-            isRevealing = false;
+            revealBtn.classList.remove('revealing-active');
             document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.remove('visible'));
         }
-
+        */
         revealBtn.addEventListener('mousedown', showReveal);
+        revealBtn.addEventListener('mouseup', hideReveal);
+        revealBtn.addEventListener('mouseleave', hideReveal);
+
         revealBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
             showReveal();
         }, { passive: false });
 
-        document.addEventListener('mouseup', hideReveal);
-        document.addEventListener('touchend', hideReveal);
-        document.addEventListener('touchcancel', hideReveal);
+        revealBtn.addEventListener('touchend', hideReveal);
+        revealBtn.addEventListener('touchcancel', hideReveal);
 
         attachWordBankDropEvents();
 
         // Start first round on load
         initializeGame(currentRoundIndex);
     </script>
+
+
 </body>
 </html>

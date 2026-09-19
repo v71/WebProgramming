@@ -66,7 +66,6 @@
             font-weight: 600;
         }
 
-        /* Round progress bar */
         .progress-row {
             display: flex;
             justify-content: space-between;
@@ -140,11 +139,6 @@
             opacity: 0.5;
         }
 
-        /* Next/Done button: hidden entirely (not just invisible) until a
-           round is solved, so the Reveal button sits perfectly centered
-           on its own beforehand. No layout-jump risk here since both
-           buttons share the same height — only horizontal centering
-           changes when Next appears alongside it. */
         #next-btn {
             display: none;
         }
@@ -165,7 +159,6 @@
             font-weight: 600;
         }
 
-        /* Shared container language for word bank + sentence target */
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -176,58 +169,42 @@
             border-radius: 16px;
             align-items: center;
             box-sizing: border-box;
-            transition: border-color 0.2s, background-color 0.2s;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
         }
 
         #word-bank {
-            border: 2px dashed rgba(255, 255, 255, 0.15);
+            border: 2px solid var(--border);
             background-color: var(--bg-2);
         }
 
         #target-container {
-            border: 2px dashed var(--accent);
+            border: 2px solid var(--border);
             background-color: var(--bg-1);
         }
 
-        /* The revealed sentence's border is green — the moment reveal
-           swaps target-container out for this box, the box border
-           itself signals "this is the answer", matching the green
-           reveal-word chips inside it. */
         #reveal-row {
             border: 2px solid var(--correct);
             background-color: var(--bg-1);
         }
 
-        .card-container.drag-container-over {
-            border-color: var(--accent-2);
-            background-color: rgba(79, 209, 197, 0.06);
-        }
-
-        /* Draggable word chip */
         .card {
             background-color: var(--bg-2);
             color: var(--text);
             border: 1px solid var(--border);
             border-radius: 10px;
-            cursor: grab;
+            cursor: pointer;
             user-select: none;
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
             transition: border-color 0.2s, transform 0.1s, background-color 0.15s;
-            touch-action: none;
         }
 
         .card:hover {
-            border-color: var(--accent);
-            transform: translateY(-1px);
+            border-color: var(--accent-2);
+            transform: translateY(-2px);
         }
 
         .card:active {
-            cursor: grabbing;
-        }
-
-        .card.dragging {
-            opacity: 0.3;
+            transform: translateY(0);
         }
 
         .card.word-card {
@@ -240,9 +217,6 @@
             white-space: nowrap;
         }
 
-        /* Reveal — swaps the target zone's content rather than
-           overlaying it, so it can never be clipped regardless of how
-           many words wrap onto extra lines. */
         .reveal-hidden {
             display: none !important;
         }
@@ -255,7 +229,6 @@
             box-shadow: none;
         }
 
-        /* Status feedback */
         #status-message {
             margin-top: 4px;
             margin-bottom: 16px;
@@ -277,7 +250,6 @@
             color: var(--wrong);
         }
 
-        /* ---------------- Report screen ---------------- */
         .report-card {
             background: var(--bg-1);
             border: 1px solid var(--border);
@@ -392,7 +364,7 @@
         <div id="status-message"></div>
 
         <div class="section-wrapper">
-            <div class="section-title">Word Bank (Shuffled)</div>
+            <div class="section-title">Word Bank</div>
             <div id="word-bank" class="card-container"></div>
         </div>
 
@@ -406,20 +378,8 @@
 
     <script>
         const gameArea = document.getElementById('game-area');
-        // Snapshot of the original game-area markup, captured once at
-        // load, so a restart can rebuild it exactly (same technique used
-        // to fix the "Play Again doesn't work" bug in the earlier games:
-        // never reference stale DOM nodes after a full innerHTML replace
-        // — always rebuild from this template, then re-query + re-bind).
         const GAME_AREA_TEMPLATE = gameArea.innerHTML;
 
-        /* -----------------------------------------------------------
-           The rounds are set here, in code — not from a visible input
-           field — so no answer is ever shown to the player except via
-           the intentional Reveal button. A host platform can generate
-           this array dynamically (per lesson/student) instead of
-           hard-coding it here.
-        ----------------------------------------------------------- */
         const PUZZLE_ROUNDS = [
             "The quick brown fox jumps over the lazy dog.",
             "She sells seashells by the seashore.",
@@ -428,25 +388,18 @@
             "The early bird catches the worm."
         ];
 
-        // Elements — re-queried by setupGameArea() every time the
-        // game-area markup is (re)built, so these are always current.
         let wordBank, targetContainer, revealRow, statusMessage;
         let timeValueEl, movesValueEl, revealsValueEl;
         let progressRatioEl, progressFillEl, revealBtn, nextBtn;
 
         let currentRoundIndex = 0;
         let originalWords = [];
-        let draggedCard = null;
         let roundSolved = false;
 
-        // Per-round tracking, reset at the start of every round
         let roundElapsedSeconds = 0;
         let roundTimerInterval = null;
         let roundMoveCount = 0;
         let roundRevealCount = 0;
-
-        // Collected once per round, on completion — the source for the
-        // end-of-game report.
         let roundStats = [];
 
         function setupGameArea() {
@@ -464,26 +417,6 @@
             revealBtn = document.getElementById('reveal-btn');
             nextBtn = document.getElementById('next-btn');
 
-            [wordBank, targetContainer].forEach(container => {
-                container.addEventListener('dragover', (e) => e.preventDefault());
-                container.addEventListener('dragenter', (e) => {
-                    e.preventDefault();
-                    container.classList.add('drag-container-over');
-                });
-                container.addEventListener('dragleave', (e) => {
-                    if (e.target === container) container.classList.remove('drag-container-over');
-                });
-                container.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    container.classList.remove('drag-container-over');
-                    if (draggedCard && e.target === container) {
-                        container.appendChild(draggedCard);
-                        registerMove();
-                        checkArrangement();
-                    }
-                });
-            });
-
             revealBtn.addEventListener('mousedown', showReveal);
             revealBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
@@ -493,33 +426,6 @@
             nextBtn.addEventListener('click', handleNextClick);
         }
 
-        // Document-level listeners — bound exactly once. They read
-        // module-level `let` variables at call time, so they always see
-        // whichever elements are currently live, even after a rebuild.
-        document.addEventListener('dragover', (e) => {
-            if (e.target.classList && e.target.classList.contains('card')) {
-                e.preventDefault();
-            }
-        });
-        document.addEventListener('drop', (e) => {
-            if (e.target.classList && e.target.classList.contains('card') && draggedCard) {
-                e.preventDefault();
-                const targetCard = e.target;
-                const targetParent = targetCard.parentNode;
-                if (draggedCard !== targetCard) {
-                    const allCards = [...targetParent.querySelectorAll('.card')];
-                    const draggedPos = allCards.indexOf(draggedCard);
-                    const targetPos = allCards.indexOf(targetCard);
-                    if (draggedPos === -1 || draggedPos < targetPos) {
-                        targetParent.insertBefore(draggedCard, targetCard.nextSibling);
-                    } else {
-                        targetParent.insertBefore(draggedCard, targetCard);
-                    }
-                    registerMove();
-                    checkArrangement();
-                }
-            }
-        });
         document.addEventListener('mouseup', hideReveal);
         document.addEventListener('touchend', hideReveal);
         document.addEventListener('touchcancel', hideReveal);
@@ -538,16 +444,19 @@
             card.className = 'card word-card';
             card.textContent = word;
             card.dataset.word = word;
-            card.setAttribute('draggable', 'true');
-            card.addEventListener('dragstart', () => {
-                draggedCard = card;
-                setTimeout(() => card.classList.add('dragging'), 0);
+            
+            card.addEventListener('click', () => {
+                if (roundSolved) return;
+                const parent = card.parentNode;
+                if (parent === wordBank) {
+                    targetContainer.appendChild(card);
+                } else if (parent === targetContainer) {
+                    wordBank.appendChild(card);
+                }
+                registerMove();
+                checkArrangement();
             });
-            card.addEventListener('dragend', () => {
-                card.classList.remove('dragging');
-                draggedCard = null;
-                document.querySelectorAll('.card-container').forEach(c => c.classList.remove('drag-container-over'));
-            });
+
             return card;
         }
 
@@ -627,7 +536,7 @@
 
             if (targetCards.length === 0) {
                 statusMessage.className = 'wrong-text';
-                statusMessage.textContent = 'Drag words here to start building the sentence.';
+                statusMessage.textContent = 'Tap words to start building the sentence.';
                 return;
             }
 
@@ -660,10 +569,6 @@
             }
         }
 
-        // Reveal: swaps the target zone's real (draggable) words out for
-        // a static, correctly-ordered green row, only while the button
-        // is actively pressed. Each press (not each second held) counts
-        // as one reveal use toward this round's stats.
         function showReveal() {
             if (roundSolved) return;
             roundRevealCount++;
@@ -701,13 +606,11 @@
             const avgMoves = totalRounds ? (totalMoves / totalRounds).toFixed(1) : 0;
             const avgReveals = totalRounds ? (totalReveals / totalRounds).toFixed(1) : 0;
 
-            // Exposed for a host platform to read once the game finishes.
             window.sentenceGameReport = {
                 roundStats,
                 totals: { time: totalTime, moves: totalMoves, reveals: totalReveals },
                 averages: { time: Number(avgTime), moves: Number(avgMoves), reveals: Number(avgReveals) }
             };
-            console.log('Game report:', window.sentenceGameReport);
 
             const rowsHtml = roundStats.map(r => `
                 <tr>
@@ -776,10 +679,8 @@
             });
         }
 
-        // Initial load
         setupGameArea();
         initializeRound(0);
     </script>
 </body>
 </html>
-
