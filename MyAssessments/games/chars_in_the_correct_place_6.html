@@ -35,6 +35,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* <--- Add this line */
             min-height: 100vh;
         }
 
@@ -408,42 +409,32 @@
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
+    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
+
     <h1>Progresso</h1>
 
     <div class="progress-bar-container">
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
     </div>
 
-    <!--<div class="controls" id="action-controls">
-        <button id="next-btn" class="cool-btn" style="display: none;">
-            <span>Prossima parola</span>
-        </button>
-
-        <button id="reveal-btn" class="cool-btn">
-            <span>Chiedi un aiutino</span>
-        </button>
-    </div>-->
-
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn" style="display: none;">
-            <span>▶ Prossima parola</span>
+            <span>Caricamento...</span>
         </button>
 
         <button id="reveal-btn" class="cool-btn">
-            <span>💡 Chiedi un aiutino</span>
+            <span>💡 Help!</span>
         </button>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
-
     <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
         <div class="section-wrapper">
-            <div class="section-title">Lettere disponibili (tocca per spostare)</div>
+            <!--<div class="section-title">Lettere disponibili (tocca per spostare)</div>-->
             <div id="source-container" class="card-container"></div>
         </div>
 
         <div class="section-wrapper" style="margin-bottom:0;">
-            <div class="section-title">Componi qui (la casella attiva è evidenziata)</div>
+            <!--<div class="section-title">Componi qui (la casella attiva è evidenziata)</div>-->
             <div class="target-wrapper">
                 <div id="target-container" class="card-container"></div>
                 <div id="reveal-overlay" aria-hidden="true"></div>
@@ -658,6 +649,8 @@
                 return card ? card.dataset.char : '';
             }).join('');
 
+            const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+
             if (currentString.length === originalTextString.length && currentString === originalTextString) {
                 wordCompleted = true;
                 stopElapsedTimer();
@@ -675,13 +668,38 @@
                 });
 
                 if (currentWordIndex === PUZZLE_WORDS.length - 1) {
-                    nextBtn.textContent = "Fatto";
+                   // nextBtn.textContent = "Fatto";
                 } else {
-                    nextBtn.textContent = "Prossima parola";
+                    nextBtn.textContent = "▶ Prossima parola";
                 }
-
+                
                 revealBtn.style.display = 'none'; // Nasconde il pulsante aiuto
                 nextBtn.style.display = 'inline-block'; // Mostra il pulsante di avanzamento
+
+                // Ensure it's styled properly as a green functional button
+//                nextBtn.classList.remove('wrong-btn');
+//                revealBtn.style.display = 'none'; 
+//                nextBtn.style.display = 'inline-block';
+
+            }
+            else if (allSlotsFilled) {
+            
+                // All slots are full, but the word is incorrect -> Show non-clickable red warning button
+                
+  //              revealBtn.style.display = 'none';
+  //              nextBtn.innerHTML = "<span>⚠️ Parola errata</span>";
+  //              nextBtn.classList.add('wrong-btn');
+  //              nextBtn.style.display = 'inline-block';
+
+            }else
+            {
+                // If it was showing the wrong button, revert back to reveal button
+    //            if (nextBtn.classList.contains('wrong-btn')) {
+    //                nextBtn.classList.remove('wrong-btn');
+    //                nextBtn.style.display = 'none';
+    //                revealBtn.style.display = 'inline-block';
+    //            }
+
             }
         }
 

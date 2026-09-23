@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fill in the Blanks - Tap to Move</title>
+    <style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: 
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 20px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* <--- Add this line */
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        #game-stats, .stats-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* Progress Bar Styles */
+        .progress-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 12px;
+            border-radius: 99px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+        }
+
+
+
+
+
+
+        button {
+            padding: 12px 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            color: #0d0d14;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: filter 0.15s ease;
+        }
+
+        button:hover {
+            filter: brightness(1.08);
+        }
+
+        button.secondary-btn {
+            background: transparent;
+            color: var(--accent-2);
+            border: 1px solid var(--border);
+        }
+
+        button.secondary-btn:hover {
+            filter: none;
+            border-color: var(--accent-2);
+        }
+
+        button.secondary-btn:disabled {
+            color: var(--text-dim);
+            border-color: var(--border);
+            cursor: not-allowed;
+            filter: none;
+            opacity: 0.5;
+        }
+
+        button#next-round-btn {
+            display: none;
+        }
+
+
+
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+            min-height: clamp(80px, 12vh, 120px);
+            padding: 20px;
+            border-radius: 16px;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        #word-bank {
+            border: 2px dashed var(--border);
+            background-color: var(--bg-1);
+        }
+
+        .card {
+            background-color: var(--bg-2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
+            transition: border-color 0.2s, transform 0.1s, background-color 0.15s;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+        }
+
+        .card.word-card {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 16px;
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .passage-box {
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 26px 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            font-size: 1.1rem;
+            line-height: 2.6;
+            color: var(--text);
+            border: 2px dashed var(--accent);
+        }
+
+        .passage-box.revealed-state {
+            border: 2px solid var(--correct) !important;
+        }
+
+        .blank-slot {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 115px; 
+            height: 52px;
+            margin: 0 4px;
+            vertical-align: middle;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background-color: var(--bg-2);
+            transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        /* Active highlight styling for current target blank */
+        .blank-slot.active-slot {
+            border-color: var(--accent);
+            border-style: solid;
+            background-color: rgba(124, 92, 255, 0.08);
+            box-shadow: 0 0 15px rgba(124, 92, 255, 0.25);
+        }
+
+        .blank-slot .word-card {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blank-slot.filled {
+            border-style: solid;
+            border-color: var(--border);
+            background: var(--bg-2);
+            box-shadow: none;
+        }
+
+        .reveal-badge {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            background-color: var(--bg-1);
+            border: 2px solid var(--correct);
+            color: var(--correct);
+            font-weight: 700;
+            white-space: nowrap;
+            border-radius: 8px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s ease;
+            z-index: 2;
+        }
+
+        .reveal-badge.visible {
+            opacity: 1;
+        }
+
+        #status-message {
+            margin-top: 4px;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            min-height: 22px;
+            text-align: center;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        #status-message.correct-text {
+            color: var(--correct);
+        }
+
+        #status-message.wrong-text {
+            color: var(--wrong);
+        }
+
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            text-align: center;
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--accent-2);
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95rem;
+            text-align: left;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-weight: 600;
+            background: var(--bg-2);
+        }
+
+        .summary-totals {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: var(--text-dim);
+            font-weight: 600;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn i {
+            font-size: 1.1rem;
+            -webkit-text-stroke: 1px currentColor; 
+            transition: transform 0.25s ease;
+        }
+
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #4f46e5;
+            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        .cool-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        .cool-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+        }
+
+        #next-btn {
+            background-color: var(--correct);
+        }
+
+        #next-btn:hover {
+            background-color: #059669;
+            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        #next-btn:active {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+    </style>
+</head>
+
+
+    <!--
+    
+
+    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
+
+    <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
+        <div class="section-wrapper">
+            <div id="source-container" class="card-container"></div>
+        </div>
+
+        <div class="section-wrapper" style="margin-bottom:0;">
+            <div class="target-wrapper">
+                <div id="target-container" class="card-container"></div>
+                <div id="reveal-overlay" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Parola</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>-->
+
+<body>
+
+    <h1 id="game-title">Fill in the Blanks</h1>
+    
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 3</strong></span>
+        <span>Time: <strong id="time-value">0s</strong></span>
+        <span>Moves: <strong id="moves-value">0</strong></span>
+        <span>Reveals: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-container" id="progress-container-wrap">
+        <div id="progress-bar" class="progress-bar-fill"></div>
+    </div>
+
+    <div class="controls" id="game-controls">
+        <button id="next-round-btn" class="cool-btn" style="display: none;">
+            <span>▶ Prossima parola</span>
+        </button>
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Chiedi un aiutino</span>
+        </button>
+    </div>
+    
+    <div id="status-message"></div>
+
+    <div class="section-wrapper" id="word-bank-section">
+        <div class="section-title">Word Bank</div>
+        <div id="word-bank" class="card-container"></div>
+    </div>
+
+    <div class="section-wrapper" id="passage-section">
+        <div class="section-title">Drop Zone (Current Position Highlighted)</div>
+        <div id="text-passage" class="passage-box"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>All Puzzles Completed! 🎉</h2>
+        <p>Here is your performance report for analysis:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Text</th>
+                    <th>Time</th>
+                    <th>Moves</th>
+                    <th>Reveals</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+        <div style="margin-top: 24px;">
+            <button id="restart-game-btn">Play Again</button>
+        </div>
+    </div>
+
+<script>
+    const revealBtn = document.getElementById('reveal-btn');
+    const nextRoundBtn = document.getElementById('next-round-btn');
+    const wordBank = document.getElementById('word-bank');
+    const passageBox = document.getElementById('text-passage');
+    const statusMessage = document.getElementById('status-message');
+    const roundValueEl = document.getElementById('round-value');
+    const timeValueEl = document.getElementById('time-value');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressBar = document.getElementById('progress-bar');
+    
+    const progressContainerWrap = document.getElementById('progress-container-wrap');
+    const gameControls = document.getElementById('game-controls');
+    const wordBankSection = document.getElementById('word-bank-section');
+    const passageSection = document.getElementById('passage-section');
+    const gameStats = document.getElementById('game-stats');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const restartGameBtn = document.getElementById('restart-game-btn');
+
+    const PUZZLE_ROUNDS = [
+        [
+            { type: 'text', content: 'The ' },
+            { type: 'blank', id: 'b1', answer: 'quick' },
+            { type: 'text', content: ' brown ' },
+            { type: 'blank', id: 'b2', answer: 'fox' },
+            { type: 'text', content: ' jumps over the lazy ' },
+            { type: 'blank', id: 'b3', answer: 'dog' },
+            { type: 'text', content: ' near the ' },
+            { type: 'blank', id: 'b4', answer: 'river' },
+            { type: 'text', content: '.' }
+        ],
+        [
+            { type: 'text', content: 'A ' },
+            { type: 'blank', id: 'b1', answer: 'journey' },
+            { type: 'text', content: ' of a thousand ' },
+            { type: 'blank', id: 'b2', answer: 'miles' },
+            { type: 'text', content: ' begins with a single ' },
+            { type: 'blank', id: 'b3', answer: 'step' },
+            { type: 'text', content: '.' }
+        ],
+        [
+            { type: 'text', content: 'To ' },
+            { type: 'blank', id: 'b1', answer: 'err' },
+            { type: 'text', content: ' is ' },
+            { type: 'blank', id: 'b2', answer: 'human' },
+            { type: 'text', content: ', to forgive ' },
+            { type: 'blank', id: 'b3', answer: 'divine' },
+            { type: 'text', content: '.' }
+        ]
+    ];
+
+    let currentRoundIndex = 0;
+    let blanksMeta = [];
+
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let gameCompleted = false;
+
+    let moveCount = 0;
+    let revealCount = 0;
+    let roundResults = [];
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function updateMovesDisplay() {
+        movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealsDisplay() {
+        revealsValueEl.textContent = revealCount;
+    }
+
+    function updateRoundDisplay() {
+        roundValueEl.textContent = `${currentRoundIndex + 1} / ${PUZZLE_ROUNDS.length}`;
+        const progressPercent = (currentRoundIndex / PUZZLE_ROUNDS.length) * 100;
+        progressBar.style.width = `${progressPercent}%`;
+    }
+
+    function registerMove() {
+        if (gameCompleted) return;
+        moveCount++;
+        updateMovesDisplay();
+        updateSlotHighlights();
+    }
+
+    function updateSlotHighlights() {
+        // Clear active highlights from all slots
+        blanksMeta.forEach(b => b.element.classList.remove('active-slot'));
+
+        if (gameCompleted) return;
+
+        // Find the first empty slot and highlight it as active
+        const firstEmpty = blanksMeta.find(b => !b.element.querySelector('.word-card'));
+        if (firstEmpty) {
+            firstEmpty.element.classList.add('active-slot');
+        }
+    }
+
+    function shuffleArray(array) {
+        let arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function createWordCard(word) {
+        const card = document.createElement('div');
+        card.className = 'card word-card';
+        card.textContent = word;
+        card.dataset.word = word;
+        
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            handleCardTap(card);
+        });
+
+        return card;
+    }
+
+    function handleCardTap(card) {
+        if (gameCompleted) return;
+
+        if (card.parentNode === wordBank) {
+            const emptySlot = blanksMeta.map(b => b.element).find(slot => !slot.querySelector('.word-card'));
+            if (emptySlot) {
+                emptySlot.appendChild(card);
+                registerMove();
+                checkArrangement();
+            }
+        } else if (card.parentNode.classList.contains('blank-slot')) {
+            wordBank.appendChild(card);
+            registerMove();
+            checkArrangement();
+        }
+    }
+
+    function initializeGame(roundIndex) {
+        summaryScreen.style.display = 'none';
+        progressContainerWrap.style.display = 'block';
+        gameControls.style.display = 'flex';
+        wordBankSection.style.display = 'block';
+        passageSection.style.display = 'block';
+        gameStats.style.display = 'flex';
+
+        passageBox.innerHTML = '';
+        wordBank.innerHTML = '';
+        statusMessage.textContent = '';
+        statusMessage.className = '';
+        gameCompleted = false;
+        revealBtn.disabled = false;
+        nextRoundBtn.style.display = 'none';
+        moveCount = 0;
+        revealCount = 0;
+        updateMovesDisplay();
+        updateRevealsDisplay();
+        updateRoundDisplay();
+        startElapsedTimer();
+
+        blanksMeta = [];
+        const segments = PUZZLE_ROUNDS[roundIndex];
+
+        segments.forEach((seg) => {
+            if (seg.type === 'text') {
+                passageBox.appendChild(document.createTextNode(seg.content));
+            } else {
+                const slot = document.createElement('span');
+                slot.className = 'blank-slot';
+                slot.dataset.blankId = seg.id;
+
+                slot.addEventListener('click', () => {
+                    if (gameCompleted || slot.querySelector('.word-card')) return;
+                    const firstBankCard = wordBank.querySelector('.word-card');
+                    if (firstBankCard) {
+                        slot.appendChild(firstBankCard);
+                        registerMove();
+                        checkArrangement();
+                    }
+                });
+
+                const badge = document.createElement('span');
+                badge.className = 'reveal-badge';
+                badge.textContent = seg.answer;
+                slot.appendChild(badge);
+
+                passageBox.appendChild(slot);
+                blanksMeta.push({ id: seg.id, answer: seg.answer, element: slot });
+            }
+        });
+
+        const shuffledWords = shuffleArray(blanksMeta.map((b) => b.answer));
+        shuffledWords.forEach((word) => {
+            wordBank.appendChild(createWordCard(word));
+        });
+
+        updateSlotHighlights();
+        checkArrangement();
+    }
+
+    function checkArrangement() {
+        let filledCount = 0;
+        let allCorrect = true;
+
+        blanksMeta.forEach((b) => {
+            const occupant = b.element.querySelector('.word-card');
+            b.element.classList.toggle('filled', !!occupant);
+            if (occupant) {
+                filledCount++;
+                if (occupant.dataset.word !== b.answer) allCorrect = false;
+            } else {
+                allCorrect = false;
+            }
+        });
+
+        updateSlotHighlights();
+
+        if (filledCount < blanksMeta.length) {
+            statusMessage.textContent = '';
+            statusMessage.className = '';
+            return;
+        }
+
+        if (allCorrect) {
+            statusMessage.className = 'correct-text';
+            if (!gameCompleted) {
+                gameCompleted = true;
+                stopElapsedTimer();
+                revealBtn.disabled = true;
+                updateSlotHighlights(); // clears active highlight
+
+                const correctSentence = PUZZLE_ROUNDS[currentRoundIndex].map(seg => {
+                    return seg.type === 'text' ? seg.content : seg.answer;
+                }).join('');
+
+                const effectiveTime = Math.max(elapsedSeconds, 1);
+                const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+
+                roundResults.push({
+                    sentence: correctSentence,
+                    time: elapsedSeconds,
+                    moves: moveCount,
+                    reveals: revealCount,
+                    metric: metricValue
+                });
+
+                if (currentRoundIndex < PUZZLE_ROUNDS.length - 1) {
+                    statusMessage.textContent = 'Round Complete! Click "Next Round" to proceed.';
+                    nextRoundBtn.textContent = 'Next Round';
+                    nextRoundBtn.style.display = 'inline-block';
+                } else {
+                    progressBar.style.width = '100%';
+                    statusMessage.textContent = 'All rounds completed! Click "Done" to view your report.';
+                    nextRoundBtn.textContent = 'Done';
+                    nextRoundBtn.style.display = 'inline-block';
+                }
+            }
+        } else {
+            statusMessage.className = 'wrong-text';
+            statusMessage.textContent = 'All blanks are filled, but some words are in the wrong place.';
+        }
+    }
+
+    function showSummaryScreen() {
+        progressContainerWrap.style.display = 'none';
+        gameControls.style.display = 'none';
+        wordBankSection.style.display = 'none';
+        passageSection.style.display = 'none';
+        gameStats.style.display = 'none';
+        statusMessage.textContent = '';
+
+        summaryTbody.innerHTML = '';
+        let totalTime = 0;
+        let totalMoves = 0;
+        let totalReveals = 0;
+
+        roundResults.forEach((res) => {
+            totalTime += res.time;
+            totalMoves += res.moves;
+            totalReveals += res.reveals;
+
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${res.sentence}</td>
+                <td>${res.time}s</td>
+                <td>${res.moves}</td>
+                <td>${res.reveals}</td>
+                <td>${res.metric}</td>
+            `;
+            summaryTbody.appendChild(row);
+        });
+
+        summaryTotals.innerHTML = `Total Time: ${totalTime}s &bull; Total Moves: ${totalMoves} &bull; Total Reveals: ${totalReveals}`;
+        summaryScreen.style.display = 'block';
+    }
+
+    nextRoundBtn.addEventListener('click', () => {
+        if (currentRoundIndex < PUZZLE_ROUNDS.length - 1) {
+            currentRoundIndex++;
+            initializeGame(currentRoundIndex);
+        } else {
+            showSummaryScreen();
+        }
+    });
+
+    restartGameBtn.addEventListener('click', () => {
+        currentRoundIndex = 0;
+        roundResults = [];
+        initializeGame(currentRoundIndex);
+    });
+
+    function showReveal() {
+        if (gameCompleted || revealBtn.disabled) return;
+        if (!revealBtn.classList.contains('revealing-active')) {
+            revealBtn.classList.add('revealing-active');
+            revealCount++;
+            updateRevealsDisplay();
+        }
+        document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.add('visible'));
+        passageBox.classList.add('revealed-state');
+    }
+
+    function hideReveal() {
+        revealBtn.classList.remove('revealing-active');
+        document.querySelectorAll('.reveal-badge').forEach((b) => b.classList.remove('visible'));
+        passageBox.classList.remove('revealed-state');
+    }
+
+    revealBtn.addEventListener('mousedown', showReveal);
+    revealBtn.addEventListener('mouseup', hideReveal);
+    revealBtn.addEventListener('mouseleave', hideReveal);
+
+    revealBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        showReveal();
+    }, { passive: false });
+
+    revealBtn.addEventListener('touchend', hideReveal);
+    revealBtn.addEventListener('touchcancel', hideReveal);
+
+    // Start first round on load
+    initializeGame(currentRoundIndex);
+</script>
+
+</body>
+</html>

@@ -6,7 +6,7 @@
     <title>Puzzle di Lettere</title>
     <style>
         :root {
-            --bg-0: #f8fafc;
+            --bg-0: #e6e6e6;
             --bg-1: #ffffff;
             --bg-2: #f1f5f9;
             --accent: #6366f1;
@@ -35,6 +35,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
         }
 
@@ -51,10 +52,13 @@
             margin-bottom: 16px;
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 12px;
             width: 100%;
             max-width: 1100px;
             flex-wrap: wrap;
+            position: relative;
+            min-height: 52px;
         }
 
         .section-wrapper {
@@ -120,7 +124,7 @@
         }
 
         #target-container {
-            border: 2px dashed #a5b4fc;
+            border: 2px solid #a5b4fc;
             background-color: #faf8ff;
         }
 
@@ -163,6 +167,24 @@
             border-color: var(--accent);
             box-shadow: var(--shadow-md);
             z-index: 5;
+        }
+
+        /* Error state for incorrect slots */
+        .slot.error-slot {
+            border-color: var(--wrong) !important;
+            background-color: rgba(239, 68, 68, 0.05) !important;
+            animation: shake 0.4s ease;
+        }
+
+        .slot.error-slot .card {
+            color: var(--wrong);
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
         .target-wrapper {
@@ -209,7 +231,7 @@
             height: 94px;
             background: linear-gradient(145deg, #ffffff, #f8fafc);
             color: var(--text);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -253,21 +275,6 @@
             font-size: 1.2rem;
             color: var(--text-dim);
         }
-
-
-        /*#status-message {
-            margin-top: 4px;
-            margin-bottom: 12px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            min-height: 24px;
-            text-align: center;
-            letter-spacing: 0.2px;
-        }
-
-        #status-message.correct-text {
-            color: var(--correct);
-        }*/
 
         #game-stats, .stats-style {
             margin: 0 0 14px;
@@ -372,8 +379,19 @@
             border-radius: 99px;
             cursor: pointer;
             box-shadow: var(--shadow-lg);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
+        }
+
+        .cool-btn.smooth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
         }
 
         .cool-btn i {
@@ -396,6 +414,27 @@
             transform: translateY(1px);
             box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
         }
+
+        #next-btn {
+            background-color: var(--correct);
+        }
+
+        #next-btn:hover {
+            background-color: #059669;
+            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        #next-btn:active {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .cool-btn.wrong-btn {
+            background-color: var(--wrong);
+            cursor: default;
+            pointer-events: none;
+            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+        }
+
     </style>
 </head>
 <body>
@@ -409,6 +448,8 @@
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
+    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
+
     <h1>Progresso</h1>
 
     <div class="progress-bar-container">
@@ -416,27 +457,23 @@
     </div>
 
     <div class="controls" id="action-controls">
-        <button id="next-btn" class="cool-btn" style="display: none;">
-            <span>Prossima parola</span>
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span>Caricamento...</span>
         </button>
 
         <button id="reveal-btn" class="cool-btn">
-            <span>Chiedi un aiutino</span>
+            <span>💡 Help!</span>
         </button>
     </div>
 
-    <h3 class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
-
-    <!--<div id="status-message"></div>-->
-
     <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
         <div class="section-wrapper">
-            <div class="section-title">Lettere disponibili (tocca per spostare)</div>
+            <!--<div class="section-title">Lettere disponibili (tocca per spostare)</div>-->
             <div id="source-container" class="card-container"></div>
         </div>
 
         <div class="section-wrapper" style="margin-bottom:0;">
-            <div class="section-title">Componi qui (la casella attiva è evidenziata)</div>
+            <!--<div class="section-title">Componi qui (la casella attiva è evidenziata)</div>-->
             <div class="target-wrapper">
                 <div id="target-container" class="card-container"></div>
                 <div id="reveal-overlay" aria-hidden="true"></div>
@@ -474,7 +511,6 @@
         const revealOverlay = document.getElementById('reveal-overlay');
         const sourceContainer = document.getElementById('source-container');
         const targetContainer = document.getElementById('target-container');
-    //    const statusMessage = document.getElementById('status-message');
         const timeValueEl = document.getElementById('time-value');
         const movesValueEl = document.getElementById('moves-value');
         const revealsValueEl = document.getElementById('reveals-value');
@@ -485,6 +521,7 @@
         const summaryScreen = document.getElementById('summary-screen');
         const summaryTbody = document.getElementById('summary-tbody');
         const summaryTotals = document.getElementById('summary-totals');
+        const instructionBanner = document.getElementById('instruction-banner');
 
         let originalTextString = "";
         let elapsedSeconds = 0;
@@ -552,11 +589,9 @@
             progressBarFill.style.width = progressRatio + '%';
 
             originalTextString = PUZZLE_WORDS[index];
-            sourceContainer.style.width = ''; // Reset width measurement
+            sourceContainer.style.width = ''; 
             sourceContainer.innerHTML = ''; 
             targetContainer.innerHTML = ''; 
-      //     statusMessage.textContent = '';
-      //      statusMessage.className = '';
             wordCompleted = false;
             moveCount = 0;
             revealCount = 0;
@@ -567,8 +602,11 @@
             updateRevealsDisplay();
             startElapsedTimer();
 
-            nextBtn.style.display = 'none';
+            nextBtn.classList.add('smooth-hidden');
+            revealBtn.classList.remove('smooth-hidden');
             revealBtn.disabled = false;
+            revealBtn.classList.remove('wrong-btn');
+            revealBtn.innerHTML = "<span>💡 Help!</span>";
 
             for (let i = 0; i < originalTextString.length; i++) {
                 const slot = document.createElement('div');
@@ -580,6 +618,15 @@
                     if (card) {
                         sourceContainer.appendChild(card);
                         slot.classList.remove('filled');
+                        
+                        // Clear error states and restore Help button immediately on click
+                        slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                        if (revealBtn.classList.contains('wrong-btn')) {
+                            revealBtn.classList.remove('wrong-btn');
+                            revealBtn.disabled = false;
+                            revealBtn.innerHTML = "<span>💡 Help!</span>";
+                        }
+                        
                         registerMove();
                     }
                 });
@@ -608,7 +655,6 @@
                 sourceContainer.appendChild(card);
             });
 
-            // Lock the source container width so it doesn't shrink when cards are removed
             requestAnimationFrame(() => {
                 const initialWidth = sourceContainer.getBoundingClientRect().width;
                 sourceContainer.style.width = initialWidth + 'px';
@@ -631,6 +677,14 @@
                     const slot = card.parentNode;
                     sourceContainer.appendChild(card);
                     slot.classList.remove('filled');
+                    
+                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                    if (revealBtn.classList.contains('wrong-btn')) {
+                        revealBtn.classList.remove('wrong-btn');
+                        revealBtn.disabled = false;
+                        revealBtn.innerHTML = "<span>💡 Help!</span>";
+                    }
+
                     registerMove();
                 }
             });
@@ -653,13 +707,14 @@
                 return card ? card.dataset.char : '';
             }).join('');
 
+            const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+
             if (currentString.length === originalTextString.length && currentString === originalTextString) {
                 wordCompleted = true;
                 stopElapsedTimer();
                 updateSlotHighlights();
-                
-           //     statusMessage.className = 'correct-text';
-           //     statusMessage.textContent = 'Esatto! Ottimo lavoro!';
+
+                slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
 
                 const effectiveTime = Math.max(elapsedSeconds, 1);
                 const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
@@ -675,11 +730,31 @@
                 if (currentWordIndex === PUZZLE_WORDS.length - 1) {
                     nextBtn.textContent = "Fatto";
                 } else {
-                    nextBtn.textContent = "Prossima parola";
+                    nextBtn.textContent = "▶ Prossima parola";
                 }
+                
+                revealBtn.classList.remove('wrong-btn');
+                revealBtn.disabled = false;
+                
+                // Smoothly fade out Help and fade in Next button
+                revealBtn.classList.add('smooth-hidden');
+                nextBtn.classList.remove('smooth-hidden');
 
-                nextBtn.style.display = 'inline-block';
+            } else if (allSlotsFilled) {
+                // Turn Help! button red and non-clickable
+                revealBtn.innerHTML = "<span>⚠️ Parola errata</span>";
+                revealBtn.classList.add('wrong-btn');
                 revealBtn.disabled = true;
+
+                slotsMeta.forEach(m => m.element.classList.add('error-slot'));
+            } else {
+                slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+                if (revealBtn.classList.contains('wrong-btn')) {
+                    revealBtn.classList.remove('wrong-btn');
+                    revealBtn.disabled = false;
+                    revealBtn.innerHTML = "<span>💡 Help!</span>";
+                }
             }
         }
 
@@ -695,10 +770,10 @@
 
         function showSummaryScreen() {
             puzzleWorkspace.style.display = 'none';
+            instructionBanner.style.display = 'none'; 
             document.getElementById('game-stats').style.display = 'none';
             document.querySelector('.progress-bar-container').style.display = 'none';
             actionControls.style.display = 'none';
-        //    statusMessage.style.display = 'none';
             
             summaryTbody.innerHTML = '';
             let totalMetric = 0;
@@ -722,7 +797,7 @@
         }
 
         function showReveal() {
-            if (wordCompleted || isRevealing) return;
+            if (wordCompleted || isRevealing || revealBtn.disabled) return;
             isRevealing = true;
             
             revealCount++;

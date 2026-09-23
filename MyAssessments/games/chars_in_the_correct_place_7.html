@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Character Card Puzzle - Highlighted Drop Zone</title>
+    <title>Puzzle di Lettere</title>
     <style>
         :root {
-            --bg-0: #f8fafc;
+            --bg-0: #e6e6e6;
             --bg-1: #ffffff;
             --bg-2: #f1f5f9;
             --accent: #6366f1;
@@ -35,6 +35,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             min-height: 100vh;
         }
 
@@ -61,6 +62,9 @@
             width: 100%;
             max-width: 1100px;
             margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .section-title {
@@ -69,6 +73,8 @@
             color: var(--text-dim);
             font-weight: 700;
             letter-spacing: 0.2px;
+            text-align: center;
+            width: 100%;
         }
 
         /* Progress Bar Styles */
@@ -92,11 +98,13 @@
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* Container sizes dynamically and stays centered */
         .card-container {
             display: flex;
             flex-wrap: wrap;
             gap: 14px;
-            width: 100%;
+            width: fit-content;
+            max-width: 100%;
             min-height: clamp(120px, 16vh, 190px);
             padding: 20px;
             border-radius: 20px;
@@ -105,6 +113,7 @@
             background-color: var(--bg-1);
             box-shadow: var(--shadow-md);
             border: 1px solid rgba(226, 232, 240, 0.8);
+            margin: 0 auto;
         }
 
         #source-container {
@@ -157,8 +166,28 @@
             z-index: 5;
         }
 
+        /* Error state for incorrect slots */
+        .slot.error-slot {
+            border-color: var(--wrong) !important;
+            background-color: rgba(239, 68, 68, 0.05) !important;
+            animation: shake 0.4s ease; /* Plays the shake once and releases transform */
+        }
+
+        .slot.error-slot .card {
+            color: var(--wrong);
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
         .target-wrapper {
             position: relative;
+            width: fit-content;
+            margin: 0 auto;
         }
 
         #reveal-overlay {
@@ -199,7 +228,7 @@
             height: 94px;
             background: linear-gradient(145deg, #ffffff, #f8fafc);
             color: var(--text);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             border-radius: 14px;
             display: flex;
             align-items: center;
@@ -244,23 +273,11 @@
             color: var(--text-dim);
         }
 
-        #status-message {
-            margin-top: 4px;
-            margin-bottom: 12px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            min-height: 24px;
-            text-align: center;
-            letter-spacing: 0.2px;
-        }
-
-        #status-message.correct-text {
-            color: var(--correct);
-        }
-
         #game-stats, .stats-style {
             margin: 0 0 14px;
             display: flex;
+            justify-content: center;
+            align-items: center;
             gap: 24px;
             font-size: 1.05rem;
             font-weight: 500;
@@ -271,13 +288,14 @@
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             font-variant-numeric: tabular-nums;
+            text-align: center;
         }
 
         #game-stats strong {
             color: var(--text);
             font-weight: 700;
         }
-       
+
         /* Results Summary Screen */
         #summary-screen {
             display: none;
@@ -382,20 +400,41 @@
             transform: translateY(1px);
             box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
         }
+
+        #next-btn {
+            background-color: var(--correct);
+        }
+
+        #next-btn:hover {
+            background-color: #059669;
+            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        #next-btn:active {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .cool-btn.wrong-btn {
+            background-color: var(--wrong);
+            cursor: default;
+            pointer-events: none;
+            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+        }
+
     </style>
 </head>
 <body>
 
-    <h1 id="stats-style">Puzzle di Lettere</h1>
-
-    <h3 id="game-stats">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
+    <h1 id="game-title">Puzzle di Lettere</h1>
     
     <div id="game-stats">
         <span>Round: <strong id="progress-value">1 / 4</strong></span>
-        <span>Secondi trascorsi: <strong id="time-value">0s</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
+
+    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
 
     <h1>Progresso</h1>
 
@@ -405,24 +444,22 @@
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn" style="display: none;">
-            <span>Next Word</span>
+            <span>Caricamento...</span>
         </button>
 
         <button id="reveal-btn" class="cool-btn">
-            <span>Clicca per avere un aiuto</span>
+            <span>💡 Help!</span>
         </button>
     </div>
 
-    <!--<div id="status-message"></div>-->
-
-    <div id="puzzle-workspace" class="section-wrapper">
-        <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:16px;">
-            <!--<div class="section-title">Lista di Partenza, clicca su di una lettera per mandarla nella lista qui in basso.</div>-->
+    <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
+        <div class="section-wrapper">
+            <!--<div class="section-title">Lettere disponibili (tocca per spostare)</div>-->
             <div id="source-container" class="card-container"></div>
         </div>
 
-        <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:0;">
-            <!--<div class="section-title">Drop Zone (Current Position Highlighted)</div>-->
+        <div class="section-wrapper" style="margin-bottom:0;">
+            <!--<div class="section-title">Componi qui (la casella attiva è evidenziata)</div>-->
             <div class="target-wrapper">
                 <div id="target-container" class="card-container"></div>
                 <div id="reveal-overlay" aria-hidden="true"></div>
@@ -431,15 +468,15 @@
     </div>
 
     <div id="summary-screen">
-        <h2>All Puzzles Completed! 🎉</h2>
-        <p>Here is your performance report for analysis:</p>
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
         <table class="summary-table">
             <thead>
                 <tr>
-                    <th>Word</th>
-                    <th>Time</th>
-                    <th>Moves</th>
-                    <th>Reveals</th>
+                    <th>Parola</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
                     <th>Metric</th>
                 </tr>
             </thead>
@@ -460,7 +497,6 @@
         const revealOverlay = document.getElementById('reveal-overlay');
         const sourceContainer = document.getElementById('source-container');
         const targetContainer = document.getElementById('target-container');
-    //    const statusMessage = document.getElementById('status-message');
         const timeValueEl = document.getElementById('time-value');
         const movesValueEl = document.getElementById('moves-value');
         const revealsValueEl = document.getElementById('reveals-value');
@@ -471,6 +507,7 @@
         const summaryScreen = document.getElementById('summary-screen');
         const summaryTbody = document.getElementById('summary-tbody');
         const summaryTotals = document.getElementById('summary-totals');
+        const instructionBanner = document.getElementById('instruction-banner');
 
         let originalTextString = "";
         let elapsedSeconds = 0;
@@ -538,10 +575,9 @@
             progressBarFill.style.width = progressRatio + '%';
 
             originalTextString = PUZZLE_WORDS[index];
+            sourceContainer.style.width = ''; 
             sourceContainer.innerHTML = ''; 
             targetContainer.innerHTML = ''; 
-         //   statusMessage.textContent = '';
-         //   statusMessage.className = '';
             wordCompleted = false;
             moveCount = 0;
             revealCount = 0;
@@ -553,7 +589,10 @@
             startElapsedTimer();
 
             nextBtn.style.display = 'none';
+            revealBtn.style.display = 'inline-block'; 
             revealBtn.disabled = false;
+            revealBtn.classList.remove('wrong-btn');
+            revealBtn.innerHTML = "<span>💡 Help!</span>";
 
             for (let i = 0; i < originalTextString.length; i++) {
                 const slot = document.createElement('div');
@@ -565,6 +604,15 @@
                     if (card) {
                         sourceContainer.appendChild(card);
                         slot.classList.remove('filled');
+                        
+                        // Clear error states and restore Help button immediately on click
+                        slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                        if (revealBtn.classList.contains('wrong-btn')) {
+                            revealBtn.classList.remove('wrong-btn');
+                            revealBtn.disabled = false;
+                            revealBtn.innerHTML = "<span>💡 Help!</span>";
+                        }
+                        
                         registerMove();
                     }
                 });
@@ -592,6 +640,11 @@
                 setupCardTapToMove(card);
                 sourceContainer.appendChild(card);
             });
+
+            requestAnimationFrame(() => {
+                const initialWidth = sourceContainer.getBoundingClientRect().width;
+                sourceContainer.style.width = initialWidth + 'px';
+            });
         }
 
         function setupCardTapToMove(card) {
@@ -610,6 +663,14 @@
                     const slot = card.parentNode;
                     sourceContainer.appendChild(card);
                     slot.classList.remove('filled');
+                    
+                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                    if (revealBtn.classList.contains('wrong-btn')) {
+                        revealBtn.classList.remove('wrong-btn');
+                        revealBtn.disabled = false;
+                        revealBtn.innerHTML = "<span>💡 Help!</span>";
+                    }
+
                     registerMove();
                 }
             });
@@ -632,13 +693,14 @@
                 return card ? card.dataset.char : '';
             }).join('');
 
+            const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+
             if (currentString.length === originalTextString.length && currentString === originalTextString) {
                 wordCompleted = true;
                 stopElapsedTimer();
                 updateSlotHighlights();
-                
-          //      statusMessage.className = 'correct-text';
-          //      statusMessage.textContent = 'Correct! Great job!';
+
+                slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
 
                 const effectiveTime = Math.max(elapsedSeconds, 1);
                 const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
@@ -652,13 +714,31 @@
                 });
 
                 if (currentWordIndex === PUZZLE_WORDS.length - 1) {
-                    nextBtn.textContent = "Done";
+                    nextBtn.textContent = "Fatto";
                 } else {
-                    nextBtn.textContent = "Next Word";
+                    nextBtn.textContent = "▶ Prossima parola";
                 }
-
+                
+                revealBtn.classList.remove('wrong-btn');
+                revealBtn.disabled = false;
+                revealBtn.style.display = 'none'; 
                 nextBtn.style.display = 'inline-block';
+
+            } else if (allSlotsFilled) {
+                // Turn Help! button red and non-clickable
+                revealBtn.innerHTML = "<span>⚠️ Parola errata</span>";
+                revealBtn.classList.add('wrong-btn');
                 revealBtn.disabled = true;
+
+                slotsMeta.forEach(m => m.element.classList.add('error-slot'));
+            } else {
+                slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+                if (revealBtn.classList.contains('wrong-btn')) {
+                    revealBtn.classList.remove('wrong-btn');
+                    revealBtn.disabled = false;
+                    revealBtn.innerHTML = "<span>💡 Help!</span>";
+                }
             }
         }
 
@@ -674,10 +754,10 @@
 
         function showSummaryScreen() {
             puzzleWorkspace.style.display = 'none';
+            instructionBanner.style.display = 'none'; 
             document.getElementById('game-stats').style.display = 'none';
             document.querySelector('.progress-bar-container').style.display = 'none';
             actionControls.style.display = 'none';
-       //     statusMessage.style.display = 'none';
             
             summaryTbody.innerHTML = '';
             let totalMetric = 0;
@@ -693,15 +773,15 @@
             const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
             
             summaryTotals.innerHTML = `
-                <div>Average Metric: <strong>${averageMetric.toFixed(2)}</strong></div>
-                <div>Normalized Score: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
+                <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+                <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
             `;
 
             summaryScreen.style.display = 'block';
         }
 
         function showReveal() {
-            if (wordCompleted || isRevealing) return;
+            if (wordCompleted || isRevealing || revealBtn.disabled) return;
             isRevealing = true;
             
             revealCount++;
