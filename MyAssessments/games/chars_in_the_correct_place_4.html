@@ -6,29 +6,32 @@
     <title>Character Card Puzzle - Highlighted Drop Zone</title>
     <style>
         :root {
-            --bg-0: #0d0d14;
-            --bg-1: #15151f;
-            --bg-2: #1c1c29;
-            --accent: #7c5cff;
-            --accent-2: #4fd1c5;
-            --correct: #39d98a;
-            --wrong: #ff5c7c;
-            --text: #e8e8f0;
-            --text-dim: #9494a8;
-            --border: #2a2a3a;
+            --bg-0: #f8fafc;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
         }
 
         * { box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(124,92,255,0.08), transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(79,209,197,0.07), transparent 40%),
+            background: 
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
                 var(--bg-0);
             color: var(--text);
             margin: 0;
-            padding: 24px 20px 60px;
+            padding: 20px 20px 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -37,68 +40,35 @@
 
         h1 {
             margin: 0 0 10px;
-            font-size: 1.6rem;
-            letter-spacing: 0.5px;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
         }
 
         .controls {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             display: flex;
             justify-content: center;
-            gap: 10px;
+            gap: 12px;
             width: 100%;
             max-width: 1100px;
             flex-wrap: wrap;
         }
 
-        button {
-            padding: 12px 20px;
-            font-size: 0.95rem;
-            font-weight: 700;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
-            color: #0d0d14;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: filter 0.15s ease;
-        }
-
-        button:hover {
-            filter: brightness(1.08);
-        }
-
-        button.secondary-btn {
-            background: transparent;
-            color: var(--accent-2);
-            border: 1px solid var(--border);
-        }
-
-        button.secondary-btn:hover {
-            filter: none;
-            border-color: var(--accent-2);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            filter: none;
-        }
-
         .section-wrapper {
             width: 100%;
             max-width: 1100px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .section-title {
-            font-size: 0.9rem;
-            margin-bottom: 8px;
+            font-size: 1.05rem;
+            margin-bottom: 6px;
             color: var(--text-dim);
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.2px;
         }
 
         /* Progress Bar Styles */
@@ -107,55 +77,59 @@
             max-width: 1100px;
             background: var(--bg-1);
             border: 1px solid var(--border);
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 20px;
+            height: 12px;
+            border-radius: 99px;
+            margin-bottom: 16px;
             overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
         }
 
         .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             width: 0%;
-            transition: width 0.4s ease;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .card-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
             width: 100%;
-            min-height: clamp(120px, 18vh, 200px);
+            min-height: clamp(120px, 16vh, 190px);
             padding: 20px;
-            border-radius: 16px;
+            border-radius: 20px;
             align-items: center;
             box-sizing: border-box;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            background-color: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(226, 232, 240, 0.8);
         }
 
         #source-container {
-            border: 2px dashed var(--border);
-            background-color: var(--bg-1);
+            border-color: var(--border);
         }
 
         #target-container {
-            border: 2px dashed var(--accent);
-            background-color: var(--bg-1);
+            border: 2px dashed #a5b4fc;
+            background-color: #faf8ff;
         }
 
         /* Slot styles for Drop Zone */
         .slot {
+            position: relative;
             flex-shrink: 0;
-            width: 70px;
-            height: 90px;
+            width: 72px;
+            height: 94px;
             background-color: var(--bg-2);
             border: 2px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
         }
 
@@ -163,14 +137,24 @@
         .slot.active-slot {
             border-color: var(--accent);
             border-style: solid;
-            background-color: rgba(124, 92, 255, 0.08);
-            box-shadow: 0 0 15px rgba(124, 92, 255, 0.25);
+            background-color: #ede9fe;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
         }
 
+        /* Filled slot acts as a unified card container and lifts together smoothly */
         .slot.filled {
             border-style: solid;
             border-color: var(--border);
-            background-color: var(--bg-2);
+            background-color: var(--bg-1);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+        }
+
+        .slot.filled:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
         }
 
         .target-wrapper {
@@ -184,14 +168,16 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: flex-start;
-            gap: 12px;
+            gap: 14px;
             padding: 20px;
-            border-radius: 16px;
+            border-radius: 20px;
             background-color: var(--bg-1);
             border: 2px solid var(--correct);
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.1s ease;
+            transition: opacity 0.2s ease;
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
         }
 
         #reveal-overlay.visible {
@@ -200,47 +186,56 @@
 
         .card.reveal-letter {
             border-color: var(--correct);
-            background-color: rgba(57, 217, 138, 0.15);
+            background-color: rgba(16, 185, 129, 0.1);
             color: var(--correct);
             cursor: default;
             box-shadow: none;
             transform: none !important;
         }
 
-        .card.reveal-letter.space {
-            background-color: rgba(57, 217, 138, 0.05);
-            border-style: dotted;
-        }
-
         .card {
             flex-shrink: 0;
-            width: 70px;
-            height: 90px;
-            background-color: var(--bg-2);
+            width: 72px;
+            height: 94px;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
             color: var(--text);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
             user-select: none;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.35);
-            transition: border-color 0.2s, transform 0.15s ease, background-color 0.15s;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
         }
 
-        .card:hover {
+        /* Hover effect for source cards */
+        #source-container .card:hover {
             border-color: var(--accent);
-            transform: translateY(-2px);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            background: #ffffff;
+            color: var(--accent);
+            z-index: 5;
+        }
+
+        /* Inside slots, cards don't translate independently and borders are reset */
+        .slot .card,
+        .slot .card.space {
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            width: 100%;
+            height: 100%;
+            transform: none !important;
         }
 
         .card.space {
-            border-style: dotted;
+            border-style: solid;
             border-color: var(--border);
-            background-color: rgba(255, 255, 255, 0.03);
-            box-shadow: none;
         }
 
         .card.space::after {
@@ -251,31 +246,38 @@
 
         #status-message {
             margin-top: 4px;
-            margin-bottom: 16px;
-            font-size: 1rem;
-            font-weight: 600;
-            min-height: 22px;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-height: 24px;
             text-align: center;
+            letter-spacing: 0.2px;
         }
 
         #status-message.correct-text {
             color: var(--correct);
         }
 
-        #game-stats {
-            margin: -5px 0 16px;
+        #game-stats, .stats-style {
+            margin: 0 0 14px;
             display: flex;
-            gap: 20px;
-            font-size: 0.85rem;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
             color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
             font-variant-numeric: tabular-nums;
         }
 
         #game-stats strong {
-            color: var(--accent-2);
-            font-weight: 600;
+            color: var(--text);
+            font-weight: 700;
         }
-
+       
         /* Results Summary Screen */
         #summary-screen {
             display: none;
@@ -283,80 +285,144 @@
             max-width: 650px;
             background: var(--bg-1);
             border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 36px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            box-shadow: var(--shadow-lg);
         }
 
         #summary-screen h2 {
             margin-top: 0;
             color: var(--correct);
+            font-size: 2rem;
         }
 
         .summary-table {
             width: 100%;
-            margin: 20px 0;
+            margin: 24px 0;
             border-collapse: collapse;
         }
 
         .summary-table th, .summary-table td {
-            padding: 10px;
+            padding: 12px;
             border-bottom: 1px solid var(--border);
             text-align: left;
         }
 
         .summary-table th {
             color: var(--text-dim);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .summary-totals {
-            margin-top: 15px;
-            padding: 15px;
+            margin-top: 20px;
+            padding: 18px;
             background: var(--bg-2);
-            border-radius: 10px;
+            border-radius: 14px;
             display: flex;
             justify-content: space-around;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            font-weight: 600;
         }
 
         .summary-totals strong {
-            color: var(--accent-2);
+            color: var(--accent);
+        }
+
+        button:hover {
+            filter: brightness(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn i {
+            font-size: 1.1rem;
+            -webkit-text-stroke: 1px currentColor; 
+            transition: transform 0.25s ease;
+        }
+
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #4f46e5;
+            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        .cool-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        .cool-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
         }
     </style>
 </head>
 <body>
 
-    <h1 id="game-title">Character Card Puzzle</h1>
+    <h1 id="stats-style">Puzzle di Lettere</h1>
+
+    <h3 id="game-stats">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
     
     <div id="game-stats">
-        <span>Word: <strong id="progress-value">1 / 4</strong></span>
-        <span>Time: <strong id="time-value">0s</strong></span>
-        <span>Moves: <strong id="moves-value">0</strong></span>
-        <span>Reveals: <strong id="reveals-value">0</strong></span>
+        <span>Round: <strong id="progress-value">1 / 4</strong></span>
+        <span>Secondi trascorsi: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <!-- Visual Progress Bar Element -->
+    <h1>Progresso</h1>
+
     <div class="progress-bar-container">
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
     </div>
 
     <div class="controls" id="action-controls">
-        <button id="next-btn" style="display: none;">Next Word</button>
-        <button id="reveal-btn" class="secondary-btn">Hold to Reveal Word</button>
+        <button id="next-btn" class="cool-btn" style="display: none;">
+            <span>Next Word</span>
+        </button>
+
+        <button id="reveal-btn" class="cool-btn">
+            <span>Clicca per avere un aiuto</span>
+        </button>
     </div>
 
-    <div id="status-message"></div>
+    <!--<div id="status-message"></div>-->
 
     <div id="puzzle-workspace" class="section-wrapper">
-        <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:20px;">
-            <div class="section-title">Source List (Tap to Send to Drop Zone)</div>
+        <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:16px;">
+            <!--<div class="section-title">Lista di Partenza, clicca su di una lettera per mandarla nella lista qui in basso.</div>-->
             <div id="source-container" class="card-container"></div>
         </div>
 
         <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:0;">
-            <div class="section-title">Drop Zone (Current Position Highlighted)</div>
+            <!--<div class="section-title">Drop Zone (Current Position Highlighted)</div>-->
             <div class="target-wrapper">
                 <div id="target-container" class="card-container"></div>
                 <div id="reveal-overlay" aria-hidden="true"></div>
@@ -364,7 +430,6 @@
         </div>
     </div>
 
-    <!-- Summary Screen for Memorized Results -->
     <div id="summary-screen">
         <h2>All Puzzles Completed! 🎉</h2>
         <p>Here is your performance report for analysis:</p>
@@ -379,11 +444,9 @@
                 </tr>
             </thead>
             <tbody id="summary-tbody">
-                <!-- Populated via JS -->
             </tbody>
         </table>
         <div class="summary-totals" id="summary-totals">
-            <!-- Populated via JS -->
         </div>
     </div>
 
@@ -397,7 +460,7 @@
         const revealOverlay = document.getElementById('reveal-overlay');
         const sourceContainer = document.getElementById('source-container');
         const targetContainer = document.getElementById('target-container');
-        const statusMessage = document.getElementById('status-message');
+    //    const statusMessage = document.getElementById('status-message');
         const timeValueEl = document.getElementById('time-value');
         const movesValueEl = document.getElementById('moves-value');
         const revealsValueEl = document.getElementById('reveals-value');
@@ -477,8 +540,8 @@
             originalTextString = PUZZLE_WORDS[index];
             sourceContainer.innerHTML = ''; 
             targetContainer.innerHTML = ''; 
-            statusMessage.textContent = '';
-            statusMessage.className = '';
+         //   statusMessage.textContent = '';
+         //   statusMessage.className = '';
             wordCompleted = false;
             moveCount = 0;
             revealCount = 0;
@@ -492,12 +555,10 @@
             nextBtn.style.display = 'none';
             revealBtn.disabled = false;
 
-            // Create target slots based on word length
             for (let i = 0; i < originalTextString.length; i++) {
                 const slot = document.createElement('div');
                 slot.classList.add('slot');
                 
-                // Clicking a filled slot returns the card to source
                 slot.addEventListener('click', () => {
                     if (wordCompleted) return;
                     const card = slot.querySelector('.card');
@@ -514,7 +575,6 @@
 
             updateSlotHighlights();
 
-            // Populate source container with shuffled character cards
             const charArray = Array.from(originalTextString);
             const shuffledChars = shuffleArray(charArray);
 
@@ -540,7 +600,6 @@
                 if (wordCompleted) return;
 
                 if (card.parentNode === sourceContainer) {
-                    // Find first empty slot and place card there
                     const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
                     if (emptySlotMeta) {
                         emptySlotMeta.element.appendChild(card);
@@ -557,10 +616,8 @@
         }
 
         function updateSlotHighlights() {
-            // Remove active highlight from all slots
             slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
 
-            // Find the first empty slot and highlight it as the current place
             const firstEmptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
             if (firstEmptyMeta) {
                 firstEmptyMeta.element.classList.add('active-slot');
@@ -578,10 +635,10 @@
             if (currentString.length === originalTextString.length && currentString === originalTextString) {
                 wordCompleted = true;
                 stopElapsedTimer();
-                updateSlotHighlights(); // clears active highlight
+                updateSlotHighlights();
                 
-                statusMessage.className = 'correct-text';
-                statusMessage.textContent = 'Correct! Great job!';
+          //      statusMessage.className = 'correct-text';
+          //      statusMessage.textContent = 'Correct! Great job!';
 
                 const effectiveTime = Math.max(elapsedSeconds, 1);
                 const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
@@ -620,7 +677,7 @@
             document.getElementById('game-stats').style.display = 'none';
             document.querySelector('.progress-bar-container').style.display = 'none';
             actionControls.style.display = 'none';
-            statusMessage.style.display = 'none';
+       //     statusMessage.style.display = 'none';
             
             summaryTbody.innerHTML = '';
             let totalMetric = 0;
@@ -681,7 +738,6 @@
         revealBtn.addEventListener('touchend', hideReveal);
         revealBtn.addEventListener('touchcancel', hideReveal);
 
-        // Initial Load
         loadWord(currentWordIndex);
     </script>
 </body>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle di Lettere</title>
+    <style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: 
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 20px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .controls {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+        }
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: var(--text-dim);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Progress Bar Styles */
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 12px;
+            border-radius: 99px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Container sizes dynamically and stays centered */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            width: fit-content;
+            max-width: 100%;
+            min-height: clamp(120px, 16vh, 190px);
+            padding: 20px;
+            border-radius: 20px;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            margin: 0 auto;
+        }
+
+        #source-container {
+            border-color: var(--border);
+        }
+
+        #target-container {
+            border: 2px dashed #a5b4fc;
+            background-color: #faf8ff;
+        }
+
+        /* Slot styles for Drop Zone */
+        .slot {
+            position: relative;
+            flex-shrink: 0;
+            width: 72px;
+            height: 94px;
+            background-color: var(--bg-2);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        /* Highlight for the current active slot */
+        .slot.active-slot {
+            border-color: var(--accent);
+            border-style: solid;
+            background-color: #ede9fe;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Filled slot acts as a unified card container and lifts together smoothly */
+        .slot.filled {
+            border-style: solid;
+            border-color: var(--border);
+            background-color: var(--bg-1);
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+        }
+
+        .slot.filled:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+
+        .target-wrapper {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        #reveal-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 14px;
+            padding: 20px;
+            border-radius: 20px;
+            background-color: var(--bg-1);
+            border: 2px solid var(--correct);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+        }
+
+        #reveal-overlay.visible {
+            opacity: 1;
+        }
+
+        .card.reveal-letter {
+            border-color: var(--correct);
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--correct);
+            cursor: default;
+            box-shadow: none;
+            transform: none !important;
+        }
+
+        .card {
+            flex-shrink: 0;
+            width: 72px;
+            height: 94px;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* Hover effect for source cards */
+        #source-container .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            background: #ffffff;
+            color: var(--accent);
+            z-index: 5;
+        }
+
+        /* Inside slots, cards don't translate independently and borders are reset */
+        .slot .card,
+        .slot .card.space {
+            border: none;
+            box-shadow: none;
+            background: transparent;
+            width: 100%;
+            height: 100%;
+            transform: none !important;
+        }
+
+        .card.space {
+            border-style: solid;
+            border-color: var(--border);
+        }
+
+        .card.space::after {
+            content: '␣';
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        #game-stats, .stats-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* Results Summary Screen */
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--correct);
+            font-size: 2rem;
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 24px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-totals {
+            margin-top: 20px;
+            padding: 18px;
+            background: var(--bg-2);
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .summary-totals strong {
+            color: var(--accent);
+        }
+
+        button:hover {
+            filter: brightness(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn i {
+            font-size: 1.1rem;
+            -webkit-text-stroke: 1px currentColor; 
+            transition: transform 0.25s ease;
+        }
+
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #4f46e5;
+            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        .cool-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        .cool-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+        }
+
+        #next-btn {
+            background-color: var(--correct);
+        }
+
+        #next-btn:hover {
+            background-color: #059669;
+            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        #next-btn:active {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Puzzle di Lettere</h1>
+    
+    <div id="game-stats">
+        <span>Round: <strong id="progress-value">1 / 4</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <!--<div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn" style="display: none;">
+            <span>Prossima parola</span>
+        </button>
+
+        <button id="reveal-btn" class="cool-btn">
+            <span>Chiedi un aiutino</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn" style="display: none;">
+            <span>▶ Prossima parola</span>
+        </button>
+
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Chiedi un aiutino</span>
+        </button>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
+
+    <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
+        <div class="section-wrapper">
+            <div class="section-title">Lettere disponibili (tocca per spostare)</div>
+            <div id="source-container" class="card-container"></div>
+        </div>
+
+        <div class="section-wrapper" style="margin-bottom:0;">
+            <div class="section-title">Componi qui (la casella attiva è evidenziata)</div>
+            <div class="target-wrapper">
+                <div id="target-container" class="card-container"></div>
+                <div id="reveal-overlay" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Parola</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+    <script>
+        const PUZZLE_WORDS = ["HELLO WORLD", "CODE PUZZLE", "JAVASCRIPT", "UI DESIGN"];
+        let currentWordIndex = 0;
+        let roundResults = [];
+
+        const nextBtn = document.getElementById('next-btn');
+        const revealBtn = document.getElementById('reveal-btn');
+        const revealOverlay = document.getElementById('reveal-overlay');
+        const sourceContainer = document.getElementById('source-container');
+        const targetContainer = document.getElementById('target-container');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressValueEl = document.getElementById('progress-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const puzzleWorkspace = document.getElementById('puzzle-workspace');
+        const actionControls = document.getElementById('action-controls');
+        const summaryScreen = document.getElementById('summary-screen');
+        const summaryTbody = document.getElementById('summary-tbody');
+        const summaryTotals = document.getElementById('summary-totals');
+        const instructionBanner = document.getElementById('instruction-banner');
+
+        let originalTextString = "";
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let wordCompleted = false;
+        let isRevealing = false;
+        let slotsMeta = [];
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function updateMovesDisplay() {
+            movesValueEl.textContent = moveCount;
+        }
+
+        function updateRevealsDisplay() {
+            revealsValueEl.textContent = revealCount;
+        }
+
+        function registerMove() {
+            if (wordCompleted) return;
+            moveCount++;
+            updateMovesDisplay();
+            updateSlotHighlights();
+            checkWordAutomatic();
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function loadWord(index) {
+            if (index >= PUZZLE_WORDS.length) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+                return;
+            }
+
+            const progressRatio = (index / PUZZLE_WORDS.length) * 100;
+            progressBarFill.style.width = progressRatio + '%';
+
+            originalTextString = PUZZLE_WORDS[index];
+            sourceContainer.style.width = ''; 
+            sourceContainer.innerHTML = ''; 
+            targetContainer.innerHTML = ''; 
+            wordCompleted = false;
+            moveCount = 0;
+            revealCount = 0;
+            slotsMeta = [];
+            
+            progressValueEl.textContent = `${index + 1} / ${PUZZLE_WORDS.length}`;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+            startElapsedTimer();
+
+            nextBtn.style.display = 'none';
+            revealBtn.style.display = 'inline-block'; // Mostra il pulsante aiuto all'inizio del round
+            revealBtn.disabled = false;
+
+            for (let i = 0; i < originalTextString.length; i++) {
+                const slot = document.createElement('div');
+                slot.classList.add('slot');
+                
+                slot.addEventListener('click', () => {
+                    if (wordCompleted) return;
+                    const card = slot.querySelector('.card');
+                    if (card) {
+                        sourceContainer.appendChild(card);
+                        slot.classList.remove('filled');
+                        registerMove();
+                    }
+                });
+
+                targetContainer.appendChild(slot);
+                slotsMeta.push({ element: slot, expected: originalTextString[i] });
+            }
+
+            updateSlotHighlights();
+
+            const charArray = Array.from(originalTextString);
+            const shuffledChars = shuffleArray(charArray);
+
+            shuffledChars.forEach(char => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.char = char;
+
+                if (char === ' ') {
+                    card.classList.add('space');
+                } else {
+                    card.textContent = char;
+                }
+
+                setupCardTapToMove(card);
+                sourceContainer.appendChild(card);
+            });
+
+            requestAnimationFrame(() => {
+                const initialWidth = sourceContainer.getBoundingClientRect().width;
+                sourceContainer.style.width = initialWidth + 'px';
+            });
+        }
+
+        function setupCardTapToMove(card) {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (wordCompleted) return;
+
+                if (card.parentNode === sourceContainer) {
+                    const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+                    if (emptySlotMeta) {
+                        emptySlotMeta.element.appendChild(card);
+                        emptySlotMeta.element.classList.add('filled');
+                        registerMove();
+                    }
+                } else if (card.parentNode.classList.contains('slot')) {
+                    const slot = card.parentNode;
+                    sourceContainer.appendChild(card);
+                    slot.classList.remove('filled');
+                    registerMove();
+                }
+            });
+        }
+
+        function updateSlotHighlights() {
+            slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
+
+            const firstEmptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+            if (firstEmptyMeta) {
+                firstEmptyMeta.element.classList.add('active-slot');
+            }
+        }
+
+        function checkWordAutomatic() {
+            if (wordCompleted) return;
+
+            const currentString = slotsMeta.map(m => {
+                const card = m.element.querySelector('.card');
+                return card ? card.dataset.char : '';
+            }).join('');
+
+            if (currentString.length === originalTextString.length && currentString === originalTextString) {
+                wordCompleted = true;
+                stopElapsedTimer();
+                updateSlotHighlights();
+
+                const effectiveTime = Math.max(elapsedSeconds, 1);
+                const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+
+                roundResults.push({
+                    word: originalTextString,
+                    time: elapsedSeconds + 's',
+                    moves: moveCount,
+                    reveals: revealCount,
+                    metric: metricValue
+                });
+
+                if (currentWordIndex === PUZZLE_WORDS.length - 1) {
+                    nextBtn.textContent = "Fatto";
+                } else {
+                    nextBtn.textContent = "Prossima parola";
+                }
+
+                revealBtn.style.display = 'none'; // Nasconde il pulsante aiuto
+                nextBtn.style.display = 'inline-block'; // Mostra il pulsante di avanzamento
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentWordIndex === PUZZLE_WORDS.length - 1) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+            } else {
+                currentWordIndex++;
+                loadWord(currentWordIndex);
+            }
+        });
+
+        function showSummaryScreen() {
+            puzzleWorkspace.style.display = 'none';
+            instructionBanner.style.display = 'none'; // Added here
+            document.getElementById('game-stats').style.display = 'none';
+            document.querySelector('.progress-bar-container').style.display = 'none';
+            actionControls.style.display = 'none';
+            
+            summaryTbody.innerHTML = '';
+            let totalMetric = 0;
+
+            roundResults.forEach(res => {
+                totalMetric += res.metric;
+                const row = document.createElement('tr');
+                row.innerHTML = `<td><strong>${res.word}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
+                summaryTbody.appendChild(row);
+            });
+
+            const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+            const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+            
+            summaryTotals.innerHTML = `
+                <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+                <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
+            `;
+
+            summaryScreen.style.display = 'block';
+        }
+
+        function showReveal() {
+            if (wordCompleted || isRevealing) return;
+            isRevealing = true;
+            
+            revealCount++;
+            updateRevealsDisplay();
+
+            revealOverlay.innerHTML = '';
+            Array.from(originalTextString).forEach((char) => {
+                const card = document.createElement('div');
+                card.classList.add('card', 'reveal-letter');
+                if (char === ' ') {
+                    card.classList.add('space');
+                } else {
+                    card.textContent = char;
+                }
+                revealOverlay.appendChild(card);
+            });
+            revealOverlay.classList.add('visible');
+        }
+
+        function hideReveal() {
+            if (!isRevealing) return;
+            isRevealing = false;
+            revealOverlay.classList.remove('visible');
+        }
+
+        revealBtn.addEventListener('mousedown', showReveal);
+        revealBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            showReveal();
+        }, { passive: false });
+
+        revealBtn.addEventListener('mouseup', hideReveal);
+        revealBtn.addEventListener('mouseleave', hideReveal);
+        revealBtn.addEventListener('touchend', hideReveal);
+        revealBtn.addEventListener('touchcancel', hideReveal);
+
+        loadWord(currentWordIndex);
+    </script>
+</body>
+</html>

@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Card Puzzle - Highlighted Drop Zone</title>
+    <style>
+        :root {
+            --bg-0: #f4f1ea;
+            --bg-1: #ffffff;
+            --bg-2: #e9e4dc;
+            --accent: #5850ec;
+            --accent-2: #0d9488;
+            --correct: #10b981;
+            --wrong: #f43f5e;
+            --text: #27272a;
+            --text-dim: #71717a;
+            --border: #d4d4d8;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 15% 15%, rgba(88, 80, 236, 0.08), transparent 45%),
+                radial-gradient(circle at 85% 85%, rgba(13, 148, 136, 0.08), transparent 45%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 24px 20px 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 0 0 14px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: 0.3px;
+            color: var(--accent);
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+        }
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            margin-bottom: 8px;
+            color: var(--text-dim);
+            font-weight: 700;
+        }
+
+        /* Progress Bar Styles */
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-1);
+            border: 2px solid var(--border);
+            height: 18px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.04);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.4s ease;
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            width: 100%;
+            min-height: clamp(120px, 18vh, 200px);
+            padding: 20px;
+            border-radius: 16px;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 8px 24px rgba(39, 39, 42, 0.06);
+        }
+
+        #source-container {
+            border: 2px solid var(--border);
+            background-color: var(--bg-1);
+        }
+
+        #target-container {
+            border: 2px dashed var(--accent);
+            background-color: var(--bg-1);
+        }
+
+        /* Slot styles for Drop Zone */
+        .slot {
+            flex-shrink: 0;
+            width: 70px;
+            height: 90px;
+            background-color: var(--bg-2);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+
+        /* Highlight for the current active slot */
+        .slot.active-slot {
+            border-color: var(--accent);
+            border-style: solid;
+            background-color: rgba(88, 80, 236, 0.1);
+            box-shadow: 0 0 12px rgba(88, 80, 236, 0.25);
+        }
+
+        .slot.filled {
+            border-style: solid;
+            border-color: var(--border);
+            background-color: var(--bg-2);
+        }
+
+        .target-wrapper {
+            position: relative;
+        }
+
+        #reveal-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            padding: 20px;
+            border-radius: 16px;
+            background-color: var(--bg-1);
+            border: 2px solid var(--correct);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.1s ease;
+        }
+
+        #reveal-overlay.visible {
+            opacity: 1;
+        }
+
+        .card.reveal-letter {
+            border-color: var(--correct);
+            background-color: rgba(16, 185, 129, 0.12);
+            color: var(--correct);
+            cursor: default;
+            box-shadow: none;
+            transform: none !important;
+        }
+
+        .card {
+            flex-shrink: 0;
+            width: 70px;
+            height: 90px;
+            background-color: var(--bg-1);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: 0 4px 12px rgba(39, 39, 42, 0.05);
+            transition: border-color 0.2s, transform 0.15s ease, background-color 0.15s;
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            background-color: #faf5ff;
+        }
+
+        .card.space {
+            border-style: dotted;
+            border-color: var(--border);
+            background-color: rgba(39, 39, 42, 0.02);
+            box-shadow: none;
+        }
+
+        .card.space::after {
+            content: '␣';
+            font-size: 1.2rem;
+            color: var(--text-dim);
+        }
+
+        #status-message {
+            margin-top: 4px;
+            margin-bottom: 16px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            min-height: 26px;
+            text-align: center;
+        }
+
+        #status-message.correct-text {
+            color: var(--correct);
+        }
+
+        #game-stats {
+            margin: -5px 0 16px;
+            display: flex;
+            gap: 20px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            font-variant-numeric: tabular-nums;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        /* Results Summary Screen */
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 24px rgba(39, 39, 42, 0.08);
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--correct);
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
+        .summary-totals {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--bg-2);
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 0.95rem;
+        }
+
+        .summary-totals strong {
+            color: var(--accent-2);
+        }
+
+        button:hover {
+            filter: brightness(0.94);
+        }
+
+        button.secondary-btn {
+            background: rgba(88, 80, 236, 0.08);
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+
+        button.secondary-btn:hover {
+            filter: none;
+            background: rgba(88, 80, 236, 0.14);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+        }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #5850ec;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(88, 80, 236, 0.3);
+            transition: all 0.25s ease;
+            text-decoration: none;
+        }
+
+        .cool-btn i {
+            font-size: 1.1rem;
+            -webkit-text-stroke: 1px currentColor; 
+            transition: transform 0.25s ease;
+        }
+
+        /* Hover & Active Effects */
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #4c43d4;
+            box-shadow: 0 12px 24px rgba(88, 80, 236, 0.4);
+        }
+
+        .cool-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        .cool-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 4px 10px rgba(88, 80, 236, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Puzzle di Lettere</h1>
+    
+    <div id="game-stats">
+        <span>Round: <strong id="progress-value">1 / 4</strong></span>
+        <span>Secondi trascorsi: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn" style="display: none;">
+            <span>Next Word</span>
+        </button>
+
+        <button id="reveal-btn" class="cool-btn">
+            <span>Clicca per avere un aiuto</span>
+        </button>
+    </div>
+
+    <div id="status-message"></div>
+
+    <div id="puzzle-workspace" class="section-wrapper">
+        <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:20px;">
+            <div class="section-title">Source List (Tap to Send to Drop Zone)</div>
+            <div id="source-container" class="card-container"></div>
+        </div>
+
+        <div class="section-wrapper" style="width:100%; max-width:none; margin-bottom:0;">
+            <div class="section-title">Drop Zone (Current Position Highlighted)</div>
+            <div class="target-wrapper">
+                <div id="target-container" class="card-container"></div>
+                <div id="reveal-overlay" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>All Puzzles Completed! 🎉</h2>
+        <p>Here is your performance report for analysis:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Word</th>
+                    <th>Time</th>
+                    <th>Moves</th>
+                    <th>Reveals</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+    <script>
+        const PUZZLE_WORDS = ["HELLO WORLD", "CODE PUZZLE", "JAVASCRIPT", "UI DESIGN"];
+        let currentWordIndex = 0;
+        let roundResults = [];
+
+        const nextBtn = document.getElementById('next-btn');
+        const revealBtn = document.getElementById('reveal-btn');
+        const revealOverlay = document.getElementById('reveal-overlay');
+        const sourceContainer = document.getElementById('source-container');
+        const targetContainer = document.getElementById('target-container');
+        const statusMessage = document.getElementById('status-message');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressValueEl = document.getElementById('progress-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const puzzleWorkspace = document.getElementById('puzzle-workspace');
+        const actionControls = document.getElementById('action-controls');
+        const summaryScreen = document.getElementById('summary-screen');
+        const summaryTbody = document.getElementById('summary-tbody');
+        const summaryTotals = document.getElementById('summary-totals');
+
+        let originalTextString = "";
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let wordCompleted = false;
+        let isRevealing = false;
+        let slotsMeta = [];
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function updateMovesDisplay() {
+            movesValueEl.textContent = moveCount;
+        }
+
+        function updateRevealsDisplay() {
+            revealsValueEl.textContent = revealCount;
+        }
+
+        function registerMove() {
+            if (wordCompleted) return;
+            moveCount++;
+            updateMovesDisplay();
+            updateSlotHighlights();
+            checkWordAutomatic();
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function loadWord(index) {
+            if (index >= PUZZLE_WORDS.length) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+                return;
+            }
+
+            const progressRatio = (index / PUZZLE_WORDS.length) * 100;
+            progressBarFill.style.width = progressRatio + '%';
+
+            originalTextString = PUZZLE_WORDS[index];
+            sourceContainer.innerHTML = ''; 
+            targetContainer.innerHTML = ''; 
+            statusMessage.textContent = '';
+            statusMessage.className = '';
+            wordCompleted = false;
+            moveCount = 0;
+            revealCount = 0;
+            slotsMeta = [];
+            
+            progressValueEl.textContent = `${index + 1} / ${PUZZLE_WORDS.length}`;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+            startElapsedTimer();
+
+            nextBtn.style.display = 'none';
+            revealBtn.disabled = false;
+
+            for (let i = 0; i < originalTextString.length; i++) {
+                const slot = document.createElement('div');
+                slot.classList.add('slot');
+                
+                slot.addEventListener('click', () => {
+                    if (wordCompleted) return;
+                    const card = slot.querySelector('.card');
+                    if (card) {
+                        sourceContainer.appendChild(card);
+                        slot.classList.remove('filled');
+                        registerMove();
+                    }
+                });
+
+                targetContainer.appendChild(slot);
+                slotsMeta.push({ element: slot, expected: originalTextString[i] });
+            }
+
+            updateSlotHighlights();
+
+            const charArray = Array.from(originalTextString);
+            const shuffledChars = shuffleArray(charArray);
+
+            shuffledChars.forEach(char => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.char = char;
+
+                if (char === ' ') {
+                    card.classList.add('space');
+                } else {
+                    card.textContent = char;
+                }
+
+                setupCardTapToMove(card);
+                sourceContainer.appendChild(card);
+            });
+        }
+
+        function setupCardTapToMove(card) {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (wordCompleted) return;
+
+                if (card.parentNode === sourceContainer) {
+                    const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+                    if (emptySlotMeta) {
+                        emptySlotMeta.element.appendChild(card);
+                        emptySlotMeta.element.classList.add('filled');
+                        registerMove();
+                    }
+                } else if (card.parentNode.classList.contains('slot')) {
+                    const slot = card.parentNode;
+                    sourceContainer.appendChild(card);
+                    slot.classList.remove('filled');
+                    registerMove();
+                }
+            });
+        }
+
+        function updateSlotHighlights() {
+            slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
+
+            const firstEmptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+            if (firstEmptyMeta) {
+                firstEmptyMeta.element.classList.add('active-slot');
+            }
+        }
+
+        function checkWordAutomatic() {
+            if (wordCompleted) return;
+
+            const currentString = slotsMeta.map(m => {
+                const card = m.element.querySelector('.card');
+                return card ? card.dataset.char : '';
+            }).join('');
+
+            if (currentString.length === originalTextString.length && currentString === originalTextString) {
+                wordCompleted = true;
+                stopElapsedTimer();
+                updateSlotHighlights();
+                
+                statusMessage.className = 'correct-text';
+                statusMessage.textContent = 'Correct! Great job!';
+
+                const effectiveTime = Math.max(elapsedSeconds, 1);
+                const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+
+                roundResults.push({
+                    word: originalTextString,
+                    time: elapsedSeconds + 's',
+                    moves: moveCount,
+                    reveals: revealCount,
+                    metric: metricValue
+                });
+
+                if (currentWordIndex === PUZZLE_WORDS.length - 1) {
+                    nextBtn.textContent = "Done";
+                } else {
+                    nextBtn.textContent = "Next Word";
+                }
+
+                nextBtn.style.display = 'inline-block';
+                revealBtn.disabled = true;
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentWordIndex === PUZZLE_WORDS.length - 1) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+            } else {
+                currentWordIndex++;
+                loadWord(currentWordIndex);
+            }
+        });
+
+        function showSummaryScreen() {
+            puzzleWorkspace.style.display = 'none';
+            document.getElementById('game-stats').style.display = 'none';
+            document.querySelector('.progress-bar-container').style.display = 'none';
+            actionControls.style.display = 'none';
+            statusMessage.style.display = 'none';
+            
+            summaryTbody.innerHTML = '';
+            let totalMetric = 0;
+
+            roundResults.forEach(res => {
+                totalMetric += res.metric;
+                const row = document.createElement('tr');
+                row.innerHTML = `<td><strong>${res.word}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
+                summaryTbody.appendChild(row);
+            });
+
+            const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+            const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+            
+            summaryTotals.innerHTML = `
+                <div>Average Metric: <strong>${averageMetric.toFixed(2)}</strong></div>
+                <div>Normalized Score: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
+            `;
+
+            summaryScreen.style.display = 'block';
+        }
+
+        function showReveal() {
+            if (wordCompleted || isRevealing) return;
+            isRevealing = true;
+            
+            revealCount++;
+            updateRevealsDisplay();
+
+            revealOverlay.innerHTML = '';
+            Array.from(originalTextString).forEach((char) => {
+                const card = document.createElement('div');
+                card.classList.add('card', 'reveal-letter');
+                if (char === ' ') {
+                    card.classList.add('space');
+                } else {
+                    card.textContent = char;
+                }
+                revealOverlay.appendChild(card);
+            });
+            revealOverlay.classList.add('visible');
+        }
+
+        function hideReveal() {
+            if (!isRevealing) return;
+            isRevealing = false;
+            revealOverlay.classList.remove('visible');
+        }
+
+        revealBtn.addEventListener('mousedown', showReveal);
+        revealBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            showReveal();
+        }, { passive: false });
+
+        revealBtn.addEventListener('mouseup', hideReveal);
+        revealBtn.addEventListener('mouseleave', hideReveal);
+        revealBtn.addEventListener('touchend', hideReveal);
+        revealBtn.addEventListener('touchcancel', hideReveal);
+
+        loadWord(currentWordIndex);
+    </script>
+</body>
+</html>
