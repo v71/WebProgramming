@@ -589,6 +589,40 @@
             return arr;
         }
 
+        function measureFullRowWidth(words) {
+            // Builds a throwaway row with every word at its real rendered
+            // size, measures how wide it naturally needs to be, then removes
+            // it — synchronously, so nothing is ever visible to the user.
+            const temp = document.createElement('div');
+            temp.className = 'card-container';
+            temp.style.visibility = 'hidden';
+            temp.style.position = 'absolute';
+            temp.style.pointerEvents = 'none';
+
+            words.forEach(word => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.textContent = word;
+                temp.appendChild(card);
+            });
+
+            puzzleWorkspace.appendChild(temp);
+            const width = temp.getBoundingClientRect().width;
+            puzzleWorkspace.removeChild(temp);
+            return width;
+        }
+
+        function syncContainerWidths() {
+            // Re-locks both containers to the width the current sentence
+            // needs, based on live measurement — safe to call any time,
+            // including on window resize, since it never touches slot or
+            // card contents, only the container width.
+            if (!originalWords.length) return;
+            const fullWidth = measureFullRowWidth(originalWords);
+            sourceContainer.style.width = fullWidth + 'px';
+            targetContainer.style.width = fullWidth + 'px';
+        }
+
         function loadSentence(index) {
             if (index >= PUZZLE_SENTENCES.length) {
                 progressBarFill.style.width = '100%';
@@ -662,9 +696,7 @@
             });
 
             requestAnimationFrame(() => {
-                const initialWidth = sourceContainer.getBoundingClientRect().width;
-                sourceContainer.style.width = initialWidth + 'px';
-                targetContainer.style.width = initialWidth + 'px';
+                syncContainerWidths();
             });
         }
 
@@ -723,6 +755,12 @@
                 updateSlotHighlights();
 
                 slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+                // Reflect the round just finished right away (not just when a
+                // new round starts), so completing the last sentence visibly
+                // fills the bar to 100% instead of jumping straight to the
+                // (hidden) summary screen.
+                progressBarFill.style.width = (((currentSentenceIndex + 1) / PUZZLE_SENTENCES.length) * 100) + '%';
 
                 const effectiveTime = Math.max(elapsedSeconds, 1);
                 const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
@@ -842,6 +880,15 @@
         revealBtn.addEventListener('mouseleave', hideReveal);
         revealBtn.addEventListener('touchend', hideReveal);
         revealBtn.addEventListener('touchcancel', hideReveal);
+
+        // Keep both containers correctly sized if the window/viewport
+        // changes (resize, orientation change, devtools panel, etc.) —
+        // debounced so it only recalculates once the resizing settles.
+        let resizeDebounceTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeDebounceTimer);
+            resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
+        });
 
         loadSentence(currentSentenceIndex);
     </script>

@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Completa la Frase</title>
+    <style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 20px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .controls {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 52px;
+        }
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: var(--text-dim);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Progress Bar Styles */
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 12px;
+            border-radius: 99px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Container sizes dynamically and stays centered */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            width: fit-content;
+            max-width: 100%;
+            min-height: clamp(90px, 14vh, 130px);
+            padding: 20px;
+            border-radius: 20px;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            margin: 0 auto;
+        }
+
+        #source-container {
+            border-color: var(--border);
+        }
+
+        #target-container {
+            border: 2px solid #a5b4fc;
+            background-color: #faf8ff;
+            /* Border is 1px thicker per side than #source-container's 1px
+               border; trim padding by that same 1px per side so the two
+               containers end up with identical usable (content) width even
+               though their outer width is set equal in JS. */
+            padding: 19px;
+        }
+
+        /* Slot styles for Drop Zone — width now flexes to fit the word it will hold */
+        .slot {
+            position: relative;
+            flex-shrink: 0;
+            min-width: 90px;
+            height: 60px;
+            padding: 0;
+            background-color: var(--bg-2);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        /* Highlight for the current active slot */
+        .slot.active-slot {
+            border-color: var(--accent);
+            border-style: solid;
+            background-color: #ede9fe;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+        }
+
+        /* Filled slot becomes an invisible wrapper: the card inside keeps its
+           normal, unmodified styling, so it's pixel-identical to a source card
+           or a revealed card — no separate sizing rules to drift out of sync. */
+        .slot.filled,
+        .slot.revealed {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .slot.filled:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+
+        /* Error state for incorrect slots — styled on the card itself, since the
+           filled slot no longer has its own border/background to color. */
+        .slot.error-slot {
+            animation: shake 0.4s ease;
+        }
+
+        .slot.error-slot .card {
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.05);
+            color: var(--wrong);
+        }
+
+        /* Pre-filled "given" slots: already correct, locked, not clickable —
+           styled distinctly (cyan accent, muted, small check mark) so it's
+           obvious at a glance which words are provided vs. still to place. */
+        .slot.given {
+            cursor: default;
+        }
+
+        .slot.given:hover {
+            transform: none;
+            box-shadow: none;
+            z-index: auto;
+        }
+
+        .card.given {
+            position: relative;
+            border-color: var(--accent-2);
+            background: rgba(6, 182, 212, 0.07);
+            color: var(--accent-2);
+            cursor: default;
+        }
+
+        .card.given::after {
+            content: '✓';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-2);
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .target-wrapper {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        #reveal-overlay {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: min(92vw, 1060px);
+            min-width: 100%;
+            height: max-content;
+            min-height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 19px;
+            border-radius: 20px;
+            background-color: var(--bg-1);
+            border: 2px solid var(--correct);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        #reveal-overlay.visible {
+            opacity: 1;
+        }
+
+        .card.reveal-letter {
+            border-color: var(--correct);
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--correct);
+            cursor: default;
+            box-shadow: none;
+            transform: none !important;
+        }
+
+        /* Cards now hold a whole word: flexible width, no fixed square */
+        .card {
+            flex-shrink: 0;
+            min-width: 90px;
+            height: 60px;
+            padding: 0 18px;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        }
+
+        /* Hover effect for source cards */
+        #source-container .card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            background: #ffffff;
+            color: var(--accent);
+            z-index: 5;
+        }
+
+        /* Cards inside a slot keep the exact same styling as everywhere else
+           (see .card above) — no width/padding/border overrides here, so a
+           placed word, a source word, and a revealed word are always the
+           same size. */
+        .slot .card {
+            transform: none !important;
+        }
+
+        #game-stats, .stats-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* Results Summary Screen */
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--correct);
+            font-size: 2rem;
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 24px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-totals {
+            margin-top: 20px;
+            padding: 18px;
+            background: var(--bg-2);
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .summary-totals strong {
+            color: var(--accent);
+        }
+
+        button:hover {
+            filter: brightness(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn.smooth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
+        }
+
+        .cool-btn i {
+            font-size: 1.1rem;
+            -webkit-text-stroke: 1px currentColor;
+            transition: transform 0.25s ease;
+        }
+
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #4f46e5;
+            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+        }
+
+        .cool-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        .cool-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+        }
+
+        #next-btn {
+            background-color: var(--correct);
+        }
+
+        #next-btn:hover {
+            background-color: #059669;
+            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
+        }
+
+        #next-btn:active {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .cool-btn.wrong-btn {
+            background-color: var(--wrong);
+            cursor: default;
+            pointer-events: none;
+            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+        }
+
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Completa la Frase</h1>
+
+    <div id="game-stats">
+        <span>Frase: <strong id="progress-value">1 / 4</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">Alcune parole sono già al posto giusto. Clicca sulle parole mancanti nella prima lista per completare la frase nelle caselle vuote.</h3>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span>Caricamento...</span>
+        </button>
+
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Help!</span>
+        </button>
+    </div>
+
+    <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
+        <div class="section-wrapper">
+            <!--<div class="section-title">Parole disponibili (tocca per spostare)</div>-->
+            <div id="source-container" class="card-container"></div>
+        </div>
+
+        <div class="section-wrapper" style="margin-bottom:0;">
+            <!--<div class="section-title">Componi qui (la casella attiva è evidenziata)</div>-->
+            <div class="target-wrapper">
+                <div id="target-container" class="card-container"></div>
+                <div id="reveal-overlay" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+    <script>
+        // Each entry is a full sentence; it gets split into words, which are then
+        // the draggable/clickable units instead of individual letters.
+        const PUZZLE_SENTENCES = [
+            "IL SOLE SORGE A EST",
+            "MI PIACE IL CAFFÈ CALDO",
+            "LA LUNA ILLUMINA LA NOTTE",
+            "IMPARARE È UN VIAGGIO"
+        ];
+        let currentSentenceIndex = 0;
+        let roundResults = [];
+
+        const nextBtn = document.getElementById('next-btn');
+        const revealBtn = document.getElementById('reveal-btn');
+        const revealOverlay = document.getElementById('reveal-overlay');
+        const sourceContainer = document.getElementById('source-container');
+        const targetContainer = document.getElementById('target-container');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressValueEl = document.getElementById('progress-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const puzzleWorkspace = document.getElementById('puzzle-workspace');
+        const actionControls = document.getElementById('action-controls');
+        const summaryScreen = document.getElementById('summary-screen');
+        const summaryTbody = document.getElementById('summary-tbody');
+        const summaryTotals = document.getElementById('summary-totals');
+        const instructionBanner = document.getElementById('instruction-banner');
+
+        let originalWords = [];       // array of words for the current sentence
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let sentenceCompleted = false;
+        let isRevealing = false;
+        let slotsMeta = [];
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function updateMovesDisplay() {
+            movesValueEl.textContent = moveCount;
+        }
+
+        function updateRevealsDisplay() {
+            revealsValueEl.textContent = revealCount;
+        }
+
+        function registerMove() {
+            if (sentenceCompleted) return;
+            moveCount++;
+            updateMovesDisplay();
+            updateSlotHighlights();
+            checkSentenceAutomatic();
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function measureFullRowWidth(words) {
+            // Builds a throwaway row with every word at its real rendered
+            // size (same markup/classes as the real containers), measures
+            // how wide it naturally needs to be, then removes it — all
+            // synchronously, so nothing is ever visible to the user.
+            const temp = document.createElement('div');
+            temp.className = 'card-container';
+            temp.style.visibility = 'hidden';
+            temp.style.position = 'absolute';
+            temp.style.pointerEvents = 'none';
+
+            words.forEach(word => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.textContent = word;
+                temp.appendChild(card);
+            });
+
+            puzzleWorkspace.appendChild(temp);
+            const width = temp.getBoundingClientRect().width;
+            puzzleWorkspace.removeChild(temp);
+            return width;
+        }
+
+        function syncContainerWidths() {
+            // Re-locks both containers to the width the current sentence
+            // needs, based on live measurement — safe to call any time,
+            // including on window resize, since it never touches slot or
+            // card contents, only the container width.
+            if (!originalWords.length) return;
+            const fullWidth = measureFullRowWidth(originalWords);
+            sourceContainer.style.width = fullWidth + 'px';
+            targetContainer.style.width = fullWidth + 'px';
+        }
+
+        function loadSentence(index) {
+            if (index >= PUZZLE_SENTENCES.length) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+                return;
+            }
+
+            const progressRatio = (index / PUZZLE_SENTENCES.length) * 100;
+            progressBarFill.style.width = progressRatio + '%';
+
+            originalWords = PUZZLE_SENTENCES[index].split(' ');
+            sourceContainer.style.width = '';
+            targetContainer.style.width = '';
+            sourceContainer.innerHTML = '';
+            targetContainer.innerHTML = '';
+            sentenceCompleted = false;
+            moveCount = 0;
+            revealCount = 0;
+            slotsMeta = [];
+
+            // Pick roughly half the word positions to show pre-filled and
+            // locked; the rest stay empty and must be completed from the
+            // shuffled word list below. Always leave at least one blank
+            // (and, for sentences of 3+ words, at least one given word).
+            const wordCount = originalWords.length;
+            const givenCount = wordCount <= 2
+                ? 1
+                : Math.min(wordCount - 1, Math.max(1, Math.round(wordCount / 2)));
+            const allPositions = shuffleArray(originalWords.map((_, i) => i));
+            const givenPositions = new Set(allPositions.slice(0, givenCount));
+
+            // Lock both containers to the width the FULL sentence needs
+            // (every word at its real size) up front, before any slot is
+            // built — so a blank slot never has to grow wider once a word
+            // gets dropped into it.
+            const fullWidth = measureFullRowWidth(originalWords);
+            sourceContainer.style.width = fullWidth + 'px';
+            targetContainer.style.width = fullWidth + 'px';
+
+            progressValueEl.textContent = `${index + 1} / ${PUZZLE_SENTENCES.length}`;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+            startElapsedTimer();
+
+            nextBtn.classList.add('smooth-hidden');
+            revealBtn.classList.remove('smooth-hidden');
+            revealBtn.disabled = false;
+            revealBtn.classList.remove('wrong-btn');
+            revealBtn.innerHTML = "<span>💡 Help!</span>";
+
+            // One slot per word in the sentence
+            for (let i = 0; i < originalWords.length; i++) {
+                const slot = document.createElement('div');
+                slot.classList.add('slot');
+
+                if (givenPositions.has(i)) {
+                    // Pre-filled, locked slot: shows the correct word right
+                    // away and is not clickable/removable.
+                    slot.classList.add('filled', 'given');
+
+                    const givenCard = document.createElement('div');
+                    givenCard.classList.add('card', 'given');
+                    givenCard.dataset.word = originalWords[i];
+                    givenCard.textContent = originalWords[i];
+                    slot.appendChild(givenCard);
+                } else {
+                    slot.addEventListener('click', () => {
+                        if (sentenceCompleted) return;
+                        const card = slot.querySelector('.card');
+                        if (card) {
+                            sourceContainer.appendChild(card);
+                            slot.classList.remove('filled');
+
+                            // Clear error states and restore Help button immediately on click
+                            slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                            if (revealBtn.classList.contains('wrong-btn')) {
+                                revealBtn.classList.remove('wrong-btn');
+                                revealBtn.disabled = false;
+                                revealBtn.innerHTML = "<span>💡 Help!</span>";
+                            }
+
+                            registerMove();
+                        }
+                    });
+                }
+
+                targetContainer.appendChild(slot);
+                slotsMeta.push({ element: slot, expected: originalWords[i] });
+            }
+
+            updateSlotHighlights();
+
+            // Only the words that are NOT already given need to be placed,
+            // so only those go into the shuffled source list.
+            const missingWords = originalWords.filter((_, i) => !givenPositions.has(i));
+            const shuffledWords = shuffleArray(missingWords);
+
+            shuffledWords.forEach(word => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.word = word;
+                card.textContent = word;
+
+                setupCardTapToMove(card);
+                sourceContainer.appendChild(card);
+            });
+        }
+
+        function setupCardTapToMove(card) {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (sentenceCompleted) return;
+
+                if (card.parentNode === sourceContainer) {
+                    const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+                    if (emptySlotMeta) {
+                        emptySlotMeta.element.appendChild(card);
+                        emptySlotMeta.element.classList.add('filled');
+                        registerMove();
+                    }
+                } else if (card.parentNode.classList.contains('slot')) {
+                    const slot = card.parentNode;
+                    sourceContainer.appendChild(card);
+                    slot.classList.remove('filled');
+
+                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                    if (revealBtn.classList.contains('wrong-btn')) {
+                        revealBtn.classList.remove('wrong-btn');
+                        revealBtn.disabled = false;
+                        revealBtn.innerHTML = "<span>💡 Help!</span>";
+                    }
+
+                    registerMove();
+                }
+            });
+        }
+
+        function updateSlotHighlights() {
+            slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
+
+            const firstEmptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+            if (firstEmptyMeta) {
+                firstEmptyMeta.element.classList.add('active-slot');
+            }
+        }
+
+        function checkSentenceAutomatic() {
+            if (sentenceCompleted) return;
+
+            const currentWords = slotsMeta.map(m => {
+                const card = m.element.querySelector('.card');
+                return card ? card.dataset.word : '';
+            });
+
+            const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+            const isCorrect = allSlotsFilled && currentWords.every((w, i) => w === originalWords[i]);
+
+            if (isCorrect) {
+                sentenceCompleted = true;
+                stopElapsedTimer();
+                updateSlotHighlights();
+
+                slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+                // Reflect the round just finished right away (not just when a
+                // new round starts), so completing the last sentence visibly
+                // fills the bar to 100% instead of jumping straight to the
+                // (hidden) summary screen.
+                progressBarFill.style.width = (((currentSentenceIndex + 1) / PUZZLE_SENTENCES.length) * 100) + '%';
+
+                const effectiveTime = Math.max(elapsedSeconds, 1);
+                const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+
+                roundResults.push({
+                    sentence: originalWords.join(' '),
+                    time: elapsedSeconds + 's',
+                    moves: moveCount,
+                    reveals: revealCount,
+                    metric: metricValue
+                });
+
+                if (currentSentenceIndex === PUZZLE_SENTENCES.length - 1) {
+                    nextBtn.textContent = "Fatto";
+                } else {
+                    nextBtn.textContent = "▶ Prossima frase";
+                }
+
+                revealBtn.classList.remove('wrong-btn');
+                revealBtn.disabled = false;
+
+                // Smoothly fade out Help and fade in Next button
+                revealBtn.classList.add('smooth-hidden');
+                nextBtn.classList.remove('smooth-hidden');
+
+            } else if (allSlotsFilled) {
+                // Turn Help! button red and non-clickable
+                revealBtn.innerHTML = "<span>⚠️ Frase errata</span>";
+                revealBtn.classList.add('wrong-btn');
+                revealBtn.disabled = true;
+
+                slotsMeta.forEach(m => m.element.classList.add('error-slot'));
+            } else {
+                slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+                if (revealBtn.classList.contains('wrong-btn')) {
+                    revealBtn.classList.remove('wrong-btn');
+                    revealBtn.disabled = false;
+                    revealBtn.innerHTML = "<span>💡 Help!</span>";
+                }
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentSentenceIndex === PUZZLE_SENTENCES.length - 1) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+            } else {
+                currentSentenceIndex++;
+                loadSentence(currentSentenceIndex);
+            }
+        });
+
+        function showSummaryScreen() {
+            puzzleWorkspace.style.display = 'none';
+            instructionBanner.style.display = 'none';
+            document.getElementById('game-stats').style.display = 'none';
+            document.querySelector('.progress-bar-container').style.display = 'none';
+            actionControls.style.display = 'none';
+
+            summaryTbody.innerHTML = '';
+            let totalMetric = 0;
+
+            roundResults.forEach(res => {
+                totalMetric += res.metric;
+                const row = document.createElement('tr');
+                row.innerHTML = `<td><strong>${res.sentence}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
+                summaryTbody.appendChild(row);
+            });
+
+            const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+            const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+
+            summaryTotals.innerHTML = `
+                <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+                <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
+            `;
+
+            summaryScreen.style.display = 'block';
+        }
+
+        function showReveal() {
+            if (sentenceCompleted || isRevealing || revealBtn.disabled) return;
+            isRevealing = true;
+
+            revealCount++;
+            updateRevealsDisplay();
+
+            revealOverlay.innerHTML = '';
+            originalWords.forEach((word) => {
+                const slot = document.createElement('div');
+                slot.classList.add('slot', 'revealed');
+
+                const card = document.createElement('div');
+                card.classList.add('card', 'reveal-letter');
+                card.textContent = word;
+
+                slot.appendChild(card);
+                revealOverlay.appendChild(slot);
+            });
+            revealOverlay.classList.add('visible');
+        }
+
+        function hideReveal() {
+            if (!isRevealing) return;
+            isRevealing = false;
+            revealOverlay.classList.remove('visible');
+        }
+
+        revealBtn.addEventListener('mousedown', showReveal);
+        revealBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            showReveal();
+        }, { passive: false });
+
+        revealBtn.addEventListener('mouseup', hideReveal);
+        revealBtn.addEventListener('mouseleave', hideReveal);
+        revealBtn.addEventListener('touchend', hideReveal);
+        revealBtn.addEventListener('touchcancel', hideReveal);
+
+        // Keep both containers correctly sized if the window/viewport
+        // changes (resize, orientation change, devtools panel, etc.) —
+        // debounced so it only recalculates once the resizing settles.
+        let resizeDebounceTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeDebounceTimer);
+            resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
+        });
+
+        loadSentence(currentSentenceIndex);
+    </script>
+</body>
+</html>
