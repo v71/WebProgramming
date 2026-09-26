@@ -425,57 +425,9 @@
     </div>
 
     <script>
-        const ROUNDS = [
-            {
-                label: "Fiducia",
-                img: "emozioni-set-1/trust.png",
-                options: ["Fiducia", "Gelosia", "Sorpresa", "Noia", "Rabbia", "Amore"],
-                correctIndex: 0
-            },
-            {
-                label: "Calma",
-                img: "emozioni-set-1/calm.png",
-                options: ["Rabbia", "Invidia", "Calma", "Sorpresa", "Gioia", "Disgusto"],
-                correctIndex: 2
-            },
-            {
-                label: "Amore",
-                img: "emozioni-set-1/love.png",
-                options: ["Noia", "Amore", "Disgusto", "Gelosia", "Stupore", "Euforia"],
-                correctIndex: 1
-            },
-            {
-                label: "Sorpresa",
-                img: "emozioni-set-1/surprise.png",
-                options: ["Soddisfazione", "Calma", "Fiducia", "Sorpresa", "Noia", "Invidia"],
-                correctIndex: 3
-            },
-            {
-                label: "Euforia",
-                img: "emozioni-set-1/euforia.png",
-                options: ["Noia", "Invidia", "Euforia", "Calma", "Amore", "Rabbia"],
-                correctIndex: 2
-            },
-            {
-                label: "Soddisfazione",
-                img: "emozioni-set-1/satisfaction.png",
-                options: ["Gelosia", "Disgusto", "Rabbia", "Soddisfazione", "Gioia", "Fiducia"],
-                correctIndex: 3
-            },
-            {
-                label: "Gioia",
-                img: "emozioni-set-1/joy.png",
-                options: ["Gioia", "Calma", "Invidia", "Disgusto", "Sorpresa", "Euforia"],
-                correctIndex: 0
-            },
-            {
-                label: "Stupore",
-                img: "emozioni-set-1/amazement.png",
-                options: ["Fiducia", "Stupore", "Noia", "Amore", "Soddisfazione", "Calma"],
-                correctIndex: 1
-            }
-        ];
-        
+
+        let ROUNDS = [];
+    
         let currentRoundIndex = 0;
         let roundResults = [];
 
@@ -704,7 +656,32 @@
             optionElements.forEach(el => el.classList.remove('peek'));
         }
 
-        function initGame() {
+        async function initGame() {
+            try {
+                const response = await fetch('indovina-emozione-6-opzioni-set-1.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                ROUNDS = data.rounds;
+
+           //     console.log("Loaded rounds:", ROUNDS.length);
+           //     console.log("Rounds:", ROUNDS);
+
+                if (data.title) {
+                    document.title = data.title;
+                    document.getElementById('game-title').textContent = data.title;
+                }
+
+                if (data.description) {
+                    instructionBanner.textContent = data.description;
+                }
+         
+            } catch (err) {
+                console.error('Could not load indovina-emozione-4-opzioni-set-1.json:', err);
+            }
+
             loadRound(currentRoundIndex);
         }
 

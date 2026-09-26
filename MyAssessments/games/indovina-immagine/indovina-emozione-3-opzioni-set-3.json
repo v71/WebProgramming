@@ -1,0 +1,54 @@
+{
+  "title": "Indovina l'Emozione",
+  "description": "Osserva ogni immagine e scegli l'emozione che rappresenta meglio ciò che vedi.",
+  "rounds": [
+    {
+      "label": "Disgusto",
+      "img": "emozioni-set-3/disgust.png",
+      "options": ["Disgusto", "Invidia", "Gelosia"],
+      "correctIndex": 0
+    },
+    {
+      "label": "Confusione",
+      "img": "emozioni-set-3/confusion.png",
+      "options": ["Senso di Colpa", "Vergogna", "Confusione"],
+      "correctIndex": 2
+    },
+    {
+      "label": "Ansia",
+      "img": "emozioni-set-3/anxiety.png",
+      "options": ["Delusione", "Ansia", "Invidia"],
+      "correctIndex": 1
+    },
+    {
+      "label": "Gelosia",
+      "img": "emozioni-set-3/jelousy.png",
+      "options": ["Vergogna", "Gelosia", "Confusione"],
+      "correctIndex": 1
+    },
+    {
+      "label": "Colpa",
+      "img": "emozioni-set-3/guilt.png",
+      "options": ["Senso di Colpa", "Disgusto", "Delusione"],
+      "correctIndex": 0
+    },
+    {
+      "label": "Vergogna",
+      "img": "emozioni-set-3/shame.png",
+      "options": ["Gelosia", "Confusione", "Vergogna"],
+      "correctIndex": 2
+    },
+    {
+      "label": "Invidia",
+      "img": "emozioni-set-3/envy.png",
+      "options": ["Invidia", "Vergonga", "Ansia"],
+      "correctIndex": 0
+    },
+    {
+      "label": "Delusione",
+      "img": "emozioni-set-3/disappointment.png",
+      "options": ["Ansia", "Delusione", "Disgusto"],
+      "correctIndex": 1
+    }
+  ]
+}
