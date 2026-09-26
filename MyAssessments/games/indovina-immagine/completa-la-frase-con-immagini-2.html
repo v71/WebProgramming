@@ -314,15 +314,56 @@
         }
 
         #blank-slot {
-            display: inline-block;
-            min-width: 140px;
-            padding: 2px 10px;
-            margin: 0 2px;
-            border-bottom: 3px dashed var(--border);
-            color: var(--text-dim);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 150px;
+            height: 48px;
+
+            margin: 0 8px;
+            padding: 6px 16px;
+
+            border: 2px solid var(--border);
+            border-radius: 10px;
+
+            background: var(--bg-1);
+            color: transparent;
+
             font-weight: 700;
-            transition: color 0.15s ease, border-color 0.15s ease;
+            vertical-align: middle;
+
+            box-shadow: var(--shadow-sm);
+
+            transition:
+                color 0.15s ease,
+                border-color 0.15s ease,
+                background-color 0.15s ease,
+                box-shadow 0.15s ease;
         }
+
+
+        #blank-slot.filled-correct {
+            color: var(--correct);
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        #blank-slot.filled-wrong {
+            color: var(--wrong);
+            border-color: var(--wrong);
+            background: rgba(239, 68, 68, 0.05);
+            animation: shake 0.4s ease;
+        }
+
+        #blank-slot.peek-fill {
+            color: var(--correct);
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, 0.08);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+
+        /*
 
         #blank-slot.filled-correct {
             color: var(--correct);
@@ -342,7 +383,7 @@
             border-bottom-style: solid;
             border-bottom-color: var(--correct);
         }
-
+        */
 /* =========================================================
    BUTTONS
    ========================================================= */
@@ -492,7 +533,9 @@ button:disabled {
     </div>
 
     <div id="sentence-container">
-        <span id="sentence-before"></span><span id="blank-slot">______</span><span id="sentence-after"></span>
+        <span id="sentence-before"></span>
+        <span id="blank-slot"></span>
+        <span id="sentence-after"></span>
     </div>
 
     <div id="puzzle-workspace">
@@ -531,60 +574,61 @@ button:disabled {
 
         // sentenceTemplate uses {blank} as the placeholder position for
         // the correct option's text.
+
         const ROUNDS = [
             {
                 label: "Fiducia",
-                img: "emozioni-split/image_1.png",
-                sentenceTemplate: "Quando mi fido di qualcuno, provo {blank}.",
+                img: "emozioni-set-1/image_1.png",
+                sentenceTemplate: "Quando mi fido di qualcuno, provo {blank}",
                 options: ["Fiducia", "Gelosia", "Sorpresa", "Noia"],
                 correctIndex: 0
             },
             {
                 label: "Calma",
-                img: "emozioni-split/image_2.png",
-                sentenceTemplate: "Dopo una giornata tranquilla, mi sento {blank}.",
+                img: "emozioni-set-1/image_2.png",
+                sentenceTemplate: "Dopo una giornata tranquilla, mi sento {blank}",
                 options: ["Rabbia", "Invidia", "Calma", "Sorpresa"],
                 correctIndex: 2
             },
             {
                 label: "Amore",
-                img: "emozioni-split/image_3.png",
-                sentenceTemplate: "Quando penso alla mia famiglia, provo {blank}.",
+                img: "emozioni-set-1/image_3.png",
+                sentenceTemplate: "Quando penso alla mia famiglia, provo {blank}",
                 options: ["Noia", "Amore", "Disgusto", "Gelosia"],
                 correctIndex: 1
             },
             {
                 label: "Sorpresa",
-                img: "emozioni-split/image_4.png",
-                sentenceTemplate: "Quando succede qualcosa di inaspettato, provo {blank}.",
+                img: "emozioni-set-1/image_4.png",
+                sentenceTemplate: "Quando succede qualcosa di inaspettato, provo {blank}",
                 options: ["Soddisfazione", "Calma", "Fiducia", "Sorpresa"],
                 correctIndex: 3
             },
             {
                 label: "Euforia",
-                img: "emozioni-split/image_5.png",
-                sentenceTemplate: "Quando vinco una gara, mi sento pieno di {blank}.",
+                img: "emozioni-set-1/image_5.png",
+                sentenceTemplate: "Quando vinco una gara, mi sento pieno di {blank}",
                 options: ["Noia", "Invidia", "Euforia", "Calma"],
                 correctIndex: 2
             },
             {
                 label: "Soddisfazione",
-                img: "emozioni-split/image_6.png",
-                sentenceTemplate: "Quando finisco un compito difficile, provo {blank}.",
+                img: "emozioni-set-1/image_6.png",
+                sentenceTemplate: "Quando finisco un compito difficile, provo {blank}",
                 options: ["Gelosia", "Disgusto", "Fiducia", "Soddisfazione"],
                 correctIndex: 3
             },
             {
                 label: "Gioia",
-                img: "emozioni-split/image_7.png",
-                sentenceTemplate: "Quando gioco con i miei amici, provo {blank}.",
+                img: "emozioni-set-1/image_7.png",
+                sentenceTemplate: "Quando gioco con i miei amici, provo {blank}",
                 options: ["Gioia", "Calma", "Invidia", "Amore"],
                 correctIndex: 0
             },
             {
                 label: "Stupore",
-                img: "emozioni-split/image_8.png",
-                sentenceTemplate: "Quando vedo qualcosa di incredibile, provo {blank}.",
+                img: "emozioni-set-1/image_8.png",
+                sentenceTemplate: "Quando vedo qualcosa di incredibile, provo {blank}",
                 options: ["Fiducia", "Stupore", "Noia", "Amore"],
                 correctIndex: 1
             }
@@ -661,10 +705,17 @@ button:disabled {
         }
 
         function renderSentenceShell(template) {
-            const [before, after] = template.split('{blank}');
+
+        /*    const [before, after] = template.split('{blank}');
             sentenceBefore.textContent = before;
             sentenceAfter.textContent = after;
             blankSlot.textContent = '______';
+            blankSlot.className = '';
+        */
+            const [before, after] = template.split('{blank}');
+            sentenceBefore.textContent = before;
+            sentenceAfter.textContent = after;
+            blankSlot.textContent = '';
             blankSlot.className = '';
         }
 
@@ -785,7 +836,8 @@ button:disabled {
                 optionEl.addEventListener('animationend', () => {
                     optionEl.classList.remove('wrong-option');
                     if (!roundCompleted) {
-                        blankSlot.textContent = '______';
+                        blankSlot.textContent = '';
+                        //blankSlot.textContent = '______';
                         blankSlot.className = '';
                     }
                 }, { once: true });
@@ -851,7 +903,8 @@ button:disabled {
             optionElements.forEach(el => el.classList.remove('peek'));
 
             if (!roundCompleted) {
-                blankSlot.textContent = '______';
+                //blankSlot.textContent = '______';
+                blankSlot.textContent = '';
                 blankSlot.className = '';
             }
         }

@@ -1,0 +1,54 @@
+{
+  "title": "Indovina l'Emozione",
+  "description": "Osserva ogni immagine e scegli l'emozione che rappresenta meglio ciò che vedi.",
+  "rounds": [
+    {
+      "label": "Rabbia",
+      "img": "emozioni-set-2/anger.png",
+      "options": ["Rabbia", "Disgusto", "Sorpresa"],
+      "correctIndex": 0
+    },
+    {
+      "label": "Cuoriosità",
+      "img": "emozioni-set-2/curiosity.png",
+      "options": ["Gioia", "Invidia", "Curiosità"],
+      "correctIndex": 2
+    },
+    {
+      "label": "Paura",
+      "img": "emozioni-set-2/fear.png",
+      "options": ["Noia", "Paura", "Amore"],
+      "correctIndex": 1
+    },
+    {
+      "label": "Gratitudine",
+      "img": "emozioni-set-2/gratitude.png",
+      "options": ["Soddisfazione", "Calma", "Gratitudine"],
+      "correctIndex": 2
+    },
+    {
+      "label": "Danno",
+      "img": "emozioni-set-2/hurt.png",
+      "options": ["Ferita Emotiva", "Euforia", "Calma"],
+      "correctIndex": 0
+    },
+    {
+      "label": "Ispirazione",
+      "img": "emozioni-set-2/inspiration.png",
+      "options": ["Gelosia", "Disgusto", "Ispirazione"],
+      "correctIndex": 2
+    },
+    {
+      "label": "Orgoglio",
+      "img": "emozioni-set-2/pride.png",
+      "options": ["Orgoglio", "Calma", "Invidia"],
+      "correctIndex": 0
+    },
+    {
+      "label": "Tristezza",
+      "img": "emozioni-set-2/sadness.png",
+      "options": ["Fiducia", "Tristezza", "Noia"],
+      "correctIndex": 1
+    }
+  ]
+}

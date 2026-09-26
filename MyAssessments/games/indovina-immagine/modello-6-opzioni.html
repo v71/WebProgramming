@@ -76,11 +76,12 @@
             display: flex;
             flex-direction: row;
             justify-content: center;
-            align-items: stretch;
+            align-items: center;
             gap: 20px;
             flex-wrap: wrap;
             margin-top: 15px;
             margin-bottom: 15px;
+            max-width: 1300px;
         }
 
         .progress-bar-container {
@@ -105,19 +106,11 @@
 
         .card-container {
             display: flex;
-            flex-wrap: wrap;
-            gap: 14px;
-            width: fit-content;
-            max-width: 100%;
-            padding: 20px;
             border-radius: 20px;
-            align-items: center;
-            justify-content: center;
             box-sizing: border-box;
             background-color: var(--bg-1);
             box-shadow: var(--shadow-md);
             border: 1px solid rgba(226, 232, 240, 0.8);
-            margin: 0 auto;
         }
 
         #image-container {
@@ -145,9 +138,16 @@
         }
 
         #options-container {
+            width: 580px;
+            height: 400px; /* Matches the vertical length of the image container */
+            padding: 16px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Exactly two columns */
+            grid-template-rows: repeat(3, 1fr);   /* Three rows to fit 6 options */
+            gap: 10px;                            /* Tight gap between grid items */
+            align-items: stretch;
+            justify-items: stretch;
             border-color: var(--border);
-            flex-direction: column;
-            justify-content: center;
         }
 
         @keyframes shake {
@@ -158,19 +158,18 @@
         }
 
         .option-card {
-            flex-shrink: 0;
-            width: 280px;
-            min-height: 75px;
+            width: 100%;
+            height: 100%;
             background: linear-gradient(145deg, #ffffff, #f8fafc);
             color: var(--text);
             border: 2px solid var(--border);
-            border-radius: 14px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 12px 18px;
-            font-size: 1.05rem;
+            padding: 8px 12px;
+            font-size: 1.5rem;
             font-weight: 700;
             line-height: 1.3;
             white-space: normal;
@@ -182,7 +181,7 @@
 
         .option-card:hover {
             border-color: var(--accent);
-            transform: translateY(-4px);
+            transform: translateY(-2px);
             box-shadow: var(--shadow-md);
             color: var(--accent);
         }
@@ -310,8 +309,8 @@
             align-items: center;
             justify-content: center;
             gap: 10px;
-            padding: 10px 24px;
-            font-size: 0.95rem;
+            padding: 11px 28px;
+            font-size: 1rem;
             font-weight: 600;
             color: #ffffff;
             background-color: var(--accent);
@@ -324,6 +323,12 @@
             transform: translateY(0);
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
+        }
+
+        #reveal-btn {
+            min-width: 180px;
+            min-height: 48px;
+            font-size: 1rem;
         }
 
         .cool-btn.smooth-hidden {
@@ -347,6 +352,8 @@
 
         #next-btn {
             background-color: var(--correct);
+            min-width: 220px;
+            min-height: 48px;
         }
 
         #next-btn:hover {
@@ -358,13 +365,12 @@
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
         }
     </style>
-
 </head>
 <body>
 
     <h1 id="game-title">Indovina l'Emozione</h1>
 
-        <div id="game-stats">
+    <div id="game-stats">
         <span>Round: <strong id="progress-value"> 
              <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i> 
         </strong></span>
@@ -372,13 +378,13 @@
              <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i>
         </strong></span>
         <span>Tentativi: <strong id="moves-value"> 
-            <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
+              <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
         <span>Aiuti: <strong id="reveals-value"> <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 4 opzioni, l' emozione che la descrive meglio.</h3>
+    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 6 opzioni, l'emozione che la descrive meglio.</h3>
 
-        <div class="controls" id="action-controls">
+    <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
@@ -397,7 +403,6 @@
     <div class="progress-bar-container">
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
     </div>
-
     
     <div id="summary-screen">
         <h2>Hai completato tutto! 🎉</h2>
@@ -420,34 +425,57 @@
     </div>
 
     <script>
-
         const ROUNDS = [
             {
                 label: "Fiducia",
-                img: "emozioni-split/image_1.png",
-                options: ["Fiducia", "Gelosia", "Sorpresa", "Noia"],
+                img: "emozioni-set-1/trust.png",
+                options: ["Fiducia", "Gelosia", "Sorpresa", "Noia", "Rabbia", "Amore"],
                 correctIndex: 0
             },
             {
                 label: "Calma",
-                img: "emozioni-split/image_2.png",
-                options: ["Rabbia", "Invidia", "Calma", "Sorpresa"],
+                img: "emozioni-set-1/calm.png",
+                options: ["Rabbia", "Invidia", "Calma", "Sorpresa", "Gioia", "Disgusto"],
                 correctIndex: 2
             },
             {
                 label: "Amore",
-                img: "emozioni-split/image_3.png",
-                options: ["Noia", "Amore", "Disgusto", "Gelosia"],
+                img: "emozioni-set-1/love.png",
+                options: ["Noia", "Amore", "Disgusto", "Gelosia", "Stupore", "Euforia"],
                 correctIndex: 1
             },
             {
                 label: "Sorpresa",
-                img: "emozioni-split/image_4.png",
-                options: ["Soddisfazione", "Calma", "Fiducia", "Sorpresa"],
+                img: "emozioni-set-1/surprise.png",
+                options: ["Soddisfazione", "Calma", "Fiducia", "Sorpresa", "Noia", "Invidia"],
                 correctIndex: 3
+            },
+            {
+                label: "Euforia",
+                img: "emozioni-set-1/euforia.png",
+                options: ["Noia", "Invidia", "Euforia", "Calma", "Amore", "Rabbia"],
+                correctIndex: 2
+            },
+            {
+                label: "Soddisfazione",
+                img: "emozioni-set-1/satisfaction.png",
+                options: ["Gelosia", "Disgusto", "Rabbia", "Soddisfazione", "Gioia", "Fiducia"],
+                correctIndex: 3
+            },
+            {
+                label: "Gioia",
+                img: "emozioni-set-1/joy.png",
+                options: ["Gioia", "Calma", "Invidia", "Disgusto", "Sorpresa", "Euforia"],
+                correctIndex: 0
+            },
+            {
+                label: "Stupore",
+                img: "emozioni-set-1/amazement.png",
+                options: ["Fiducia", "Stupore", "Noia", "Amore", "Soddisfazione", "Calma"],
+                correctIndex: 1
             }
         ];
-
+        
         let currentRoundIndex = 0;
         let roundResults = [];
 
@@ -539,13 +567,11 @@
             revealBtn.classList.remove('smooth-hidden');
             revealBtn.disabled = false;
 
-            // Fade out current image if it exists, then swap and fade in
             const existingImg = imageContainer.querySelector('img');
             
             const updateImageSource = () => {
                 imageContainer.innerHTML = `<img src="${currentRound.img}" alt="${currentRound.label}">`;
                 const newImg = imageContainer.querySelector('img');
-                // Force layout reflow before setting opacity to 1 for smooth fade-in
                 if (newImg) {
                     newImg.getBoundingClientRect();
                     newImg.style.opacity = '1';
@@ -554,7 +580,7 @@
 
             if (existingImg) {
                 existingImg.style.opacity = '0';
-                setTimeout(updateImageSource, 350); // Matches CSS transition duration
+                setTimeout(updateImageSource, 350);
             } else {
                 updateImageSource();
             }
@@ -575,7 +601,6 @@
                 optionElements.push(optionEl);
             });
         }
-
         
         function handleOptionClick(optionEl) {
             if (roundCompleted || optionEl.classList.contains('disabled-option')) return;
@@ -584,11 +609,6 @@
                 roundCompleted = true;
                 stopElapsedTimer();
 
-                // The winning guess counts as a move too (same as the word
-                // games count the final correct placement) — otherwise a
-                // flawless first-try round has moveCount === 0 and the
-                // metric collapses to exactly 0, indistinguishable from
-                // never having played.
                 moveCount++;
                 updateMovesDisplay();
 
@@ -598,13 +618,10 @@
                 });
                 optionEl.classList.add('correct-option');
 
-                // Reflect the round just finished right away, so completing
-                // the last round visibly fills the bar to 100% instead of
-                // jumping straight to the (hidden) summary screen.
                 progressBarFill.style.width = (((currentRoundIndex + 1) / ROUNDS.length) * 100) + '%';
 
-                const effectiveTime = Math.max(elapsedSeconds, 1);
-                const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+                const wrongAttempts = moveCount - 1;
+                const metricValue = Math.max(0, 100 - (wrongAttempts * 15) - (revealCount * 15));
 
                 roundResults.push({
                     label: currentRound.label,
@@ -660,7 +677,7 @@
             });
 
             const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-            const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+            const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
 
             summaryTotals.innerHTML = `
                 <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
@@ -687,6 +704,10 @@
             optionElements.forEach(el => el.classList.remove('peek'));
         }
 
+        function initGame() {
+            loadRound(currentRoundIndex);
+        }
+
         revealBtn.addEventListener('mousedown', showPeek);
         revealBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -698,7 +719,7 @@
         revealBtn.addEventListener('touchend', hidePeek);
         revealBtn.addEventListener('touchcancel', hidePeek);
 
-        loadRound(currentRoundIndex);
+        initGame();
     </script>
 </body>
 </html>

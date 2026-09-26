@@ -487,57 +487,7 @@ button:disabled {
 
     <script>
 
-        const ROUNDS = [
-            {
-                label: "Fiducia",
-                img: "emozioni-split/image_1.png",
-                options: ["Fiducia", "Gelosia", "Sorpresa"],
-                correctIndex: 0
-            },
-            {
-                label: "Calma",
-                img: "emozioni-split/image_2.png",
-                options: ["Rabbia", "Invidia", "Calma"],
-                correctIndex: 2
-            },
-            {
-                label: "Amore",
-                img: "emozioni-split/image_3.png",
-                options: ["Noia", "Amore", "Disgusto"],
-                correctIndex: 1
-            },
-            {
-                label: "Sorpresa",
-                img: "emozioni-split/image_4.png",
-                options: ["Soddisfazione", "Calma", "Sorpresa"],
-                correctIndex: 2
-            },
-            {
-                label: "Euforia",
-                img: "emozioni-split/image_5.png",
-                options: ["Noia", "Euforia", "Calma"],
-                correctIndex: 1
-            },
-            {
-                label: "Soddisfazione",
-                img: "emozioni-split/image_6.png",
-                options: ["Gelosia", "Disgusto", "Soddisfazione"],
-                correctIndex: 2
-            },
-            {
-                label: "Gioia",
-                img: "emozioni-split/image_7.png",
-                options: ["Gioia", "Calma", "Invidia"],
-                correctIndex: 0
-            },
-            {
-                label: "Stupore",
-                img: "emozioni-split/image_8.png",
-                options: ["Fiducia", "Stupore", "Noia"],
-                correctIndex: 1
-            }
-
-        ];
+        let ROUNDS = [];
 
         let currentRoundIndex = 0;
         let roundResults = [];
@@ -789,6 +739,36 @@ button:disabled {
             optionElements.forEach(el => el.classList.remove('peek'));
         }
 
+        async function initGame() {
+            
+            try {
+                const response = await fetch('indovina-emozione-3-opzioni-set-1.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                ROUNDS = data.rounds;
+
+            //    console.log("Loaded rounds:", ROUNDS.length);
+            //    console.log("Rounds:", ROUNDS);
+
+                if (data.title) {
+                    document.title = data.title;
+                    document.getElementById('game-title').textContent = data.title;
+                }
+
+                if (data.description) {
+                    instructionBanner.textContent = data.description;
+                }
+         
+            } catch (err) {
+                console.error('Could not load indovina-emozione-3-opzioni-set-1.json:', err);
+            }
+            
+            loadRound(currentRoundIndex);
+        }
+
         revealBtn.addEventListener('mousedown', showPeek);
         revealBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -800,7 +780,9 @@ button:disabled {
         revealBtn.addEventListener('touchend', hidePeek);
         revealBtn.addEventListener('touchcancel', hidePeek);
 
-        loadRound(currentRoundIndex);
+        initGame();
+
+       // loadRound(currentRoundIndex);
     </script>
 </body>
 </html>

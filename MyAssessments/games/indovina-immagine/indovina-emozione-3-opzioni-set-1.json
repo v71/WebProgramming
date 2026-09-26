@@ -1,0 +1,54 @@
+{
+  "title": "Indovina l'Emozione",
+  "description": "Osserva ogni immagine e scegli l'emozione che rappresenta meglio ciò che vedi.",
+  "rounds": [
+    {
+      "label": "Fiducia",
+      "img": "emozioni-set-1/trust.png",
+      "options": ["Fiducia", "Gelosia", "Sorpresa"],
+      "correctIndex": 0
+    },
+    {
+      "label": "Calma",
+      "img": "emozioni-set-1/calm.png",
+      "options": ["Rabbia", "Invidia", "Calma"],
+      "correctIndex": 2
+    },
+    {
+      "label": "Amore",
+      "img": "emozioni-set-1/love.png",
+      "options": ["Noia", "Amore", "Disgusto"],
+      "correctIndex": 1
+    },
+    {
+      "label": "Sorpresa",
+      "img": "emozioni-set-1/surprise.png",
+      "options": ["Soddisfazione", "Calma", "Sorpresa"],
+      "correctIndex": 2
+    },
+    {
+      "label": "Euforia",
+      "img": "emozioni-set-1/euforia.png",
+      "options": ["Noia", "Euforia", "Calma"],
+      "correctIndex": 1
+    },
+    {
+      "label": "Soddisfazione",
+      "img": "emozioni-set-1/satisfaction.png",
+      "options": ["Gelosia", "Disgusto", "Soddisfazione"],
+      "correctIndex": 2
+    },
+    {
+      "label": "Gioia",
+      "img": "emozioni-set-1/joy.png",
+      "options": ["Gioia", "Calma", "Invidia"],
+      "correctIndex": 0
+    },
+    {
+      "label": "Stupore",
+      "img": "emozioni-set-1/amazement.png",
+      "options": ["Fiducia", "Stupore", "Noia"],
+      "correctIndex": 1
+    }
+  ]
+}
