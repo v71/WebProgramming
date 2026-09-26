@@ -450,11 +450,6 @@
 
     <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
 
-    <h1>Progresso</h1>
-
-    <div class="progress-bar-container">
-        <div id="progress-bar-fill" class="progress-bar-fill"></div>
-    </div>
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
@@ -480,6 +475,13 @@
             </div>
         </div>
     </div>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
 
     <div id="summary-screen">
         <h2>Hai completato tutto! 🎉</h2>
@@ -716,8 +718,14 @@
 
                 slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
 
-                const effectiveTime = Math.max(elapsedSeconds, 1);
-                const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+            //    const effectiveTime = Math.max(elapsedSeconds, 1);
+            //    const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+
+                // Score this round directly on a 0–100 scale: start at 100, lose points
+                // for each wrong guess and each reveal used. No time-based formula, so
+                // there's no arbitrary "perfect value" left to guess at.
+                const wrongAttempts = moveCount - 1; // moveCount includes the final correct click
+                const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
 
                 roundResults.push({
                     word: originalTextString,
@@ -785,9 +793,14 @@
                 summaryTbody.appendChild(row);
             });
 
-            const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-            const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+        //    const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+        //    const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
             
+            // averageMetric is already 0–100 per round (see handleOptionClick),
+            // so no rescaling is needed — just average and clamp for safety.
+            const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+            const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
+
             summaryTotals.innerHTML = `
                 <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
                 <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>

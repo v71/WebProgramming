@@ -454,11 +454,6 @@
 
     <h3 id="instruction-banner" class="stats-style">Clicca sulle parole nella prima lista per ricomporre la frase nella seconda lista, nell'ordine giusto.</h3>
 
-    <h1>Progresso</h1>
-
-    <div class="progress-bar-container">
-        <div id="progress-bar-fill" class="progress-bar-fill"></div>
-    </div>
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
@@ -485,6 +480,12 @@
         </div>
     </div>
 
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
     <div id="summary-screen">
         <h2>Hai completato tutto! 🎉</h2>
         <p>Ecco il riepilogo delle tue prestazioni:</p>
@@ -508,12 +509,13 @@
 <script>
         // Each entry is a full sentence; it gets split into words, which are then
         // the draggable/clickable units instead of individual letters.
-        const PUZZLE_SENTENCES = [
-            "IL SOLE SORGE A EST",
-            "MI PIACE IL CAFFÈ CALDO",
-            "LA LUNA ILLUMINA LA NOTTE",
-            "IMPARARE È UN VIAGGIO"
-        ];
+
+        ///////////////////////////////////////////////////////////////////////////////
+        // LE FRASI SONO LETTE NELLA FUNZIONE INITGAME DAL FILE SENTENCES.JSON
+        ///////////////////////////////////////////////////////////////////////////////
+
+        let PUZZLE_SENTENCES = [];
+
         let currentSentenceIndex = 0;
         let roundResults = [];
 
@@ -757,9 +759,15 @@
 
                 progressBarFill.style.width = (((currentSentenceIndex + 1) / PUZZLE_SENTENCES.length) * 100) + '%';
 
-                const effectiveTime = Math.max(elapsedSeconds, 1);
-                const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+            //    const effectiveTime = Math.max(elapsedSeconds, 1);
+            //    const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
 
+                // Score this round directly on a 0–100 scale: start at 100, lose points
+                // for each wrong guess and each reveal used. No time-based formula, so
+                // there's no arbitrary "perfect value" left to guess at.
+                const wrongAttempts = moveCount - 1; // moveCount includes the final correct click
+                const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
+              
                 roundResults.push({
                     sentence: originalWords.join(' '),
                     time: elapsedSeconds + 's',
@@ -824,8 +832,13 @@
                 summaryTbody.appendChild(row);
             });
 
+        //    const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+        //    const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+
+            // averageMetric is already 0–100 per round (see handleOptionClick),
+            // so no rescaling is needed — just average and clamp for safety.
             const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-            const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+            const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
 
             summaryTotals.innerHTML = `
                 <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
@@ -863,6 +876,27 @@
             revealOverlay.classList.remove('visible');
         }
 
+        
+        async function initGame() {
+            
+            try {
+                const response = await fetch('sentences.json');
+                const data = await response.json();
+                PUZZLE_SENTENCES = data.sentences;
+
+                if (data.title) {
+                    document.title = data.title;
+                    document.getElementById('game-title').textContent = data.title;
+                }
+                    
+            } catch (err) {
+                console.error('Could not load sentences.json:', err);
+                PUZZLE_SENTENCES = ["QUALCOSA é ANDATO STORTO"]; // fallback so it still runs
+            }
+            
+            loadSentence(currentSentenceIndex);
+        }
+
         revealBtn.addEventListener('mousedown', showReveal);
         revealBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
@@ -880,9 +914,11 @@
             resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
         });
 
-        loadSentence(currentSentenceIndex);
-    </script>
+       // load json with the sentences
 
+       initGame();
+
+    </script>
 
 
 </body>

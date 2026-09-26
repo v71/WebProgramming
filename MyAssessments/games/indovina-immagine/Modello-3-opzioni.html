@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Indovina l'Emozione</title>
+    
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 24px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .controls {
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 48px;
+        }
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #puzzle-workspace {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: stretch;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 10px;
+            border-radius: 99px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            width: fit-content;
+            max-width: 100%;
+            padding: 20px;
+            border-radius: 20px;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            background-color: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            margin: 0 auto;
+        }
+
+        #image-container {
+            border: 2px solid #a5b4fc;
+            background-color: #ffffff;
+            padding: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 400px;
+            height: 400px;
+            overflow: hidden;
+        }
+
+        #image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.35s ease-in-out;
+        }
+
+        #options-container {
+            border-color: var(--border);
+            flex-direction: column;
+            justify-content: center;
+            align-items: stretch;
+            width: 400px;
+            padding: 14px;
+            gap: 12px;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .option-card {
+            flex-shrink: 0;
+            width: 100%;
+            min-height: 100px;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 18px 22px;
+            font-size: 1.35rem;
+            font-weight: 700;
+            line-height: 1.3;
+            white-space: normal;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .option-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            color: var(--accent);
+        }
+
+        .option-card.correct-option {
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--correct);
+            cursor: default;
+            transform: none !important;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .option-card.wrong-option {
+            border-color: var(--wrong);
+            background: rgba(239, 68, 68, 0.05);
+            color: var(--wrong);
+            animation: shake 0.4s ease;
+        }
+
+        .option-card.disabled-option {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+            transform: none !important;
+        }
+
+        .option-card.peek {
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, 0.08);
+            color: var(--correct);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+
+        #game-stats, .stats-style {
+            margin: 0 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 8px 18px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--correct);
+            font-size: 2rem;
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 24px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-totals {
+            margin-top: 20px;
+            padding: 18px;
+            background: var(--bg-2);
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .summary-totals strong {
+            color: var(--accent);
+        }
+
+
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+button:hover {
+    filter: brightness(1.05);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: none;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.cool-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    padding: 11px 28px;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    color: #ffffff;
+    background-color: var(--accent);
+
+    border: none;
+    border-radius: 99px;
+
+    cursor: pointer;
+
+    box-shadow: var(--shadow-lg);
+
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+
+    transition:
+        all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+    text-decoration: none;
+}
+
+
+/* =========================================================
+   HELP BUTTON
+   ========================================================= */
+
+#reveal-btn {
+    min-width: 180px;
+    min-height: 48px;
+
+    font-size: 1rem;
+}
+
+
+/* =========================================================
+   HIDDEN BUTTON
+   ========================================================= */
+
+.cool-btn.smooth-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: scale(0.95);
+    position: absolute;
+}
+
+
+/* =========================================================
+   BUTTON HOVER
+   ========================================================= */
+
+.cool-btn:hover {
+    transform: translateY(-2px);
+
+    background-color: #4f46e5;
+
+    box-shadow:
+        0 15px 30px -5px rgba(99, 102, 241, 0.4);
+}
+
+
+/* =========================================================
+   BUTTON ACTIVE
+   ========================================================= */
+
+.cool-btn:active {
+    transform: translateY(1px);
+
+    box-shadow:
+        0 5px 15px rgba(99, 102, 241, 0.2);
+}
+
+
+/* =========================================================
+   NEXT BUTTON
+   ========================================================= */
+
+#next-btn {
+    background-color: var(--correct);
+
+    min-width: 220px;
+    min-height: 48px;
+}
+
+#next-btn:hover {
+    background-color: #059669;
+
+    box-shadow:
+        0 15px 30px -5px rgba(16, 185, 129, 0.4);
+}
+
+#next-btn:active {
+    box-shadow:
+        0 5px 15px rgba(16, 185, 129, 0.2);
+}
+
+   </style>
+
+</head>
+<body>
+
+    <h1 id="game-title">Indovina l'Emozione</h1>
+
+        <div id="game-stats">
+        <span>Round: <strong id="progress-value"> 
+             <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i> 
+        </strong></span>
+        <span>Tempo: <strong id="time-value">
+             <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i>
+        </strong></span>
+        <span>Tentativi: <strong id="moves-value"> 
+            <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
+        <span>Aiuti: <strong id="reveals-value"> <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 3 opzioni, l' emozione che la descrive meglio.</h3>
+
+    <div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span>Caricamento...</span>
+        </button>
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Help!</span>
+        </button>
+    </div>
+
+    <div id="puzzle-workspace">
+        <div id="image-container" class="card-container"></div>
+        <div id="options-container" class="card-container"></div>
+    </div>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Immagine</th>
+                    <th>Tempo</th>
+                    <th>Tentativi</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+    <script>
+
+        const ROUNDS = [
+            {
+                label: "Fiducia",
+                img: "emozioni-split/image_1.png",
+                options: ["Fiducia", "Gelosia", "Sorpresa"],
+                correctIndex: 0
+            },
+            {
+                label: "Calma",
+                img: "emozioni-split/image_2.png",
+                options: ["Rabbia", "Invidia", "Calma"],
+                correctIndex: 2
+            },
+            {
+                label: "Amore",
+                img: "emozioni-split/image_3.png",
+                options: ["Noia", "Amore", "Disgusto"],
+                correctIndex: 1
+            },
+            {
+                label: "Sorpresa",
+                img: "emozioni-split/image_4.png",
+                options: ["Soddisfazione", "Calma", "Sorpresa"],
+                correctIndex: 2
+            },
+            {
+                label: "Euforia",
+                img: "emozioni-split/image_5.png",
+                options: ["Noia", "Euforia", "Calma"],
+                correctIndex: 1
+            },
+            {
+                label: "Soddisfazione",
+                img: "emozioni-split/image_6.png",
+                options: ["Gelosia", "Disgusto", "Soddisfazione"],
+                correctIndex: 2
+            },
+            {
+                label: "Gioia",
+                img: "emozioni-split/image_7.png",
+                options: ["Gioia", "Calma", "Invidia"],
+                correctIndex: 0
+            },
+            {
+                label: "Stupore",
+                img: "emozioni-split/image_8.png",
+                options: ["Fiducia", "Stupore", "Noia"],
+                correctIndex: 1
+            }
+
+        ];
+
+        let currentRoundIndex = 0;
+        let roundResults = [];
+
+        const nextBtn = document.getElementById('next-btn');
+        const revealBtn = document.getElementById('reveal-btn');
+        const imageContainer = document.getElementById('image-container');
+        const optionsContainer = document.getElementById('options-container');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressValueEl = document.getElementById('progress-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const puzzleWorkspace = document.getElementById('puzzle-workspace');
+        const actionControls = document.getElementById('action-controls');
+        const summaryScreen = document.getElementById('summary-screen');
+        const summaryTbody = document.getElementById('summary-tbody');
+        const summaryTotals = document.getElementById('summary-totals');
+        const instructionBanner = document.getElementById('instruction-banner');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let roundCompleted = false;
+        let isPeeking = false;
+        let optionElements = [];
+        let currentRound = null;
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function updateMovesDisplay() {
+            movesValueEl.textContent = moveCount;
+        }
+
+        function updateRevealsDisplay() {
+            revealsValueEl.textContent = revealCount;
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function loadRound(index) {
+            if (index >= ROUNDS.length) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+                return;
+            }
+
+            const progressRatio = (index / ROUNDS.length) * 100;
+            progressBarFill.style.width = progressRatio + '%';
+
+            currentRound = ROUNDS[index];
+            roundCompleted = false;
+            moveCount = 0;
+            revealCount = 0;
+            optionElements = [];
+
+            progressValueEl.textContent = `${index + 1} / ${ROUNDS.length}`;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+            startElapsedTimer();
+
+            nextBtn.classList.add('smooth-hidden');
+            revealBtn.classList.remove('smooth-hidden');
+            revealBtn.disabled = false;
+
+            // Fade out current image if it exists, then swap and fade in
+            const existingImg = imageContainer.querySelector('img');
+            
+            const updateImageSource = () => {
+                imageContainer.innerHTML = `<img src="${currentRound.img}" alt="${currentRound.label}">`;
+                const newImg = imageContainer.querySelector('img');
+                // Force layout reflow before setting opacity to 1 for smooth fade-in
+                if (newImg) {
+                    newImg.getBoundingClientRect();
+                    newImg.style.opacity = '1';
+                }
+            };
+
+            if (existingImg) {
+                existingImg.style.opacity = '0';
+                setTimeout(updateImageSource, 350); // Matches CSS transition duration
+            } else {
+                updateImageSource();
+            }
+
+            optionsContainer.innerHTML = '';
+
+            const order = shuffleArray([0, 1, 2]);
+
+            order.forEach((originalIdx) => {
+                const optionEl = document.createElement('div');
+                optionEl.classList.add('option-card');
+                optionEl.textContent = currentRound.options[originalIdx];
+                optionEl.dataset.isCorrect = (originalIdx === currentRound.correctIndex) ? 'true' : 'false';
+
+                optionEl.addEventListener('click', () => handleOptionClick(optionEl));
+
+                optionsContainer.appendChild(optionEl);
+                optionElements.push(optionEl);
+            });
+        }
+
+        
+        function handleOptionClick(optionEl) {
+            if (roundCompleted || optionEl.classList.contains('disabled-option')) return;
+
+            if (optionEl.dataset.isCorrect === 'true') {
+                roundCompleted = true;
+                stopElapsedTimer();
+
+                // The winning guess counts as a move too (same as the word
+                // games count the final correct placement) — otherwise a
+                // flawless first-try round has moveCount === 0 and the
+                // metric collapses to exactly 0, indistinguishable from
+                // never having played.
+                moveCount++;
+                updateMovesDisplay();
+
+                optionElements.forEach(el => {
+                    el.classList.remove('wrong-option', 'peek');
+                    if (el !== optionEl) el.classList.add('disabled-option');
+                });
+                optionEl.classList.add('correct-option');
+
+                // Reflect the round just finished right away, so completing
+                // the last round visibly fills the bar to 100% instead of
+                // jumping straight to the (hidden) summary screen.
+                progressBarFill.style.width = (((currentRoundIndex + 1) / ROUNDS.length) * 100) + '%';
+
+            //    const effectiveTime = Math.max(elapsedSeconds, 1);
+            //    const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
+
+                // Score this round directly on a 0–100 scale: start at 100, lose points
+                // for each wrong guess and each reveal used. No time-based formula, so
+                // there's no arbitrary "perfect value" left to guess at.
+                const wrongAttempts = moveCount - 1; // moveCount includes the final correct click
+                const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
+
+                roundResults.push({
+                    label: currentRound.label,
+                    time: elapsedSeconds + 's',
+                    moves: moveCount,
+                    reveals: revealCount,
+                    metric: metricValue
+                });
+
+                if (currentRoundIndex === ROUNDS.length - 1) {
+                    nextBtn.textContent = "Fatto";
+                } else {
+                    nextBtn.textContent = "▶ Prossima immagine";
+                }
+
+                revealBtn.classList.add('smooth-hidden');
+                nextBtn.classList.remove('smooth-hidden');
+            } else {
+                moveCount++;
+                updateMovesDisplay();
+                optionEl.classList.add('wrong-option', 'disabled-option');
+                optionEl.addEventListener('animationend', () => {
+                    optionEl.classList.remove('wrong-option');
+                }, { once: true });
+            }
+        }
+        
+        nextBtn.addEventListener('click', () => {
+            if (currentRoundIndex === ROUNDS.length - 1) {
+                progressBarFill.style.width = '100%';
+                showSummaryScreen();
+            } else {
+                currentRoundIndex++;
+                loadRound(currentRoundIndex);
+            }
+        });
+
+        function showSummaryScreen() {
+            puzzleWorkspace.style.display = 'none';
+            instructionBanner.style.display = 'none';
+            document.getElementById('game-stats').style.display = 'none';
+            document.querySelector('.progress-bar-container').style.display = 'none';
+            actionControls.style.display = 'none';
+
+            summaryTbody.innerHTML = '';
+            let totalMetric = 0;
+
+            roundResults.forEach(res => {
+                totalMetric += res.metric;
+                const row = document.createElement('tr');
+                row.innerHTML = `<td><strong>${res.label}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
+                summaryTbody.appendChild(row);
+            });
+
+         //   const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+         //   const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
+
+            // averageMetric is already 0–100 per round (see handleOptionClick),
+            // so no rescaling is needed — just average and clamp for safety.
+            const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+            const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
+
+            summaryTotals.innerHTML = `
+                <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+                <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
+            `;
+
+            summaryScreen.style.display = 'block';
+        }
+
+        function showPeek() {
+            if (roundCompleted || isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+
+            revealCount++;
+            updateRevealsDisplay();
+
+            const correctEl = optionElements.find(el => el.dataset.isCorrect === 'true');
+            if (correctEl) correctEl.classList.add('peek');
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            optionElements.forEach(el => el.classList.remove('peek'));
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            showPeek();
+        }, { passive: false });
+
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+
+        loadRound(currentRoundIndex);
+    </script>
+</body>
+</html>
