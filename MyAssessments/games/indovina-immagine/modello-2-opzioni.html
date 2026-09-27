@@ -147,11 +147,12 @@
         #options-container {
             border-color: var(--border);
             flex-direction: column;
-            justify-content: center;
+            justify-content: space-between;
             align-items: stretch;
             width: 400px;
-            padding: 14px;
-            gap: 12px;
+            height: 400px;
+            padding: 20px;
+            gap: 16px;
         }
 
         @keyframes shake {
@@ -162,9 +163,8 @@
         }
 
         .option-card {
-            flex-shrink: 0;
+            flex: 1;
             width: 100%;
-            min-height: 100px;
             background: linear-gradient(145deg, #ffffff, #f8fafc);
             color: var(--text);
             border: 2px solid var(--border);
@@ -174,7 +174,7 @@
             justify-content: center;
             text-align: center;
             padding: 18px 22px;
-            font-size: 1.35rem;
+            font-size: 1.5rem;
             font-weight: 700;
             line-height: 1.3;
             white-space: normal;
@@ -391,7 +391,7 @@ button:disabled {
         <span>Aiuti: <strong id="reveals-value"> <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 3 opzioni, l'emozione che la descrive meglio.</h3>
+    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 2 opzioni, l'emozione che la descrive meglio</h3>
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
@@ -547,7 +547,7 @@ button:disabled {
 
             optionsContainer.innerHTML = '';
 
-            // --- SELEZIONE CORRETTA PER 3 OPZIONI DAL JSON ---
+            // Seleziona correttamente la risposta corretta e 1 sola opzione errata casuale dal JSON
             const correctIdx = currentRound.correctIndex;
             let incorrectIndices = [];
             for (let i = 0; i < currentRound.options.length; i++) {
@@ -555,10 +555,8 @@ button:disabled {
                     incorrectIndices.push(i);
                 }
             }
-            // Prende 2 opzioni errate casuali e le unisce alla corretta, poi mescola
-            const selectedIncorrect = shuffleArray(incorrectIndices).slice(0, 2);
-            const order = shuffleArray([correctIdx, ...selectedIncorrect]);
-            // ------------------------------------------------
+            const selectedIncorrect = shuffleArray(incorrectIndices)[0];
+            const order = shuffleArray([correctIdx, selectedIncorrect]);
 
             order.forEach((originalIdx) => {
                 const optionEl = document.createElement('div');
@@ -572,7 +570,7 @@ button:disabled {
                 optionElements.push(optionEl);
             });
         }
-        
+
         function handleOptionClick(optionEl) {
             if (roundCompleted || optionEl.classList.contains('disabled-option')) return;
 
@@ -681,9 +679,8 @@ button:disabled {
                 if (!response.ok) {
                     throw new Error(`HTTP error: ${response.status}`);
                 }
-
                 const data = await response.json();
-                // Mescola l'intero array dei round in modo casuale all'avvio
+               // Mescola l'intero array dei round in modo casuale all'avvio
                 ROUNDS = shuffleArray(data.rounds);
 
             } catch (err) {

@@ -144,10 +144,18 @@
             transition: opacity 0.35s ease-in-out;
         }
 
+        /* Contenitore ottimizzato a griglia 2x2 per le 4 opzioni */
         #options-container {
             border-color: var(--border);
-            flex-direction: column;
-            justify-content: center;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            width: 400px;
+            height: 400px;
+            padding: 16px;
+            gap: 12px;
+            align-content: stretch;
+            justify-content: stretch;
         }
 
         @keyframes shake {
@@ -158,9 +166,8 @@
         }
 
         .option-card {
-            flex-shrink: 0;
-            width: 280px;
-            min-height: 75px;
+            width: 100%;
+            height: 100%;
             background: linear-gradient(145deg, #ffffff, #f8fafc);
             color: var(--text);
             border: 2px solid var(--border);
@@ -169,10 +176,10 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 12px 18px;
-            font-size: 1.05rem;
+            padding: 12px;
+            font-size: 1.3rem;
             font-weight: 700;
-            line-height: 1.3;
+            line-height: 1.2;
             white-space: normal;
             cursor: pointer;
             user-select: none;
@@ -293,9 +300,6 @@
             color: var(--accent);
         }
 
-
-
-
 /* =========================================================
    BUTTONS
    ========================================================= */
@@ -317,49 +321,27 @@ button:disabled {
     align-items: center;
     justify-content: center;
     gap: 10px;
-
     padding: 11px 28px;
-
     font-size: 1rem;
     font-weight: 600;
-
     color: #ffffff;
     background-color: var(--accent);
-
     border: none;
     border-radius: 99px;
-
     cursor: pointer;
-
     box-shadow: var(--shadow-lg);
-
     opacity: 1;
     visibility: visible;
-
     transform: translateY(0);
-
-    transition:
-        all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
 }
-
-
-/* =========================================================
-   HELP BUTTON
-   ========================================================= */
 
 #reveal-btn {
     min-width: 180px;
     min-height: 48px;
-
     font-size: 1rem;
 }
-
-
-/* =========================================================
-   HIDDEN BUTTON
-   ========================================================= */
 
 .cool-btn.smooth-hidden {
     opacity: 0;
@@ -369,64 +351,38 @@ button:disabled {
     position: absolute;
 }
 
-
-/* =========================================================
-   BUTTON HOVER
-   ========================================================= */
-
 .cool-btn:hover {
     transform: translateY(-2px);
-
     background-color: #4f46e5;
-
-    box-shadow:
-        0 15px 30px -5px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
 }
-
-
-/* =========================================================
-   BUTTON ACTIVE
-   ========================================================= */
 
 .cool-btn:active {
     transform: translateY(1px);
-
-    box-shadow:
-        0 5px 15px rgba(99, 102, 241, 0.2);
+    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
 }
-
-
-/* =========================================================
-   NEXT BUTTON
-   ========================================================= */
 
 #next-btn {
     background-color: var(--correct);
-
     min-width: 220px;
     min-height: 48px;
 }
 
 #next-btn:hover {
     background-color: #059669;
-
-    box-shadow:
-        0 15px 30px -5px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
 }
 
 #next-btn:active {
-    box-shadow:
-        0 5px 15px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
 }
-
    </style>
-
 </head>
 <body>
 
     <h1 id="game-title">Indovina l'Emozione</h1>
 
-        <div id="game-stats">
+    <div id="game-stats">
         <span>Round: <strong id="progress-value"> 
              <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i> 
         </strong></span>
@@ -438,7 +394,7 @@ button:disabled {
         <span>Aiuti: <strong id="reveals-value"> <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 4 opzioni, l' emozione che la descrive meglio.</h3>
+    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 4 opzioni, l'emozione che la descrive meglio.</h3>
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
@@ -459,7 +415,6 @@ button:disabled {
     <div class="progress-bar-container">
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
     </div>
-
     
     <div id="summary-screen">
         <h2>Hai completato tutto! 🎉</h2>
@@ -482,7 +437,6 @@ button:disabled {
     </div>
 
     <script>
-
         let ROUNDS = [];
 
         let currentRoundIndex = 0;
@@ -576,13 +530,11 @@ button:disabled {
             revealBtn.classList.remove('smooth-hidden');
             revealBtn.disabled = false;
 
-            // Fade out current image if it exists, then swap and fade in
             const existingImg = imageContainer.querySelector('img');
             
             const updateImageSource = () => {
                 imageContainer.innerHTML = `<img src="${currentRound.img}" alt="${currentRound.label}">`;
                 const newImg = imageContainer.querySelector('img');
-                // Force layout reflow before setting opacity to 1 for smooth fade-in
                 if (newImg) {
                     newImg.getBoundingClientRect();
                     newImg.style.opacity = '1';
@@ -591,14 +543,24 @@ button:disabled {
 
             if (existingImg) {
                 existingImg.style.opacity = '0';
-                setTimeout(updateImageSource, 350); // Matches CSS transition duration
+                setTimeout(updateImageSource, 350);
             } else {
                 updateImageSource();
             }
 
             optionsContainer.innerHTML = '';
 
-            const order = shuffleArray(currentRound.options.map((_, i) => i));
+            // --- SELEZIONE CORRETTA PER 4 OPZIONI DAL JSON ---
+            const correctIdx = currentRound.correctIndex;
+            let incorrectIndices = [];
+            for (let i = 0; i < currentRound.options.length; i++) {
+                if (i !== correctIdx) {
+                    incorrectIndices.push(i);
+                }
+            }
+            // Prende 3 opzioni errate casuali e le unisce alla corretta, poi mescola
+            const selectedIncorrect = shuffleArray(incorrectIndices).slice(0, 3);
+            const order = shuffleArray([correctIdx, ...selectedIncorrect]);
 
             order.forEach((originalIdx) => {
                 const optionEl = document.createElement('div');
@@ -612,7 +574,6 @@ button:disabled {
                 optionElements.push(optionEl);
             });
         }
-
         
         function handleOptionClick(optionEl) {
             if (roundCompleted || optionEl.classList.contains('disabled-option')) return;
@@ -621,11 +582,6 @@ button:disabled {
                 roundCompleted = true;
                 stopElapsedTimer();
 
-                // The winning guess counts as a move too (same as the word
-                // games count the final correct placement) — otherwise a
-                // flawless first-try round has moveCount === 0 and the
-                // metric collapses to exactly 0, indistinguishable from
-                // never having played.
                 moveCount++;
                 updateMovesDisplay();
 
@@ -635,18 +591,9 @@ button:disabled {
                 });
                 optionEl.classList.add('correct-option');
 
-                // Reflect the round just finished right away, so completing
-                // the last round visibly fills the bar to 100% instead of
-                // jumping straight to the (hidden) summary screen.
                 progressBarFill.style.width = (((currentRoundIndex + 1) / ROUNDS.length) * 100) + '%';
 
-            //    const effectiveTime = Math.max(elapsedSeconds, 1);
-            //    const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
-
-                // Score this round directly on a 0–100 scale: start at 100, lose points
-                // for each wrong guess and each reveal used. No time-based formula, so
-                // there's no arbitrary "perfect value" left to guess at.
-                const wrongAttempts = moveCount - 1; // moveCount includes the final correct click
+                const wrongAttempts = moveCount - 1; 
                 const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
 
                 roundResults.push({
@@ -702,11 +649,6 @@ button:disabled {
                 summaryTbody.appendChild(row);
             });
 
-         //   const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-         //   const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
-
-            // averageMetric is already 0–100 per round (see handleOptionClick),
-            // so no rescaling is needed — just average and clamp for safety.
             const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
             const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
 
@@ -737,30 +679,20 @@ button:disabled {
 
         async function initGame() {
             try {
-                const response = await fetch('indovina-emozione-4-opzioni-set-1.json');
+                const response = await fetch('indovina-emozione-set-1.json');
                 if (!response.ok) {
                     throw new Error(`HTTP error: ${response.status}`);
                 }
 
                 const data = await response.json();
-                ROUNDS = data.rounds;
+                // Mescola l'intero array dei round in modo casuale all'avvio
+                ROUNDS = shuffleArray(data.rounds);
 
-            //    console.log("Loaded rounds:", ROUNDS.length);
-            //    console.log("Rounds:", ROUNDS);
 
-                if (data.title) {
-                    document.title = data.title;
-                    document.getElementById('game-title').textContent = data.title;
-                }
-
-                if (data.description) {
-                    instructionBanner.textContent = data.description;
-                }
-         
             } catch (err) {
-                console.error('Could not load indovina-emozione-4-opzioni-set-1.json:', err);
+                console.error('Could not load JSON file:', err);
             }
-
+            
             loadRound(currentRoundIndex);
         }
 
@@ -776,8 +708,6 @@ button:disabled {
         revealBtn.addEventListener('touchcancel', hidePeek);
 
         initGame();
-
-//        loadRound(currentRoundIndex);
     </script>
 </body>
 </html>

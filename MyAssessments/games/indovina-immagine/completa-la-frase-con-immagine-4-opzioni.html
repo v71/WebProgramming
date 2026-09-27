@@ -148,6 +148,10 @@
             border-color: var(--border);
             flex-direction: column;
             justify-content: center;
+            align-items: stretch;
+            width: 400px;
+            padding: 14px;
+            gap: 10px;
         }
 
         @keyframes shake {
@@ -158,9 +162,9 @@
         }
 
         .option-card {
-            flex-shrink: 0;
-            width: 280px;
-            min-height: 75px;
+            flex: 1;
+            width: 100%;
+            min-height: 85px; /* Adattato per fare spazio a 4 pulsanti verticali */
             background: linear-gradient(145deg, #ffffff, #f8fafc);
             color: var(--text);
             border: 2px solid var(--border);
@@ -169,8 +173,8 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 12px 18px;
-            font-size: 1.05rem;
+            padding: 10px 18px;
+            font-size: 1.25rem;
             font-weight: 700;
             line-height: 1.3;
             white-space: normal;
@@ -293,10 +297,6 @@
             color: var(--accent);
         }
 
-        /* =========================================================
-           SENTENCE DISPLAY (new for this game)
-           ========================================================= */
-
         #sentence-container {
             width: 100%;
             max-width: 700px;
@@ -317,31 +317,19 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
-
             min-width: 150px;
             height: 48px;
-
             margin: 0 8px;
             padding: 6px 16px;
-
             border: 2px solid var(--border);
             border-radius: 10px;
-
             background: var(--bg-1);
             color: transparent;
-
             font-weight: 700;
             vertical-align: middle;
-
             box-shadow: var(--shadow-sm);
-
-            transition:
-                color 0.15s ease,
-                border-color 0.15s ease,
-                background-color 0.15s ease,
-                box-shadow 0.15s ease;
+            transition: color 0.15s ease, border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
         }
-
 
         #blank-slot.filled-correct {
             color: var(--correct);
@@ -363,158 +351,85 @@
             box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
         }
 
-        /*
-
-        #blank-slot.filled-correct {
-            color: var(--correct);
-            border-bottom-style: solid;
-            border-bottom-color: var(--correct);
+        button:hover {
+            filter: brightness(1.05);
         }
 
-        #blank-slot.filled-wrong {
-            color: var(--wrong);
-            border-bottom-style: solid;
-            border-bottom-color: var(--wrong);
-            animation: shake 0.4s ease;
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+            box-shadow: none !important;
+            transform: none !important;
         }
 
-        #blank-slot.peek-fill {
-            color: var(--correct);
-            border-bottom-style: solid;
-            border-bottom-color: var(--correct);
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 11px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
         }
-        */
-/* =========================================================
-   BUTTONS
-   ========================================================= */
 
-button:hover {
-    filter: brightness(1.05);
-}
+        #reveal-btn {
+            min-width: 180px;
+            min-height: 48px;
+            font-size: 1rem;
+        }
 
-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-    filter: none;
-    box-shadow: none !important;
-    transform: none !important;
-}
+        .cool-btn.smooth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
+        }
 
-.cool-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #4f46e5;
+            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+        }
 
-    padding: 11px 28px;
+        .cool-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+        }
 
-    font-size: 1rem;
-    font-weight: 600;
+        #next-btn {
+            background-color: var(--correct);
+            min-width: 220px;
+            min-height: 48px;
+        }
 
-    color: #ffffff;
-    background-color: var(--accent);
+        #next-btn:hover {
+            background-color: #059669;
+            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
+        }
 
-    border: none;
-    border-radius: 99px;
-
-    cursor: pointer;
-
-    box-shadow: var(--shadow-lg);
-
-    opacity: 1;
-    visibility: visible;
-
-    transform: translateY(0);
-
-    transition:
-        all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-
-    text-decoration: none;
-}
-
-
-/* =========================================================
-   HELP BUTTON
-   ========================================================= */
-
-#reveal-btn {
-    min-width: 180px;
-    min-height: 48px;
-
-    font-size: 1rem;
-}
-
-
-/* =========================================================
-   HIDDEN BUTTON
-   ========================================================= */
-
-.cool-btn.smooth-hidden {
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: scale(0.95);
-    position: absolute;
-}
-
-
-/* =========================================================
-   BUTTON HOVER
-   ========================================================= */
-
-.cool-btn:hover {
-    transform: translateY(-2px);
-
-    background-color: #4f46e5;
-
-    box-shadow:
-        0 15px 30px -5px rgba(99, 102, 241, 0.4);
-}
-
-
-/* =========================================================
-   BUTTON ACTIVE
-   ========================================================= */
-
-.cool-btn:active {
-    transform: translateY(1px);
-
-    box-shadow:
-        0 5px 15px rgba(99, 102, 241, 0.2);
-}
-
-
-/* =========================================================
-   NEXT BUTTON
-   ========================================================= */
-
-#next-btn {
-    background-color: var(--correct);
-
-    min-width: 220px;
-    min-height: 48px;
-}
-
-#next-btn:hover {
-    background-color: #059669;
-
-    box-shadow:
-        0 15px 30px -5px rgba(16, 185, 129, 0.4);
-}
-
-#next-btn:active {
-    box-shadow:
-        0 5px 15px rgba(16, 185, 129, 0.2);
-}
-
+        #next-btn:active {
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
    </style>
-
 </head>
 <body>
 
     <h1 id="game-title">Completa la Frase</h1>
 
-        <div id="game-stats">
+    <div id="game-stats">
         <span>Round: <strong id="progress-value">1 / 8</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Tentativi: <strong id="moves-value">0</strong></span>
@@ -549,7 +464,6 @@ button:disabled {
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
     </div>
 
-
     <div id="summary-screen">
         <h2>Hai completato tutto! 🎉</h2>
         <p>Ecco il riepilogo delle tue prestazioni:</p>
@@ -571,68 +485,7 @@ button:disabled {
     </div>
 
     <script>
-
-        // sentenceTemplate uses {blank} as the placeholder position for
-        // the correct option's text.
-
-        const ROUNDS = [
-            {
-                label: "Fiducia",
-                img: "emozioni-set-1/image_1.png",
-                sentenceTemplate: "Quando mi fido di qualcuno, provo {blank}",
-                options: ["Fiducia", "Gelosia", "Sorpresa", "Noia"],
-                correctIndex: 0
-            },
-            {
-                label: "Calma",
-                img: "emozioni-set-1/image_2.png",
-                sentenceTemplate: "Dopo una giornata tranquilla, mi sento {blank}",
-                options: ["Rabbia", "Invidia", "Calma", "Sorpresa"],
-                correctIndex: 2
-            },
-            {
-                label: "Amore",
-                img: "emozioni-set-1/image_3.png",
-                sentenceTemplate: "Quando penso alla mia famiglia, provo {blank}",
-                options: ["Noia", "Amore", "Disgusto", "Gelosia"],
-                correctIndex: 1
-            },
-            {
-                label: "Sorpresa",
-                img: "emozioni-set-1/image_4.png",
-                sentenceTemplate: "Quando succede qualcosa di inaspettato, provo {blank}",
-                options: ["Soddisfazione", "Calma", "Fiducia", "Sorpresa"],
-                correctIndex: 3
-            },
-            {
-                label: "Euforia",
-                img: "emozioni-set-1/image_5.png",
-                sentenceTemplate: "Quando vinco una gara, mi sento pieno di {blank}",
-                options: ["Noia", "Invidia", "Euforia", "Calma"],
-                correctIndex: 2
-            },
-            {
-                label: "Soddisfazione",
-                img: "emozioni-set-1/image_6.png",
-                sentenceTemplate: "Quando finisco un compito difficile, provo {blank}",
-                options: ["Gelosia", "Disgusto", "Fiducia", "Soddisfazione"],
-                correctIndex: 3
-            },
-            {
-                label: "Gioia",
-                img: "emozioni-set-1/image_7.png",
-                sentenceTemplate: "Quando gioco con i miei amici, provo {blank}",
-                options: ["Gioia", "Calma", "Invidia", "Amore"],
-                correctIndex: 0
-            },
-            {
-                label: "Stupore",
-                img: "emozioni-set-1/image_8.png",
-                sentenceTemplate: "Quando vedo qualcosa di incredibile, provo {blank}",
-                options: ["Fiducia", "Stupore", "Noia", "Amore"],
-                correctIndex: 1
-            }
-        ];
+        let ROUNDS = [];
 
         let currentRoundIndex = 0;
         let roundResults = [];
@@ -705,13 +558,6 @@ button:disabled {
         }
 
         function renderSentenceShell(template) {
-
-        /*    const [before, after] = template.split('{blank}');
-            sentenceBefore.textContent = before;
-            sentenceAfter.textContent = after;
-            blankSlot.textContent = '______';
-            blankSlot.className = '';
-        */
             const [before, after] = template.split('{blank}');
             sentenceBefore.textContent = before;
             sentenceAfter.textContent = after;
@@ -746,7 +592,6 @@ button:disabled {
 
             renderSentenceShell(currentRound.sentenceTemplate);
 
-            // Fade out current image if it exists, then swap and fade in
             const existingImg = imageContainer.querySelector('img');
 
             const updateImageSource = () => {
@@ -767,13 +612,29 @@ button:disabled {
 
             optionsContainer.innerHTML = '';
 
-            const order = shuffleArray(currentRound.options.map((_, i) => i));
+            // --- SELEZIONE DI 4 OPZIONI (1 Corretta + 3 Errate) ---
+            const correctIdx = currentRound.correctIndex;
+            const correctValue = currentRound.options[correctIdx];
 
-            order.forEach((originalIdx) => {
+            let incorrectValues = [];
+            for (let i = 0; i < currentRound.options.length; i++) {
+                if (i !== correctIdx) {
+                    incorrectValues.push(currentRound.options[i]);
+                }
+            }
+
+             // Mescola le errate e ne prende 3 (totale 4 opzioni visualizzate)
+            const selectedIncorrect = shuffleArray(incorrectValues).slice(0, 3);
+            
+            // Unisce la risposta corretta alle 3 errate e le mescola casualmente
+            let activeOptions = shuffleArray([correctValue, ...selectedIncorrect]);
+
+            activeOptions.forEach((optionText) => {
                 const optionEl = document.createElement('div');
                 optionEl.classList.add('option-card');
-                optionEl.textContent = currentRound.options[originalIdx];
-                optionEl.dataset.isCorrect = (originalIdx === currentRound.correctIndex) ? 'true' : 'false';
+                optionEl.textContent = optionText;
+                
+                optionEl.dataset.isCorrect = (optionText === correctValue) ? 'true' : 'false';
 
                 optionEl.addEventListener('click', () => handleOptionClick(optionEl));
 
@@ -781,7 +642,6 @@ button:disabled {
                 optionElements.push(optionEl);
             });
         }
-
 
         function handleOptionClick(optionEl) {
             if (roundCompleted || optionEl.classList.contains('disabled-option')) return;
@@ -828,8 +688,6 @@ button:disabled {
                 updateMovesDisplay();
                 optionEl.classList.add('wrong-option', 'disabled-option');
 
-                // Briefly show the wrong guess in the blank, then reset it
-                // back to the placeholder once the shake finishes.
                 blankSlot.textContent = optionEl.textContent;
                 blankSlot.className = 'filled-wrong';
 
@@ -837,7 +695,6 @@ button:disabled {
                     optionEl.classList.remove('wrong-option');
                     if (!roundCompleted) {
                         blankSlot.textContent = '';
-                        //blankSlot.textContent = '______';
                         blankSlot.className = '';
                     }
                 }, { once: true });
@@ -903,10 +760,25 @@ button:disabled {
             optionElements.forEach(el => el.classList.remove('peek'));
 
             if (!roundCompleted) {
-                //blankSlot.textContent = '______';
                 blankSlot.textContent = '';
                 blankSlot.className = '';
             }
+        }
+
+        async function initGame() {
+            try {
+                const response = await fetch('indovina-emozione-set-1.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error: ${response.status}`);
+                }
+                const data = await response.json();
+                ROUNDS = data.rounds;
+
+            } catch (err) {
+                console.error('Could not load JSON file:', err);
+            }
+             
+            loadRound(currentRoundIndex);
         }
 
         revealBtn.addEventListener('mousedown', showPeek);
@@ -920,7 +792,7 @@ button:disabled {
         revealBtn.addEventListener('touchend', hidePeek);
         revealBtn.addEventListener('touchcancel', hidePeek);
 
-        loadRound(currentRoundIndex);
+        initGame();
     </script>
 </body>
 </html>

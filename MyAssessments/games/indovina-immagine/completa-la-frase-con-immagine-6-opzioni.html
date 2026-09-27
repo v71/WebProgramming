@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Indovina l'Emozione</title>
+    <title>Completa la Frase</title>
     
 <style>
         :root {
@@ -146,12 +146,24 @@
 
         #options-container {
             border-color: var(--border);
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(220px, 280px));
+            gap: 14px;
             justify-content: center;
-            align-items: stretch;
-            width: 400px;
-            padding: 14px;
-            gap: 12px;
+            align-content: center;
+            width: 600px;
+            max-width: 100%;
+        }
+
+        @media (max-width: 700px) {
+            #options-container {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                width: 100%;
+            }
+
+            .option-card {
+                width: 100%;
+            }
         }
 
         @keyframes shake {
@@ -297,6 +309,76 @@
             color: var(--accent);
         }
 
+        /* =========================================================
+           SENTENCE DISPLAY (new for this game)
+           ========================================================= */
+
+        #sentence-container {
+            width: 100%;
+            max-width: 700px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            padding: 22px 28px;
+            margin-bottom: 6px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            line-height: 1.6;
+            color: var(--text);
+        }
+
+        #blank-slot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            min-width: 150px;
+            height: 48px;
+
+            margin: 0 8px;
+            padding: 6px 16px;
+
+            border: 2px solid var(--border);
+            border-radius: 10px;
+
+            background: var(--bg-1);
+            color: transparent;
+
+            font-weight: 700;
+            vertical-align: middle;
+
+            box-shadow: var(--shadow-sm);
+
+            transition:
+                color 0.15s ease,
+                border-color 0.15s ease,
+                background-color 0.15s ease,
+                box-shadow 0.15s ease;
+        }
+
+
+        #blank-slot.filled-correct {
+            color: var(--correct);
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        #blank-slot.filled-wrong {
+            color: var(--wrong);
+            border-color: var(--wrong);
+            background: rgba(239, 68, 68, 0.05);
+            animation: shake 0.4s ease;
+        }
+
+        #blank-slot.peek-fill {
+            color: var(--correct);
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, 0.08);
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.15);
+        }
+
 /* =========================================================
    BUTTONS
    ========================================================= */
@@ -318,27 +400,49 @@ button:disabled {
     align-items: center;
     justify-content: center;
     gap: 10px;
+
     padding: 11px 28px;
+
     font-size: 1rem;
     font-weight: 600;
+
     color: #ffffff;
     background-color: var(--accent);
+
     border: none;
     border-radius: 99px;
+
     cursor: pointer;
+
     box-shadow: var(--shadow-lg);
+
     opacity: 1;
     visibility: visible;
+
     transform: translateY(0);
-    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+    transition:
+        all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
     text-decoration: none;
 }
+
+
+/* =========================================================
+   HELP BUTTON
+   ========================================================= */
 
 #reveal-btn {
     min-width: 180px;
     min-height: 48px;
+
     font-size: 1rem;
 }
+
+
+/* =========================================================
+   HIDDEN BUTTON
+   ========================================================= */
 
 .cool-btn.smooth-hidden {
     opacity: 0;
@@ -348,50 +452,71 @@ button:disabled {
     position: absolute;
 }
 
+
+/* =========================================================
+   BUTTON HOVER
+   ========================================================= */
+
 .cool-btn:hover {
     transform: translateY(-2px);
+
     background-color: #4f46e5;
-    box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+
+    box-shadow:
+        0 15px 30px -5px rgba(99, 102, 241, 0.4);
 }
+
+
+/* =========================================================
+   BUTTON ACTIVE
+   ========================================================= */
 
 .cool-btn:active {
     transform: translateY(1px);
-    box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+
+    box-shadow:
+        0 5px 15px rgba(99, 102, 241, 0.2);
 }
+
+
+/* =========================================================
+   NEXT BUTTON
+   ========================================================= */
 
 #next-btn {
     background-color: var(--correct);
+
     min-width: 220px;
     min-height: 48px;
 }
 
 #next-btn:hover {
     background-color: #059669;
-    box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
+
+    box-shadow:
+        0 15px 30px -5px rgba(16, 185, 129, 0.4);
 }
 
 #next-btn:active {
-    box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+    box-shadow:
+        0 5px 15px rgba(16, 185, 129, 0.2);
 }
+
    </style>
+
 </head>
 <body>
 
-    <h1 id="game-title">Indovina l'Emozione</h1>
+    <h1 id="game-title">Completa la Frase</h1>
 
-    <div id="game-stats">
-        <span>Round: <strong id="progress-value"> 
-             <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i> 
-        </strong></span>
-        <span>Tempo: <strong id="time-value">
-             <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i>
-        </strong></span>
-        <span>Tentativi: <strong id="moves-value"> 
-            <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
-        <span>Aiuti: <strong id="reveals-value"> <i class="fas fa-circle-notch fa-spin" style="font-size: 1.0rem; color: #4B5563;"></i></strong></span>
+        <div id="game-stats">
+        <span>Round: <strong id="progress-value">1 / 8</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 3 opzioni, l'emozione che la descrive meglio.</h3>
+    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine, leggi la frase e scegli la parola giusta tra le 6 opzioni.</h3>
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
@@ -400,6 +525,12 @@ button:disabled {
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
         </button>
+    </div>
+
+    <div id="sentence-container">
+        <span id="sentence-before"></span>
+        <span id="blank-slot"></span>
+        <span id="sentence-after"></span>
     </div>
 
     <div id="puzzle-workspace">
@@ -412,14 +543,15 @@ button:disabled {
     <div class="progress-bar-container">
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
     </div>
-    
+
+
     <div id="summary-screen">
         <h2>Hai completato tutto! 🎉</h2>
         <p>Ecco il riepilogo delle tue prestazioni:</p>
         <table class="summary-table">
             <thead>
                 <tr>
-                    <th>Immagine</th>
+                    <th>Frase</th>
                     <th>Tempo</th>
                     <th>Tentativi</th>
                     <th>Aiuti</th>
@@ -434,7 +566,8 @@ button:disabled {
     </div>
 
     <script>
-        let ROUNDS = [];
+
+        let ROUNDS=[];
 
         let currentRoundIndex = 0;
         let roundResults = [];
@@ -443,6 +576,9 @@ button:disabled {
         const revealBtn = document.getElementById('reveal-btn');
         const imageContainer = document.getElementById('image-container');
         const optionsContainer = document.getElementById('options-container');
+        const sentenceBefore = document.getElementById('sentence-before');
+        const sentenceAfter = document.getElementById('sentence-after');
+        const blankSlot = document.getElementById('blank-slot');
         const timeValueEl = document.getElementById('time-value');
         const movesValueEl = document.getElementById('moves-value');
         const revealsValueEl = document.getElementById('reveals-value');
@@ -454,6 +590,7 @@ button:disabled {
         const summaryTbody = document.getElementById('summary-tbody');
         const summaryTotals = document.getElementById('summary-totals');
         const instructionBanner = document.getElementById('instruction-banner');
+        const sentenceContainer = document.getElementById('sentence-container');
 
         let elapsedSeconds = 0;
         let elapsedTimerInterval = null;
@@ -502,6 +639,15 @@ button:disabled {
             return arr;
         }
 
+        function renderSentenceShell(template) {
+
+            const [before, after] = template.split('{blank}');
+            sentenceBefore.textContent = before;
+            sentenceAfter.textContent = after;
+            blankSlot.textContent = '';
+            blankSlot.className = '';
+        }
+
         function loadRound(index) {
             if (index >= ROUNDS.length) {
                 progressBarFill.style.width = '100%';
@@ -527,8 +673,10 @@ button:disabled {
             revealBtn.classList.remove('smooth-hidden');
             revealBtn.disabled = false;
 
+            renderSentenceShell(currentRound.sentenceTemplate);
+
             const existingImg = imageContainer.querySelector('img');
-            
+
             const updateImageSource = () => {
                 imageContainer.innerHTML = `<img src="${currentRound.img}" alt="${currentRound.label}">`;
                 const newImg = imageContainer.querySelector('img');
@@ -547,24 +695,30 @@ button:disabled {
 
             optionsContainer.innerHTML = '';
 
-            // --- SELEZIONE CORRETTA PER 3 OPZIONI DAL JSON ---
+            // --- SELEZIONE DI 6 OPZIONI (1 Corretta + 5 Errate) ---
             const correctIdx = currentRound.correctIndex;
-            let incorrectIndices = [];
+            const correctValue = currentRound.options[correctIdx];
+
+            let incorrectValues = [];
             for (let i = 0; i < currentRound.options.length; i++) {
                 if (i !== correctIdx) {
-                    incorrectIndices.push(i);
+                    incorrectValues.push(currentRound.options[i]);
                 }
             }
-            // Prende 2 opzioni errate casuali e le unisce alla corretta, poi mescola
-            const selectedIncorrect = shuffleArray(incorrectIndices).slice(0, 2);
-            const order = shuffleArray([correctIdx, ...selectedIncorrect]);
-            // ------------------------------------------------
 
-            order.forEach((originalIdx) => {
+            // Mescola le errate e ne prende esattamente 5
+            const selectedIncorrect = shuffleArray(incorrectValues).slice(0, 5);
+            
+            // Unisce la risposta corretta alle 5 errate e le mescola casualmente
+            let activeOptions = shuffleArray([correctValue, ...selectedIncorrect]);
+
+            activeOptions.forEach((optionText) => {
                 const optionEl = document.createElement('div');
                 optionEl.classList.add('option-card');
-                optionEl.textContent = currentRound.options[originalIdx];
-                optionEl.dataset.isCorrect = (originalIdx === currentRound.correctIndex) ? 'true' : 'false';
+                optionEl.textContent = optionText;
+                
+                // Imposta il dataset verificando se il testo corrisponde alla risposta corretta
+                optionEl.dataset.isCorrect = (optionText === correctValue) ? 'true' : 'false';
 
                 optionEl.addEventListener('click', () => handleOptionClick(optionEl));
 
@@ -589,9 +743,12 @@ button:disabled {
                 });
                 optionEl.classList.add('correct-option');
 
+                blankSlot.textContent = optionEl.textContent;
+                blankSlot.className = 'filled-correct';
+
                 progressBarFill.style.width = (((currentRoundIndex + 1) / ROUNDS.length) * 100) + '%';
 
-                const wrongAttempts = moveCount - 1; 
+                const wrongAttempts = moveCount - 1;
                 const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
 
                 roundResults.push({
@@ -614,12 +771,23 @@ button:disabled {
                 moveCount++;
                 updateMovesDisplay();
                 optionEl.classList.add('wrong-option', 'disabled-option');
+
+                // Briefly show the wrong guess in the blank, then reset it
+                // back to the placeholder once the shake finishes.
+                blankSlot.textContent = optionEl.textContent;
+                blankSlot.className = 'filled-wrong';
+
                 optionEl.addEventListener('animationend', () => {
                     optionEl.classList.remove('wrong-option');
+                    if (!roundCompleted) {
+                        blankSlot.textContent = '';
+                        //blankSlot.textContent = '______';
+                        blankSlot.className = '';
+                    }
                 }, { once: true });
             }
         }
-        
+
         nextBtn.addEventListener('click', () => {
             if (currentRoundIndex === ROUNDS.length - 1) {
                 progressBarFill.style.width = '100%';
@@ -632,6 +800,7 @@ button:disabled {
 
         function showSummaryScreen() {
             puzzleWorkspace.style.display = 'none';
+            sentenceContainer.style.display = 'none';
             instructionBanner.style.display = 'none';
             document.getElementById('game-stats').style.display = 'none';
             document.querySelector('.progress-bar-container').style.display = 'none';
@@ -667,12 +836,21 @@ button:disabled {
 
             const correctEl = optionElements.find(el => el.dataset.isCorrect === 'true');
             if (correctEl) correctEl.classList.add('peek');
+
+            blankSlot.textContent = currentRound.options[currentRound.correctIndex];
+            blankSlot.className = 'peek-fill';
         }
 
         function hidePeek() {
             if (!isPeeking) return;
             isPeeking = false;
             optionElements.forEach(el => el.classList.remove('peek'));
+
+            if (!roundCompleted) {
+                //blankSlot.textContent = '______';
+                blankSlot.textContent = '';
+                blankSlot.className = '';
+            }
         }
 
         async function initGame() {
@@ -681,7 +859,6 @@ button:disabled {
                 if (!response.ok) {
                     throw new Error(`HTTP error: ${response.status}`);
                 }
-
                 const data = await response.json();
                 // Mescola l'intero array dei round in modo casuale all'avvio
                 ROUNDS = shuffleArray(data.rounds);
@@ -689,7 +866,7 @@ button:disabled {
             } catch (err) {
                 console.error('Could not load JSON file:', err);
             }
-            
+             
             loadRound(currentRoundIndex);
         }
 
@@ -705,6 +882,8 @@ button:disabled {
         revealBtn.addEventListener('touchcancel', hidePeek);
 
         initGame();
+
+//        loadRound(currentRoundIndex);
     </script>
 </body>
 </html>
