@@ -276,22 +276,21 @@
         }
 
         .image-card-slot {
+            flex-shrink: 0;
             width: 340px;
             height: 380px;
-            min-width: 340px;
-            min-height: 380px;
-            background-color: var(--bg-2);
-            border: 2px solid var(--border);
-            border-radius: 14px;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border: 2px solid #a5b4fc;
+            border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--shadow-sm);
-            overflow: hidden;
-            flex-shrink: 0;
+            padding: 12px;
             cursor: pointer;
-            position: relative;
-            transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+            user-select: none;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
         }
 
         .image-card-slot:hover:not(.disabled-option) {
@@ -305,6 +304,7 @@
             height: 100%;
             object-fit: cover;
             display: block;
+            border-radius: 12px; /* Added rounded borders */
         }
 
         .image-card-slot span {
@@ -402,7 +402,7 @@
 </head>
 <body>
 
-    <h1 id="game-title">Nuovo Gioco</h1>
+    <h1 id="game-title">Frasi Relative</h1>
     
     <div id="game-stats">
         <span>Round: <strong id="progress-value">1 / 4</strong></span>
@@ -485,7 +485,7 @@
                 congiunzione: ["e", "ed", "o", "ma", "però", "anche", "se", "perché", "poiché", "quindi", "dunque"],
                 verbo: [
                     "vado", "vai", "va", "andiamo", "andate", "vanno", "andare",
-                    "sono", "sei", "è", "siamo", "siete", "essere",
+                    "sono", "sei", "è", "siamo", "siete", "essere","era",
                     "ho", "hai", "ha", "abbiamo", "avete", "hanno", "avere",
                     "fai", "fa", "facciamo", "fate", "fanno", "fare",
                     "giocare", "gioco", "giochi", "gioca", "giochiamo", "giochiate", "giocano",
@@ -554,9 +554,9 @@
     <script>
         const ROUNDS = [
             { 
-                text: "La bambina maniga la mela che è sul tavolo", 
+                text: "La bambina mangia la mela che era sul tavolo", 
                 images: ["images-set-1/apple-girl-a.png", "images-set-1/pear-girl-c.png", "images-set-1/apple-girl-b.png"], 
-                correctIndex: 0 
+                correctIndex: 2 
             },
             { 
                 text: "Il cane rincorre il gatto", 
