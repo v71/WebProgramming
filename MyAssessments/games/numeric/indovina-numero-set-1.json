@@ -1,11 +1,11 @@
 {
     "rounds": [
         {
-            "label": "Amore",
-            "sentenceTemplate": "Quando penso alla mia famiglia, provo {blank}",
+            "label": "Numero amico di 1",
+            "sentenceTemplate": "Il numero amico di 1 è 9 ( 1 + 9 = 10)",
             "mainImg": "numeri-set-1/uno_reduced.png",
-            "options": ["numeri-set-1/uno_reduced.png", "numeri-set-1/uno_reduced.png", "numeri-set-1/uno_reduced.png"],
-            "correctIndex": 0
+            "options": ["numeri-set-1/uno_reduced.png", "numeri-set-1/cinque_reduced.png", "numeri-set-1/nove_reduced.png"],
+            "correctIndex": 2
         }
     ]
 }

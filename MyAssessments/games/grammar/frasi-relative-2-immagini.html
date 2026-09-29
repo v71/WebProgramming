@@ -266,13 +266,12 @@
             margin-bottom: 0.3rem;
         }
 
-        /* 3 Image Display Container Accommodating 340x380 */
         .images-grid {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 25px;
             width: 100%;
-            max-width: 1100px;
+            max-width: 800px;
         }
 
         .image-card-slot {
@@ -304,7 +303,13 @@
             height: 100%;
             object-fit: cover;
             display: block;
-            border-radius: 12px; /* Added rounded borders */
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out; /* Effetto dissolvenza (fade-in) */
+        }
+
+        .image-card-slot img.loaded {
+            opacity: 1;
         }
 
         .image-card-slot span {
@@ -435,7 +440,7 @@
             <!-- Dynamic tokens populate here -->
         </div>
 
-        <!-- 3 Image Slots Container (340x380 each) placed under the cards -->
+        <!-- 2 Image Slots Container placed under the cards -->
         <div class="images-grid" id="imagesGrid">
             <!-- Dynamic image slots populate here -->
         </div>
@@ -489,7 +494,8 @@
                     "ho", "hai", "ha", "abbiamo", "avete", "hanno", "avere",
                     "fai", "fa", "facciamo", "fate", "fanno", "fare",
                     "giocare", "gioco", "giochi", "gioca", "giochiamo", "giochiate", "giocano",
-                    "dorme", "corre", "mangia", "parla", "legge", "scrive"
+                    "dorme", "corre", "mangia", "parla", "legge", "scrive",
+                    "prende"
                 ]
             };
 
@@ -552,26 +558,25 @@
     </script>
 
     <script>
-        
         const ROUNDS = [
             { 
-                text: "La bambina mangia la mela che era sul tavolo", 
-                images: ["images-set-1/apple-girl-a.png", "images-set-1/pear-girl-c.png", "images-set-1/apple-girl-b.png"], 
-                correctIndex: 2 
+                text: "La Mamma prende la gonna che è sulla sedia", 
+                images: ["immagini-per-scelta-2/mamma-che-prende-la-gonna-su-una-sedia-1.png", "immagini-per-scelta-2/mamma-che-prende-la-gonna-su-una-sedia-2.png"], 
+                correctIndex: 1 
             },
             { 
                 text: "Il cane rincorre il gatto", 
-                images: ["images/cane_gatto_1.jpg", "images/cane_gatto_2.jpg", "images/cane_gatto_3.jpg"], 
+                images: ["images/cane_gatto_1.jpg", "images/cane_gatto_2.jpg"], 
                 correctIndex: 1 
             },
             { 
                 text: "Il gatto dorme al sole", 
-                images: ["images/gatto_sole_1.jpg", "images/gatto_sole_2.jpg", "images/gatto_sole_3.jpg"], 
-                correctIndex: 2 
+                images: ["images/gatto_sole_1.jpg", "images/gatto_sole_2.jpg"], 
+                correctIndex: 1 
             },
             { 
                 text: "Il bambino gioca con il cane", 
-                images: ["images/bambino_cane_1.jpg", "images/bambino_cane_2.jpg", "images/bambino_cane_3.jpg"], 
+                images: ["images/bambino_cane_1.jpg", "images/bambino_cane_2.jpg"], 
                 correctIndex: 0 
             }
         ];
@@ -605,7 +610,7 @@
         function initImageSlots() {
             imagesGrid.innerHTML = '';
             optionElements = [];
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 2; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'image-card-slot';
                 
@@ -663,18 +668,23 @@
                 const img = slot.querySelector('img');
                 const span = slot.querySelector('span');
                 
-                img.style.visibility = 'hidden';
+                // Rimuovi la classe loaded per resettare il fade-in ad ogni cambio round
+                img.classList.remove('loaded');
                 span.style.display = 'block';
+                
                 img.src = imgPath;
                 img.alt = `Opzione ${idx + 1}`;
                 
                 img.onload = function() {
                     span.style.display = 'none';
-                    img.style.visibility = 'visible';
+                    // Aggiunge la classe per attivare la transizione di opacità
+                    requestAnimationFrame(() => {
+                        img.classList.add('loaded');
+                    });
                 };
 
                 img.onerror = function() {
-                    img.style.visibility = 'hidden';
+                    img.classList.remove('loaded');
                     span.style.display = 'block';
                 };
             });
