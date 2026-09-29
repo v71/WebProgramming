@@ -1,0 +1,11 @@
+{
+    "rounds": [
+        {
+            "label": "Amore",
+            "sentenceTemplate": "Quando penso alla mia famiglia, provo {blank}",
+            "mainImg": "numeri-set-1/uno_reduced.png",
+            "options": ["numeri-set-1/uno_reduced.png", "numeri-set-1/uno_reduced.png", "numeri-set-1/uno_reduced.png"],
+            "correctIndex": 0
+        }
+    ]
+}
