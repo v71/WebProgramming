@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Indovina in Numero Amico</title>
-    
+
 <style>
         :root {
             --bg-0: #e6e6e6;
@@ -38,7 +38,8 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            overflow: hidden;
+            min-height: 100dvh;   /* stable height on mobile browsers */
+            overflow-x: hidden;   /* was "overflow: hidden": the page can now scroll vertically on small screens */
         }
 
         h1 {
@@ -60,29 +61,18 @@
             width: 100%;
             max-width: 1050px;
             position: relative;
-            min-height: 48px;
+            height: 48px;         /* fixed: the Help/Next swap can't nudge the layout */
         }
-/*
+
         #puzzle-workspace {
             display: flex;
             flex-direction: row;
             justify-content: center;
-            align-items: center;
+            align-items: stretch;
             gap: 28px;
             width: 100%;
             max-width: 1050px;
-            margin-top: 10px;
-            margin-bottom: 10px;
-        }
-*/
-        #puzzle-workspace {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: stretch; /* <--- Changed from center to stretch */
-            gap: 28px;
-            width: 100%;
-            max-width: 1050px;
+            min-height: 400px;
             margin-top: 10px;
             margin-bottom: 10px;
         }
@@ -116,69 +106,87 @@
             box-sizing: border-box;
         }
 
-        /* Main Target Image: Enlarged size */
-        /*
+        /* Main image: an invisible fixed slot keeps the layout stable,
+           the visible border (.image-frame) hugs the image itself */
         #image-container {
-            border: 2px solid #a5b4fc;
-            padding: 8px; 
-            display: inline-flex; 
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: auto;
-            height: auto;
-            max-width: 450px; 
-            max-height: 450px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-        */
-
-        #image-container {
-            border: 2px solid #a5b4fc;
-            padding: 8px;
-            display: flex; /* Changed from inline-flex to flex so height: 100% works */
-            align-items: center;
-            justify-content: center;
-            width: auto;
-            height: auto;
-            flex: 1; /* Allows it to grow and match the height of the options column */
-            max-width: 450px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        #image-container img {
+            width: 400px;
+            height: 400px;
+            flex: 0 0 auto;
             max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            border-radius: 12px;
-            display: block;
-            opacity: 0;
-            transition: opacity 0.35s ease-in-out;
         }
 
-        /* Options Container: Stacked vertically, larger layout */
+        .image-frame {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 400px;                   /* replaced by the image size from JS */
+            height: 400px;
+            transition: width 0.3s ease, height 0.3s ease;
+            padding: 12px;                  /* gap between border and image */
+            border: 2px solid #a5b4fc;
+            border-radius: 20px;
+            background-color: var(--bg-1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .image-frame img {
+            max-width: 372px;               /* 400 - 2*12 padding - 2*2 border */
+            max-height: 372px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+            display: block;
+        }
+
+        /* Fade between rounds: only the images fade, the containers stay put */
         /*
-        #options-container {
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: stretch;
-            width: 360px;
-            padding: 14px;
-            gap: 10px;
+        .image-frame img,
+        .option-img-card img {
+            transition: opacity 0.3s ease-in-out;
         }
         */
+        /* Fade between rounds: only the images fade, the containers stay put */
+        .image-frame img,
+        .option-img-card img {
+            transition: opacity 0.3s ease-in-out;
 
+             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                opacity 0.3s ease-in-out;   /* added */
+        }
+
+        #puzzle-workspace.fade-out .image-frame img,
+        #puzzle-workspace.fade-out .option-img-card img {
+            opacity: 0;
+        }
+
+        /* add right after the existing #puzzle-workspace.fade-out rule */
+        #puzzle-workspace.fade-out .option-img-card {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Options column: fixed size, same height as the image box */
+        /* 6 options laid out as a 2 x 3 grid inside a fixed-size box */
         #options-container {
-            flex-direction: column;
-            justify-content: center;
-            align-items: center; /* Centers the option cards nicely */
-            width: auto; /* Hugs the content instead of forcing 360px */
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            justify-items: center;
+            align-items: center;
+            width: 290px;
+            height: 400px;
+            flex: 0 0 auto;
             padding: 12px;
             gap: 10px;
+            border: 2px solid #a5b4fc;
         }
 
-        
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
             20%, 80% { transform: translate3d(2px, 0, 0); }
@@ -186,18 +194,18 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
-        /* Dedicated style for option image cards */
+        /* Option image cards */
         .option-img-card {
             flex-shrink: 0;
-            width: auto; /* Shrinks horizontally to fit the image */
-            height: auto; /* Shrinks vertically to fit the image */
+            width: auto;
+            height: auto;
             background: linear-gradient(145deg, #ffffff, #f8fafc);
             border: 2px solid var(--border);
             border-radius: 14px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 6px; /* Leaves a gap of just a few pixels around the image */
+            padding: 6px;
             cursor: pointer;
             user-select: none;
             box-shadow: var(--shadow-sm);
@@ -206,8 +214,8 @@
         }
 
         .option-img-card img {
-            max-width: 140px;  /* Limits the max width so they don't get too large */
-            max-height: 90px;  /* Limits the max height */
+            max-width: 140px;
+            max-height: 90px;
             width: auto;
             height: auto;
             object-fit: contain;
@@ -238,7 +246,16 @@
             opacity: 0.5;
             cursor: not-allowed;
             pointer-events: none;
+        }
+
+        /* Disabled cards don't move, except a wrong one, which must be free to shake */
+        .option-img-card.disabled-option:not(.wrong-option) {
             transform: none !important;
+        }
+
+        /* A wrong card stays fully red (no fade) */
+        .option-img-card.wrong-option.disabled-option {
+            opacity: 1;
         }
 
         .option-img-card.peek {
@@ -347,7 +364,7 @@
         #reveal-btn { min-width: 160px; min-height: 44px; }
         .cool-btn.smooth-hidden { opacity: 0; visibility: hidden; pointer-events: none; transform: scale(0.95); position: absolute; }
         .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
-        
+
         #next-btn { background-color: var(--correct); min-width: 200px; min-height: 44px; }
         #next-btn:hover { background-color: #059669; }
     </style>
@@ -363,15 +380,17 @@
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Osserva il numero principale e trova l'immagine corrispondente sulla destra!</h3>
+    <h3 id="instruction-banner" class="stats-style">Osserva il numero principale e trova il numero amico corrispondente sulla destra!</h3>
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden"><span>Caricamento...</span></button>
         <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
     </div>
 
-    <div id="puzzle-workspace">
-        <div id="image-container" class="card-container"></div>
+    <div id="puzzle-workspace" class="fade-out">
+        <div id="image-container">
+            <div class="image-frame" id="image-frame"><img id="main-img" alt=""></div>
+        </div>
         <div id="options-container" class="card-container"></div>
     </div>
 
@@ -380,7 +399,7 @@
     <div class="progress-bar-container">
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
     </div>
-    
+
     <div id="summary-screen">
         <h2>Hai completato tutto! 🎉</h2>
         <p>Ecco il riepilogo delle tue prestazioni:</p>
@@ -459,66 +478,105 @@
             return arr;
         }
 
-        function loadRound(index) {
+        function preloadImages(urls) {
+            return Promise.all(urls.map(url => new Promise(resolve => {
+                const img = new Image();
+                img.onload = img.onerror = () => resolve(img);
+                img.src = url;
+            })));
+        }
+
+        const FADE_MS = 300;
+        const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+        let isLoading = false;
+
+        async function loadRound(index) {
             if (index >= ROUNDS.length) {
                 progressBarFill.style.width = '100%';
                 showSummaryScreen();
                 return;
             }
 
-            const progressRatio = (index / ROUNDS.length) * 100;
-            progressBarFill.style.width = progressRatio + '%';
+//            isLoading = true;
+//            const round = ROUNDS[index];
 
-            currentRound = ROUNDS[index];
+            isLoading = true;
+            hidePeek();              // added
+            roundCompleted = true;   // added: blocks clicks and Help on the old cards
+            const round = ROUNDS[index];
+
+            // Pick and shuffle options first
+            const correctIdx = round.correctIndex;
+            const incorrectIndices = round.options
+                .map((_, i) => i)
+                .filter(i => i !== correctIdx);
+            const NUM_OPTIONS = 6;   // 1 correct + 5 wrong
+            const order = shuffleArray([correctIdx, ...shuffleArray(incorrectIndices).slice(0, NUM_OPTIONS - 1)]);
+
+            // Fade the current round out while the next images load in the background
+            puzzleWorkspace.classList.add('fade-out');
+            const [loaded] = await Promise.all([
+                preloadImages([round.mainImg, ...order.map(i => round.options[i])]),
+                wait(FADE_MS)
+            ]);
+            const mainLoaded = loaded[0];
+
+            // From here on everything is synchronous, so the swap happens in a single paint
+            currentRound = round;
             roundCompleted = false;
             moveCount = 0;
             revealCount = 0;
             optionElements = [];
 
+            progressBarFill.style.width = ((index / ROUNDS.length) * 100) + '%';
             progressValueEl.textContent = `${index + 1} / ${ROUNDS.length}`;
             updateMovesDisplay();
             updateRevealsDisplay();
-            startElapsedTimer();
 
             nextBtn.classList.add('smooth-hidden');
             revealBtn.classList.remove('smooth-hidden');
             revealBtn.disabled = false;
 
-            const updateImageSource = () => {
-                imageContainer.innerHTML = `<img src="${currentRound.mainImg}" alt="${currentRound.label}">`;
-                const newImg = imageContainer.querySelector('img');
-                if (newImg) {
-                    newImg.getBoundingClientRect();
-                    newImg.style.opacity = '1';
-                }
-            };
-            updateImageSource();
+            // The frame is never rebuilt: only the image inside changes,
+            // and the frame animates to the new image size (max 372px per side)
+            const mainImgEl = document.getElementById('main-img');
+            const frameEl = document.getElementById('image-frame');
+            const MAX_IMG = 372;   // 400 - 2*12 padding - 2*2 border
+            const nw = mainLoaded.naturalWidth || MAX_IMG;
+            const nh = mainLoaded.naturalHeight || MAX_IMG;
+            const scale = Math.min(1, MAX_IMG / nw, MAX_IMG / nh);
+            const w = Math.round(nw * scale);
+            const h = Math.round(nh * scale);
+            mainImgEl.src = round.mainImg;
+            mainImgEl.alt = round.label;
+            mainImgEl.style.width = w + 'px';
+            mainImgEl.style.height = h + 'px';
+            frameEl.style.width = (w + 28) + 'px';    // image + 2*12 padding + 2*2 border
+            frameEl.style.height = (h + 28) + 'px';
 
             optionsContainer.innerHTML = '';
-
-            const correctIdx = currentRound.correctIndex;
-            let incorrectIndices = [];
-            for (let i = 0; i < currentRound.options.length; i++) {
-                if (i !== correctIdx) incorrectIndices.push(i);
-            }
-            
-            const selectedIncorrect = shuffleArray(incorrectIndices).slice(0, 2);
-            const order = shuffleArray([correctIdx, ...selectedIncorrect]);
-
-            order.forEach((originalIdx) => {
+            order.forEach(originalIdx => {
                 const optionEl = document.createElement('div');
-                optionEl.classList.add('option-img-card'); // <--- Updated class here
-                optionEl.innerHTML = `<img src="${currentRound.options[originalIdx]}" alt="Option">`;
-                optionEl.dataset.isCorrect = (originalIdx === currentRound.correctIndex) ? 'true' : 'false';
-
+                optionEl.classList.add('option-img-card');
+                optionEl.innerHTML = `<img src="${round.options[originalIdx]}" alt="Option">`;
+                optionEl.dataset.isCorrect = (originalIdx === round.correctIndex) ? 'true' : 'false';
                 optionEl.addEventListener('click', () => handleOptionClick(optionEl));
                 optionsContainer.appendChild(optionEl);
                 optionElements.push(optionEl);
             });
 
+            // Force a reflow so the browser registers the new content, then fade it in
+            void puzzleWorkspace.offsetWidth;
+            puzzleWorkspace.classList.remove('fade-out');
+            isLoading = false;
 
+            startElapsedTimer(); // the timer starts only when the round is actually visible
+
+            // Warm the cache for the next round
+            const next = ROUNDS[index + 1];
+            if (next) preloadImages([next.mainImg, ...next.options]);
         }
-        
+
         function handleOptionClick(optionEl) {
             if (roundCompleted || optionEl.classList.contains('disabled-option')) return;
 
@@ -530,14 +588,14 @@
                 updateMovesDisplay();
 
                 optionElements.forEach(el => {
-                    el.classList.remove('wrong-option', 'peek');
+                    el.classList.remove('peek');   // wrong cards keep their red state
                     if (el !== optionEl) el.classList.add('disabled-option');
                 });
                 optionEl.classList.add('correct-option');
 
                 progressBarFill.style.width = (((currentRoundIndex + 1) / ROUNDS.length) * 100) + '%';
 
-                const wrongAttempts = moveCount - 1; 
+                const wrongAttempts = moveCount - 1;
                 const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
 
                 roundResults.push({
@@ -559,14 +617,13 @@
             } else {
                 moveCount++;
                 updateMovesDisplay();
+                // Shakes once, then stays red and unclickable until the round ends
                 optionEl.classList.add('wrong-option', 'disabled-option');
-                optionEl.addEventListener('animationend', () => {
-                    optionEl.classList.remove('wrong-option');
-                }, { once: true });
             }
         }
-        
+
         nextBtn.addEventListener('click', () => {
+            if (isLoading) return;
             if (currentRoundIndex === ROUNDS.length - 1) {
                 progressBarFill.style.width = '100%';
                 showSummaryScreen();
@@ -622,12 +679,12 @@
 
         async function initGame() {
             try {
-                const response = await fetch('indovina-numero-set-1.json');
+                const response = await fetch('indovina-numero-set-2.json');
                 if (!response.ok) throw new Error(`HTTP error: ${response.status}`);
                 const data = await response.json();
                 ROUNDS = shuffleArray(data.rounds);
             } catch (err) {
-                console.warn('Could not load JSON file, using fallback mock data for testing:', err);
+                console.warn('Could not load JSON file:', err);
             }
             loadRound(currentRoundIndex);
         }

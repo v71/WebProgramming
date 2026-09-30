@@ -207,13 +207,40 @@
             animation: shake 0.4s ease;
         }
 
+        /*
+        .option-card.disabled-option {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .option-card.disabled-option:not(.wrong-option) {
+            transform: none !important;
+        }
+            */
+
+        .option-card.disabled-option {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .option-card.disabled-option:not(.wrong-option) {
+            transform: none !important;
+        }
+
+        .option-card.wrong-option.disabled-option {
+            opacity: 1;   /* stays fully red instead of faded */
+        }
+
+/*
         .option-card.disabled-option {
             opacity: 0.5;
             cursor: not-allowed;
             pointer-events: none;
             transform: none !important;
         }
-
+*/
         .option-card.peek {
             border-color: var(--correct);
             background: rgba(16, 185, 129, 0.08);
@@ -582,7 +609,8 @@ button:disabled {
                 updateMovesDisplay();
 
                 optionElements.forEach(el => {
-                    el.classList.remove('wrong-option', 'peek');
+                    el.classList.remove('peek');
+                    //el.classList.remove('wrong-option', 'peek');
                     if (el !== optionEl) el.classList.add('disabled-option');
                 });
                 optionEl.classList.add('correct-option');
@@ -612,9 +640,9 @@ button:disabled {
                 moveCount++;
                 updateMovesDisplay();
                 optionEl.classList.add('wrong-option', 'disabled-option');
-                optionEl.addEventListener('animationend', () => {
-                    optionEl.classList.remove('wrong-option');
-                }, { once: true });
+           //     optionEl.addEventListener('animationend', () => {
+           //         optionEl.classList.remove('wrong-option');
+           //     }, { once: true });
             }
         }
         

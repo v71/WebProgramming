@@ -4,65 +4,64 @@
             "label": "Numero amico di 1",
             "sentenceTemplate": "Il numero amico di 1 è 9 ( 1 + 9 = 10)",
             "mainImg": "numeri-set-1/uno.png",
-            "options": ["numeri-set-1/nove.png", "numeri-set-1/cinque.png", "numeri-set-1/quattro.png"],
+            "options": ["numeri-set-1/nove.png", "numeri-set-1/cinque.png", "numeri-set-1/tre.png","numeri-set-1/sei.png","numeri-set-1/quattro.png","numeri-set-1/otto.png"],
             "correctIndex": 0
         },
         {
             "label": "Numero amico di 2",
             "sentenceTemplate": "Il numero amico di 2 è 8 ( 2 + 8 = 10)",
             "mainImg": "numeri-set-1/due.png",
-            "options": ["numeri-set-1/otto.png", "numeri-set-1/sei.png", "numeri-set-1/tre.png"],
+            "options": ["numeri-set-1/otto.png", "numeri-set-1/cinque.png", "numeri-set-1/tre.png","numeri-set-1/sei.png","numeri-set-1/quattro.png","numeri-set-1/nove.png"],
             "correctIndex": 0
         },
         {
             "label": "Numero amico di 3",
             "sentenceTemplate": "Il numero amico di 3 è 7 ( 3 + 7 = 10)",
             "mainImg": "numeri-set-1/tre.png",
-            "options": ["numeri-set-1/sette.png", "numeri-set-1/cinque.png", "numeri-set-1/uno.png"],
+            "options": ["numeri-set-1/sette.png", "numeri-set-1/cinque.png", "numeri-set-1/tre.png","numeri-set-1/sei.png","numeri-set-1/quattro.png","numeri-set-1/otto.png"],
             "correctIndex": 0
         },
         {
             "label": "Numero amico di 4",
             "sentenceTemplate": "Il numero amico di 4 è 6 ( 4 + 6 = 10)",
             "mainImg": "numeri-set-1/quattro.png",
-            "options": ["numeri-set-1/sei.png", "numeri-set-1/tre.png", "numeri-set-1/otto.png"],
+            "options": ["numeri-set-1/sei.png", "numeri-set-1/cinque.png", "numeri-set-1/tre.png","numeri-set-1/uno.png","numeri-set-1/quattro.png","numeri-set-1/otto.png"],
             "correctIndex": 0
         },
         {
             "label": "Numero amico di 5",
             "sentenceTemplate": "Il numero amico di 5 è 5 ( 5 + 5 = 10)",
             "mainImg": "numeri-set-1/cinque.png",
-            "options": ["numeri-set-1/cinque.png", "numeri-set-1/due.png", "numeri-set-1/sette.png"],
+            "options": ["numeri-set-1/cinque.png", "numeri-set-1/tre.png", "numeri-set-1/otto.png","numeri-set-1/sei.png","numeri-set-1/quattro.png","numeri-set-1/nove.png"],
             "correctIndex": 0
         },
         {
             "label": "Numero amico di 6",
             "sentenceTemplate": "Il numero amico di 6 è 4 ( 6 + 4 = 10)",
             "mainImg": "numeri-set-1/sei.png",
-            "options": ["numeri-set-1/quattro.png", "numeri-set-1/otto.png", "numeri-set-1/uno.png"],
+             "options": ["numeri-set-1/quattro.png", "numeri-set-1/tre.png", "numeri-set-1/sette.png","numeri-set-1/sei.png","numeri-set-1/quattro.png","numeri-set-1/otto.png"],
             "correctIndex": 0
         },
         {
             "label": "Numero amico di 7",
             "sentenceTemplate": "Il numero amico di 7 è 3 ( 7 + 3 = 10)",
             "mainImg": "numeri-set-1/sette.png",
-            "options": ["numeri-set-1/tre.png", "numeri-set-1/sei.png", "numeri-set-1/otto.png"],
+            "options": ["numeri-set-1/tre.png", "numeri-set-1/sei.png", "numeri-set-1/otto.png", "numeri-set-1/cinque.png", "numeri-set-1/due.png", "numeri-set-1/nove.png"],
             "correctIndex": 0
         },
         {
             "label": "Numero amico di 8",
             "sentenceTemplate": "Il numero amico di 8 è 2 ( 8 + 2 = 10)",
             "mainImg": "numeri-set-1/otto.png",
-            "options": ["numeri-set-1/due.png", "numeri-set-1/tre.png", "numeri-set-1/sette.png"],
+            "options": ["numeri-set-1/due.png", "numeri-set-1/tre.png", "numeri-set-1/sette.png","numeri-set-1/tre.png", "numeri-set-1/quattro.png", "numeri-set-1/quattro.png"],
             "correctIndex": 0
         },
         {
             "label": "Numero amico di 9",
             "sentenceTemplate": "Il numero amico di 9 è 1 ( 9 + 1 = 10)",
             "mainImg": "numeri-set-1/nove.png",
-            "options": ["numeri-set-1/uno.png", "numeri-set-1/quattro.png", "numeri-set-1/cinque.png"],
+            "options": ["numeri-set-1/uno.png", "numeri-set-1/quattro.png", "numeri-set-1/cinque.png","numeri-set-1/tre.png","numeri-set-1/nove.png","numeri-set-1/tre.png"],
             "correctIndex": 0
         }
-
     ]
 }

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Checkmark test page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  :root {
+    --bg: #f6f5f2; --panel: #ffffff; --ink: #1c1c1e; --muted: #6b6b70; --line: #dcdad4; --accent: #1c1c1e; --accent-ink: #ffffff;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #151517; --panel: #202024; --ink: #f2f1ee; --muted: #a0a0a6; --line: #34343a; --accent: #f2f1ee; --accent-ink: #151517; }
+  }
+  :root[data-theme="dark"] { --bg: #151517; --panel: #202024; --ink: #f2f1ee; --muted: #a0a0a6; --line: #34343a; --accent: #f2f1ee; --accent-ink: #151517; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body { margin: 0; min-height: 100vh; background-color: var(--bg); color: var(--ink);
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; line-height: 1.55; }
+  header { max-width: 720px; margin: 0 auto; padding: 56px 24px 8px; }
+  h1 { font-size: clamp(1.8rem, 5vw, 2.6rem); line-height: 1.15; margin: 0 0 12px; letter-spacing: -.02em; }
+  header p { margin: 0; color: var(--muted); max-width: 56ch; }
+  main { max-width: 720px; margin: 0 auto; padding: 24px; display: grid; gap: 20px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  h2 { font-size: 1rem; margin: 0 0 14px; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  button { min-height: 44px; padding: 0 18px; border-radius: 8px; border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+    font: 600 .95rem system-ui, sans-serif; cursor: pointer; }
+  button.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  button:focus-visible, input:focus-visible { outline: 3px solid #3fa7d6; outline-offset: 2px; }
+  button:active { transform: translateY(1px); }
+  .sliders { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  label { display: grid; gap: 4px; font-size: .9rem; color: var(--muted); }
+  label span b { color: var(--ink); font-weight: 600; }
+  input[type=range] { width: 100%; }
+  input[type=color] { width: 100%; height: 36px; padding: 0; border: 1px solid var(--line); border-radius: 6px; background: none; }
+  .note { margin: 12px 0 0; font-size: .85rem; color: var(--muted); }
+  .filler { color: var(--muted); }
+  .filler p { margin: 0 0 12px; }
+  #marker { position: fixed; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; border: 2px solid #e8505b;
+    pointer-events: none; opacity: 0; transition: opacity .25s ease; z-index: 10000; }
+  #marker.on { opacity: 1; }
+  footer { max-width: 720px; margin: 0 auto; padding: 8px 24px 120px; color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Checkmark test page</h1>
+  <p>Click anywhere outside the controls to raise a checkmark from that point, or use the presets and the custom panel.</p>
+</header>
+
+<main>
+  <section class="panel" aria-labelledby="h-presets">
+    <h2 id="h-presets">Presets</h2>
+    <div class="row">
+      <button class="primary" id="bCenter" type="button">Screen center</button>
+      <button id="bBtn" type="button">From this button</button>
+      <button id="bThree" type="button">Three in a row</button>
+    </div>
+  </section>
+
+  <section class="panel controls" aria-labelledby="h-tune">
+    <h2 id="h-tune">Custom checkmark</h2>
+    <div class="sliders">
+      <label>Origin X <span><b id="vOx">50</b>%</span><input id="ox" type="range" min="0" max="100" value="50"></label>
+      <label>Origin Y <span><b id="vOy">60</b>%</span><input id="oy" type="range" min="0" max="100" value="60"></label>
+      <label>Size <span><b id="vSize">64</b> px</span><input id="size" type="range" min="24" max="200" value="64"></label>
+      <label>Rise <span><b id="vRise">140</b> px</span><input id="rise" type="range" min="20" max="500" value="140"></label>
+      <label>Duration <span><b id="vDur">2200</b> ms</span><input id="dur" type="range" min="600" max="6000" step="100" value="2200"></label>
+      <label>Border <span><b id="vBorder">4</b> px</span><input id="border" type="range" min="0" max="12" step="0.5" value="4.5"></label>
+      <label>Check color<input id="color" type="color" value="#22a95a"></label>
+      <label>Border color<input id="bcolor" type="color" value="#ffffff"></label>
+    </div>
+    <div class="row" style="margin-top:16px">
+      <button class="primary" id="bCustom" type="button">Show with these settings</button>
+    </div>
+    <p class="note">Releasing any slider also plays a preview.</p>
+  </section>
+
+  <section class="panel filler" aria-label="Sample content">
+    <p>This paragraph is only here so you can check the effect over real page content. The checkmark never blocks clicks or scrolling. Click here to fire from the click point.</p>
+    <p>The white border and soft shadow keep the check readable on both light and dark backgrounds.</p>
+  </section>
+</main>
+
+<div id="marker" aria-hidden="true"></div>
+<footer>With reduced motion enabled, the checkmark fades in and out in place instead of rising.</footer>
+
+<script>
+/*!
+ * checkmark.js — a green checkmark with a white border that rises slowly
+ * from a point on the screen and fades away. Shown fully formed (no drawing-in). No dependencies.
+ *
+ * Checkmark.show({
+ *   origin:      { x: 0.5, y: 0.5 },  // fractions of the viewport (0–1)
+ *   element:     someElement,          // optional: start from this element's center (overrides origin)
+ *   size:        64,                   // px
+ *   rise:        140,                  // px travelled upward
+ *   duration:    2200,                 // ms
+ *   color:       '#22a95a',            // fill
+ *   borderColor: '#ffffff',
+ *   borderWidth: 4,                    // px, per side. Default: size * 0.07
+ *   zIndex:      9999
+ * });                                   // returns a Promise that resolves when the animation ends
+ */
+(function (root) {
+  'use strict';
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var PATH = 'M5.5 12.8 L10 17.3 L18.6 7.2';
+
+  function show(opts) {
+    opts = opts || {};
+    if (typeof document === 'undefined') return Promise.resolve();
+
+    var size = opts.size != null ? opts.size : 64;
+    var rise = opts.rise != null ? opts.rise : 140;
+    var duration = opts.duration != null ? opts.duration : 2200;
+    var color = opts.color || '#22a95a';
+    var borderColor = opts.borderColor || '#ffffff';
+    var borderPx = opts.borderWidth != null ? opts.borderWidth : size * 0.07;
+    var reduced = opts.respectReducedMotion !== false &&
+      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // origin
+    var x, y;
+    if (opts.element && opts.element.getBoundingClientRect) {
+      var r = opts.element.getBoundingClientRect();
+      x = r.left + r.width / 2;
+      y = r.top + r.height / 2;
+    } else {
+      var o = opts.origin || {};
+      x = (o.x != null ? o.x : 0.5) * window.innerWidth;
+      y = (o.y != null ? o.y : 0.5) * window.innerHeight;
+    }
+
+    // build DOM
+    var box = document.createElement('div');
+    box.setAttribute('aria-hidden', 'true');
+    box.style.cssText =
+      'position:fixed;pointer-events:none;opacity:0;will-change:transform,opacity;' +
+      'width:' + size + 'px;height:' + size + 'px;' +
+      'left:' + (x - size / 2) + 'px;top:' + (y - size / 2) + 'px;' +
+      'z-index:' + (opts.zIndex != null ? opts.zIndex : 9999) + ';';
+
+    var svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('width', size);
+    svg.setAttribute('height', size);
+    svg.style.cssText = 'display:block;overflow:visible;filter:drop-shadow(0 2px 5px rgba(0,0,0,.28));';
+
+    var unit = 24 / size;                       // px -> viewBox units
+    var lineW = size * 0.15 * unit;             // green stroke width
+    var outerW = lineW + borderPx * 2 * unit;   // white stroke width
+
+    function makePath(stroke, width) {
+      var p = document.createElementNS(NS, 'path');
+      p.setAttribute('d', PATH);
+      p.setAttribute('fill', 'none');
+      p.setAttribute('stroke', stroke);
+      p.setAttribute('stroke-width', width);
+      p.setAttribute('stroke-linecap', 'round');
+      p.setAttribute('stroke-linejoin', 'round');
+      return p;
+    }
+    var outer = makePath(borderColor, outerW);
+    var inner = makePath(color, lineW);
+    svg.appendChild(outer);
+    svg.appendChild(inner);
+    box.appendChild(svg);
+    document.body.appendChild(box);
+
+    // animate
+    var anims = [];
+    if (reduced) {
+      anims.push(box.animate(
+        [{ opacity: 0 }, { opacity: 1, offset: 0.15 }, { opacity: 1, offset: 0.7 }, { opacity: 0 }],
+        { duration: Math.min(duration, 1400), fill: 'forwards' }
+      ));
+    } else {
+      // fully formed from the first frame: it only translates and fades
+      anims.push(box.animate(
+        [
+          { opacity: 0, transform: 'translate3d(0,0,0)' },
+          { opacity: 1, offset: 0.12 },
+          { opacity: 1, offset: 0.55 },
+          { opacity: 0, transform: 'translate3d(0,' + (-rise) + 'px,0)' }
+        ],
+        { duration: duration, easing: 'cubic-bezier(.25,.6,.35,1)', fill: 'forwards' }
+      ));
+    }
+
+    return anims[0].finished.then(function () {
+      box.remove();
+    }, function () {
+      box.remove();
+    });
+  }
+
+  root.Checkmark = { show: show };
+})(typeof window !== 'undefined' ? window : this);
+
+</script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var outs = { ox: 'vOx', oy: 'vOy', size: 'vSize', rise: 'vRise', dur: 'vDur', border: 'vBorder' };
+  var marker = $('marker'), markerTimer;
+  function showMarker() {
+    marker.style.left = (+$('ox').value / 100 * innerWidth) + 'px';
+    marker.style.top = (+$('oy').value / 100 * innerHeight) + 'px';
+    marker.classList.add('on');
+    clearTimeout(markerTimer);
+    markerTimer = setTimeout(function () { marker.classList.remove('on'); }, 900);
+  }
+  function custom(origin) {
+    return {
+      origin: origin || { x: +$('ox').value / 100, y: +$('oy').value / 100 },
+      size: +$('size').value, rise: +$('rise').value, duration: +$('dur').value,
+      borderWidth: +$('border').value, color: $('color').value, borderColor: $('bcolor').value
+    };
+  }
+  Object.keys(outs).forEach(function (k) {
+    var el = $(k), out = $(outs[k]);
+    el.addEventListener('input', function () {
+      out.textContent = el.value;
+      if (k === 'ox' || k === 'oy') showMarker();
+    });
+    el.addEventListener('change', function () { Checkmark.show(custom()); });
+  });
+  ['color', 'bcolor'].forEach(function (k) {
+    $(k).addEventListener('change', function () { Checkmark.show(custom()); });
+  });
+  $('bCustom').addEventListener('click', function () { Checkmark.show(custom()); });
+
+  document.addEventListener('pointerdown', function (e) {
+    if (e.target.closest('.controls, button, input, label, a')) return;
+    Checkmark.show(custom({ x: e.clientX / innerWidth, y: e.clientY / innerHeight }));
+  });
+
+  $('bCenter').addEventListener('click', function () {
+    Checkmark.show({ origin: { x: 0.5, y: 0.5 } });
+  });
+  $('bBtn').addEventListener('click', function (e) {
+    Checkmark.show({ element: e.currentTarget, size: 48, rise: 100 });
+  });
+  $('bThree').addEventListener('click', function () {
+    [0.3, 0.5, 0.7].forEach(function (x, i) {
+      setTimeout(function () { Checkmark.show({ origin: { x: x, y: 0.55 }, size: 56 }); }, i * 300);
+    });
+  });
+})();
+</script>
+</body>
+</html>
