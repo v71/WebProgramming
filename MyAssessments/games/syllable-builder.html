@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Costruisci la parola</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --tile-size: 30px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            min-height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        #game-stats, .stats-style {
+            margin: 0 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 8px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .controls {
+            margin-top: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 48px;
+            flex-wrap: wrap;
+        }
+
+        #game-area {
+            width: 100%;
+            max-width: 1050px;
+            min-height: 400px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            color: var(--text);
+            padding: 20px 12px;
+            transition: background-color 0.3s ease;
+        }
+
+        #game-area.cream { background: #fbf3dc; }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 10px;
+            border-radius: 99px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        button:focus-visible, input:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 160px; min-height: 44px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #listen-btn { min-height: 44px; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Syllable Builder ---------- */
+        #board {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+            width: 100%;
+        }
+
+        #picture {
+            font-size: 5.5rem;
+            line-height: 1;
+            min-height: 6.2rem;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-content: flex-start;
+            gap: 14px;
+            width: 100%;
+            min-height: calc(var(--tile-size) * 2.2);
+        }
+
+        .slot, .tile {
+            font-family: inherit;
+            font-size: var(--tile-size);
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            border-radius: 16px;
+            width: calc(var(--n, 2) * 0.75em + 44px);
+            height: calc(var(--tile-size) * 2.2);
+            padding: 8px 16px;
+            cursor: pointer;
+            color: var(--text);
+        }
+
+        .slot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-2);
+            border: 3px dashed #94a3b8;
+        }
+
+        .slot.f { border-style: solid; }
+        .tile { background: var(--bg-1); border: 3px solid #94a3b8; box-shadow: var(--shadow-sm); }
+        .tile:hover { border-color: var(--accent); }
+
+        /* Position colours: they never signal right or wrong */
+        .slot.c0 { background: #e0e7ff; border-color: #6366f1; }
+        .slot.c1 { background: #cffafe; border-color: #0891b2; }
+        .slot.c2 { background: #fef3c7; border-color: #d97706; }
+        .slot.c3 { background: #fce7f3; border-color: #db2777; }
+
+        #feedback {
+            height: 2.4rem;
+            line-height: 2.4rem;
+            font-size: 1.3rem;
+            font-weight: 500;
+            text-align: center;
+        }
+        #feedback.ok { color: #047857; }
+        #feedback.retry { color: #92400e; }
+
+        /* Help: hold the button to see where each syllable goes */
+        .slot::before { content: ''; }
+        #board.peeking .slot:not(.f) {
+            border-color: var(--accent);
+            background: #eef2ff;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.35);
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+        #board.peeking .slot:not(.f)::before {
+            content: attr(data-g);
+            color: var(--accent);
+        }
+        #board.peeking .tile.need {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.35);
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #board.peeking .slot:not(.f), #board.peeking .tile.need { animation: none; }
+            .progress-bar-fill, .cool-btn, #game-area { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.7rem; }
+            #game-stats { gap: 12px; padding: 8px 14px; font-size: 0.95rem; }
+            #picture { font-size: 4.2rem; }
+            .row { gap: 10px; min-height: calc(var(--tile-size) * 4.4 + 10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Costruisci la parola</h1>
+
+    <div id="game-stats">
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">Istruzioni del gioco</h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+        <button id="listen-btn" class="cool-btn"><span>🔊 Ascolta</span></button>
+    </div>
+
+    <div id="game-area">
+        <div id="board">
+            <div id="picture" role="img" aria-label=""></div>
+            <div id="slots" class="row"></div>
+            <div id="feedback" aria-live="polite"></div>
+            <div id="tray" class="row"></div>
+        </div>
+    </div>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        /* =====================================================
+           WORD LIST - edit here. Ordered from easy to hard.
+           word: target word, syl: syllables in order,
+           pic: picture (emoji placeholder, swap for an image),
+           alt: description for screen readers.
+           ===================================================== */
+        const WORDS = [
+            { word: 'luna',       syl: ['lu', 'na'],                pic: '🌙', alt: 'una luna' },
+            { word: 'casa',       syl: ['ca', 'sa'],                pic: '🏠', alt: 'una casa' },
+            { word: 'mela',       syl: ['me', 'la'],                pic: '🍎', alt: 'una mela' },
+            { word: 'gatto',      syl: ['gat', 'to'],               pic: '🐱', alt: 'un gatto' },
+            { word: 'pesce',      syl: ['pe', 'sce'],               pic: '🐟', alt: 'un pesce' },
+            { word: 'farfalla',   syl: ['far', 'fal', 'la'],        pic: '🦋', alt: 'una farfalla' },
+            { word: 'telefono',   syl: ['te', 'le', 'fo', 'no'],    pic: '📞', alt: 'un telefono' },
+            { word: 'bicicletta', syl: ['bi', 'ci', 'clet', 'ta'],  pic: '🚲', alt: 'una bicicletta' }
+        ];
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        /* ---------- Info bar ---------- */
+        function setInstruction(text) {
+            document.getElementById('instruction-banner').textContent = text;
+        }
+
+        /* ---------- Progress bar (0 to 100) ---------- */
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() {
+            boardEl.classList.add('peeking');
+        }
+
+        function onHelpEnd() {
+            boardEl.classList.remove('peeking');
+        }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Syllable Builder
+           ===================================================== */
+        const boardEl = document.getElementById('board');
+        const gameAreaEl = document.getElementById('game-area');
+        const pictureEl = document.getElementById('picture');
+        const slotsEl = document.getElementById('slots');
+        const trayEl = document.getElementById('tray');
+        const feedbackEl = document.getElementById('feedback');
+        const listenBtn = document.getElementById('listen-btn');
+
+        let wordIdx = 0;
+        let slots = [];
+        let tray = [];
+        let locked = false;
+        let done = false;
+        let timerStarted = false;
+        let nextTileId = 0;
+        let nextMode = false;
+
+        /* =====================================================
+           OPTIONS - change these values in code
+           size:     letter size in px (22 to 46)
+           cream:    cream background for the game area
+           colors:   colour each syllable slot by position
+           voice:    speak syllables and words aloud
+           showTime: show the timer in the stats bar
+           ===================================================== */
+        const prefs = {
+            size: 30,
+            cream: false,
+            colors: true,
+            voice: true,
+            showTime: true
+        };
+
+        function applyPrefs() {
+            document.documentElement.style.setProperty('--tile-size', prefs.size + 'px');
+            gameAreaEl.classList.toggle('cream', prefs.cream);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+        }
+
+        /* ---------- Voice ---------- */
+        function say(text, force) {
+            if (!prefs.voice && !force) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'it-IT';
+                u.rate = 0.8;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        listenBtn.addEventListener('click', () => say(WORDS[wordIdx].word, true));
+
+        /* ---------- Helpers ---------- */
+        function shuffle(arr) {
+            const original = arr.map(t => t.t).join('|');
+            let out = arr.slice();
+            for (let tries = 0; tries < 20; tries++) {
+                for (let i = out.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [out[i], out[j]] = [out[j], out[i]];
+                }
+                if (out.map(t => t.t).join('|') !== original) break;
+            }
+            return out;
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* ---------- Rendering ---------- */
+        function render() {
+            const w = WORDS[wordIdx];
+            const needed = new Set();
+            slots.forEach((s, i) => { if (!s) needed.add(w.syl[i]); });
+
+            slotsEl.innerHTML = slots.map((s, i) => {
+                const colour = prefs.colors ? ' c' + (i % 4) : '';
+                return '<button type="button" class="slot' + (s ? ' f' + colour : '') + '" data-slot="' + i +
+                    '" data-g="' + w.syl[i] + '" aria-label="Posto ' + (i + 1) + (s ? ': ' + s.t : ': vuoto') + '">' +
+                    (s ? s.t : '') + '</button>';
+            }).join('');
+
+            trayEl.innerHTML = tray.map(t =>
+                '<button type="button" class="tile' + (needed.has(t.t) ? ' need' : '') + '" data-tile="' + t.id + '">' + t.t + '</button>'
+            ).join('');
+        }
+
+        function loadWord() {
+            const w = WORDS[wordIdx];
+            slots = w.syl.map(() => null);
+            tray = shuffle(w.syl.map(t => ({ id: nextTileId++, t })));
+            locked = false;
+            done = false;
+            hidePeek();
+            setNextMode(false);
+            boardEl.style.setProperty('--n', Math.max.apply(null, w.syl.map(x => x.length)));
+            pictureEl.textContent = w.pic;
+            pictureEl.setAttribute('aria-label', 'Immagine: ' + w.alt);
+            feedbackEl.textContent = '';
+            feedbackEl.className = '';
+            setInstruction('Tocca le sillabe nell\'ordine giusto. Tieni premuto Help per vedere dove vanno.');
+            render();
+        }
+
+        /* ---------- Interaction ---------- */
+        trayEl.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-tile]');
+            if (!btn || locked || done) return;
+            const firstEmpty = slots.indexOf(null);
+            if (firstEmpty < 0) return;
+
+            const pos = tray.findIndex(t => t.id === +btn.dataset.tile);
+            if (pos < 0) return;
+            const tile = tray.splice(pos, 1)[0];
+            slots[firstEmpty] = tile;
+
+            startTimerOnce();
+            addMove();
+            say(tile.t);
+            render();
+
+            if (slots.indexOf(null) < 0) checkWord();
+        });
+
+        slotsEl.addEventListener('click', (e) => {
+            const btn = e.target.closest('[data-slot]');
+            if (!btn || locked || done) return;
+            const i = +btn.dataset.slot;
+            if (!slots[i]) return;
+            tray.push(slots[i]);
+            slots[i] = null;
+            feedbackEl.textContent = '';
+            feedbackEl.className = '';
+            render();
+        });
+
+        function checkWord() {
+            const w = WORDS[wordIdx];
+            const correct = slots.every((s, i) => s.t === w.syl[i]);
+
+            if (correct) {
+                done = true;
+                hidePeek();
+                const isLast = wordIdx === WORDS.length - 1;
+                setProgress(((wordIdx + 1) / WORDS.length) * 100);
+                feedbackEl.className = 'ok';
+                feedbackEl.textContent = isLast ? 'Bravo! ' + w.word + '. Hai finito tutte le parole!' : 'Bravo! ' + w.word;
+                if (isLast) stopElapsedTimer();
+                setNextMode(true, isLast);
+                setTimeout(() => say(w.word), 400);
+                return;
+            }
+
+            locked = true;
+            feedbackEl.className = 'retry';
+            feedbackEl.textContent = 'Quasi! Proviamo ancora.';
+            setTimeout(() => {
+                slots = slots.map((s, i) => {
+                    if (s.t === w.syl[i]) return s;
+                    tray.push(s);
+                    return null;
+                });
+                locked = false;
+                feedbackEl.textContent = '';
+                feedbackEl.className = '';
+                render();
+            }, 1100);
+        }
+
+        /* The Help button turns into "Avanti" once the word is correct */
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (wordIdx === WORDS.length - 1) {
+                wordIdx = 0;
+                initGame();
+            } else {
+                wordIdx++;
+                loadWord();
+            }
+        }
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            setProgress(0);
+            loadWord();
+        }
+
+        applyPrefs();
+        initGame();
+    </script>
+</body>
+</html>

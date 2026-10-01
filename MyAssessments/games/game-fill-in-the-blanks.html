@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Il ciclo dell'acqua</title>
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        #game-stats, .stats-style {
+            margin: 0 0 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 8px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .controls {
+            margin-top: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            height: 48px;
+        }
+
+        /* Area where the game renders its own content */
+        #game-area {
+            width: 100%;
+            max-width: 1050px;
+            flex: 1 1 auto;
+            min-height: 0;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        /* ===== Drag & drop fill-in-the-blanks ===== */
+        .dd-wrap { width: 100%; max-width: 1050px; height: 100%; display: flex; flex-direction: column; min-height: 0; }
+
+        .dd-tray {
+            background: var(--bg-2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            min-height: 64px;
+            margin-bottom: 12px;
+            flex: 0 0 auto;
+            box-shadow: var(--shadow-sm);
+        }
+        .dd-empty { color: var(--text-dim); padding: 0 6px; }
+        .dd-message { color: #047857; font-weight: 600; padding: 4px 8px; }
+
+        .dd-chip {
+            font: 600 1rem/1 inherit;
+            font-family: inherit;
+            background: var(--accent);
+            color: #fff;
+            border: 0;
+            border-radius: 99px;
+            padding: 11px 18px;
+            margin: 0;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: var(--shadow-sm);
+        }
+        .dd-chip.dd-selected { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+        .dd-chip.dd-lifting { opacity: 0.25; }
+        .dd-chip.dd-ghost {
+            position: fixed; left: 0; top: 0; z-index: 99999;
+            pointer-events: none; cursor: grabbing;
+            box-shadow: var(--shadow-md);
+        }
+        .dd-chip:focus-visible, .dd-blank:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+
+        .dd-text {
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            box-shadow: var(--shadow-md);
+            padding: clamp(14px, 2.5vw, 28px);
+            font-size: 20px;               /* set automatically by ddFitText() */
+            line-height: 2.3;
+            flex: 1 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+        }
+
+        .dd-blank {
+            display: inline-block;
+            vertical-align: baseline;
+            position: relative;
+            height: 1.7em;
+            margin: 0 2px;
+            padding: 0 14px;
+            white-space: nowrap;
+            text-align: center;
+            font: 600 0.88em/1.6em inherit;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--bg-2);
+            border: 2px dashed #a5b4fc;
+            border-radius: 99px;
+            transform: translateY(0.2em);
+            cursor: default;
+        }
+        .dd-blank.dd-hot { border-style: solid; border-color: var(--accent); background: #e0e7ff; }
+        /* The hidden "sizer" holds the answer text, so every gap is already as wide as its word
+           and the text never reflows when the word appears. */
+        .dd-sizer { visibility: hidden; pointer-events: none; }
+        .dd-blank.dd-filled { border-style: solid; border-color: var(--correct); background: #d1fae5; color: #047857; }
+        .dd-blank.dd-filled .dd-sizer { visibility: visible; }
+        /* Help button: hold to show the answers in green inside the empty gaps */
+        .dd-blank.dd-peek:not(.dd-filled) { border-style: solid; border-color: var(--correct); background: #d1fae5; color: #047857; }
+        .dd-blank.dd-peek:not(.dd-filled) .dd-sizer { visibility: visible; }
+        /* Wrong drop: red (declared last so it wins over the other states) */
+        .dd-blank.dd-wrong, .dd-blank.dd-wrong.dd-peek:not(.dd-filled) { border-style: solid; border-color: var(--wrong); background: #fee2e2; color: #b91c1c; }
+
+        .dd-shake { animation: dd-shake 0.2s; }
+        .dd-blank.dd-shake { animation-name: dd-shake-blank; }
+        @keyframes dd-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        @keyframes dd-shake-blank { 0%,100% { transform: translateY(0.2em); } 25% { transform: translate(-5px, 0.2em); } 75% { transform: translate(5px, 0.2em); } }
+        @media (prefers-reduced-motion: reduce) { .dd-shake { animation: none; } }
+
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 10px;
+            border-radius: 99px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 160px; min-height: 44px; }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Il ciclo dell'acqua</h1>
+
+    <div id="game-stats">
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">Trascina ogni parola nello spazio giusto del testo</h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <!-- Game content goes here -->
+    <div id="game-area">
+        <div class="dd-wrap">
+            <div class="dd-tray" id="dd-tray" aria-label="Parole da inserire"></div>
+            <div class="dd-text" id="dd-text"></div>
+        </div>
+    </div>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        /* ---------- Info bar ---------- */
+        function setInstruction(text) {
+            document.getElementById('instruction-banner').textContent = text;
+        }
+
+        /* ---------- Progress bar (0 to 100) ---------- */
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() {
+            document.querySelectorAll('#dd-text .dd-blank').forEach(b => b.classList.add('dd-peek'));
+        }
+
+        function onHelpEnd() {
+            document.querySelectorAll('#dd-text .dd-blank').forEach(b => b.classList.remove('dd-peek'));
+        }
+
+        function showPeek() {
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+
+        /* ---------- Game: drag & drop fill-in-the-blanks ---------- */
+        /* EDIT HERE: put each missing word in {curly braces}. */
+        const GAME_TEXT =
+            "L'acqua si muove di continuo intorno al nostro pianeta in un percorso chiamato {ciclo dell'acqua}. " +
+            "Il calore del {sole} scalda oceani e laghi e trasforma l'acqua liquida in vapore invisibile: questo processo si chiama {evaporazione}. " +
+            "Salendo, il vapore incontra aria più fredda e si trasforma di nuovo in minuscole goccioline che si riuniscono a formare le {nuvole}. " +
+            "Questo passaggio si chiama {condensazione}. " +
+            "Quando le goccioline diventano troppo pesanti, cadono al suolo come {precipitazioni}, ad esempio pioggia, neve o grandine. " +
+            "Una parte dell'acqua scorre sul terreno come {ruscellamento} e confluisce nei fiumi, che la riportano al {mare}, dove il ciclo ricomincia.";
+        const GAME_DISTRACTORS = ["erosione", "ghiacciaio"];   // extra words that fit nowhere ([] for none)
+
+        const ddTray = document.getElementById('dd-tray');
+        const ddText = document.getElementById('dd-text');
+
+        let ddPlaced = 0, ddTotal = 0, ddMisses = 0, ddSelected = null, ddDrag = null;
+
+        function ddShuffle(a) {
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function ddFlash(el, cls, ms) {
+            el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls);
+            clearTimeout(el['t_' + cls]);
+            el['t_' + cls] = setTimeout(() => el.classList.remove(cls), ms || 400);
+        }
+
+        function ddBuild() {
+            ddTray.innerHTML = '';
+            ddText.innerHTML = '';
+            ddPlaced = 0; ddMisses = 0; ddSelected = null;
+            const answers = [];
+
+            GAME_TEXT.split(/(\{[^}]+\})/).forEach(part => {
+                const m = part.match(/^\{(.+)\}$/);
+                if (!m) { ddText.appendChild(document.createTextNode(part)); return; }
+                answers.push(m[1]);
+                const b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'dd-blank';
+                b.dataset.answer = m[1];
+                const sizer = document.createElement('span');
+                sizer.className = 'dd-sizer';
+                sizer.textContent = m[1];
+                b.appendChild(sizer);
+                b.setAttribute('aria-label', 'Spazio ' + answers.length);
+                b.addEventListener('click', () => { if (ddSelected) ddAttempt(ddSelected, b); });
+                ddText.appendChild(b);
+            });
+            ddTotal = answers.length;
+
+            ddShuffle(answers.concat(GAME_DISTRACTORS)).forEach(w => {
+                const c = document.createElement('button');
+                c.type = 'button';
+                c.className = 'dd-chip';
+                c.textContent = w;
+                c.dataset.word = w;
+                c.addEventListener('pointerdown', ddOnDown);
+                c.addEventListener('click', e => { if (e.detail === 0) ddToggle(c); }); // keyboard
+                ddTray.appendChild(c);
+            });
+        }
+
+        function ddToggle(chip) {
+            if (ddSelected === chip) { chip.classList.remove('dd-selected'); ddSelected = null; return; }
+            if (ddSelected) ddSelected.classList.remove('dd-selected');
+            ddSelected = chip; chip.classList.add('dd-selected');
+        }
+
+        function ddAttempt(chip, blank) {
+            if (!blank || blank.classList.contains('dd-filled')) return;
+            addMove();                                   // template stat: "Tentativi"
+            if (chip.dataset.word === blank.dataset.answer) {
+                blank.classList.remove('dd-hot', 'dd-peek');
+                blank.classList.add('dd-filled');
+                blank.setAttribute('aria-label', 'Spazio completato con ' + chip.dataset.word);
+                chip.remove();
+                ddPlaced++;
+                setProgress(ddPlaced / ddTotal * 100);   // template progress bar
+                if (ddPlaced === ddTotal) ddFinish();
+            } else {
+                ddMisses++;
+                ddFlash(chip, 'dd-shake');
+                ddFlash(blank, 'dd-shake');
+                ddFlash(blank, 'dd-wrong', 900);   // stays red a bit after the shake
+            }
+            if (ddSelected) { ddSelected.classList.remove('dd-selected'); ddSelected = null; }
+        }
+
+        function ddFinish() {
+            stopElapsedTimer();
+            hidePeek();
+            revealBtn.disabled = true;
+            const msg = ddMisses === 0
+                ? 'Perfetto! Ogni parola è finita al posto giusto al primo colpo.'
+                : 'Completato! Hai sbagliato ' + ddMisses + (ddMisses === 1 ? ' volta' : ' volte') + ' lungo il percorso.';
+            ddTray.innerHTML = '';
+            const span = document.createElement('span');
+            span.className = 'dd-message';
+            span.textContent = msg;
+            ddTray.appendChild(span);
+            setInstruction('Gioco completato!');
+        }
+
+        /* Pointer-based drag & drop (mouse, touch, pen) */
+        function ddBlankAt(x, y) {
+            const el = document.elementFromPoint(x, y);
+            const b = el && el.closest ? el.closest('.dd-blank') : null;
+            return b && ddText.contains(b) ? b : null;
+        }
+
+        function ddOnDown(e) {
+            if (e.button !== undefined && e.button !== 0) return;
+            ddDrag = { chip: e.currentTarget, x: e.clientX, y: e.clientY, moved: false, ghost: null, over: null, dx: 0, dy: 0 };
+            window.addEventListener('pointermove', ddOnMove);
+            window.addEventListener('pointerup', ddOnUp);
+            window.addEventListener('pointercancel', ddOnCancel);
+        }
+
+        function ddOnMove(e) {
+            if (!ddDrag) return;
+            if (!ddDrag.moved) {
+                if (Math.hypot(e.clientX - ddDrag.x, e.clientY - ddDrag.y) < 6) return;
+                ddDrag.moved = true;
+                const r = ddDrag.chip.getBoundingClientRect();
+                ddDrag.dx = e.clientX - r.left; ddDrag.dy = e.clientY - r.top;
+                const g = ddDrag.chip.cloneNode(true);
+                g.className = 'dd-chip dd-ghost';
+                g.style.width = r.width + 'px';
+                document.body.appendChild(g);
+                ddDrag.ghost = g;
+                ddDrag.chip.classList.add('dd-lifting');
+            }
+            ddDrag.ghost.style.transform = 'translate(' + (e.clientX - ddDrag.dx) + 'px,' + (e.clientY - ddDrag.dy) + 'px) scale(1.06)';
+            let b = ddBlankAt(e.clientX, e.clientY);
+            if (b && b.classList.contains('dd-filled')) b = null;
+            if (b !== ddDrag.over) {
+                if (ddDrag.over) ddDrag.over.classList.remove('dd-hot');
+                ddDrag.over = b;
+                if (b) b.classList.add('dd-hot');
+            }
+        }
+
+        function ddEndDrag() {
+            window.removeEventListener('pointermove', ddOnMove);
+            window.removeEventListener('pointerup', ddOnUp);
+            window.removeEventListener('pointercancel', ddOnCancel);
+            if (!ddDrag) return;
+            if (ddDrag.ghost) ddDrag.ghost.remove();
+            if (ddDrag.over) ddDrag.over.classList.remove('dd-hot');
+            ddDrag.chip.classList.remove('dd-lifting');
+        }
+
+        function ddOnUp(e) {
+            if (!ddDrag) return;
+            const d = ddDrag;
+            const target = d.moved ? ddBlankAt(e.clientX, e.clientY) : null;
+            ddEndDrag(); ddDrag = null;
+            if (!d.moved) ddToggle(d.chip);
+            else if (target) ddAttempt(d.chip, target);
+        }
+
+        function ddOnCancel() { ddEndDrag(); ddDrag = null; }
+
+        /* Largest text size that still fits the game area, so the page never needs scrolling */
+        function ddFitText() {
+            let lo = 12, hi = 44;
+            while (hi - lo > 0.5) {
+                const mid = (lo + hi) / 2;
+                ddText.style.fontSize = mid + 'px';
+                if (ddText.scrollHeight <= ddText.clientHeight + 1) lo = mid; else hi = mid;
+            }
+            ddText.style.fontSize = lo + 'px';
+        }
+
+        let ddResizeTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(ddResizeTimer);
+            ddResizeTimer = setTimeout(ddFitText, 100);
+        });
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            resetStats();
+            setProgress(0);
+            revealBtn.disabled = false;
+            setInstruction('Trascina ogni parola nello spazio giusto del testo');
+            ddBuild();
+            ddTray.style.minHeight = '';
+            ddTray.style.minHeight = ddTray.offsetHeight + 'px';   // keep the bank's height stable as words leave
+            ddFitText();
+            startElapsedTimer();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

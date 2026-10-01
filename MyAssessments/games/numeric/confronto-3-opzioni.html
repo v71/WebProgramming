@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Indovina l'Emozione</title>
+    <title>Maggiore Minore o Uguale</title>
     
 <style>
         :root {
@@ -119,7 +119,7 @@
             border: 1px solid rgba(226, 232, 240, 0.8);
             margin: 0 auto;
         }
-
+        /*
         #image-container {
             border: 2px solid #a5b4fc;
             background-color: #ffffff;
@@ -139,6 +139,32 @@
             height: auto;
             object-fit: contain;
             border-radius: 10px;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.35s ease-in-out;
+        }
+        */
+
+        #image-container {
+            border: 2px solid #a5b4fc;
+            background-color: #ffffff;
+            padding: 4px; /* Riduci il padding da 10px a 4px */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content; /* Adatta la larghezza al contenuto */
+            height: auto;
+            overflow: hidden;
+            border-radius: 14px; /* Allinea leggermente l'arrotondamento */
+        }
+
+        #image-container img {
+            max-width: 100%;
+            max-height: 400px; /* Limita l'altezza massima per evitare immagini troppo grandi */
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
             display: block;
             opacity: 0;
             transition: opacity 0.35s ease-in-out;
@@ -400,7 +426,7 @@ button:disabled {
 </head>
 <body>
 
-    <h1 id="game-title">Indovina l'Emozione</h1>
+    <h1 id="game-title">Maggiore, Minore o Uguale ?</h1>
 
     <div id="game-stats">
         <span>Round: <strong id="progress-value"> 
@@ -487,6 +513,8 @@ button:disabled {
         let optionElements = [];
         let currentRound = null;
 
+        let imageLoadToken = 0;   // <-- add this
+
         function startElapsedTimer() {
             stopElapsedTimer();
             elapsedSeconds = 0;
@@ -525,6 +553,7 @@ button:disabled {
             return arr;
         }
 
+        /*
         function loadRound(index) {
             if (index >= ROUNDS.length) {
                 progressBarFill.style.width = '100%';
@@ -594,7 +623,102 @@ button:disabled {
                 optionElements.push(optionEl);
             });
         }
-        
+        */
+
+        function loadRound(index) {
+    if (index >= ROUNDS.length) {
+        progressBarFill.style.width = '100%';
+        showSummaryScreen();
+        return;
+    }
+
+    const progressRatio = (index / ROUNDS.length) * 100;
+    progressBarFill.style.width = progressRatio + '%';
+
+    currentRound = ROUNDS[index];
+    roundCompleted = false;
+    moveCount = 0;
+    revealCount = 0;
+    optionElements = [];
+
+    progressValueEl.textContent = `${index + 1} / ${ROUNDS.length}`;
+    updateMovesDisplay();
+    updateRevealsDisplay();
+    startElapsedTimer();
+
+    nextBtn.classList.add('smooth-hidden');
+    revealBtn.classList.remove('smooth-hidden');
+    revealBtn.disabled = false;
+
+    // ---------- IMAGE SWAP (no layout jump) ----------
+    const existingImg = imageContainer.querySelector('img');
+
+    // Token to ignore stale loads if rounds advance quickly
+    const loadToken = ++imageLoadToken;
+    const roundForImage = currentRound;
+
+    const updateImageSource = () => {
+        if (loadToken !== imageLoadToken) return; // outdated request
+
+        // Lock the current size so the page doesn't collapse during the swap
+        const h = imageContainer.offsetHeight;
+        const w = imageContainer.offsetWidth;
+        if (h) imageContainer.style.minHeight = h + 'px';
+        if (w) imageContainer.style.minWidth = w + 'px';
+
+        const newImg = new Image();
+        newImg.alt = roundForImage.label;
+
+        const show = () => {
+            if (loadToken !== imageLoadToken) return; // outdated request
+            imageContainer.replaceChildren(newImg);
+            newImg.getBoundingClientRect(); // force reflow so the fade-in runs
+            newImg.style.opacity = '1';
+            // Release the size lock now that the new image is in place
+            imageContainer.style.minHeight = '';
+            imageContainer.style.minWidth = '';
+        };
+
+        newImg.onload = show;
+        newImg.onerror = show;
+        newImg.src = roundForImage.img;
+    };
+
+    if (existingImg) {
+        existingImg.style.opacity = '0';
+        setTimeout(updateImageSource, 350);
+    } else {
+        updateImageSource();
+    }
+
+    // ---------- OPTIONS ----------
+    optionsContainer.innerHTML = '';
+
+    const correctIdx = currentRound.correctIndex;
+    const incorrectIndices = [];
+    for (let i = 0; i < currentRound.options.length; i++) {
+        if (i !== correctIdx) {
+            incorrectIndices.push(i);
+        }
+    }
+
+    // Pick 2 random wrong options, add the correct one, then shuffle
+    const selectedIncorrect = shuffleArray(incorrectIndices).slice(0, 2);
+    const order = shuffleArray([correctIdx, ...selectedIncorrect]);
+
+    order.forEach((originalIdx) => {
+        const optionEl = document.createElement('div');
+        optionEl.classList.add('option-card');
+        optionEl.textContent = currentRound.options[originalIdx];
+        optionEl.dataset.isCorrect = (originalIdx === currentRound.correctIndex) ? 'true' : 'false';
+
+        optionEl.addEventListener('click', () => handleOptionClick(optionEl));
+
+        optionsContainer.appendChild(optionEl);
+        optionElements.push(optionEl);
+    });
+}
+
         function handleOptionClick(optionEl) {
             if (roundCompleted || optionEl.classList.contains('disabled-option')) return;
 
@@ -700,7 +824,7 @@ button:disabled {
 
         async function initGame() {
             try {
-                const response = await fetch('indovina-emozione-set-1.json');
+                const response = await fetch('confronto-3-opzioni-set-1.json');
                 if (!response.ok) {
                     throw new Error(`HTTP error: ${response.status}`);
                 }
