@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Karaoke di lettura</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the text frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        /* ---------- Controls ---------- */
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px 14px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        button:focus-visible, input:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            min-height: 40px;
+        }
+
+        .cool-btn:hover:not(:disabled) { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #play-btn { min-width: 160px; }
+        #next-btn { background-color: var(--correct); min-width: 140px; }
+        #next-btn:hover:not(:disabled) { background-color: #059669; }
+
+        /* Speed: three buttons in one pill */
+        .seg {
+            display: inline-flex;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 3px;
+            box-shadow: var(--shadow-sm);
+        }
+        .seg button {
+            border: none;
+            background: transparent;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 6px 12px;
+            border-radius: 99px;
+            cursor: pointer;
+            min-height: 34px;
+        }
+        .seg button[aria-pressed="true"] { background: var(--accent); color: #ffffff; }
+
+        .tog {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 6px 14px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            min-height: 40px;
+        }
+        .tog input { width: 20px; height: 20px; accent-color: var(--accent); cursor: pointer; }
+
+        /* ---------- Text frame ---------- */
+        /* The stage takes all the space that is left; the text is scaled to fit it
+           (see fitText() in the script), so the page never needs to scroll. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            width: min(100%, 780px);       /* replaced by fitStage() */
+            height: 100%;
+            padding: 12px 18px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease;
+        }
+        #game-area.cream { background: #fbf3dc; }
+
+        /* Dyslexia-friendly text: clear sans-serif, open spacing, left aligned */
+        #story {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 28px;               /* replaced by fitText() */
+            line-height: 1.9;
+            letter-spacing: 0.04em;
+            word-spacing: 0.18em;
+            font-weight: 400;
+            color: var(--text);
+        }
+
+        .w {
+            padding: 0.04em 0.12em;
+            border-radius: 8px;
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            transition: background-color 0.12s ease, box-shadow 0.12s ease;
+            -webkit-box-decoration-break: clone;
+            box-decoration-break: clone;
+        }
+        .w:hover { background: #e0e7ff; }
+        .w:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 1px; }
+
+        /* The sentence being read gets a soft band; the word being read stands out
+           with a strong background AND an underline (never colour alone). The
+           font weight never changes, so the text never reflows while reading. */
+        .w.sent { background: #e8ecff; }
+        .w.cur {
+            background: #fde047;
+            box-shadow: 0 3px 0 #ca8a04;
+            color: #0f172a;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .progress-bar-fill, .cool-btn, .w, #game-area { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+            .cool-btn { padding: 8px 16px; }
+            #play-btn { min-width: 140px; }
+            #next-btn { min-width: 120px; }
+            #game-area { padding: 8px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Karaoke di lettura</h1>
+
+    <div id="game-stats">
+        <span>Storia: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Parole toccate: <strong id="moves-value">0</strong></span>
+        <span>Ascolti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="play-btn" class="cool-btn"><span>▶ Ascolta</span></button>
+
+        <div class="seg" id="speed-seg" role="group" aria-label="Velocità della voce">
+            <button type="button" data-rate="0.6" aria-pressed="false">🐢 Lenta</button>
+            <button type="button" data-rate="0.8" aria-pressed="true">Media</button>
+            <button type="button" data-rate="1" aria-pressed="false">🐇 Veloce</button>
+        </div>
+
+        <label class="tog" for="opt-tap"><input type="checkbox" id="opt-tap" checked> 👆 Tocca per ascoltare</label>
+
+        <button id="next-btn" class="cool-btn" disabled><span>➡️ Avanti</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <div id="story" aria-label="Storia da leggere"></div>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        /* =====================================================
+           STORIES - edit here. Ordered from short to longer.
+           title: shown in the info bar
+           pic:   a small emoji next to the title
+           text:  the story. Sentences end with . ! or ?
+           ===================================================== */
+        const STORIES = [
+            { title: 'Il gatto Micio', pic: '🐱',
+              text: 'Micio è un gatto nero. Ama dormire sul divano. Oggi vede una farfalla. La insegue per tutta la casa.' },
+            { title: 'La luna e le stelle', pic: '🌙',
+              text: 'Di sera la luna sale nel cielo. Le stelle brillano accanto a lei. Un bambino guarda dalla finestra. Sorride e dice buonanotte, luna!' },
+            { title: 'Il piccolo pesce', pic: '🐟',
+              text: 'Nel mare vive un piccolo pesce di nome Pino. Ogni mattina nuota tra le alghe con i suoi amici. Un giorno trova una conchiglia dorata. La porta con orgoglio alla sua mamma.' },
+            { title: 'Una giornata al parco', pic: '🌳',
+              text: 'Sabato andiamo al parco con il nonno. Io corro sull\'erba e gioco con il pallone. Il nonno si siede sulla panchina e legge il giornale. Poi mangiamo un gelato alla fragola.' }
+        ];
+
+        /* =====================================================
+           OPTIONS - change these values in code
+           cream:      cream background for the text (easier on the eyes)
+           showTime:   show the timer in the stats bar
+           speed:      starting speed, one of 0.6 (slow), 0.8 (medium), 1 (fast)
+           tapToHear:  starting state of "Tocca per ascoltare"
+           ===================================================== */
+        const prefs = {
+            cream: true,
+            showTime: true,
+            speed: 0.8,
+            tapToHear: true
+        };
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;        // words tapped
+        let revealCount = 0;      // times the story was listened to from the start
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (storyIdx + 1) + ' / ' + STORIES.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* =====================================================
+           Reading Karaoke
+           ===================================================== */
+        const storyEl = document.getElementById('story');
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+        const infoMainEl = document.getElementById('info-main');
+        const playBtn = document.getElementById('play-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const tapOpt = document.getElementById('opt-tap');
+        const speedBtns = Array.from(document.querySelectorAll('#speed-seg button'));
+
+        const HAS_VOICE = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+
+        let storyIdx = 0;
+        let words = [];            // [{ text, sent }]
+        let sents = [];            // [{ start, end }] word indexes
+        let wordEls = [];
+        let cur = -1;              // word being read (-1 = none yet)
+        let playing = false;
+        let atEnd = false;         // narration reached the end: Play restarts from the start
+        let storyDone = false;     // story listened to once: "Avanti" is enabled
+        let timerStarted = false;
+        let speed = prefs.speed;
+        let token = 0;             // invalidates callbacks of old utterances
+        let timers = [];
+        let boundaryMode = false;  // the voice reports word positions itself
+        let statusHtml = '';
+        let statusKind = '';
+
+        /* ---------- Layout: fit the frame and the text to the space that is left ---------- */
+        function fitText() {
+            let lo = 18, hi = 40;
+            while (lo < hi) {
+                const mid = Math.ceil((lo + hi) / 2);
+                storyEl.style.fontSize = mid + 'px';
+                if (storyEl.scrollHeight <= storyEl.clientHeight + 1) lo = mid; else hi = mid - 1;
+            }
+            storyEl.style.fontSize = lo + 'px';
+        }
+
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const h = Math.max(200, avail - used);
+            stageEl.style.height = h + 'px';
+            frameEl.style.width = Math.min(stageEl.clientWidth, 780) + 'px';
+            fitText();
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Info bar ---------- */
+        function renderInfo() {
+            const s = STORIES[storyIdx];
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>' + s.pic + ' ' + s.title + '</span>' +
+                 '<span class="cnt">Parola ' + Math.max(cur + 1, 0) + ' / ' + words.length + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- Voice ---------- */
+        function pickVoice() {
+            if (!HAS_VOICE) return null;
+            const it = speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().indexOf('it') === 0);
+            // Local voices report word positions, so they are preferred
+            return it.find(v => v.localService) || it[0] || null;
+        }
+
+        function makeUtterance(text) {
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'it-IT';
+            u.rate = speed;
+            const v = pickVoice();
+            if (v) u.voice = v;
+            return u;
+        }
+
+        function clearTimers() {
+            timers.forEach(clearTimeout);
+            timers = [];
+        }
+
+        function stopSpeech() {
+            token++;
+            clearTimers();
+            if (HAS_VOICE) { try { speechSynthesis.cancel(); } catch (e) {} }
+        }
+
+        /* Rough duration of a word, used only when the voice does not report
+           word positions (e.g. network voices). Boundary events take over as
+           soon as they arrive. */
+        function estimateSeconds(text) {
+            const letters = text.replace(/[^A-Za-zÀ-ÿ]/g, '').length;
+            let t = letters * 0.07 + 0.12;
+            if (/[,;:]$/.test(text)) t += 0.2;
+            if (/[.!?]$/.test(text)) t += 0.45;
+            return t / speed;
+        }
+
+        /* ---------- Story ---------- */
+        function buildStory() {
+            const tokens = STORIES[storyIdx].text.trim().split(/\s+/);
+            words = [];
+            sents = [];
+            let start = 0;
+            tokens.forEach((t, i) => {
+                words.push({ text: t, sent: sents.length });
+                if (/[.!?]$/.test(t) || i === tokens.length - 1) {
+                    sents.push({ start: start, end: i });
+                    start = i + 1;
+                }
+            });
+
+            storyEl.innerHTML = words.map((w, i) =>
+                '<span class="w" role="button" tabindex="0" data-i="' + i + '">' + w.text + '</span>'
+            ).join(' ');
+            wordEls = Array.from(storyEl.querySelectorAll('.w'));
+        }
+
+        function updateProgress() {
+            const frac = storyDone ? 1 : (cur >= 0 ? (cur + 1) / words.length : 0);
+            setProgress(((storyIdx + frac) / STORIES.length) * 100);
+        }
+
+        function setCurrent(i) {
+            if (i === cur || !wordEls[i]) return;
+            const prevSent = cur >= 0 ? words[cur].sent : -1;
+            const newSent = words[i].sent;
+
+            if (cur >= 0) wordEls[cur].classList.remove('cur');
+            if (prevSent !== newSent) {
+                if (prevSent >= 0) for (let k = sents[prevSent].start; k <= sents[prevSent].end; k++) wordEls[k].classList.remove('sent');
+                for (let k = sents[newSent].start; k <= sents[newSent].end; k++) wordEls[k].classList.add('sent');
+            }
+            cur = i;
+            wordEls[i].classList.add('cur');
+            renderInfo();
+            updateProgress();
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* ---------- Narration ---------- */
+        function updatePlayBtn() {
+            let label;
+            if (playing) label = '⏸ Pausa';
+            else if (atEnd) label = '🔁 Riascolta';
+            else if (cur >= 0) label = '▶ Continua';
+            else label = '▶ Ascolta';
+            playBtn.querySelector('span').textContent = label;
+
+            const last = storyIdx === STORIES.length - 1;
+            nextBtn.querySelector('span').textContent = last ? '🔄 Ricomincia' : '➡️ Avanti';
+            nextBtn.disabled = !storyDone;
+        }
+
+        /* Reads from word i to the end of its sentence, then continues with the next one */
+        function speakFrom(i) {
+            stopSpeech();
+            const myToken = token;
+            const end = sents[words[i].sent].end;
+
+            const toks = words.slice(i, end + 1).map(w => w.text);
+            const offsets = [];
+            let pos = 0;
+            toks.forEach(t => { offsets.push(pos); pos += t.length + 1; });
+
+            const u = makeUtterance(toks.join(' '));
+            boundaryMode = false;
+
+            u.onstart = () => {
+                if (myToken !== token) return;
+                setCurrent(i);
+                // Fallback timing, replaced as soon as the voice reports positions
+                let t = 0;
+                for (let k = i; k <= end; k++) {
+                    const idx = k;
+                    timers.push(setTimeout(() => {
+                        if (myToken !== token || boundaryMode) return;
+                        setCurrent(idx);
+                    }, t * 1000));
+                    t += estimateSeconds(words[k].text);
+                }
+            };
+
+            u.onboundary = (e) => {
+                if (myToken !== token) return;
+                if (e.name && e.name !== 'word') return;
+                boundaryMode = true;
+                clearTimers();
+                let k = 0;
+                for (let j = 0; j < offsets.length; j++) {
+                    if (offsets[j] <= e.charIndex) k = j; else break;
+                }
+                setCurrent(i + k);
+            };
+
+            u.onend = () => {
+                if (myToken !== token) return;
+                clearTimers();
+                if (!playing) return;
+                if (end + 1 < words.length) speakFrom(end + 1);
+                else finishStory();
+            };
+
+            u.onerror = (e) => {
+                if (myToken !== token) return;
+                if (e && (e.error === 'interrupted' || e.error === 'canceled')) return;
+                clearTimers();
+                playing = false;
+                setStatus('Non riesco a usare la voce. Riprova.', 'retry');
+                updatePlayBtn();
+            };
+
+            speechSynthesis.speak(u);
+        }
+
+        function pauseNarration() {
+            playing = false;
+            stopSpeech();
+            updatePlayBtn();
+        }
+
+        function startNarration() {
+            if (!HAS_VOICE) return;
+            startTimerOnce();
+            setStatus('');
+
+            let from = cur >= 0 ? cur : 0;
+            if (atEnd) { from = 0; atEnd = false; }
+            if (from === 0) { revealCount++; updateRevealsDisplay(); }
+
+            playing = true;
+            updatePlayBtn();
+            speakFrom(from);
+        }
+
+        function finishStory() {
+            playing = false;
+            atEnd = true;
+            storyDone = true;
+            clearTimers();
+            updateProgress();
+
+            const last = storyIdx === STORIES.length - 1;
+            if (last) stopElapsedTimer();
+            setStatus(last ? 'Bravo! Hai finito tutte le storie!' : 'Bravo! Hai ascoltato tutta la storia.', 'ok');
+            updatePlayBtn();
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (playing) pauseNarration(); else startNarration();
+        });
+
+        /* ---------- Speed ---------- */
+        function applySpeedButtons() {
+            speedBtns.forEach(b => b.setAttribute('aria-pressed', String(parseFloat(b.dataset.rate) === speed)));
+        }
+
+        speedBtns.forEach(b => b.addEventListener('click', () => {
+            speed = parseFloat(b.dataset.rate);
+            applySpeedButtons();
+            if (playing && cur >= 0) speakFrom(cur);     // takes effect right away
+        }));
+
+        /* ---------- Tap a word ---------- */
+        let tapToHear = prefs.tapToHear;
+        tapOpt.checked = tapToHear;
+        tapOpt.addEventListener('change', () => { tapToHear = tapOpt.checked; });
+
+        function onWordActivate(el) {
+            if (!el) return;
+            const i = parseInt(el.dataset.i, 10);
+
+            startTimerOnce();
+            addMove();
+
+            // Tapping pauses the story; "Continua" resumes from the tapped word
+            playing = false;
+            atEnd = false;
+            stopSpeech();
+            setStatus('');
+            setCurrent(i);
+            updatePlayBtn();
+
+            if (tapToHear && HAS_VOICE) {
+                const clean = words[i].text.replace(/[.,;:!?"“”()]/g, '');
+                if (clean) speechSynthesis.speak(makeUtterance(clean));
+            }
+        }
+
+        storyEl.addEventListener('click', (e) => onWordActivate(e.target.closest('.w')));
+        storyEl.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            const el = e.target.closest && e.target.closest('.w');
+            if (!el) return;
+            e.preventDefault();
+            onWordActivate(el);
+        });
+
+        /* ---------- Next story ---------- */
+        function loadStory() {
+            stopSpeech();
+            playing = false;
+            atEnd = false;
+            storyDone = false;
+            cur = -1;
+            boundaryMode = false;
+
+            buildStory();
+            updateRoundDisplay();
+            setStatus(HAS_VOICE ? '' : 'La voce non è supportata da questo browser.', HAS_VOICE ? '' : 'retry');
+            playBtn.disabled = !HAS_VOICE;
+            updatePlayBtn();
+            updateProgress();
+            fitStage();
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (!storyDone) return;
+            if (storyIdx === STORIES.length - 1) {
+                storyIdx = 0;
+                initGame();
+            } else {
+                storyIdx++;
+                loadStory();
+            }
+        });
+
+        // Never keep talking in a hidden tab
+        document.addEventListener('visibilitychange', () => { if (document.hidden && playing) pauseNarration(); });
+        window.addEventListener('beforeunload', () => { if (HAS_VOICE) speechSynthesis.cancel(); });
+
+        // The list of voices can arrive after the page has loaded
+        if (HAS_VOICE && speechSynthesis.addEventListener) speechSynthesis.addEventListener('voiceschanged', () => {});
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            frameEl.classList.toggle('cream', prefs.cream);
+            applySpeedButtons();
+            loadStory();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

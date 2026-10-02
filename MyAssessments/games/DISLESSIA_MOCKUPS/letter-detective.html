@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Detective delle lettere</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --frame-pad: 10px;   /* space between the frame border and the picture */
+            --frame-bd: 1px;     /* frame border width */
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the picture frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;   /* centered, but never cut off when too tall */
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            /* same height as the letter tile, so the bar never changes size
+               when the text switches between the instruction and a message */
+            min-height: calc(1.56em + 4px);
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+
+        .tl {
+            display: inline-block;
+            min-width: 1.6em;
+            padding: 0 8px;
+            font-size: 1.3em;
+            line-height: 1.2;
+            font-weight: 600;
+            color: var(--text);
+            background: #e0e7ff;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+        }
+
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage is exactly as tall as the frame (set by fitStage() in the script),
+           so the frame sits right under the Help button with no gap, and the
+           "Progresso" label stays close below it. The whole page is centered. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /* Frame: white card that wraps the picture tightly */
+        #game-area {
+            width: min(100%, 700px);       /* replaced by fitStage() */
+            padding: var(--frame-pad);
+            border: var(--frame-bd) solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Letter Detective ---------- */
+        #scene {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 5 / 4;
+            border-radius: 12px;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #scene .ch { font-family: 'Lexend', 'Segoe UI', system-ui, sans-serif; font-size: 30px; font-weight: 600; fill: #0f172a; pointer-events: none; }
+        #scene .tick-mark { font-family: system-ui, sans-serif; font-size: 22px; font-weight: 700; fill: #ffffff; pointer-events: none; }
+
+        .badge { cursor: pointer; transform-box: fill-box; transform-origin: center; outline: none; }
+        .badge .bg { fill: var(--badge-fill); stroke: #92400e; stroke-width: 3; transition: fill 0.2s ease, stroke 0.2s ease; }
+        .badge:hover .bg { stroke: var(--accent); }
+        .badge:focus-visible .bg { stroke: var(--accent-2); stroke-width: 6; }
+        .badge .ring { fill: none; stroke: var(--accent); stroke-width: 7; opacity: 0; pointer-events: none; transform-box: fill-box; transform-origin: center; }
+        .badge .tick { display: none; pointer-events: none; }
+        .badge.found { cursor: default; }
+        .badge.found .bg { fill: #bbf7d0; stroke: #059669; }
+        .badge.found .tick { display: block; }
+        .badge.wobble { animation: wobble 0.45s ease; }
+
+        /* Help: remaining target letters get a thick ring and a pulse
+           (shape and motion, not only color) */
+        #scene.peeking .badge.target:not(.found) .ring { opacity: 1; animation: pulse 0.9s ease-in-out infinite; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.12); }
+        }
+
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0); }
+            20% { transform: rotate(-9deg); }
+            40% { transform: rotate(8deg); }
+            60% { transform: rotate(-5deg); }
+            80% { transform: rotate(3deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #scene.peeking .badge.target:not(.found) .ring { animation: none; }
+            .badge.wobble { animation: none; }
+            .progress-bar-fill, .cool-btn { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --frame-pad: 6px; --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Detective delle lettere</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+    <div id="game-area">
+            <svg id="scene" viewBox="0 0 600 480" role="group" aria-label="Scena con le lettere">
+                <defs>
+                    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#bae6fd"/>
+                        <stop offset="1" stop-color="#e0f2fe"/>
+                    </linearGradient>
+                    <linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#fbcfe8"/>
+                        <stop offset="1" stop-color="#e9d5ff"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- Plain background shown while a picture is loading -->
+                <rect width="600" height="480" fill="#e0f2fe"/>
+
+                <!-- Drawn fallbacks: shown only if the matching PNG is missing or fails to load -->
+                <g id="fb-tree" class="fallback" display="none">
+                    <rect width="600" height="480" fill="url(#sky)"/>
+                    <circle cx="548" cy="44" r="30" fill="#fde047"/>
+                    <g fill="#ffffff" opacity="0.9">
+                        <ellipse cx="70" cy="40" rx="42" ry="16"/>
+                        <ellipse cx="102" cy="32" rx="28" ry="14"/>
+                        <ellipse cx="470" cy="76" rx="36" ry="13"/>
+                    </g>
+                    <ellipse cx="300" cy="500" rx="420" ry="90" fill="#86efac"/>
+                    <rect x="272" y="400" width="56" height="70" rx="8" fill="#a16207"/>
+                    <rect x="10" y="10" width="580" height="418" rx="130" fill="#4ade80" stroke="#16a34a" stroke-width="4"/>
+                </g>
+
+                <g id="fb-balloons" class="fallback" display="none">
+                    <rect width="600" height="480" fill="url(#sky2)"/>
+                    <g fill="#ffffff" opacity="0.9">
+                        <ellipse cx="90" cy="450" rx="60" ry="18"/>
+                        <ellipse cx="500" cy="455" rx="70" ry="18"/>
+                        <ellipse cx="300" cy="462" rx="80" ry="16"/>
+                    </g>
+                    <rect x="10" y="10" width="580" height="418" rx="130" fill="#c4b5fd" opacity="0.6" stroke="#8b5cf6" stroke-width="4"/>
+                </g>
+
+                <image id="scene-bg" x="0" y="0" width="600" height="480" preserveAspectRatio="xMidYMid slice" style="pointer-events:none" visibility="hidden"/>
+
+                <g id="letters"></g>
+            </svg>
+    </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        /* =====================================================
+           SCENES - one background picture per scene (PNG, WebP or JPG)
+           Recommended size: 1200 x 960 px (ratio 5:4).
+           src:  path of the picture
+           grid: optional, overrides the letter grid for this scene only
+           ===================================================== */
+        const SCENES = {
+            tree:     { src: 'images/tree.png' },
+            balloons: { src: 'images/balloons.png' }
+        };
+        const DEFAULT_SCENE = 'tree';
+
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           scene:  which picture to show (key of SCENES)
+           target: letter to find
+           other:  look-alike letter used as distractor
+           total:  how many letters in the picture (max 20)
+           hits:   how many of them are the target
+           ===================================================== */
+        const ROUNDS = [
+            { scene: 'tree',     target: 'b', other: 'd', total: 8,  hits: 3 },
+            { scene: 'balloons', target: 'd', other: 'b', total: 10, hits: 4 },
+            { scene: 'tree',     target: 'p', other: 'q', total: 10, hits: 4 },
+            { scene: 'balloons', target: 'q', other: 'p', total: 12, hits: 5 },
+            { scene: 'tree',     target: 'm', other: 'n', total: 12, hits: 5 },
+            { scene: 'balloons', target: 'n', other: 'm', total: 12, hits: 5 }
+        ];
+
+        // How each letter is spoken in Italian (letter names)
+        const LETTER_NAMES = { b: 'bi', d: 'di', p: 'pi', q: 'cu', m: 'emme', n: 'enne' };
+
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:     speak letters aloud
+           showTime:  show the timer in the stats bar
+           wrongHint: say which letter was tapped after a wrong tap
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            showTime: true,
+            wrongHint: true
+        };
+
+        // Badge colours are picked at random and are NOT linked to the letter,
+        // so a child can never find the answer by colour instead of shape.
+        const FRUIT_COLORS = ['#fde68a', '#fdba74', '#fbcfe8', '#ffffff', '#fecaca'];
+
+        // Grid of 5 x 4 positions; each badge gets a small random jitter
+        const GRID = { cols: 5, rows: 4, x0: 50, cellW: 100, y0: 54, cellH: 92, jitterX: 8, jitterY: 5 };
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { sceneEl.classList.add('peeking'); }
+        function onHelpEnd() { sceneEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Letter Detective
+           ===================================================== */
+        const sceneEl = document.getElementById('scene');
+        const lettersEl = document.getElementById('letters');
+        const infoMainEl = document.getElementById('info-main');
+        const sceneBgEl = document.getElementById('scene-bg');
+        const fallbackEls = document.querySelectorAll('.fallback');
+
+        let roundIdx = 0;
+        let foundCount = 0;
+        let done = false;
+        let timerStarted = false;
+        let nextMode = false;
+        let currentSceneKey = DEFAULT_SCENE;
+        let currentSceneSrc = '';
+
+        /* ---------- Voice ---------- */
+        function say(text, force) {
+            if (!prefs.voice && !force) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'it-IT';
+                u.rate = 0.8;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function letterName(ch) { return LETTER_NAMES[ch] || ch; }
+
+        /* ---------- Layout: size the frame to the space that is left ---------- */
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            // Height used by everything except the stage
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            // Space the frame itself takes around the picture
+            const g = getComputedStyle(frameEl);
+            const extraW = parseFloat(g.paddingLeft) + parseFloat(g.paddingRight)
+                         + parseFloat(g.borderLeftWidth) + parseFloat(g.borderRightWidth);
+            const extraH = parseFloat(g.paddingTop) + parseFloat(g.paddingBottom)
+                         + parseFloat(g.borderTopWidth) + parseFloat(g.borderBottomWidth);
+
+            const maxH = Math.max(160, avail - used);
+            const maxW = Math.min(stageEl.clientWidth, 700);
+            const picW = Math.max(120, Math.min(maxW - extraW, (maxH - extraH) * 1.25));   // picture is 5:4
+
+            frameEl.style.width = (picW + extraW) + 'px';
+            stageEl.style.height = (picW * 0.8 + extraH) + 'px';
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Info bar ---------- */
+        function targetTile(ch) { return '<span class="tl">' + ch + '</span>'; }
+
+        let statusHtml = '';
+        let statusKind = '';
+
+        /* One line: normally "Trova tutte le [b] · Trovate: x / y";
+           while a message is active, the message replaces the whole line. */
+        function renderInfo() {
+            const r = ROUNDS[roundIdx];
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('Trova tutte le ' + targetTile(r.target) +
+                 '<span class="cnt">Trovate: ' + foundCount + ' / ' + r.hits + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- Background picture ---------- */
+        function hideFallbacks() {
+            fallbackEls.forEach(g => g.setAttribute('display', 'none'));
+        }
+
+        sceneBgEl.addEventListener('load', () => {
+            sceneBgEl.setAttribute('visibility', 'visible');
+            hideFallbacks();
+        });
+
+        sceneBgEl.addEventListener('error', () => {
+            sceneBgEl.setAttribute('visibility', 'hidden');
+            hideFallbacks();
+            const fb = document.getElementById('fb-' + currentSceneKey);
+            if (fb) fb.removeAttribute('display');
+        });
+
+        function setScene(name) {
+            currentSceneKey = SCENES[name] ? name : DEFAULT_SCENE;
+            const scene = SCENES[currentSceneKey];
+            if (scene.src === currentSceneSrc) return;
+            currentSceneSrc = scene.src;
+            sceneBgEl.setAttribute('visibility', 'hidden');
+            hideFallbacks();
+            sceneBgEl.setAttribute('href', scene.src);
+        }
+
+        /* ---------- Helpers ---------- */
+        function shuffle(arr) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* Build the letters for a round: distinct grid cells, small jitter,
+           colours and letter order both random and independent of each other. */
+        function buildRound(r) {
+            const grid = Object.assign({}, GRID, (SCENES[currentSceneKey] || {}).grid);
+            const total = Math.min(r.total, grid.cols * grid.rows);
+            const hits = Math.min(r.hits, total);
+
+            const cells = [];
+            for (let row = 0; row < grid.rows; row++) {
+                for (let col = 0; col < grid.cols; col++) cells.push({ col, row });
+            }
+            const chosen = shuffle(cells).slice(0, total);
+
+            const chars = shuffle([].concat(
+                Array(hits).fill(r.target),
+                Array(total - hits).fill(r.other)
+            ));
+
+            return chosen.map((cell, i) => ({
+                ch: chars[i],
+                x: grid.x0 + cell.col * grid.cellW + grid.cellW / 2 + (Math.random() * 2 - 1) * grid.jitterX,
+                y: grid.y0 + cell.row * grid.cellH + grid.cellH / 2 + (Math.random() * 2 - 1) * grid.jitterY,
+                fill: FRUIT_COLORS[Math.floor(Math.random() * FRUIT_COLORS.length)]
+            }));
+        }
+
+        function renderLetters(items, target) {
+            lettersEl.innerHTML = items.map((it) =>
+                '<g transform="translate(' + it.x.toFixed(1) + ' ' + it.y.toFixed(1) + ')">' +
+                    '<g class="badge' + (it.ch === target ? ' target' : '') + '" data-ch="' + it.ch + '" ' +
+                        'role="button" tabindex="0" aria-label="Lettera ' + it.ch + '" style="--badge-fill:' + it.fill + '">' +
+                        '<circle class="ring" r="48"/>' +
+                        '<circle class="bg" r="40"/>' +
+                        '<text class="ch" text-anchor="middle" y="11">' + it.ch + '</text>' +
+                        '<g class="tick"><circle cx="30" cy="-30" r="15" fill="#059669" stroke="#ffffff" stroke-width="3"/>' +
+                        '<text class="tick-mark" x="30" y="-22" text-anchor="middle">✓</text></g>' +
+                    '</g>' +
+                '</g>'
+            ).join('');
+        }
+
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadRound() {
+            const r = ROUNDS[roundIdx];
+            foundCount = 0;
+            done = false;
+            hidePeek();
+            setNextMode(false);
+
+            setScene(r.scene);
+            updateRoundDisplay();
+            setStatus('');
+            renderLetters(buildRound(r), r.target);
+        }
+
+        /* ---------- Interaction ---------- */
+        function onBadgeActivate(badge) {
+            if (!badge || done || badge.classList.contains('found')) return;
+            const r = ROUNDS[roundIdx];
+            const ch = badge.dataset.ch;
+
+            startTimerOnce();
+            addMove();
+
+            if (ch === r.target) {
+                badge.classList.add('found');
+                foundCount++;
+                say(letterName(ch));
+                setStatus('');
+
+                if (foundCount >= r.hits) finishRound();
+            } else {
+                // Wrong tap: gentle wobble, no penalty beyond the move count
+                badge.classList.remove('wobble');
+                void badge.getBoundingClientRect();     // restart the animation
+                badge.classList.add('wobble');
+                setStatus(prefs.wrongHint
+                    ? 'Questa è una "' + ch + '". Cerca la ' + targetTile(r.target)
+                    : 'Quasi! Prova ancora.', 'retry');
+            }
+        }
+
+        function finishRound() {
+            done = true;
+            hidePeek();
+            const isLast = roundIdx === ROUNDS.length - 1;
+            setProgress(((roundIdx + 1) / ROUNDS.length) * 100);
+            setStatus(isLast ? 'Bravo! Hai finito tutti i round!' : 'Bravo! Le hai trovate tutte.', 'ok');
+            if (isLast) stopElapsedTimer();
+            setNextMode(true, isLast);
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (roundIdx === ROUNDS.length - 1) {
+                roundIdx = 0;
+                initGame();
+            } else {
+                roundIdx++;
+                loadRound();
+            }
+        }
+
+        sceneEl.addEventListener('click', (e) => {
+            onBadgeActivate(e.target.closest('.badge'));
+        });
+
+        sceneEl.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            const badge = e.target.closest && e.target.closest('.badge');
+            if (!badge) return;
+            e.preventDefault();
+            onBadgeActivate(badge);
+        });
+
+        sceneEl.addEventListener('animationend', (e) => {
+            if (e.animationName === 'wobble') e.target.classList.remove('wobble');
+        });
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            loadRound();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

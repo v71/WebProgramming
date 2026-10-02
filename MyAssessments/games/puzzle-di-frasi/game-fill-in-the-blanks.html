@@ -89,7 +89,7 @@
         #game-area {
             width: 100%;
             max-width: 1050px;
-            flex: 1 1 auto;
+            flex: 0 1 auto;          /* wraps the game: nothing is pushed to the bottom, the page block stays centred */
             min-height: 0;
             margin-top: 10px;
             margin-bottom: 10px;
@@ -99,7 +99,7 @@
         }
 
         /* ===== Drag & drop fill-in-the-blanks ===== */
-        .dd-wrap { width: 100%; max-width: 1050px; height: 100%; display: flex; flex-direction: column; min-height: 0; }
+        .dd-wrap { width: 100%; max-width: 1050px; max-height: 100%; display: flex; flex-direction: column; min-height: 0; }
 
         .dd-tray {
             background: var(--bg-2);
@@ -116,31 +116,28 @@
             box-shadow: var(--shadow-sm);
         }
         .dd-empty { color: var(--text-dim); padding: 0 6px; }
-        .dd-message { color: #047857; font-weight: 600; padding: 4px 8px; }
 
         .dd-chip {
-            font: 600 1rem/1 inherit;
             font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1;
             background: var(--accent);
             color: #fff;
-            border: 0;
+            border: 2px solid transparent;
             border-radius: 99px;
             padding: 11px 18px;
             margin: 0;
-            cursor: grab;
-            touch-action: none;
+            cursor: pointer;
+            touch-action: manipulation;
             user-select: none;
             -webkit-user-select: none;
             box-shadow: var(--shadow-sm);
         }
-        .dd-chip.dd-selected { outline: 3px solid var(--accent-2); outline-offset: 2px; }
-        .dd-chip.dd-lifting { opacity: 0.25; }
-        .dd-chip.dd-ghost {
-            position: fixed; left: 0; top: 0; z-index: 99999;
-            pointer-events: none; cursor: grabbing;
-            box-shadow: var(--shadow-md);
-        }
-        .dd-chip:focus-visible, .dd-blank:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
+        .dd-chip.dd-used, .dd-chip.dd-used:hover { opacity: 0.4; cursor: default; filter: none; }
+        /* Wrong choice: the word in the word bank shakes and gets a red border */
+        .dd-chip.dd-wrong { border-color: var(--wrong); background: #fee2e2; color: #b91c1c; }
+        .dd-chip:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 2px; }
 
         .dd-text {
             background: var(--bg-1);
@@ -148,32 +145,35 @@
             border-radius: 20px;
             box-shadow: var(--shadow-md);
             padding: clamp(14px, 2.5vw, 28px);
+            padding-bottom: 20px;          /* gap under the last line */
             font-size: 20px;               /* set automatically by ddFitText() */
             line-height: 2.3;
-            flex: 1 1 auto;
+            flex: 0 1 auto;                /* height wraps the text; only shrinks (and scrolls) if it can't fit */
             min-height: 0;
             overflow-y: auto;
         }
 
         .dd-blank {
             display: inline-block;
-            vertical-align: baseline;
             position: relative;
             height: 1.7em;
             margin: 0 2px;
             padding: 0 14px;
             white-space: nowrap;
             text-align: center;
-            font: 600 0.88em/1.6em inherit;
             font-family: inherit;
+            font-size: 0.88em;
+            font-weight: 600;
+            line-height: calc(1.7em - 4px);   /* box height minus the two 2px borders: centres the word vertically */
             color: var(--text);
             background: var(--bg-2);
             border: 2px dashed #a5b4fc;
             border-radius: 99px;
-            transform: translateY(0.2em);
+            vertical-align: middle;
             cursor: default;
         }
-        .dd-blank.dd-hot { border-style: solid; border-color: var(--accent); background: #e0e7ff; }
+        /* Current gap: highlighted with a solid border and a soft ring */
+        .dd-blank.dd-current { border-style: solid; border-color: var(--accent); background: #e0e7ff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25); }
         /* The hidden "sizer" holds the answer text, so every gap is already as wide as its word
            and the text never reflows when the word appears. */
         .dd-sizer { visibility: hidden; pointer-events: none; }
@@ -182,13 +182,9 @@
         /* Help button: hold to show the answers in green inside the empty gaps */
         .dd-blank.dd-peek:not(.dd-filled) { border-style: solid; border-color: var(--correct); background: #d1fae5; color: #047857; }
         .dd-blank.dd-peek:not(.dd-filled) .dd-sizer { visibility: visible; }
-        /* Wrong drop: red (declared last so it wins over the other states) */
-        .dd-blank.dd-wrong, .dd-blank.dd-wrong.dd-peek:not(.dd-filled) { border-style: solid; border-color: var(--wrong); background: #fee2e2; color: #b91c1c; }
 
         .dd-shake { animation: dd-shake 0.2s; }
-        .dd-blank.dd-shake { animation-name: dd-shake-blank; }
         @keyframes dd-shake { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
-        @keyframes dd-shake-blank { 0%,100% { transform: translateY(0.2em); } 25% { transform: translate(-5px, 0.2em); } 75% { transform: translate(5px, 0.2em); } }
         @media (prefers-reduced-motion: reduce) { .dd-shake { animation: none; } }
 
 
@@ -206,7 +202,7 @@
 
         .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            background: var(--accent);
             width: 0%;
             border-radius: 99px;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -248,7 +244,7 @@
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Trascina ogni parola nello spazio giusto del testo</h3>
+    <h3 id="instruction-banner" class="stats-style">Clicca la parola giusta per lo spazio evidenziato</h3>
 
     <div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
@@ -370,7 +366,7 @@
         const ddTray = document.getElementById('dd-tray');
         const ddText = document.getElementById('dd-text');
 
-        let ddPlaced = 0, ddTotal = 0, ddMisses = 0, ddSelected = null, ddDrag = null;
+        let ddPlaced = 0, ddTotal = 0, ddMisses = 0, ddCurrent = null;
 
         function ddShuffle(a) {
             for (let i = a.length - 1; i > 0; i--) {
@@ -389,23 +385,20 @@
         function ddBuild() {
             ddTray.innerHTML = '';
             ddText.innerHTML = '';
-            ddPlaced = 0; ddMisses = 0; ddSelected = null;
+            ddPlaced = 0; ddMisses = 0; ddCurrent = null;
             const answers = [];
 
             GAME_TEXT.split(/(\{[^}]+\})/).forEach(part => {
                 const m = part.match(/^\{(.+)\}$/);
                 if (!m) { ddText.appendChild(document.createTextNode(part)); return; }
                 answers.push(m[1]);
-                const b = document.createElement('button');
-                b.type = 'button';
+                const b = document.createElement('span');
                 b.className = 'dd-blank';
                 b.dataset.answer = m[1];
                 const sizer = document.createElement('span');
                 sizer.className = 'dd-sizer';
                 sizer.textContent = m[1];
                 b.appendChild(sizer);
-                b.setAttribute('aria-label', 'Spazio ' + answers.length);
-                b.addEventListener('click', () => { if (ddSelected) ddAttempt(ddSelected, b); });
                 ddText.appendChild(b);
             });
             ddTotal = answers.length;
@@ -416,36 +409,40 @@
                 c.className = 'dd-chip';
                 c.textContent = w;
                 c.dataset.word = w;
-                c.addEventListener('pointerdown', ddOnDown);
-                c.addEventListener('click', e => { if (e.detail === 0) ddToggle(c); }); // keyboard
+                c.addEventListener('click', () => ddChoose(c));
                 ddTray.appendChild(c);
             });
+            ddNextBlank();
         }
 
-        function ddToggle(chip) {
-            if (ddSelected === chip) { chip.classList.remove('dd-selected'); ddSelected = null; return; }
-            if (ddSelected) ddSelected.classList.remove('dd-selected');
-            ddSelected = chip; chip.classList.add('dd-selected');
+        /* The current gap is always the first one not yet filled */
+        function ddNextBlank() {
+            if (ddCurrent) ddCurrent.classList.remove('dd-current');
+            ddCurrent = ddText.querySelector('.dd-blank:not(.dd-filled)');
+            if (ddCurrent) {
+                ddCurrent.classList.add('dd-current');
+                ddCurrent.scrollIntoView({ block: 'nearest' });
+            }
         }
 
-        function ddAttempt(chip, blank) {
-            if (!blank || blank.classList.contains('dd-filled')) return;
+        /* Tap on a word in the word bank */
+        function ddChoose(chip) {
+            if (!ddCurrent) return;
             addMove();                                   // template stat: "Tentativi"
-            if (chip.dataset.word === blank.dataset.answer) {
-                blank.classList.remove('dd-hot', 'dd-peek');
-                blank.classList.add('dd-filled');
-                blank.setAttribute('aria-label', 'Spazio completato con ' + chip.dataset.word);
-                chip.remove();
+            if (chip.dataset.word === ddCurrent.dataset.answer) {
+                ddCurrent.classList.remove('dd-peek');
+                ddCurrent.classList.add('dd-filled');
+                chip.disabled = true;                    // stays in the word bank, greyed out
+                chip.classList.add('dd-used');
                 ddPlaced++;
                 setProgress(ddPlaced / ddTotal * 100);   // template progress bar
+                ddNextBlank();
                 if (ddPlaced === ddTotal) ddFinish();
             } else {
                 ddMisses++;
                 ddFlash(chip, 'dd-shake');
-                ddFlash(blank, 'dd-shake');
-                ddFlash(blank, 'dd-wrong', 900);   // stays red a bit after the shake
+                ddFlash(chip, 'dd-wrong', 900);          // red border stays a bit after the shake
             }
-            if (ddSelected) { ddSelected.classList.remove('dd-selected'); ddSelected = null; }
         }
 
         function ddFinish() {
@@ -455,75 +452,11 @@
             const msg = ddMisses === 0
                 ? 'Perfetto! Ogni parola è finita al posto giusto al primo colpo.'
                 : 'Completato! Hai sbagliato ' + ddMisses + (ddMisses === 1 ? ' volta' : ' volte') + ' lungo il percorso.';
-            ddTray.innerHTML = '';
-            const span = document.createElement('span');
-            span.className = 'dd-message';
-            span.textContent = msg;
-            ddTray.appendChild(span);
-            setInstruction('Gioco completato!');
+            setInstruction(msg);                         // the word bank keeps all (disabled) words
         }
-
-        /* Pointer-based drag & drop (mouse, touch, pen) */
-        function ddBlankAt(x, y) {
-            const el = document.elementFromPoint(x, y);
-            const b = el && el.closest ? el.closest('.dd-blank') : null;
-            return b && ddText.contains(b) ? b : null;
-        }
-
-        function ddOnDown(e) {
-            if (e.button !== undefined && e.button !== 0) return;
-            ddDrag = { chip: e.currentTarget, x: e.clientX, y: e.clientY, moved: false, ghost: null, over: null, dx: 0, dy: 0 };
-            window.addEventListener('pointermove', ddOnMove);
-            window.addEventListener('pointerup', ddOnUp);
-            window.addEventListener('pointercancel', ddOnCancel);
-        }
-
-        function ddOnMove(e) {
-            if (!ddDrag) return;
-            if (!ddDrag.moved) {
-                if (Math.hypot(e.clientX - ddDrag.x, e.clientY - ddDrag.y) < 6) return;
-                ddDrag.moved = true;
-                const r = ddDrag.chip.getBoundingClientRect();
-                ddDrag.dx = e.clientX - r.left; ddDrag.dy = e.clientY - r.top;
-                const g = ddDrag.chip.cloneNode(true);
-                g.className = 'dd-chip dd-ghost';
-                g.style.width = r.width + 'px';
-                document.body.appendChild(g);
-                ddDrag.ghost = g;
-                ddDrag.chip.classList.add('dd-lifting');
-            }
-            ddDrag.ghost.style.transform = 'translate(' + (e.clientX - ddDrag.dx) + 'px,' + (e.clientY - ddDrag.dy) + 'px) scale(1.06)';
-            let b = ddBlankAt(e.clientX, e.clientY);
-            if (b && b.classList.contains('dd-filled')) b = null;
-            if (b !== ddDrag.over) {
-                if (ddDrag.over) ddDrag.over.classList.remove('dd-hot');
-                ddDrag.over = b;
-                if (b) b.classList.add('dd-hot');
-            }
-        }
-
-        function ddEndDrag() {
-            window.removeEventListener('pointermove', ddOnMove);
-            window.removeEventListener('pointerup', ddOnUp);
-            window.removeEventListener('pointercancel', ddOnCancel);
-            if (!ddDrag) return;
-            if (ddDrag.ghost) ddDrag.ghost.remove();
-            if (ddDrag.over) ddDrag.over.classList.remove('dd-hot');
-            ddDrag.chip.classList.remove('dd-lifting');
-        }
-
-        function ddOnUp(e) {
-            if (!ddDrag) return;
-            const d = ddDrag;
-            const target = d.moved ? ddBlankAt(e.clientX, e.clientY) : null;
-            ddEndDrag(); ddDrag = null;
-            if (!d.moved) ddToggle(d.chip);
-            else if (target) ddAttempt(d.chip, target);
-        }
-
-        function ddOnCancel() { ddEndDrag(); ddDrag = null; }
 
         /* Largest text size that still fits the game area, so the page never needs scrolling */
+        const DD_FONT_SCALE = 0.85;   // 1 = largest size that fits; lower = smaller text
         function ddFitText() {
             let lo = 12, hi = 44;
             while (hi - lo > 0.5) {
@@ -531,7 +464,7 @@
                 ddText.style.fontSize = mid + 'px';
                 if (ddText.scrollHeight <= ddText.clientHeight + 1) lo = mid; else hi = mid;
             }
-            ddText.style.fontSize = lo + 'px';
+            ddText.style.fontSize = Math.max(12, lo * DD_FONT_SCALE) + 'px';
         }
 
         let ddResizeTimer = null;
@@ -545,7 +478,7 @@
             resetStats();
             setProgress(0);
             revealBtn.disabled = false;
-            setInstruction('Trascina ogni parola nello spazio giusto del testo');
+            setInstruction('Tocca la parola giusta per lo spazio evidenziato');
             ddBuild();
             ddTray.style.minHeight = '';
             ddTray.style.minHeight = ddTray.offsetHeight + 'px';   // keep the bank's height stable as words leave

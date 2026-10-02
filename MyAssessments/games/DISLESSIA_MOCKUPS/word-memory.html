@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Memory delle parole</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --frame-pad: 10px;   /* space between the frame border and the cards */
+            --frame-bd: 1px;     /* frame border width */
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage is exactly as tall as the frame (set by fitStage() in the script),
+           so the frame hugs the cards and the page is centered. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            width: 300px;                  /* replaced by fitStage() */
+            padding: var(--frame-pad);
+            border: var(--frame-bd) solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Word Memory ---------- */
+        /* --cw, --ch (card size) and --wfs (word size) are set by fitStage() */
+        #grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: var(--gap, 12px);
+            margin: 0 auto;
+        }
+
+        .card {
+            width: var(--cw);
+            height: var(--ch);
+            padding: 0;
+            border: none;
+            background: none;
+            cursor: pointer;
+            perspective: 700px;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .inner {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.45s ease;
+        }
+
+        .card.flipped .inner,
+        #grid.peeking .card:not(.matched) .inner { transform: rotateY(180deg); }
+
+        .face {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 16px;
+            border: 3px solid;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .back {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-color: #4f46e5;
+            color: #ffffff;
+            font-size: calc(var(--ch) * 0.42);
+            font-weight: 600;
+        }
+        .card:not(.flipped):not(.matched):hover .back { filter: brightness(1.12); }
+
+        .front {
+            transform: rotateY(180deg);
+            background: #ffffff;
+            border-color: #94a3b8;
+            color: var(--text);
+        }
+
+        /* The card type is shown by a subtle tint, never by the pair */
+        .card.word .front  { background: #ffffff; }
+        .card.image .front { background: #fff7e6; }
+        .card.sound .front { background: #e0f2fe; }
+
+        .wtxt {
+            font-size: var(--wfs, 22px);
+            font-weight: 500;
+            letter-spacing: 0.06em;
+            line-height: 1.1;
+            max-width: 96%;
+            text-align: center;
+        }
+        .emo { font-size: calc(var(--ch) * 0.52); line-height: 1; }
+        .front img { max-width: 80%; max-height: 72%; object-fit: contain; }
+
+        /* Matched pairs stay open, in green, with a check mark */
+        .card.matched { cursor: default; }
+        .card.matched .front { background: #bbf7d0; border-color: #059669; }
+
+        .tick, .num {
+            display: none;
+            position: absolute;
+            top: 6px;
+            width: calc(var(--ch) * 0.27);
+            height: calc(var(--ch) * 0.27);
+            min-width: 18px;
+            min-height: 18px;
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-size: calc(var(--ch) * 0.16);
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1;
+        }
+        .tick { right: 6px; background: #059669; }
+        .num  { left: 6px; background: #1e293b; }
+        .card.matched .tick { display: flex; }
+
+        /* Help (hold): every closed card turns over and shows a pair number,
+           so the same number marks the two cards that belong together */
+        #grid.peeking .card:not(.matched) .num { display: flex; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .inner { transition: none; }
+            .progress-bar-fill, .cool-btn { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --frame-pad: 6px; --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Memory delle parole</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <div id="grid" role="group" aria-label="Carte del memory"></div>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           mode:  'image'  every word is matched with a picture
+                  'sound'  every word is matched with a sound card (it says the word)
+                  'mixed'  half of the pairs use a picture, half a sound
+           pairs: { word, pic }   pic = emoji placeholder
+                  optional  img: 'images/gatto.png'  to use a real picture instead
+           ===================================================== */
+        const ROUNDS = [
+            { mode: 'image', pairs: [
+                { word: 'gatto', pic: '🐱' }, { word: 'mela', pic: '🍎' }, { word: 'casa', pic: '🏠' } ] },
+            { mode: 'image', pairs: [
+                { word: 'cane', pic: '🐶' }, { word: 'sole', pic: '☀️' }, { word: 'fiore', pic: '🌸' }, { word: 'pesce', pic: '🐟' } ] },
+            { mode: 'sound', pairs: [
+                { word: 'luna', pic: '🌙' }, { word: 'libro', pic: '📖' }, { word: 'palla', pic: '⚽' }, { word: 'rana', pic: '🐸' } ] },
+            { mode: 'image', pairs: [
+                { word: 'albero', pic: '🌳' }, { word: 'treno', pic: '🚆' }, { word: 'uva', pic: '🍇' },
+                { word: 'torta', pic: '🎂' }, { word: 'chiave', pic: '🔑' }, { word: 'stella', pic: '⭐' } ] },
+            { mode: 'mixed', pairs: [
+                { word: 'nave', pic: '🚢' }, { word: 'scarpa', pic: '👟' }, { word: 'ombrello', pic: '☂️' },
+                { word: 'orologio', pic: '⌚' }, { word: 'cavallo', pic: '🐴' }, { word: 'bicicletta', pic: '🚲' } ] },
+            { mode: 'mixed', pairs: [
+                { word: 'cane', pic: '🐶' }, { word: 'pesce', pic: '🐟' }, { word: 'sole', pic: '☀️' }, { word: 'fiore', pic: '🌸' },
+                { word: 'libro', pic: '📖' }, { word: 'rana', pic: '🐸' }, { word: 'treno', pic: '🚆' }, { word: 'uva', pic: '🍇' } ] }
+        ];
+
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:          speak words aloud (sound cards always need it)
+           speakWordCards: say the word when a written-word card is turned
+                           (off by default: the child has to read it)
+           showTime:       show the timer in the stats bar
+           flipBackMs:     how long two wrong cards stay open
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            speakWordCards: false,
+            showTime: true,
+            flipBackMs: 1400
+        };
+
+        const CARD_ASPECT = 1.25;     // card width / height
+        const MAX_CARD_W = 190;       // biggest card, in px
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { gridEl.classList.add('peeking'); }
+        function onHelpEnd() { gridEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Word Memory
+           ===================================================== */
+        const gridEl = document.getElementById('grid');
+        const infoMainEl = document.getElementById('info-main');
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+
+        let roundIdx = 0;
+        let cards = [];              // { pair, type, word, pic, img, matched }
+        let cardEls = [];
+        let flipped = [];            // indexes of the cards that are turned over right now
+        let pendingTimer = null;     // flips two wrong cards back
+        let matchedPairs = 0;
+        let done = false;
+        let timerStarted = false;
+        let nextMode = false;
+        let statusHtml = '';
+        let statusKind = '';
+
+        /* ---------- Voice ---------- */
+        function say(text, force) {
+            if (!prefs.voice && !force) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'it-IT';
+                u.rate = 0.8;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        /* ---------- Info bar ---------- */
+        function renderInfo() {
+            const r = ROUNDS[roundIdx];
+            const phrase = { image: 'Parola e immagine', sound: 'Parola e suono', mixed: 'Parola, immagine o suono' }[r.mode];
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>' + phrase + '</span><span class="cnt">Coppie: ' + matchedPairs + ' / ' + r.pairs.length + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- Helpers ---------- */
+        function shuffle(arr) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* Every pair gives one written-word card and one partner card (picture or sound) */
+        function buildCards(r) {
+            const idx = r.pairs.map((_, i) => i);
+            let soundPairs = new Set();
+            if (r.mode === 'sound') soundPairs = new Set(idx);
+            if (r.mode === 'mixed') soundPairs = new Set(shuffle(idx).slice(0, Math.floor(idx.length / 2)));
+
+            const out = [];
+            r.pairs.forEach((p, i) => {
+                out.push({ pair: i, type: 'word', word: p.word, matched: false });
+                out.push({ pair: i, type: soundPairs.has(i) ? 'sound' : 'image', word: p.word, pic: p.pic, img: p.img, matched: false });
+            });
+            return shuffle(out);
+        }
+
+        function frontHtml(c) {
+            if (c.type === 'word') return '<span class="wtxt">' + c.word + '</span>';
+            if (c.type === 'sound') return '<span class="emo">🔊</span>';
+            if (c.img) return '<img src="' + c.img + '" alt="">';
+            return '<span class="emo">' + c.pic + '</span>';
+        }
+
+        function cardLabel(c) {
+            if (c.type === 'word') return 'Parola ' + c.word;
+            if (c.type === 'sound') return 'Suono';
+            return 'Immagine';
+        }
+
+        function renderCards() {
+            gridEl.innerHTML = cards.map((c, i) =>
+                '<button type="button" class="card ' + c.type + '" data-i="' + i + '" aria-label="Carta coperta">' +
+                    '<span class="inner">' +
+                        '<span class="face back" aria-hidden="true">?</span>' +
+                        '<span class="face front" aria-hidden="true">' +
+                            '<span class="num">' + (c.pair + 1) + '</span>' +
+                            frontHtml(c) +
+                            '<span class="tick">✓</span>' +
+                        '</span>' +
+                    '</span>' +
+                '</button>'
+            ).join('');
+            cardEls = Array.from(gridEl.querySelectorAll('.card'));
+        }
+
+        function updateAria(i) {
+            cardEls[i].setAttribute('aria-label', flipped.includes(i) || cards[i].matched ? cardLabel(cards[i]) : 'Carta coperta');
+        }
+
+        /* ---------- Layout: the frame hugs the cards ---------- */
+        function fitStage() {
+            const n = cards.length;
+            if (!n) return;
+
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const g = getComputedStyle(frameEl);
+            const extraW = parseFloat(g.paddingLeft) + parseFloat(g.paddingRight)
+                         + parseFloat(g.borderLeftWidth) + parseFloat(g.borderRightWidth);
+            const extraH = parseFloat(g.paddingTop) + parseFloat(g.paddingBottom)
+                         + parseFloat(g.borderTopWidth) + parseFloat(g.borderBottomWidth);
+
+            const gap = window.innerWidth <= 600 ? 8 : 12;
+            const maxH = Math.max(160, avail - used) - extraH;
+            const maxW = Math.min(stageEl.clientWidth, 760) - extraW;
+
+            // Pick the number of columns that gives the biggest cards
+            let best = null;
+            for (let cols = 2; cols <= Math.min(n, 8); cols++) {
+                const rows = Math.ceil(n / cols);
+                const cw = Math.min(
+                    (maxW - gap * (cols - 1)) / cols,
+                    ((maxH - gap * (rows - 1)) / rows) * CARD_ASPECT,
+                    MAX_CARD_W
+                );
+                const better = !best || cw > best.cw + 0.5 ||
+                    (Math.abs(cw - best.cw) <= 0.5 && n % cols === 0 && n % best.cols !== 0);
+                if (better) best = { cols, rows, cw };
+            }
+
+            const cw = Math.max(48, Math.floor(best.cw));
+            const ch = Math.floor(cw / CARD_ASPECT);
+            const gridW = best.cols * cw + gap * (best.cols - 1);
+            const gridH = best.rows * ch + gap * (best.rows - 1);
+
+            const maxLen = Math.max.apply(null, cards.filter(c => c.type === 'word').map(c => c.word.length));
+            const wfs = Math.max(11, Math.min(ch * 0.3, (cw * 0.86) / (maxLen * 0.62)));
+
+            gridEl.style.setProperty('--cw', cw + 'px');
+            gridEl.style.setProperty('--ch', ch + 'px');
+            gridEl.style.setProperty('--gap', gap + 'px');
+            gridEl.style.setProperty('--wfs', wfs.toFixed(1) + 'px');
+            gridEl.style.width = gridW + 'px';
+
+            frameEl.style.width = (gridW + extraW) + 'px';
+            stageEl.style.height = (gridH + extraH) + 'px';
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadRound() {
+            const r = ROUNDS[roundIdx];
+            clearTimeout(pendingTimer);
+            pendingTimer = null;
+            flipped = [];
+            matchedPairs = 0;
+            done = false;
+            hidePeek();
+            setNextMode(false);
+
+            cards = buildCards(r);
+            renderCards();
+            updateRoundDisplay();
+            setStatus('');
+            fitStage();
+        }
+
+        /* ---------- Interaction ---------- */
+        function flipBackPending() {
+            clearTimeout(pendingTimer);
+            pendingTimer = null;
+            const list = flipped.slice();
+            flipped = [];
+            list.forEach(i => {
+                cardEls[i].classList.remove('flipped');
+                updateAria(i);
+            });
+            if (statusKind === 'retry') setStatus('');
+        }
+
+        function onCardActivate(el) {
+            if (!el || done) return;
+            const i = parseInt(el.dataset.i, 10);
+            const c = cards[i];
+            if (c.matched) return;
+
+            // Already open: a sound card can be listened to again
+            if (flipped.includes(i)) {
+                if (c.type === 'sound') say(c.word, true);
+                return;
+            }
+
+            // Two wrong cards still open: turn them back right away
+            if (flipped.length === 2) flipBackPending();
+
+            startTimerOnce();
+            if (flipped.length === 0) setStatus('');
+
+            flipped.push(i);
+            el.classList.add('flipped');
+            updateAria(i);
+
+            if (c.type === 'sound') say(c.word, true);
+            else if (c.type === 'word' && prefs.speakWordCards) say(c.word);
+
+            if (flipped.length < 2) return;
+
+            // Two cards are open: check the pair
+            addMove();
+            const a = flipped[0], b = flipped[1];
+
+            if (cards[a].pair === cards[b].pair) {
+                cards[a].matched = cards[b].matched = true;
+                cardEls[a].classList.add('matched');
+                cardEls[b].classList.add('matched');
+                updateAria(a);
+                updateAria(b);
+                flipped = [];
+                matchedPairs++;
+
+                const word = cards[a].word;
+                const heardAlready = cards[a].type === 'sound' || cards[b].type === 'sound';
+                if (!heardAlready) setTimeout(() => say(word), 500);
+
+                if (matchedPairs >= ROUNDS[roundIdx].pairs.length) finishRound();
+                else setStatus('Bravo! ' + word, 'ok');
+            } else {
+                setStatus('Non sono una coppia. Riprova!', 'retry');
+                pendingTimer = setTimeout(flipBackPending, prefs.flipBackMs);
+            }
+        }
+
+        gridEl.addEventListener('click', (e) => onCardActivate(e.target.closest('.card')));
+
+        function finishRound() {
+            done = true;
+            hidePeek();
+            const isLast = roundIdx === ROUNDS.length - 1;
+            setProgress(((roundIdx + 1) / ROUNDS.length) * 100);
+            setStatus(isLast ? 'Bravo! Hai finito tutti i round!' : 'Bravo! Hai trovato tutte le coppie.', 'ok');
+            if (isLast) stopElapsedTimer();
+            setNextMode(true, isLast);
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (roundIdx === ROUNDS.length - 1) {
+                roundIdx = 0;
+                initGame();
+            } else {
+                roundIdx++;
+                loadRound();
+            }
+        }
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            loadRound();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

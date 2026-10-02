@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Il razzo delle rime</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --frame-pad: 10px;   /* space between the frame border and the picture */
+            --frame-bd: 1px;     /* frame border width */
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the picture frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;   /* centered, but never cut off when too tall */
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            /* same height as the target-word button, so the bar never changes
+               size when the text switches between the instruction and a message */
+            min-height: calc(1.56em + 4px);
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+
+        .tw {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            font-family: inherit;
+            font-size: 1.3em;
+            line-height: 1.2;
+            font-weight: 600;
+            color: var(--text);
+            background: #e0e7ff;
+            border: 2px solid var(--accent);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+        .tw .spk { font-size: 0.7em; }
+
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage is exactly as tall as the frame (set by fitStage() in the script),
+           so the frame sits right under the Help button with no gap, and the
+           "Progresso" label stays close below it. The whole page is centered. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        /* Frame: white card that wraps the picture tightly */
+        #game-area {
+            width: min(100%, 700px);       /* replaced by fitStage() */
+            padding: var(--frame-pad);
+            border: var(--frame-bd) solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Rhyme Rocket ---------- */
+        #scene {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 5 / 4;
+            border-radius: 12px;
+            overflow: hidden;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        #scene .word { font-family: 'Lexend', 'Segoe UI', system-ui, sans-serif; font-size: 28px; font-weight: 500; fill: #0f172a; pointer-events: none; letter-spacing: 0.03em; }
+        #scene .tick-mark { font-family: system-ui, sans-serif; font-size: 22px; font-weight: 700; fill: #ffffff; pointer-events: none; }
+
+        /* Every word looks the same: the colour never hints at the answer */
+        .rock { cursor: pointer; transform-box: fill-box; transform-origin: center; outline: none; }
+        .rock .bg { fill: #f8fafc; stroke: #94a3b8; stroke-width: 3; transition: fill 0.2s ease, stroke 0.2s ease; }
+        .rock:hover .bg { stroke: var(--accent); }
+        .rock:focus-visible .bg { stroke: var(--accent-2); stroke-width: 6; }
+        .rock .ring { fill: none; stroke: #fde047; stroke-width: 7; opacity: 0; pointer-events: none; transform-box: fill-box; transform-origin: center; }
+        .rock .tick { display: none; pointer-events: none; }
+        .rock.found { cursor: default; }
+        .rock.found .bg { fill: #bbf7d0; stroke: #059669; }
+        .rock.found .tick { display: block; }
+        .rock.wobble { animation: wobble 0.45s ease; }
+        .rock.pop { animation: pop 0.4s ease; }
+
+        /* Help: the words that rhyme get a thick ring and a pulse
+           (shape and motion, not only colour) */
+        #scene.peeking .rock.rhyme:not(.found) .ring { opacity: 1; animation: pulse 0.9s ease-in-out infinite; }
+
+        #rocket { transform: rotate(0deg); transition: transform 0.25s ease; }
+        .flame { transform-box: fill-box; transform-origin: top center; animation: flicker 0.25s ease-in-out infinite alternate; }
+
+        #beam { stroke: #fde047; stroke-width: 7; stroke-linecap: round; opacity: 0; pointer-events: none; }
+        #beam.fire { animation: beam 0.32s ease-out 0.2s both; }
+        #beam.fire.miss { stroke: #cbd5e1; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0); }
+            20% { transform: rotate(-6deg); }
+            40% { transform: rotate(5deg); }
+            60% { transform: rotate(-3deg); }
+            80% { transform: rotate(2deg); }
+        }
+        @keyframes pop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.14); }
+            100% { transform: scale(1); }
+        }
+        @keyframes flicker {
+            from { transform: scaleY(0.8); }
+            to { transform: scaleY(1.15); }
+        }
+        @keyframes beam {
+            0% { opacity: 0; }
+            25% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #scene.peeking .rock.rhyme:not(.found) .ring { animation: none; }
+            .rock.wobble, .rock.pop, .flame { animation: none; }
+            #rocket { transition: none; }
+            .progress-bar-fill, .cool-btn { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --frame-pad: 6px; --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Il razzo delle rime</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+    <div id="game-area">
+            <svg id="scene" viewBox="0 0 600 480" role="group" aria-label="Lo spazio con le parole">
+                <defs>
+                    <linearGradient id="space" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#1e1b4b"/>
+                        <stop offset="1" stop-color="#312e81"/>
+                    </linearGradient>
+                </defs>
+
+                <!-- Drawn space background (hidden when BACKGROUND_IMAGE loads) -->
+                <g id="space-art">
+                    <rect width="600" height="480" fill="url(#space)"/>
+                    <g fill="#ffffff" opacity="0.85">
+                        <circle cx="30" cy="30" r="2"/><circle cx="90" cy="14" r="1.5"/><circle cx="150" cy="38" r="2"/>
+                        <circle cx="215" cy="12" r="1.5"/><circle cx="280" cy="30" r="2"/><circle cx="350" cy="10" r="1.5"/>
+                        <circle cx="420" cy="34" r="2"/><circle cx="480" cy="14" r="1.5"/><circle cx="545" cy="28" r="2"/>
+                        <circle cx="575" cy="80" r="1.5"/><circle cx="14" cy="120" r="1.5"/><circle cx="586" cy="170" r="2"/>
+                        <circle cx="10" cy="210" r="2"/><circle cx="590" cy="250" r="1.5"/><circle cx="16" cy="300" r="1.5"/>
+                        <circle cx="584" cy="330" r="2"/><circle cx="60" cy="372" r="1.5"/><circle cx="130" cy="430" r="2"/>
+                        <circle cx="200" cy="388" r="1.5"/><circle cx="420" cy="440" r="2"/><circle cx="500" cy="396" r="1.5"/>
+                        <circle cx="560" cy="450" r="2"/><circle cx="40" cy="455" r="1.5"/>
+                    </g>
+                    <circle cx="540" cy="420" r="38" fill="#a78bfa" opacity="0.9"/>
+                    <ellipse cx="540" cy="420" rx="56" ry="9" fill="none" stroke="#ddd6fe" stroke-width="4" opacity="0.8"/>
+                    <circle cx="60" cy="420" r="22" fill="#fb923c" opacity="0.9"/>
+                </g>
+
+                <image id="scene-bg" x="0" y="0" width="600" height="480" preserveAspectRatio="xMidYMid slice" style="pointer-events:none" visibility="hidden"/>
+
+                <g id="words"></g>
+
+                <line id="beam" x1="300" y1="350" x2="300" y2="200"/>
+
+                <!-- Rocket: base at (300, 408), nose points up and rotates toward the target -->
+                <g transform="translate(300 408)">
+                    <g id="rocket">
+                        <g class="flame">
+                            <path d="M -9 40 L 0 74 L 9 40 Z" fill="#fb923c"/>
+                            <path d="M -5 40 L 0 60 L 5 40 Z" fill="#fde047"/>
+                        </g>
+                        <path d="M -26 14 L -26 44 L -10 34 Z" fill="#ef4444"/>
+                        <path d="M 26 14 L 26 44 L 10 34 Z" fill="#ef4444"/>
+                        <path d="M 0 -64 C 22 -40 22 -4 18 40 L -18 40 C -22 -4 -22 -40 0 -64 Z" fill="#f1f5f9" stroke="#94a3b8" stroke-width="3"/>
+                        <path d="M 0 -64 C 9 -54 14 -44 16 -34 L -16 -34 C -14 -44 -9 -54 0 -64 Z" fill="#ef4444"/>
+                        <circle cx="0" cy="-8" r="10" fill="#38bdf8" stroke="#475569" stroke-width="3"/>
+                    </g>
+                </g>
+            </svg>
+    </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           target:  the word the child must rhyme with
+           rhymes:  words that rhyme with it (same sound from the stressed vowel)
+           others:  words that do NOT rhyme (some start like the target on purpose)
+           Max 9 words per round (rhymes + others).
+           ===================================================== */
+        const ROUNDS = [
+            { target: 'gatto',  rhymes: ['piatto', 'matto', 'fatto'],
+                               others: ['sole', 'luna', 'pesce'] },
+            { target: 'rana',   rhymes: ['lana', 'banana', 'campana'],
+                               others: ['mare', 'topo', 'nave'] },
+            { target: 'stella', rhymes: ['bella', 'sorella', 'sella', 'scodella'],
+                               others: ['stanza', 'stazione', 'sasso', 'pane'] },
+            { target: 'nave',   rhymes: ['chiave', 'grave', 'soave'],
+                               others: ['casa', 'cane', 'fiore'] },
+            { target: 'anello', rhymes: ['castello', 'uccello', 'cappello', 'fratello'],
+                               others: ['animale', 'anatra', 'pesce', 'luna', 'mare'] },
+            { target: 'fiore',  rhymes: ['amore', 'colore', 'sapore', 'dolore'],
+                               others: ['fiume', 'fiamma', 'mare', 'cane', 'sole'] },
+            { target: 'gelato', rhymes: ['prato', 'stato', 'mangiato', 'giocato'],
+                               others: ['gelo', 'gemma', 'pane', 'casa', 'luna'] }
+        ];
+
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:           speak words aloud
+           speakOnTap:      say the tapped word before the rocket shoots
+           autoSpeakTarget: say the target word when a round starts
+           showTime:        show the timer in the stats bar
+           wrongHint:       say which word was tapped after a wrong shot
+           BACKGROUND_IMAGE: optional picture (1200 x 960 px, ratio 5:4);
+                            leave '' to use the drawn space scene
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            speakOnTap: true,
+            autoSpeakTarget: true,
+            showTime: true,
+            wrongHint: true
+        };
+        const BACKGROUND_IMAGE = '';   // e.g. 'images/space.png'
+
+        // Layout of the words: 3 columns, up to 3 rows, rows centred
+        const LAYOUT = { cols: 3, w: 170, h: 62, gapX: 20, gapY: 26, top: 40, area: 290 };
+        const ROCKET = { x: 300, y: 408, noseDist: 64 };
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { sceneEl.classList.add('peeking'); }
+        function onHelpEnd() { sceneEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Rhyme Rocket
+           ===================================================== */
+        const sceneEl = document.getElementById('scene');
+        const wordsEl = document.getElementById('words');
+        const rocketEl = document.getElementById('rocket');
+        const beamEl = document.getElementById('beam');
+        const infoMainEl = document.getElementById('info-main');
+        const sceneBgEl = document.getElementById('scene-bg');
+        const spaceArtEl = document.getElementById('space-art');
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+
+        let roundIdx = 0;
+        let foundCount = 0;
+        let done = false;
+        let busy = false;            // the rocket is shooting
+        let timerStarted = false;
+        let nextMode = false;
+        let statusHtml = '';
+        let statusKind = '';
+
+        /* ---------- Layout: size the frame to the space that is left ---------- */
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const g = getComputedStyle(frameEl);
+            const extraW = parseFloat(g.paddingLeft) + parseFloat(g.paddingRight)
+                         + parseFloat(g.borderLeftWidth) + parseFloat(g.borderRightWidth);
+            const extraH = parseFloat(g.paddingTop) + parseFloat(g.paddingBottom)
+                         + parseFloat(g.borderTopWidth) + parseFloat(g.borderBottomWidth);
+
+            const maxH = Math.max(160, avail - used);
+            const maxW = Math.min(stageEl.clientWidth, 700);
+            const picW = Math.max(120, Math.min(maxW - extraW, (maxH - extraH) * 1.25));   // picture is 5:4
+
+            frameEl.style.width = (picW + extraW) + 'px';
+            stageEl.style.height = (picW * 0.8 + extraH) + 'px';
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Voice ---------- */
+        function say(text, force) {
+            if (!prefs.voice && !force) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'it-IT';
+                u.rate = 0.8;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        /* ---------- Info bar ---------- */
+        /* One line: normally "Rima con [gatto 🔊] · Trovate: x / y";
+           while a message is active, the message replaces the whole line. */
+        function renderInfo() {
+            const r = ROUNDS[roundIdx];
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('Rima con <button type="button" class="tw" data-say="' + r.target + '" aria-label="Ascolta la parola ' + r.target + '">' +
+                 r.target + '<span class="spk" aria-hidden="true">🔊</span></button>' +
+                 '<span class="cnt">Trovate: ' + foundCount + ' / ' + r.rhymes.length + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        infoMainEl.addEventListener('click', (e) => {
+            const b = e.target.closest('[data-say]');
+            if (b) say(b.dataset.say, true);
+        });
+
+        /* ---------- Optional background picture ---------- */
+        if (BACKGROUND_IMAGE) {
+            sceneBgEl.addEventListener('load', () => {
+                sceneBgEl.setAttribute('visibility', 'visible');
+                spaceArtEl.setAttribute('display', 'none');
+            });
+            sceneBgEl.addEventListener('error', () => {
+                sceneBgEl.setAttribute('visibility', 'hidden');
+                spaceArtEl.removeAttribute('display');
+            });
+            sceneBgEl.setAttribute('href', BACKGROUND_IMAGE);
+        }
+
+        /* ---------- Helpers ---------- */
+        function shuffle(arr) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* Centre of each word: rows of up to 3, every row centred */
+        function layoutPositions(n) {
+            const L = LAYOUT;
+            const rows = Math.ceil(n / L.cols);
+            const blockH = rows * L.h + (rows - 1) * L.gapY;
+            const y0 = L.top + (L.area - blockH) / 2;
+            const out = [];
+            for (let i = 0; i < n; i++) {
+                const row = Math.floor(i / L.cols);
+                const inRow = Math.min(L.cols, n - row * L.cols);
+                const col = i - row * L.cols;
+                const rowW = inRow * L.w + (inRow - 1) * L.gapX;
+                const x0 = (600 - rowW) / 2;
+                out.push({
+                    x: x0 + col * (L.w + L.gapX) + L.w / 2,
+                    y: y0 + row * (L.h + L.gapY) + L.h / 2
+                });
+            }
+            return out;
+        }
+
+        function renderWords(r) {
+            const list = shuffle(
+                r.rhymes.map(w => ({ w, rhyme: true })).concat(r.others.map(w => ({ w, rhyme: false })))
+            ).slice(0, 9);
+            const pos = layoutPositions(list.length);
+            const L = LAYOUT;
+
+            wordsEl.innerHTML = list.map((it, i) =>
+                '<g transform="translate(' + pos[i].x.toFixed(1) + ' ' + pos[i].y.toFixed(1) + ')">' +
+                    '<g class="rock' + (it.rhyme ? ' rhyme' : '') + '" data-word="' + it.w + '" data-x="' + pos[i].x.toFixed(1) + '" data-y="' + pos[i].y.toFixed(1) + '" ' +
+                        'role="button" tabindex="0" aria-label="' + it.w + '">' +
+                        '<rect class="ring" x="' + (-L.w / 2 - 8) + '" y="' + (-L.h / 2 - 8) + '" width="' + (L.w + 16) + '" height="' + (L.h + 16) + '" rx="' + (L.h / 2 + 8) + '"/>' +
+                        '<rect class="bg" x="' + (-L.w / 2) + '" y="' + (-L.h / 2) + '" width="' + L.w + '" height="' + L.h + '" rx="' + (L.h / 2) + '"/>' +
+                        '<text class="word" text-anchor="middle" y="10">' + it.w + '</text>' +
+                        '<g class="tick"><circle cx="' + (L.w / 2 - 10) + '" cy="' + (-L.h / 2 + 4) + '" r="15" fill="#059669" stroke="#ffffff" stroke-width="3"/>' +
+                        '<text class="tick-mark" x="' + (L.w / 2 - 10) + '" y="' + (-L.h / 2 + 12) + '" text-anchor="middle">✓</text></g>' +
+                    '</g>' +
+                '</g>'
+            ).join('');
+        }
+
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadRound() {
+            const r = ROUNDS[roundIdx];
+            foundCount = 0;
+            done = false;
+            busy = false;
+            hidePeek();
+            setNextMode(false);
+
+            rocketEl.style.transform = 'rotate(0deg)';
+            beamEl.classList.remove('fire', 'miss');
+            updateRoundDisplay();
+            setStatus('');
+            renderWords(r);
+
+            if (prefs.autoSpeakTarget) setTimeout(() => say(r.target), 350);
+        }
+
+        /* ---------- Interaction ---------- */
+        function aimAndShoot(rock, hit) {
+            const tx = parseFloat(rock.dataset.x);
+            const ty = parseFloat(rock.dataset.y);
+            const angle = Math.atan2(tx - ROCKET.x, -(ty - ROCKET.y));      // radians, 0 = straight up
+
+            rocketEl.style.transform = 'rotate(' + (angle * 180 / Math.PI).toFixed(1) + 'deg)';
+
+            const nx = ROCKET.x + Math.sin(angle) * ROCKET.noseDist;
+            const ny = ROCKET.y - Math.cos(angle) * ROCKET.noseDist;
+            beamEl.setAttribute('x1', nx.toFixed(1));
+            beamEl.setAttribute('y1', ny.toFixed(1));
+            beamEl.setAttribute('x2', tx.toFixed(1));
+            beamEl.setAttribute('y2', ty.toFixed(1));
+            beamEl.classList.remove('fire', 'miss');
+            void beamEl.getBoundingClientRect();                             // restart the animation
+            beamEl.classList.add('fire');
+            if (!hit) beamEl.classList.add('miss');
+        }
+
+        function onRockActivate(rock) {
+            if (!rock || done || busy || rock.classList.contains('found')) return;
+            const r = ROUNDS[roundIdx];
+            const word = rock.dataset.word;
+            const hit = rock.classList.contains('rhyme');
+
+            startTimerOnce();
+            addMove();
+            busy = true;
+            if (prefs.speakOnTap) say(word);
+            aimAndShoot(rock, hit);
+
+            setTimeout(() => {
+                if (hit) {
+                    rock.classList.add('found', 'pop');
+                    foundCount++;
+                    setStatus('');
+                    if (foundCount >= r.rhymes.length) finishRound();
+                } else {
+                    // Wrong shot: gentle wobble, no penalty beyond the move count
+                    rock.classList.remove('wobble');
+                    void rock.getBoundingClientRect();
+                    rock.classList.add('wobble');
+                    setStatus(prefs.wrongHint ? word + ' non fa rima con ' + r.target : 'Quasi! Prova ancora.', 'retry');
+                }
+                busy = false;
+            }, 520);
+        }
+
+        function finishRound() {
+            done = true;
+            hidePeek();
+            const isLast = roundIdx === ROUNDS.length - 1;
+            setProgress(((roundIdx + 1) / ROUNDS.length) * 100);
+            setStatus(isLast ? 'Bravo! Hai finito tutti i round!' : 'Bravo! Le hai trovate tutte.', 'ok');
+            if (isLast) stopElapsedTimer();
+            setNextMode(true, isLast);
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (roundIdx === ROUNDS.length - 1) {
+                roundIdx = 0;
+                initGame();
+            } else {
+                roundIdx++;
+                loadRound();
+            }
+        }
+
+        sceneEl.addEventListener('click', (e) => {
+            onRockActivate(e.target.closest('.rock'));
+        });
+
+        sceneEl.addEventListener('keydown', (e) => {
+            if (e.key !== 'Enter' && e.key !== ' ') return;
+            const rock = e.target.closest && e.target.closest('.rock');
+            if (!rock) return;
+            e.preventDefault();
+            onRockActivate(rock);
+        });
+
+        sceneEl.addEventListener('animationend', (e) => {
+            if (e.animationName === 'wobble') e.target.classList.remove('wobble');
+            if (e.animationName === 'pop') e.target.classList.remove('pop');
+        });
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            loadRound();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

@@ -128,12 +128,11 @@
             background-color: #faf8ff;
             /* Border is 1px thicker per side than #source-container's 1px
                border; trim padding by that same 1px per side so the two
-               containers end up with identical usable (content) width even
-               though their outer width is set equal in JS. */
+               containers end up with identical usable (content) width. */
             padding: 19px;
         }
 
-        /* Slot styles for Drop Zone — width now flexes to fit the word it will hold */
+        /* Slot styles for Drop Zone */
         .slot {
             position: relative;
             flex-shrink: 0;
@@ -147,7 +146,11 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Only properties that do NOT change the slot's size are animated.
+               "transition: all" used to animate the border going from 2px to none,
+               so the slot kept changing width for 0.25s after a word was placed. */
+            transition: border-color 0.25s ease, background-color 0.25s ease,
+                        box-shadow 0.25s ease, transform 0.25s ease;
             cursor: pointer;
         }
 
@@ -160,8 +163,7 @@
         }
 
         /* Filled slot becomes an invisible wrapper: the card inside keeps its
-           normal, unmodified styling, so it's pixel-identical to a source card
-           or a revealed card — no separate sizing rules to drift out of sync. */
+           normal, unmodified styling. */
         .slot.filled,
         .slot.revealed {
             border: none;
@@ -175,8 +177,7 @@
             z-index: 5;
         }
 
-        /* Error state for incorrect slots — styled on the card itself, since the
-           filled slot no longer has its own border/background to color. */
+        /* Error state for incorrect slots */
         .slot.error-slot {
             animation: shake 0.4s ease;
         }
@@ -240,7 +241,7 @@
             transform: none !important;
         }
 
-        /* Cards now hold a whole word: flexible width, no fixed square */
+        /* Cards hold a whole word: flexible width, no fixed square */
         .card {
             flex-shrink: 0;
             min-width: 90px;
@@ -272,10 +273,7 @@
             z-index: 5;
         }
 
-        /* Cards inside a slot keep the exact same styling as everywhere else
-           (see .card above) — no width/padding/border overrides here, so a
-           placed word, a source word, and a revealed word are always the
-           same size. */
+        /* Cards inside a slot keep the exact same styling as everywhere else */
         .slot .card {
             transform: none !important;
         }
@@ -467,12 +465,10 @@
 
     <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
         <div class="section-wrapper">
-            <!--<div class="section-title">Parole disponibili (tocca per spostare)</div>-->
             <div id="source-container" class="card-container"></div>
         </div>
 
         <div class="section-wrapper" style="margin-bottom:0;">
-            <!--<div class="section-title">Componi qui (la casella attiva è evidenziata)</div>-->
             <div class="target-wrapper">
                 <div id="target-container" class="card-container"></div>
                 <div id="reveal-overlay" aria-hidden="true"></div>
@@ -508,7 +504,7 @@
 
 <script>
         // Each entry is a full sentence; it gets split into words, which are then
-        // the draggable/clickable units instead of individual letters.
+        // the clickable units instead of individual letters.
 
         ///////////////////////////////////////////////////////////////////////////////
         // LE FRASI SONO LETTE NELLA FUNZIONE INITGAME DAL FILE SENTENCES.JSON
@@ -544,6 +540,7 @@
         let sentenceCompleted = false;
         let isRevealing = false;
         let slotsMeta = [];
+        let rowCap = 0;               // maximum width (px) both containers may use
 
         function startElapsedTimer() {
             stopElapsedTimer();
@@ -579,6 +576,7 @@
             moveCount++;
             updateMovesDisplay();
             updateSlotHighlights();
+            fitTargetContainer();          // slot widths changed: re-hug the placeholders
             checkSentenceAutomatic();
         }
 
@@ -611,18 +609,53 @@
             return width;
         }
 
+        /* The source container gets the width of the whole sentence on one row
+           (capped to the available space). That same value is the maximum width
+           the target container may use. */
         function syncContainerWidths() {
             if (!originalWords.length) return;
-            
-            // Measure ideal single-row width
-            const fullWidth = measureFullRowWidth(originalWords);
-            
-            // Respect the maximum available space on smaller screens/resizes
-            const maxAllowedWidth = puzzleWorkspace.clientWidth - 40; // accounting for padding
-            const targetWidth = Math.min(fullWidth, maxAllowedWidth);
 
-            sourceContainer.style.width = targetWidth + 'px';
-            targetContainer.style.width = targetWidth + 'px';
+            const fullWidth = measureFullRowWidth(originalWords);
+            const maxAllowedWidth = puzzleWorkspace.clientWidth - 40;
+            rowCap = Math.min(fullWidth, maxAllowedWidth);
+
+            sourceContainer.style.width = rowCap + 'px';
+            fitTargetContainer();
+        }
+
+        /* Makes the target container exactly as wide as its widest row of slots.
+           It does NOT measure the container's current layout: it reads only the
+           width of each slot (a slot's width never depends on the container),
+           then simulates the line wrapping and adds padding and border. */
+        function fitTargetContainer() {
+            const slots = Array.from(targetContainer.children);
+            if (!slots.length) return;
+
+            const cs = getComputedStyle(targetContainer);
+            const gap = parseFloat(cs.columnGap) || 14;
+            const extras = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
+                         + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+
+            const cap = rowCap || (puzzleWorkspace.clientWidth - 40);
+            const maxInner = cap - extras;
+
+            let widest = 0;
+            let rowWidth = 0;
+            slots.forEach(slot => {
+                const w = slot.getBoundingClientRect().width;
+                if (rowWidth === 0) {
+                    rowWidth = w;
+                } else if (rowWidth + gap + w <= maxInner) {
+                    rowWidth += gap + w;
+                } else {
+                    widest = Math.max(widest, rowWidth);
+                    rowWidth = w;
+                }
+            });
+            widest = Math.max(widest, rowWidth);
+
+            const finalWidth = Math.min(Math.ceil(widest + extras) + 1, cap); // +1 avoids sub-pixel re-wrap
+            targetContainer.style.width = finalWidth + 'px';
         }
 
         function loadSentence(index) {
@@ -637,6 +670,7 @@
 
             originalWords = PUZZLE_SENTENCES[index].split(' ');
             sourceContainer.style.width = '';
+            targetContainer.style.width = '';
             sourceContainer.innerHTML = '';
             targetContainer.innerHTML = '';
             sentenceCompleted = false;
@@ -759,15 +793,11 @@
 
                 progressBarFill.style.width = (((currentSentenceIndex + 1) / PUZZLE_SENTENCES.length) * 100) + '%';
 
-            //    const effectiveTime = Math.max(elapsedSeconds, 1);
-            //    const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
-
-                // Score this round directly on a 0–100 scale: start at 100, lose points
-                // for each wrong guess and each reveal used. No time-based formula, so
-                // there's no arbitrary "perfect value" left to guess at.
+                // Score this round directly on a 0-100 scale: start at 100, lose points
+                // for each wrong guess and each reveal used.
                 const wrongAttempts = moveCount - 1; // moveCount includes the final correct click
                 const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
-              
+
                 roundResults.push({
                     sentence: originalWords.join(' '),
                     time: elapsedSeconds + 's',
@@ -832,11 +862,7 @@
                 summaryTbody.appendChild(row);
             });
 
-        //    const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-        //    const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
-
-            // averageMetric is already 0–100 per round (see handleOptionClick),
-            // so no rescaling is needed — just average and clamp for safety.
+            // Each round metric is already on a 0-100 scale, so just average and clamp.
             const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
             const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
 
@@ -876,7 +902,7 @@
             revealOverlay.classList.remove('visible');
         }
 
-        
+
         async function initGame() {
             try {
                 const response = await fetch('sentences.json');
@@ -887,12 +913,12 @@
                     document.title = data.title;
                     document.getElementById('game-title').textContent = data.title;
                 }
-                    
+
             } catch (err) {
                 console.error('Could not load sentences.json:', err);
                 PUZZLE_SENTENCES = ["QUALCOSA é ANDATO STORTO"]; // fallback so it still runs
             }
-            
+
             loadSentence(currentSentenceIndex);
         }
 
@@ -913,9 +939,9 @@
             resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
         });
 
-       // load json with the sentences
+        // load json with the sentences
 
-       initGame();
+        initGame();
 
     </script>
 
