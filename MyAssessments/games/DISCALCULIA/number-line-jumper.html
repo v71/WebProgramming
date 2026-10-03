@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>La rana saltatrice</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage takes all the space that is left; everything inside the frame
+           is sized from it (see fitStage / fitFonts), so the page never scrolls. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            position: relative;
+            width: min(100%, 720px);       /* replaced by fitStage() */
+            height: 100%;                  /* replaced by fitStage() */
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { cursor: not-allowed; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Number Line Jumper ---------- */
+        /* The sum */
+        #eq {
+            flex: 0 0 var(--eqh, 70px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+        #eqline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.28em;
+            font-size: var(--efs, 44px);
+            font-weight: 600;
+            line-height: 1.1;
+            letter-spacing: 0.02em;
+            white-space: nowrap;
+        }
+        #eqline .n   { min-width: 1.1em; text-align: center; }
+        #eqline .op  { color: var(--accent); }
+        #eqline .q   { color: #94a3b8; }
+        #eqline .res { color: #047857; }
+        #eqline .hop { color: var(--accent); }   /* the number of jumps */
+        #cap {
+            font-size: calc(var(--efs, 44px) * 0.38);
+            font-weight: 500;
+            color: var(--text-dim);
+            line-height: 1.1;
+        }
+        #cap.hidden { display: none; }
+
+        /* The pond with the number line */
+        #scenewrap {
+            flex: 1;
+            min-height: 0;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #7dd3fc;
+        }
+        #scene { display: block; width: 100%; height: 100%; }
+        #world { transition: transform 0.45s ease; }
+
+        .line { stroke: #334155; stroke-width: 4; stroke-linecap: round; }
+        .tick { stroke: #334155; stroke-width: 3; stroke-linecap: round; }
+        .lbl  { font-family: 'Lexend', system-ui, sans-serif; font-size: 22px; font-weight: 600; fill: #0f172a; text-anchor: middle; }
+        .pad  { fill: #86efac; stroke: #16a34a; stroke-width: 3; }
+        .padring { fill: none; stroke: var(--accent); stroke-width: 5; opacity: 0; }
+
+        .arc  { fill: none; stroke: #4f46e5; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 2 8; }
+        .arcn circle { fill: #4f46e5; stroke: #ffffff; stroke-width: 2; }
+        .arcn text { font-family: 'Lexend', system-ui, sans-serif; font-size: 13px; font-weight: 700; fill: #ffffff; text-anchor: middle; }
+
+        /* Help (hold): the jumps that lead to the answer, drawn in gold */
+        .ghost { opacity: 0; pointer-events: none; transition: opacity 0.15s ease; }
+        .ghost .arc { stroke: #f59e0b; stroke-width: 5; }
+        .ghost .arcn circle { fill: #f59e0b; }
+        #game-area.peeking .ghost { opacity: 1; }
+        #game-area.peeking .padring.goal { opacity: 1; animation: pulse 0.9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+        .flag { font-size: 28px; text-anchor: middle; }
+
+        /* The frog */
+        .eye { fill: #ffffff; stroke: #166534; stroke-width: 2.5; }
+        .pupil { fill: #14532d; }
+        .mouth { display: none; }
+        #frog[data-mood="normal"] .m-normal,
+        #frog[data-mood="happy"] .m-happy,
+        #frog[data-mood="oops"] .m-oops { display: inline; }
+
+        .star-fx { pointer-events: none; animation: twinkle 1.6s ease-in-out infinite; }
+
+        /* The buttons under the pond */
+        #actions {
+            flex: 0 0 var(--acth, 64px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .big {
+            height: 100%;
+            min-width: 150px;
+            padding: 0 26px;
+            font-size: calc(var(--acth, 64px) * 0.36);
+            font-weight: 600;
+            color: #ffffff;
+            background: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+        .big:hover:not(:disabled) { background: #4f46e5; }
+        .big:disabled { opacity: 0.5; }
+
+        .opt {
+            flex: 1;
+            max-width: 190px;
+            height: 100%;
+            font-size: calc(var(--acth, 64px) * 0.55);
+            font-weight: 600;
+            color: var(--text);
+            background: #ffffff;
+            border: 3px solid #94a3b8;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+        .opt:hover:not(:disabled) { border-color: var(--accent); }
+        .opt.wrong { opacity: 0.35; }
+        .opt.good { background: #bbf7d0; border-color: #059669; opacity: 1; }
+        .opt:disabled:not(.wrong):not(.good) { opacity: 0.6; }
+        #game-area.peeking .opt.right:not(:disabled) {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.4);
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+        #game-area.peeking .big.right:not(:disabled) {
+            box-shadow: 0 0 0 5px rgba(245, 158, 11, 0.55);
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #world { transition: none; }
+            .star-fx, #game-area.peeking .opt.right, #game-area.peeking .big.right, #game-area.peeking .padring.goal { animation: none; }
+            .progress-bar-fill, .cool-btn { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+            #game-area { padding: 8px; }
+            .big { min-width: 120px; padding: 0 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">La rana saltatrice</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <div id="eq" aria-live="polite">
+                <div id="eqline"></div>
+                <div id="cap" class="hidden"></div>
+            </div>
+
+            <div id="scenewrap">
+                <svg id="scene" viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="La rana sulla linea dei numeri">
+                    <defs>
+                        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#e0f2fe"/>
+                            <stop offset="1" stop-color="#bae6fd"/>
+                        </linearGradient>
+                        <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0" stop-color="#7dd3fc"/>
+                            <stop offset="1" stop-color="#38bdf8"/>
+                        </linearGradient>
+                        <path id="star" d="M0 -10 L2.35 -3.24 L9.51 -3.09 L3.8 1.24 L5.88 8.09 L0 4 L-5.88 8.09 L-3.8 1.24 L-9.51 -3.09 L-2.35 -3.24 Z"/>
+                    </defs>
+                    <g id="bg"></g>
+                    <g id="world"></g>
+                    <g id="fx"></g>
+                </svg>
+            </div>
+
+            <div id="actions"></div>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <!-- ===================== DATA AND RULES (no page elements here) ===================== -->
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           title:   the topic of the round
+           mode:    'guided'  the child makes the frog jump one hop per tap;
+                              the frog stops by itself after the right number of hops
+                    'pick'    the child chooses where the frog lands; the frog
+                              then jumps there and counts the hops
+                    'reach'   "a + ? = c": the child jumps the frog to the flag
+                              and finds how many jumps it took
+           max:     the number line goes from 0 to max
+           ops:     '+' and/or '-'
+           a, b:    [smallest, biggest] for the first number and the number of jumps
+           count:   how many sums in the round
+           caption: show "3 salti avanti" under the sum (extra support)
+           tricky:  (pick) include the answer of the opposite operation among the choices
+           ===================================================== */
+        const ROUNDS = [
+            { title: 'Salta avanti',     mode: 'guided', max: 10, ops: ['+'],      a: [0, 6],  b: [1, 3], count: 5, caption: true },
+            { title: 'Salta indietro',   mode: 'guided', max: 10, ops: ['-'],      a: [3, 10], b: [1, 3], count: 5, caption: true },
+            { title: 'Dove atterra?',    mode: 'pick',   max: 10, ops: ['+'],      a: [1, 8],  b: [1, 5], count: 5, caption: true },
+            { title: 'Avanti e indietro', mode: 'pick',  max: 10, ops: ['+', '-'], a: [2, 10], b: [1, 6], count: 6, caption: false, tricky: true },
+            { title: 'Fino a 20',        mode: 'pick',   max: 20, ops: ['+', '-'], a: [5, 15], b: [1, 8], count: 6, caption: false, tricky: true },
+            { title: 'Quanti salti?',    mode: 'reach',  max: 12, ops: ['+', '-'], a: [0, 9],  b: [1, 6], count: 5, caption: false }
+        ];
+
+        const NUM_WORDS = ['zero', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci',
+            'undici', 'dodici', 'tredici', 'quattordici', 'quindici', 'sedici', 'diciassette', 'diciotto', 'diciannove', 'venti'];
+
+        function randInt(lo, hi, rand) { return lo + Math.floor((rand || Math.random)() * (hi - lo + 1)); }
+
+        /* Makes the sums of a round: no repeats, answers always inside the number line */
+        function makeProblems(round, rand) {
+            const out = [], seen = {};
+            let tries = 0;
+            while (out.length < round.count && tries++ < 2000) {
+                const op = round.ops[randInt(0, round.ops.length - 1, rand)];
+                const a = randInt(round.a[0], round.a[1], rand);
+                const b = randInt(round.b[0], round.b[1], rand);
+                const ans = op === '+' ? a + b : a - b;
+                if (ans < 0 || ans > round.max || a > round.max) continue;
+                const key = a + op + b;
+                if (seen[key]) continue;
+                seen[key] = true;
+                out.push({ a: a, b: b, op: op, ans: ans });
+            }
+            return out;
+        }
+
+        /* Three choices: the right answer and two that are easy to mix up with it */
+        function makeOptions(p, round, rand) {
+            const picks = [];
+            if (round.tricky) {
+                const opposite = p.op === '+' ? p.a - p.b : p.a + p.b;     // doing the other operation by mistake
+                if (opposite >= 0 && opposite <= round.max && opposite !== p.ans) picks.push(opposite);
+            }
+            [p.ans + 1, p.ans - 1, p.ans + 2, p.ans - 2]
+                .filter(v => v >= 0 && v <= round.max && v !== p.ans && picks.indexOf(v) === -1)
+                .sort(() => (rand || Math.random)() - 0.5)
+                .forEach(v => { if (picks.length < 2) picks.push(v); });
+            return [p.ans].concat(picks.slice(0, 2)).sort((x, y) => x - y);
+        }
+
+        function sayEquation(p) {
+            const w = n => NUM_WORDS[n] || String(n);
+            return w(p.a) + (p.op === '+' ? ' più ' : ' meno ') + w(p.b) + ' fa ' + w(p.ans);
+        }
+    </script>
+
+    <!-- ===================== THE GAME (page elements) ===================== -->
+    <script>
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:        speak the numbers and the result
+           speakCounts:  count the hops aloud ("uno, due, tre")
+           showTime:     show the timer in the stats bar
+           hopMs:        how long one hop takes
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            speakCounts: true,
+            showTime: true,
+            hopMs: 420
+        };
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { frameEl.classList.add('peeking'); }
+        function onHelpEnd() { frameEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Number Line Jumper
+           ===================================================== */
+        const NS = 'http://www.w3.org/2000/svg';
+        const SP = 46;             // distance between two numbers on the line
+        const MARGIN = 40;
+        const VW = 600;            // width of the picture; its height follows the space available
+
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+        const eqEl = document.getElementById('eq');
+        const eqLineEl = document.getElementById('eqline');
+        const capEl = document.getElementById('cap');
+        const wrapEl = document.getElementById('scenewrap');
+        const sceneEl = document.getElementById('scene');
+        const bgEl = document.getElementById('bg');
+        const worldEl = document.getElementById('world');
+        const fxEl = document.getElementById('fx');
+        const actionsEl = document.getElementById('actions');
+        const infoMainEl = document.getElementById('info-main');
+
+        let roundIdx = 0;
+        let problems = [];
+        let probIdx = 0;
+        let prob = null;
+        let options = [];
+        let pos = 0;               // where the frog is on the number line
+        let hops = 0;              // hops made (guided mode)
+        let arcs = [];             // hops drawn so far: { from, to, n }
+        let sceneH = 300;          // height of the picture, in picture units
+        let geo = null;            // y positions of the picture
+        let frogEl = null;
+        let arcsEl = null;
+        let busy = false;          // the frog is jumping
+        let hopToken = 0;          // cancels a jump that is still going on
+        let done = false;
+        let problemsDone = 0;
+        let timerStarted = false;
+        let nextMode = false;
+        let statusHtml = '';
+        let statusKind = '';
+        let wrongPicks = {};
+
+        const TOTAL_PROBLEMS = ROUNDS.reduce((n, r) => n + r.count, 0);
+
+        function round() { return ROUNDS[roundIdx]; }
+        function xOf(i) { return MARGIN + i * SP; }
+        function worldW() { return 2 * MARGIN + round().max * SP; }
+
+        function make(tag, attrs) {
+            const el = document.createElementNS(NS, tag);
+            Object.keys(attrs || {}).forEach(k => el.setAttribute(k, attrs[k]));
+            return el;
+        }
+
+        /* ---------- Voice ---------- */
+        function say(t) {
+            if (!prefs.voice) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(t);
+                u.lang = 'it-IT';
+                u.rate = 0.85;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function sayCount(n) { if (prefs.speakCounts) say(NUM_WORDS[n] || String(n)); }
+
+        /* ---------- Info bar ---------- */
+        function leadText() {
+            if (!prob) return '';
+            if (round().mode === 'guided') return 'Salti: ' + hops + ' / ' + prob.b;
+            if (round().mode === 'reach') return 'Alla bandiera! Salti: ' + Math.abs(pos - prob.a);
+            return 'Dove atterra la rana?';
+        }
+
+        function renderInfo() {
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>' + leadText() + '</span><span class="cnt">Somma ' + (probIdx + 1) + ' / ' + problems.length + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- The sum on top ---------- */
+        function renderEquation(solved) {
+            const p = prob, reach = round().mode === 'reach';
+            const opSign = p.op === '+' ? '+' : '−';
+            let html;
+            if (reach) {
+                html = '<span class="n">' + p.a + '</span><span class="op">' + opSign + '</span>' +
+                       (solved ? '<span class="n hop">' + p.b + '</span>' : '<span class="n q">?</span>') +
+                       '<span class="op">=</span><span class="n">' + p.ans + '</span>';
+            } else {
+                html = '<span class="n">' + p.a + '</span><span class="op">' + opSign + '</span><span class="n hop">' + p.b + '</span>' +
+                       '<span class="op">=</span>' + (solved ? '<span class="n res">' + p.ans + '</span>' : '<span class="n q">?</span>');
+            }
+            eqLineEl.innerHTML = html;
+
+            const showCap = round().caption && !reach;
+            capEl.classList.toggle('hidden', !showCap);
+            capEl.textContent = p.b + (p.b === 1 ? ' salto ' : ' salti ') + (p.op === '+' ? 'avanti' : 'indietro');
+        }
+
+        /* ---------- Layout ---------- */
+        function fitFonts() {
+            const g = getComputedStyle(frameEl);
+            const innerW = frameEl.clientWidth - parseFloat(g.paddingLeft) - parseFloat(g.paddingRight);
+            const innerH = frameEl.clientHeight - parseFloat(g.paddingTop) - parseFloat(g.paddingBottom);
+
+            const capOn = round().caption && round().mode !== 'reach';
+            const eqH = Math.max(52, Math.min(innerH * (capOn ? 0.26 : 0.2), capOn ? 120 : 96));
+            const efs = Math.max(26, Math.min(eqH * (capOn ? 0.55 : 0.68), innerW / 6.4));
+            const actH = Math.max(46, Math.min(innerH * 0.17, 80));
+
+            frameEl.style.setProperty('--eqh', eqH + 'px');
+            frameEl.style.setProperty('--efs', efs.toFixed(1) + 'px');
+            frameEl.style.setProperty('--acth', actH + 'px');
+
+            // The picture takes the rest; its height in picture units follows its shape
+            const w = wrapEl.clientWidth, h = wrapEl.clientHeight;
+            if (w > 0 && h > 0) {
+                const newH = Math.max(210, Math.round(VW * h / w));
+                if (Math.abs(newH - sceneH) > 1 || !geo) {
+                    sceneH = newH;
+                    buildScene();
+                }
+            }
+        }
+
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const h = Math.max(320, avail - used);
+            stageEl.style.height = h + 'px';
+            frameEl.style.height = h + 'px';
+            frameEl.style.width = Math.min(stageEl.clientWidth, 720) + 'px';
+            fitFonts();
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Drawing the pond and the number line ---------- */
+        function frogSvg() {
+            const f = make('g', { id: 'frog', 'data-mood': 'normal' });
+            f.innerHTML =
+                '<ellipse cx="-24" cy="-6" rx="11" ry="7" fill="#4ade80" stroke="#16a34a" stroke-width="3"/>' +
+                '<ellipse cx="24" cy="-6" rx="11" ry="7" fill="#4ade80" stroke="#16a34a" stroke-width="3"/>' +
+                '<ellipse cx="0" cy="-17" rx="26" ry="19" fill="#4ade80" stroke="#16a34a" stroke-width="3"/>' +
+                '<ellipse cx="0" cy="-10" rx="15" ry="10" fill="#bbf7d0"/>' +
+                '<circle class="eye" cx="-12" cy="-37" r="10"/><circle class="eye" cx="12" cy="-37" r="10"/>' +
+                '<circle class="pupil" cx="-12" cy="-36" r="4.5"/><circle class="pupil" cx="12" cy="-36" r="4.5"/>' +
+                '<path class="mouth m-normal" d="M-9 -19 Q0 -12 9 -19" fill="none" stroke="#14532d" stroke-width="3" stroke-linecap="round"/>' +
+                '<path class="mouth m-happy" d="M-11 -22 Q0 -4 11 -22 Z" fill="#7f1d1d" stroke="#14532d" stroke-width="3" stroke-linejoin="round"/>' +
+                '<ellipse class="mouth m-oops" cx="0" cy="-17" rx="5" ry="6" fill="#7f1d1d" stroke="#14532d" stroke-width="3"/>';
+            return f;
+        }
+
+        function setMood(m) { if (frogEl) frogEl.setAttribute('data-mood', m); }
+
+        function frogXY(x, lift) { return 'translate(' + x.toFixed(1) + ' ' + (geo.frogY - lift).toFixed(1) + ')'; }
+
+        function arcGroup(from, to, n, cls) {
+            const x0 = xOf(from), x1 = xOf(to), y = geo.arcY;
+            const mid = (x0 + x1) / 2, top = y - geo.arcH;
+            const g = make('g', { class: cls || '' });
+            g.appendChild(make('path', { class: 'arc', d: 'M' + x0 + ' ' + y + ' Q' + mid + ' ' + (y - geo.arcH * 2) + ' ' + x1 + ' ' + y }));
+            const label = make('g', { class: 'arcn', transform: 'translate(' + mid + ' ' + top + ')' });
+            label.appendChild(make('circle', { r: 11 }));
+            const t = make('text', { y: 4.5 });
+            t.textContent = String(n);
+            label.appendChild(t);
+            g.appendChild(label);
+            return g;
+        }
+
+        function buildScene() {
+            sceneEl.setAttribute('viewBox', '0 0 ' + VW + ' ' + sceneH);
+            const r = round();
+
+            // y positions: everything hangs from the bottom, so any height works
+            const lineY = sceneH - 78;
+            geo = {
+                lineY: lineY, padY: lineY - 18, frogY: lineY - 22, labelY: lineY + 40,
+                arcY: lineY - 36, arcH: Math.max(34, Math.min(80, sceneH * 0.27))
+            };
+
+            bgEl.innerHTML = '';
+            bgEl.appendChild(make('rect', { width: VW, height: sceneH, fill: 'url(#sky)' }));
+            bgEl.appendChild(make('rect', { y: sceneH * 0.5, width: VW, height: sceneH * 0.5, fill: 'url(#water)' }));
+            bgEl.appendChild(make('ellipse', { cx: 70, cy: 42, rx: 38, ry: 13, fill: '#ffffff', opacity: 0.85 }));
+            bgEl.appendChild(make('ellipse', { cx: 520, cy: 60, rx: 44, ry: 14, fill: '#ffffff', opacity: 0.85 }));
+
+            worldEl.innerHTML = '';
+            const line = make('line', { class: 'line', x1: xOf(0) - 26, x2: xOf(r.max) + 26, y1: geo.lineY, y2: geo.lineY });
+            worldEl.appendChild(line);
+
+            for (let i = 0; i <= r.max; i++) {
+                const x = xOf(i);
+                worldEl.appendChild(make('line', { class: 'tick', x1: x, x2: x, y1: geo.lineY - 8, y2: geo.lineY + 8 }));
+                worldEl.appendChild(make('ellipse', { class: 'pad', cx: x, cy: geo.padY, rx: 20, ry: 10 }));
+                const l = make('text', { class: 'lbl', x: x, y: geo.labelY });
+                l.textContent = String(i);
+                worldEl.appendChild(l);
+            }
+
+            // Help: the whole way from the start to the answer, and a ring on the landing number
+            if (prob) {
+                const ghost = make('g', { class: 'ghost' });
+                const dir = prob.ans >= prob.a ? 1 : -1;
+                let n = 0;
+                for (let i = prob.a; i !== prob.ans; i += dir) ghost.appendChild(arcGroup(i, i + dir, ++n));
+                worldEl.appendChild(ghost);
+                worldEl.appendChild(make('ellipse', { class: 'padring goal', cx: xOf(prob.ans), cy: geo.padY, rx: 27, ry: 15 }));
+
+                if (r.mode === 'reach') {
+                    const flag = make('text', { class: 'flag', x: xOf(prob.ans), y: geo.padY - 22 });
+                    flag.textContent = '🏁';
+                    worldEl.appendChild(flag);
+                }
+            }
+
+            arcsEl = make('g', {});
+            worldEl.appendChild(arcsEl);
+            arcs.forEach(a => arcsEl.appendChild(arcGroup(a.from, a.to, a.n)));
+
+            frogEl = frogSvg();
+            frogEl.setAttribute('transform', frogXY(xOf(pos), 0));
+            frogEl.setAttribute('data-mood', done ? 'happy' : 'normal');
+            worldEl.appendChild(frogEl);
+
+            setCamera(prob && r.mode === 'reach' && !done ? (prob.a + prob.ans) / 2 : pos, false);
+        }
+
+        /* The pond slides so the frog (or the frog and the flag) stays in view */
+        function setCamera(focus, animate) {
+            const w = worldW();
+            let cam;
+            if (w <= VW) cam = -(VW - w) / 2;
+            else cam = Math.max(0, Math.min(xOf(focus) - VW / 2, w - VW));
+            if (!animate) worldEl.style.transition = 'none';
+            worldEl.style.transform = 'translateX(' + (-cam).toFixed(1) + 'px)';
+            if (!animate) { void worldEl.getBoundingClientRect(); worldEl.style.transition = ''; }
+        }
+
+        /* ---------- Jumping ---------- */
+        function tweenHop(from, to, ms) {
+            const token = hopToken;
+            const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const dur = reduce ? 120 : ms;
+            const x0 = xOf(from), x1 = xOf(to);
+            const lift = Math.min(geo.arcH, 28 + Math.abs(to - from) * 6);
+            return new Promise(resolve => {
+                const t0 = performance.now();
+                function step(now) {
+                    if (token !== hopToken) { resolve(false); return; }
+                    const t = Math.min(1, (now - t0) / dur);
+                    frogEl.setAttribute('transform', frogXY(x0 + (x1 - x0) * t, lift * 4 * t * (1 - t)));
+                    if (t < 1) requestAnimationFrame(step); else resolve(true);
+                }
+                requestAnimationFrame(step);
+            });
+        }
+
+        /* One hop forward (dir = 1) or back (dir = -1), counted as hop number n */
+        async function hopStep(dir, n) {
+            const from = pos, to = pos + dir;
+            const ok = await tweenHop(from, to, prefs.hopMs);
+            if (!ok) return false;
+            pos = to;
+            arcs.push({ from: from, to: to, n: n });
+            arcsEl.appendChild(arcGroup(from, to, n));
+            setCamera(pos, true);
+            sayCount(n);
+            return true;
+        }
+
+        function clearArcs() {
+            arcs = [];
+            if (arcsEl) arcsEl.innerHTML = '';
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* ---------- The buttons under the pond ---------- */
+        function renderActions() {
+            const mode = round().mode;
+            if (mode === 'guided') {
+                actionsEl.innerHTML = '<button type="button" class="big right" id="hop-btn">🐸 ' + (prob.op === '+' ? 'Salta avanti' : 'Salta indietro') + '</button>';
+            } else if (mode === 'pick') {
+                actionsEl.innerHTML = options.map(v =>
+                    '<button type="button" class="opt' + (v === prob.ans ? ' right' : '') + (wrongPicks[v] ? ' wrong' : '') + '" data-v="' + v + '"' +
+                    (wrongPicks[v] ? ' disabled' : '') + '>' + v + '</button>').join('');
+            } else {
+                actionsEl.innerHTML =
+                    '<button type="button" class="big' + (prob.ans < prob.a ? ' right' : '') + '" data-dir="-1">⬅️ Indietro</button>' +
+                    '<button type="button" class="big' + (prob.ans > prob.a ? ' right' : '') + '" data-dir="1">Avanti ➡️</button>';
+            }
+        }
+
+        function setBusy(on) {
+            busy = on;
+            Array.from(actionsEl.querySelectorAll('button')).forEach(b => {
+                if (on) b.disabled = true;
+                else b.disabled = done || b.classList.contains('wrong');
+            });
+        }
+
+        /* ---------- Playing a sum ---------- */
+        async function onHop() {                                   // guided mode
+            if (busy || done) return;
+            startTimerOnce();
+            addMove();
+            setStatus('');
+            setBusy(true);
+            const dir = prob.op === '+' ? 1 : -1;
+            const ok = await hopStep(dir, hops + 1);
+            if (!ok) return;
+            hops++;
+            renderInfo();
+            if (hops >= prob.b) { solved(); return; }
+            setBusy(false);
+        }
+
+        async function onPick(v) {                                 // pick mode
+            if (busy || done || wrongPicks[v]) return;
+            startTimerOnce();
+            addMove();
+            setStatus('');
+            setBusy(true);
+            const token0 = hopToken;
+
+            const dir = v >= prob.a ? 1 : -1;
+            let n = 0;
+            for (let i = prob.a; i !== v; i += dir) {
+                if (!await hopStep(dir, ++n)) return;
+            }
+            if (v === prob.ans) { solved(); return; }
+
+            // Not the right place: say how many jumps were needed, and bring the frog back
+            setMood('oops');
+            setStatus('Servono ' + prob.b + ' salti, tu ne hai fatti ' + Math.abs(v - prob.a), 'retry');
+            wrongPicks[v] = true;
+            await new Promise(r => setTimeout(r, 1300));
+            if (token0 !== hopToken) return;
+            if (!await tweenHop(pos, prob.a, 520)) return;
+            pos = prob.a;
+            clearArcs();
+            setCamera(pos, true);
+            setMood('normal');
+            renderActions();
+            setBusy(false);
+        }
+
+        async function onStep(dir) {                               // reach mode
+            if (busy || done) return;
+            const next = pos + dir;
+            if (next < 0 || next > round().max) return;
+            startTimerOnce();
+            addMove();
+            setStatus('');
+            setBusy(true);
+            const n = arcs.length + 1;
+            if (!await hopStep(dir, n)) return;
+            renderInfo();
+            if (pos === prob.ans) { solved(); return; }
+            setBusy(false);
+        }
+
+        actionsEl.addEventListener('click', (e) => {
+            const mode = round().mode;
+            if (mode === 'guided' && e.target.closest('#hop-btn')) onHop();
+            else if (mode === 'pick') {
+                const b = e.target.closest('.opt');
+                if (b) onPick(parseInt(b.dataset.v, 10));
+            } else if (mode === 'reach') {
+                const b = e.target.closest('[data-dir]');
+                if (b) onStep(parseInt(b.dataset.dir, 10));
+            }
+        });
+
+        /* ---------- Solved ---------- */
+        function celebrate() {
+            const colors = ['#fde047', '#ffffff', '#fdba74', '#f9a8d4', '#a7f3d0'];
+            fxEl.innerHTML = '';
+            for (let i = 0; i < 16; i++) {
+                const x = Math.max(20, Math.min(VW - 20, VW / 2 + (Math.random() - 0.5) * 360));
+                const y = geo.frogY - 30 - Math.random() * (sceneH * 0.5);
+                const star = make('use', {
+                    href: '#star', class: 'star-fx',
+                    transform: 'translate(' + x.toFixed(1) + ' ' + Math.max(16, y).toFixed(1) + ') rotate(' + Math.round(Math.random() * 72) + ') scale(' + (0.9 + Math.random()).toFixed(2) + ')',
+                    fill: colors[Math.floor(Math.random() * colors.length)]
+                });
+                star.style.animationDelay = (-Math.random() * 1.6).toFixed(2) + 's';
+                fxEl.appendChild(star);
+            }
+        }
+
+        function solved() {
+            done = true;
+            busy = false;
+            hidePeek();
+            setMood('happy');
+            renderEquation(true);
+            setBusy(false);
+            Array.from(actionsEl.querySelectorAll('button')).forEach(b => {
+                b.disabled = true;
+                if (b.classList.contains('opt') && parseInt(b.dataset.v, 10) === prob.ans) b.classList.add('good');
+            });
+            celebrate();
+
+            problemsDone++;
+            setProgress((problemsDone / TOTAL_PROBLEMS) * 100);
+            setTimeout(() => say(sayEquation(prob)), 300);
+
+            const lastProb = probIdx === problems.length - 1;
+            const lastRound = roundIdx === ROUNDS.length - 1;
+            if (lastProb && lastRound) {
+                stopElapsedTimer();
+                setStatus('Bravo! Hai finito tutti i round!', 'ok');
+            } else if (lastProb) {
+                setStatus('Bravo! Round completato', 'ok');
+            } else {
+                setStatus('Bravo! ' + prob.a + (prob.op === '+' ? ' + ' : ' − ') + prob.b + ' = ' + prob.ans, 'ok');
+            }
+            setNextMode(true, lastProb && lastRound);
+        }
+
+        /* ---------- Rounds and sums ---------- */
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadProblem() {
+            hopToken++;                       // stop any jump that is still going on
+            prob = problems[probIdx];
+            options = round().mode === 'pick' ? makeOptions(prob, round()) : [];
+            pos = prob.a;
+            hops = 0;
+            arcs = [];
+            wrongPicks = {};
+            done = false;
+            busy = false;
+            hidePeek();
+            setNextMode(false);
+            fxEl.innerHTML = '';
+            updateRoundDisplay();
+            setStatus('');
+            renderEquation(false);
+            geo = null;                       // rebuild the pond for the new sum
+            fitFonts();
+            renderActions();
+            setBusy(false);
+            renderInfo();
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (probIdx < problems.length - 1) {
+                probIdx++;
+                loadProblem();
+            } else if (roundIdx < ROUNDS.length - 1) {
+                roundIdx++;
+                startRound();
+            } else {
+                roundIdx = 0;
+                initGame();
+            }
+        }
+
+        function startRound() {
+            problems = makeProblems(round());
+            probIdx = 0;
+            loadProblem();
+        }
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            problemsDone = 0;
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            startRound();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

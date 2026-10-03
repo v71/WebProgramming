@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livello Completato!</title>
+    <style>
+        :root {
+            --bg-dark: #2a113d;
+            --bg-radial: #4a1d6e;
+            --panel-border: #9b4fd8;
+            --panel-bg: #5d228c;
+            --btn-orange-top: #ff9800;
+            --btn-orange-bottom: #e65100;
+            --gold: #ffcc00;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, var(--bg-radial) 0%, var(--bg-dark) 100%);
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Contenitore principale a comparsa */
+        .win-modal {
+            position: relative;
+            background: var(--panel-bg);
+            border: 6px solid var(--panel-border);
+            border-radius: 28px;
+            width: 90%;
+            max-width: 460px;
+            padding: 45px 24px 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 4px 10px rgba(255, 255, 255, 0.15);
+            text-align: center;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Sezione delle stelle dorate superiori */
+        .stars-container {
+            position: absolute;
+            top: -45px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            font-size: 38px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+        }
+
+        .star {
+            color: var(--gold);
+            animation: bounceStar 0.8s ease infinite alternate;
+        }
+        .star:nth-child(2) { animation-delay: 0.2s; font-size: 46px; margin-top: -10px; }
+
+        @keyframes bounceStar {
+            to { transform: translateY(-6px); }
+        }
+
+        /* Banner personalizzato (spazio per la tua immagine png) */
+        .banner-wrapper {
+            margin: 15px 0 20px;
+        }
+
+        .banner-img {
+            max-width: 100%;
+            height: auto;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+        }
+
+        /* Fallback testuale se non usi l'immagine */
+        .fallback-banner {
+            background: linear-gradient(135deg, #ff2a75, #ff6b97);
+            border: 4px solid #ffffff;
+            border-radius: 16px;
+            padding: 14px 20px;
+            color: #ffffff;
+            font-size: clamp(1.5rem, 4vw, 2.2rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 15px;
+        }
+
+        .sub-title {
+            color: #ffeb3b;
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            font-weight: 800;
+            text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Pulsante Continue singolo e centrale */
+        .actions-row {
+            display: flex;
+            justify-content: center;
+        }
+
+        .game-btn {
+            width: 80%;
+            max-width: 260px;
+            padding: 16px 20px;
+            border-radius: 18px;
+            border: none;
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 6px 0 rgba(0, 0, 0, 0.3), 0 10px 20px rgba(0,0,0,0.2);
+            transition: transform 0.1s, filter 0.1s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .game-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 rgba(0, 0, 0, 0.3), 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-continue {
+            background: linear-gradient(to bottom, var(--btn-orange-top), var(--btn-orange-bottom));
+            border: 2px solid #ffb74d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="win-modal">
+        <!-- Stelle decorative superiori -->
+        <div class="stars-container">
+            <span class="star">⭐</span>
+            <span class="star">⭐</span>
+            <span class="star">⭐</span>
+        </div>
+
+        <!-- Sostituisci il blocco sotto con la tua immagine PNG del banner -->
+        <div class="banner-wrapper">
+            <!-- Esempio con immagine: <img src="tuo-banner.png" alt="Congrats" class="banner-img"> -->
+            <div class="fallback-banner">Congrats!</div>
+        </div>
+
+        <!-- Sottotitolo livello completato -->
+        <div class="sub-title">Level Completed!</div>
+
+        <!-- Unico bottone Continue -->
+        <div class="actions-row">
+            <button class="game-btn btn-continue" onclick="nextLevel()">Continue</button>
+        </div>
+    </div>
+
+    <script>
+        function nextLevel() {
+            // Inserisci qui l'azione per andare avanti (es. ricaricare, cambiare livello o chiudere la schermata)
+            alert("Ottimo lavoro! Passiamo al prossimo livello.");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Il mercato delle cassette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage takes all the space that is left; everything inside the frame
+           is sized from it (see fitStage / fitFonts), so the page never scrolls. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            position: relative;
+            width: min(100%, 720px);       /* replaced by fitStage() */
+            height: 100%;                  /* replaced by fitStage() */
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { cursor: not-allowed; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Ten-Frame Market ---------- */
+        /* The customer's order */
+        #eq {
+            flex: 0 0 var(--eqh, 70px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+        }
+        #eqline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3em;
+            font-size: var(--efs, 44px);
+            font-weight: 600;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+        #eqline .n   { min-width: 0.9em; text-align: center; }
+        #eqline .op  { color: var(--accent); }
+        #eqline .q   { color: #94a3b8; }
+        #eqline .new { color: #ea580c; }       /* the counters the child adds */
+        #eqline .old { color: #2563eb; }       /* the counters that were already there */
+        #eqline .res { color: #047857; }
+        #cap { font-size: calc(var(--efs, 44px) * 0.4); font-weight: 500; color: var(--text-dim); line-height: 1.1; }
+        #cap.hidden { display: none; }
+
+        /* The market stall: wooden counter with an awning */
+        #scenewrap {
+            position: relative;
+            flex: 1;
+            min-height: 0;
+            border-radius: 14px;
+            overflow: hidden;
+            background: #fde9c9;
+        }
+        #scenewrap::before {
+            content: '';
+            position: absolute;
+            left: 0; right: 0; top: 0;
+            height: 14px;
+            background: repeating-linear-gradient(90deg, #ef4444 0 22px, #ffffff 22px 44px);
+            z-index: 1;
+        }
+        #scene { display: block; width: 100%; height: 100%; }
+
+        .crate { fill: #f4d19b; stroke: #92400e; stroke-width: 5; }
+        .cbg   { fill: #fffdf5; stroke: #b08968; stroke-width: 3; }
+        .cell  { cursor: pointer; }
+        .cell.locked { cursor: default; }
+        .cell:hover:not(.locked) .cbg { fill: #fff3d6; }
+
+        .tok { transition: opacity 0.12s ease; }
+        .tok.off { display: none; }
+        .tok.pop { animation: pop 0.3s ease; }
+        .tok shape, .tok circle, .tok rect { stroke: rgba(15, 23, 42, 0.45); stroke-width: 3; }
+
+        /* Help: where the counters belong, drawn as dashed outlines */
+        .ghost { opacity: 0; pointer-events: none; }
+        .ghost circle, .ghost rect { fill: none; stroke: var(--accent); stroke-width: 5; stroke-dasharray: 8 7; }
+        #game-area.peeking .ghost.on { opacity: 0.85; animation: pulse 0.9s ease-in-out infinite; }
+
+        /* The cloth that covers the frame after the quick look (subitizing) */
+        .curtain { fill: #f59e0b; stroke: #92400e; stroke-width: 5; transition: opacity 0.2s ease; pointer-events: none; }
+        .curtain-q { font-family: 'Lexend', system-ui, sans-serif; font-size: 90px; font-weight: 700; fill: #ffffff; text-anchor: middle; pointer-events: none; }
+        .cover { transition: opacity 0.2s ease; }
+        .cover.off { opacity: 0; }
+        #game-area.peeking .cover { opacity: 0; }
+
+        #scene.win .tok:not(.off) { animation: pop 0.5s ease; }
+        .star-fx { pointer-events: none; animation: twinkle 1.6s ease-in-out infinite; }
+
+        /* The buttons under the stall */
+        #actions {
+            flex: 0 0 var(--acth, 64px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .big {
+            height: 100%;
+            min-width: 140px;
+            padding: 0 24px;
+            font-size: calc(var(--acth, 64px) * 0.34);
+            font-weight: 600;
+            color: #ffffff;
+            background: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+        .big:hover:not(:disabled) { background: #4f46e5; }
+        .big:disabled { opacity: 0.5; }
+        .big.ghostbtn { color: var(--accent); background: #ffffff; border: 3px solid var(--accent); box-shadow: var(--shadow-sm); }
+        .big.go { background: var(--correct); }
+        .big.go:hover:not(:disabled) { background: #059669; }
+
+        .opt {
+            flex: 1;
+            max-width: 190px;
+            height: 100%;
+            font-size: calc(var(--acth, 64px) * 0.55);
+            font-weight: 600;
+            color: var(--text);
+            background: #ffffff;
+            border: 3px solid #94a3b8;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+        .opt:hover:not(:disabled) { border-color: var(--accent); }
+        .opt.wrong { opacity: 0.35; }
+        .opt.good { background: #bbf7d0; border-color: #059669; opacity: 1; }
+        .opt:disabled:not(.wrong):not(.good) { opacity: 0.6; }
+        #game-area.peeking .opt.right:not(:disabled) {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.4);
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        @keyframes pop {
+            0% { transform: scale(0.6); }
+            60% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .tok.pop, #scene.win .tok, .star-fx,
+            #game-area.peeking .ghost.on, #game-area.peeking .opt.right { animation: none; }
+            .progress-bar-fill, .cool-btn, .cover, .curtain { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+            #game-area { padding: 8px; }
+            .big { min-width: 110px; padding: 0 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Il mercato delle cassette</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <div id="eq" aria-live="polite">
+                <div id="eqline"></div>
+                <div id="cap" class="hidden"></div>
+            </div>
+
+            <div id="scenewrap">
+                <svg id="scene" viewBox="0 0 440 224" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Le cassette del mercato">
+                    <defs>
+                        <path id="star" d="M0 -10 L2.35 -3.24 L9.51 -3.09 L3.8 1.24 L5.88 8.09 L0 4 L-5.88 8.09 L-3.8 1.24 L-9.51 -3.09 L-2.35 -3.24 Z"/>
+                    </defs>
+                    <g id="frames"></g>
+                    <g id="fx"></g>
+                </svg>
+            </div>
+
+            <div id="actions"></div>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <!-- ===================== DATA AND RULES (no page elements here) ===================== -->
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           title:   the topic of the round
+           mode:    'buy'     "Vorrei 6 mele": the child puts that many counters in the frame
+                    'flash'   a quick look at a frame, then "how many did you see?" (subitizing)
+                    'tenfill' some counters are already there: fill the frame up to 10
+                    'tenpick' same, but first choose how many are needed to make 10
+                    'two'     numbers from 11 to 20: fill one frame (10), then the other
+           token:   'dot' (round counters) or 'block' (square blocks)
+           n:       [smallest, biggest] number to buy / to see
+           k:       [smallest, biggest] number of counters already in the frame
+           count:   how many orders in the round
+           showCount: show how many counters are in the frame (extra support)
+           showMs:  (flash) how long the frame is visible, in milliseconds
+           ===================================================== */
+        const ROUNDS = [
+            { title: 'Compra fino a 5',      mode: 'buy',     token: 'dot',   n: [1, 5],  count: 5, showCount: true },
+            { title: 'Compra fino a 10',     mode: 'buy',     token: 'block', n: [3, 10], count: 5 },
+            { title: 'Quanti ne vedi?',      mode: 'flash',   token: 'dot',   n: [1, 10], count: 6, showMs: 2200 },
+            { title: 'Fai 10',               mode: 'tenfill', token: 'dot',   k: [4, 9],  count: 5 },
+            { title: 'Quanti per fare 10?',  mode: 'tenpick', token: 'dot',   k: [1, 9],  count: 6 },
+            { title: 'Due cassette',         mode: 'two',     token: 'block', n: [11, 20], count: 5 }
+        ];
+
+        // What the market sells (the colour is the colour of the counters)
+        const ITEMS = [
+            { name: 'mele',    emoji: '🍎', color: '#ef4444' },
+            { name: 'pere',    emoji: '🍐', color: '#84cc16' },
+            { name: 'banane',  emoji: '🍌', color: '#facc15' },
+            { name: 'arance',  emoji: '🍊', color: '#fb923c' },
+            { name: 'fragole', emoji: '🍓', color: '#f43f5e' },
+            { name: 'uva',     emoji: '🍇', color: '#8b5cf6' },
+            { name: 'limoni',  emoji: '🍋', color: '#fde047' }
+        ];
+
+        const NUM_WORDS = ['zero', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci',
+            'undici', 'dodici', 'tredici', 'quattordici', 'quindici', 'sedici', 'diciassette', 'diciotto', 'diciannove', 'venti'];
+
+        function shuffled(arr, rand) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor((rand || Math.random)() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function range(lo, hi) { const out = []; for (let v = lo; v <= hi; v++) out.push(v); return out; }
+
+        /* The orders of a round: no repeats */
+        function makeProblems(round, rand) {
+            const lohi = round.n || round.k;
+            const values = shuffled(range(lohi[0], lohi[1]), rand).slice(0, round.count);
+            const items = shuffled(ITEMS, rand);
+            return values.map((v, i) => {
+                const p = { item: items[i % items.length] };
+                if (round.mode === 'tenfill' || round.mode === 'tenpick') { p.k = v; p.need = 10 - v; }
+                else p.n = v;
+                return p;
+            });
+        }
+
+        /* Three choices: the right number and two close to it */
+        function makeOptions(correct, lo, hi, rand) {
+            const near = shuffled([correct + 1, correct - 1, correct + 2, correct - 2].filter(v => v >= lo && v <= hi), rand);
+            return [correct].concat(near.slice(0, 2)).sort((a, b) => a - b);
+        }
+
+        /* Frames have 2 rows of 5. Cells are numbered row by row: 0..4 on top, 5..9 below
+           (the second frame continues with 10..19). Counters are always counted in this order. */
+        function frameCount(round, p) {
+            return round.mode === 'two' ? 2 : 1;
+        }
+
+        function sayEquation(a, b, c) {
+            const w = n => NUM_WORDS[n] || String(n);
+            return w(a) + ' più ' + w(b) + ' fa ' + w(c);
+        }
+    </script>
+
+    <!-- ===================== THE GAME (page elements) ===================== -->
+    <script>
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:          speak the orders and the results
+           showTime:       show the timer in the stats bar
+           speakPlacing:   count aloud while the child puts counters in the frame
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            showTime: true,
+            speakPlacing: false
+        };
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { frameEl.classList.add('peeking'); }
+        function onHelpEnd() { frameEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Ten-Frame Market
+           ===================================================== */
+        const NS = 'http://www.w3.org/2000/svg';
+        const CELL = 80, FRAME_W = 416, FRAME_H = 176, FRAME_X = 12, FRAME_GAP = 20, EDGE = 24;
+        const NEW_COLOR = '#f97316', OLD_COLOR = '#3b82f6';
+
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+        const eqLineEl = document.getElementById('eqline');
+        const capEl = document.getElementById('cap');
+        const wrapEl = document.getElementById('scenewrap');
+        const sceneEl = document.getElementById('scene');
+        const framesEl = document.getElementById('frames');
+        const fxEl = document.getElementById('fx');
+        const actionsEl = document.getElementById('actions');
+        const infoMainEl = document.getElementById('info-main');
+
+        let roundIdx = 0;
+        let problems = [];
+        let probIdx = 0;
+        let prob = null;
+        let options = [];
+        let nCells = 10;
+        let placed = [];           // placed[i] = a counter is in cell i
+        let fixedCell = [];        // fixedCell[i] = it was there from the start (cannot be moved)
+        let cellEls = [];          // { g, tok, ghost }
+        let wrongPicks = {};
+        let done = false;
+        let busy = false;
+        let covered = false;       // (flash) the cloth is over the frame
+        let flashToken = 0;
+        let problemsDone = 0;
+        let timerStarted = false;
+        let nextMode = false;
+        let statusHtml = '';
+        let statusKind = '';
+
+        const TOTAL_PROBLEMS = ROUNDS.reduce((n, r) => n + r.count, 0);
+
+        function round() { return ROUNDS[roundIdx]; }
+        function mode() { return round().mode; }
+        function placedCount() { return placed.filter(Boolean).length; }
+        function newColor() { return (mode() === 'tenfill' || mode() === 'tenpick') ? NEW_COLOR : prob.item.color; }
+
+        function make(tag, attrs) {
+            const el = document.createElementNS(NS, tag);
+            Object.keys(attrs || {}).forEach(k => el.setAttribute(k, attrs[k]));
+            return el;
+        }
+
+        /* ---------- Voice ---------- */
+        function say(t) {
+            if (!prefs.voice) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(t);
+                u.lang = 'it-IT';
+                u.rate = 0.85;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function word(n) { return NUM_WORDS[n] || String(n); }
+
+        /* ---------- Info bar ---------- */
+        function leadText() {
+            switch (mode()) {
+                case 'buy':     return round().showCount ? 'Nella cassetta: ' + placedCount() : 'Metti i pezzi nella cassetta';
+                case 'flash':   return covered ? 'Quanti ne hai visti?' : 'Guarda bene!';
+                case 'tenfill': return 'Riempi la cassetta fino a 10';
+                case 'tenpick': return 'Quanti ne servono per fare 10?';
+                default:        return 'Prima 10, poi gli altri';
+            }
+        }
+
+        function renderInfo() {
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>' + leadText() + '</span><span class="cnt">Ordine ' + (probIdx + 1) + ' / ' + problems.length + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- The order on top ---------- */
+        function renderOrder(solved) {
+            const p = prob, m = mode();
+            let html = '', cap = '';
+            if (m === 'buy' || m === 'two') {
+                html = '<span class="n">' + p.n + '</span><span>' + p.item.emoji + '</span>';
+                cap = 'Vorrei ' + word(p.n) + ' ' + p.item.name;
+            } else if (m === 'flash') {
+                html = '<span class="n' + (solved ? ' res' : ' q') + '">' + (solved ? p.n : '?') + '</span>';
+                cap = solved ? '' : 'Quanti ne vedi?';
+            } else {
+                html = '<span class="n old">' + p.k + '</span><span class="op">+</span>' +
+                       (solved ? '<span class="n new">' + p.need + '</span>' : '<span class="n q">?</span>') +
+                       '<span class="op">=</span><span class="n">10</span>';
+                cap = solved ? '' : 'Fai 10!';
+            }
+            eqLineEl.innerHTML = html;
+            capEl.textContent = cap;
+            capEl.classList.toggle('hidden', !cap);
+        }
+
+        /* ---------- Layout ---------- */
+        function viewHeight() { return EDGE * 2 + (nCells / 10) * FRAME_H + (nCells / 10 - 1) * FRAME_GAP; }
+
+        function fitFonts() {
+            const g = getComputedStyle(frameEl);
+            const innerW = frameEl.clientWidth - parseFloat(g.paddingLeft) - parseFloat(g.paddingRight);
+            const innerH = frameEl.clientHeight - parseFloat(g.paddingTop) - parseFloat(g.paddingBottom);
+
+            const eqH = Math.max(58, Math.min(innerH * 0.2, 100));
+            const efs = Math.max(26, Math.min(eqH * 0.6, innerW / 6.4));
+            const actH = Math.max(46, Math.min(innerH * 0.17, 80));
+            frameEl.style.setProperty('--eqh', eqH + 'px');
+            frameEl.style.setProperty('--efs', efs.toFixed(1) + 'px');
+            frameEl.style.setProperty('--acth', actH + 'px');
+        }
+
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const h = Math.max(320, avail - used);
+            stageEl.style.height = h + 'px';
+            frameEl.style.height = h + 'px';
+            frameEl.style.width = Math.min(stageEl.clientWidth, 720) + 'px';
+            fitFonts();
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Drawing the frames ---------- */
+        function cellCenter(i) {
+            const f = Math.floor(i / 10), j = i % 10, r = Math.floor(j / 5), c = j % 5;
+            return {
+                x: FRAME_X + 8 + c * CELL + CELL / 2,
+                y: EDGE + f * (FRAME_H + FRAME_GAP) + 8 + r * CELL + CELL / 2
+            };
+        }
+
+        function shapeOf(kind, cls) {
+            if (round().token === 'block') return make('rect', { class: cls, x: -29, y: -29, width: 58, height: 58, rx: 10 });
+            return make('circle', { class: cls, r: 30 });
+        }
+
+        function buildFrames() {
+            sceneEl.setAttribute('viewBox', '0 0 440 ' + viewHeight());
+            framesEl.innerHTML = '';
+            cellEls = [];
+
+            for (let f = 0; f < nCells / 10; f++) {
+                const y0 = EDGE + f * (FRAME_H + FRAME_GAP);
+                framesEl.appendChild(make('rect', { class: 'crate', x: FRAME_X, y: y0, width: FRAME_W, height: FRAME_H, rx: 16 }));
+            }
+
+            for (let i = 0; i < nCells; i++) {
+                const c = cellCenter(i);
+                const g = make('g', { class: 'cell', 'data-i': i, transform: 'translate(' + c.x + ' ' + c.y + ')' });
+                g.appendChild(make('rect', { class: 'cbg', x: -37, y: -37, width: 74, height: 74, rx: 10 }));
+                const ghost = make('g', { class: 'ghost' });
+                ghost.appendChild(shapeOf('ghost', ''));
+                g.appendChild(ghost);
+                const tok = make('g', { class: 'tok off' });
+                tok.appendChild(shapeOf('tok', ''));
+                g.appendChild(tok);
+                framesEl.appendChild(g);
+                cellEls.push({ g: g, tok: tok, ghost: ghost });
+            }
+
+            // The cloth for the quick look (flash mode)
+            if (mode() === 'flash') {
+                const cover = make('g', { class: 'cover off', id: 'cover' });
+                cover.appendChild(make('rect', { class: 'curtain', x: FRAME_X, y: EDGE, width: FRAME_W, height: FRAME_H, rx: 16 }));
+                const q = make('text', { class: 'curtain-q', x: FRAME_X + FRAME_W / 2, y: EDGE + FRAME_H / 2 + 32 });
+                q.textContent = '?';
+                cover.appendChild(q);
+                framesEl.appendChild(cover);
+            }
+
+            refreshCells();
+        }
+
+        /* Counters and Help outlines follow the state */
+        function ghostCells() {
+            const m = mode(), out = [];
+            if (m === 'buy' || m === 'two' || m === 'flash') {
+                for (let i = 0; i < prob.n; i++) if (!placed[i]) out.push(i);
+            } else {
+                for (let i = 0; i < 10; i++) if (!placed[i]) out.push(i);
+            }
+            return out;
+        }
+
+        function refreshCells() {
+            const ghosts = new Set(done ? [] : ghostCells());
+            const col = newColor();
+            for (let i = 0; i < nCells; i++) {
+                const c = cellEls[i];
+                c.tok.classList.toggle('off', !placed[i]);
+                const shape = c.tok.firstChild;
+                shape.setAttribute('fill', fixedCell[i] ? OLD_COLOR : col);
+                c.ghost.classList.toggle('on', ghosts.has(i));
+                c.g.classList.toggle('locked', !!fixedCell[i] || done || mode() === 'flash');
+            }
+            const cover = document.getElementById('cover');
+            if (cover) cover.classList.toggle('off', !covered);
+        }
+
+        function popCell(i) {
+            const t = cellEls[i].tok;
+            t.classList.remove('pop');
+            void t.getBoundingClientRect();
+            t.classList.add('pop');
+        }
+
+        /* ---------- The buttons under the stall ---------- */
+        function renderActions() {
+            const m = mode();
+            if (m === 'flash' || m === 'tenpick') {
+                actionsEl.innerHTML = options.map(v =>
+                    '<button type="button" class="opt' + (v === (m === 'flash' ? prob.n : prob.need) ? ' right' : '') +
+                    (wrongPicks[v] ? ' wrong' : '') + '" data-v="' + v + '"' + (wrongPicks[v] ? ' disabled' : '') + '>' + v + '</button>').join('');
+            } else {
+                actionsEl.innerHTML =
+                    '<button type="button" class="big ghostbtn" id="clear-btn">↺ Svuota</button>' +
+                    '<button type="button" class="big go" id="ok-btn">✔ Ecco!</button>';
+            }
+        }
+
+        function setBusy(on) {
+            busy = on;
+            Array.from(actionsEl.querySelectorAll('button')).forEach(b => {
+                b.disabled = on || done || b.classList.contains('wrong');
+            });
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* ---------- Putting counters in the frame ---------- */
+        sceneEl.addEventListener('click', (e) => {
+            const cell = e.target.closest('.cell');
+            if (!cell || done || busy) return;
+            const m = mode();
+            if (m === 'flash' || m === 'tenpick') return;
+            const i = parseInt(cell.dataset.i, 10);
+            if (fixedCell[i]) return;
+
+            startTimerOnce();
+            placed[i] = !placed[i];
+            if (statusKind === 'retry') setStatus('');
+            refreshCells();
+            if (placed[i]) {
+                popCell(i);
+                if (prefs.speakPlacing) say(word(placedCount()));
+            }
+            if (m === 'buy' && round().showCount) renderInfo();
+        });
+
+        function clearMine() {
+            if (done || busy) return;
+            for (let i = 0; i < nCells; i++) if (!fixedCell[i]) placed[i] = false;
+            setStatus('');
+            refreshCells();
+        }
+
+        function confirm() {                                       // buy, two, tenfill
+            if (done || busy) return;
+            startTimerOnce();
+            addMove();
+            const m = mode(), c = placedCount();
+
+            if (m === 'tenfill') {
+                if (c === 10) { solved(); return; }
+                setStatus('Non è ancora 10: riprova', 'retry');
+                return;
+            }
+
+            if (c !== prob.n) {
+                setStatus('Ne hai messi ' + c + ': ne servono ' + prob.n, 'retry');
+                return;
+            }
+            if (m === 'two') {
+                const firstFull = placed.slice(0, 10).every(Boolean);
+                if (!firstFull) { setStatus('Riempi prima una cassetta (10), poi l\'altra', 'retry'); return; }
+            }
+            solved();
+        }
+
+        /* ---------- Choosing a number (flash, tenpick) ---------- */
+        async function onPick(v) {
+            if (done || busy || wrongPicks[v]) return;
+            startTimerOnce();
+            addMove();
+            setStatus('');
+            const m = mode();
+
+            if (m === 'flash') {
+                if (v === prob.n) { solved(); return; }
+                // Not right: the frame is shown again so the child can look and count
+                wrongPicks[v] = true;
+                covered = false;
+                for (let i = 0; i < nCells; i++) placed[i] = i < prob.n;
+                refreshCells();
+                renderActions();
+                setBusy(false);
+                setStatus('Guarda bene la cassetta', 'retry');
+                return;
+            }
+
+            // tenpick: put that many counters in the empty places, and see what happens
+            setBusy(true);
+            const token = flashToken;
+            const empty = [];
+            for (let i = 0; i < 10; i++) if (!placed[i]) empty.push(i);
+            const take = Math.min(v, empty.length);
+            for (let k = 0; k < take; k++) { placed[empty[k]] = true; }
+            refreshCells();
+            empty.slice(0, take).forEach(popCell);
+
+            if (v === prob.need) { solved(); return; }
+
+            wrongPicks[v] = true;
+            if (v < prob.need) setStatus('Con ' + v + ' restano ' + (prob.need - v) + ' posti vuoti', 'retry');
+            else setStatus('Con ' + v + ' ne avanzano ' + (v - prob.need), 'retry');
+
+            await new Promise(r => setTimeout(r, 1500));
+            if (token !== flashToken) return;
+            empty.slice(0, take).forEach(i => { placed[i] = false; });
+            refreshCells();
+            renderActions();
+            setBusy(false);
+        }
+
+        actionsEl.addEventListener('click', (e) => {
+            if (e.target.closest('#clear-btn')) { clearMine(); return; }
+            if (e.target.closest('#ok-btn')) { confirm(); return; }
+            const b = e.target.closest('.opt');
+            if (b) onPick(parseInt(b.dataset.v, 10));
+        });
+
+        /* ---------- The quick look (flash mode) ---------- */
+        function runFlash() {
+            const token = ++flashToken;
+            covered = false;
+            setBusy(true);
+            for (let i = 0; i < nCells; i++) placed[i] = false;
+            refreshCells();
+            renderInfo();
+
+            setTimeout(() => {
+                if (token !== flashToken) return;
+                for (let i = 0; i < nCells; i++) placed[i] = i < prob.n;
+                refreshCells();
+                for (let i = 0; i < prob.n; i++) popCell(i);
+
+                setTimeout(() => {
+                    if (token !== flashToken) return;
+                    for (let i = 0; i < nCells; i++) placed[i] = false;
+                    covered = true;
+                    refreshCells();
+                    setBusy(false);
+                    renderInfo();
+                }, round().showMs);
+            }, 600);
+        }
+
+        /* ---------- Solved ---------- */
+        function celebrate() {
+            const colors = ['#fde047', '#ffffff', '#fdba74', '#f9a8d4', '#a7f3d0'];
+            const h = viewHeight();
+            fxEl.innerHTML = '';
+            for (let i = 0; i < 18; i++) {
+                const star = make('use', {
+                    href: '#star', class: 'star-fx',
+                    transform: 'translate(' + (30 + Math.random() * 380).toFixed(1) + ' ' + (20 + Math.random() * (h - 40)).toFixed(1) +
+                               ') rotate(' + Math.round(Math.random() * 72) + ') scale(' + (0.9 + Math.random()).toFixed(2) + ')',
+                    fill: colors[Math.floor(Math.random() * colors.length)]
+                });
+                star.style.animationDelay = (-Math.random() * 1.6).toFixed(2) + 's';
+                fxEl.appendChild(star);
+            }
+        }
+
+        function solved() {
+            done = true;
+            covered = false;
+            hidePeek();
+
+            // Show the right picture in the frame: for flash the counters that were shown
+            if (mode() === 'flash') for (let i = 0; i < nCells; i++) placed[i] = i < prob.n;
+            refreshCells();
+            sceneEl.classList.add('win');
+            renderOrder(true);
+            setBusy(false);
+            Array.from(actionsEl.querySelectorAll('button')).forEach(b => {
+                b.disabled = true;
+                if (b.classList.contains('opt') && parseInt(b.dataset.v, 10) === (mode() === 'flash' ? prob.n : prob.need)) b.classList.add('good');
+            });
+            celebrate();
+
+            problemsDone++;
+            setProgress((problemsDone / TOTAL_PROBLEMS) * 100);
+
+            const m = mode();
+            setTimeout(() => {
+                if (m === 'tenfill' || m === 'tenpick') say(sayEquation(prob.k, prob.need, 10));
+                else if (m === 'flash') say(word(prob.n));
+                else say(word(prob.n) + ' ' + prob.item.name);
+            }, 300);
+
+            const lastProb = probIdx === problems.length - 1;
+            const lastRound = roundIdx === ROUNDS.length - 1;
+            if (lastProb && lastRound) {
+                stopElapsedTimer();
+                setStatus('Bravo! Hai finito tutti i round!', 'ok');
+            } else if (lastProb) {
+                setStatus('Bravo! Round completato', 'ok');
+            } else if (m === 'tenfill' || m === 'tenpick') {
+                setStatus('Bravo! ' + prob.k + ' + ' + prob.need + ' = 10', 'ok');
+            } else {
+                setStatus('Bravo! ' + prob.n, 'ok');
+            }
+            setNextMode(true, lastProb && lastRound);
+        }
+
+        /* ---------- Rounds and orders ---------- */
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadProblem() {
+            flashToken++;                          // stop timers of the previous order
+            prob = problems[probIdx];
+            const m = mode();
+            nCells = frameCount(round(), prob) * 10;
+            placed = new Array(nCells).fill(false);
+            fixedCell = new Array(nCells).fill(false);
+            if (m === 'tenfill' || m === 'tenpick') {
+                for (let i = 0; i < prob.k; i++) { placed[i] = true; fixedCell[i] = true; }
+            }
+            options = m === 'flash' ? makeOptions(prob.n, 1, 10)
+                    : m === 'tenpick' ? makeOptions(prob.need, 1, 10) : [];
+            wrongPicks = {};
+            done = false;
+            busy = false;
+            covered = false;
+            hidePeek();
+            setNextMode(false);
+            sceneEl.classList.remove('win');
+            fxEl.innerHTML = '';
+            updateRoundDisplay();
+            setStatus('');
+            renderOrder(false);
+            fitFonts();
+            buildFrames();
+            renderActions();
+            setBusy(false);
+            renderInfo();
+
+            if (m === 'flash') runFlash();
+            else if (m === 'buy' || m === 'two') setTimeout(() => say('Vorrei ' + word(prob.n) + ' ' + prob.item.name), 300);
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (probIdx < problems.length - 1) {
+                probIdx++;
+                loadProblem();
+            } else if (roundIdx < ROUNDS.length - 1) {
+                roundIdx++;
+                startRound();
+            } else {
+                roundIdx = 0;
+                initGame();
+            }
+        }
+
+        function startRound() {
+            problems = makeProblems(round());
+            probIdx = 0;
+            loadProblem();
+        }
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            problemsDone = 0;
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            startRound();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

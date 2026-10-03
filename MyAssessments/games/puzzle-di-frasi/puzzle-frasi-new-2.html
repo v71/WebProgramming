@@ -12,16 +12,19 @@
     <style>
 
         :root {
-            --bg-0: #e6e6e6;
-            --bg-1: #ffffff;
-            --bg-2: #f1f5f9;
-            --accent: #6366f1;
+            --bg-0: #2a113d;
+            --bg-1: #4a1d6e;
+            --bg-2: #553d94;
+            --accent: #ff9800;
+
             --accent-2: #06b6d4;
-            --correct: #10b981;
+            --correct: #ffffff;
             --wrong: #ef4444;
-            --text: #0f172a;
-            --text-dim: #64748b;
-            --border: #e2e8f0;
+            
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #000205;
+            
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
@@ -52,6 +55,13 @@
             letter-spacing: -0.5px;
             color: var(--accent);
             text-align: center;
+            /* Contorno nero nitido attorno al testo */
+            text-shadow: 
+                -2px -2px 0 #000,  
+                 2px -2px 0 #000,  
+                -2px  2px 0 #000,  
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5); /* Aggiunge anche una leggera ombra tridimensionale */
         }
 
         .controls {
@@ -121,7 +131,7 @@
             box-sizing: border-box;
             background-color: var(--bg-1);
             box-shadow: var(--shadow-md);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             margin: 0 auto;
         }
 
@@ -130,8 +140,8 @@
         }
 
         #target-container {
-            border: 2px solid #a5b4fc;
-            background-color: #faf8ff;
+            border: 2px solid #000000;
+            background-color: #37275e;
             /* Border is 1px thicker per side than #source-container's 1px
                border; trim padding by that same 1px per side so the two
                containers end up with identical usable (content) width. */
@@ -162,10 +172,9 @@
 
         /* Highlight for the current active slot */
         .slot.active-slot {
-            border-color: var(--accent);
+            border-color: #ffffff;
             border-style: solid;
-            background-color: #ede9fe;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            background-color: #544b7a;
         }
 
         /* Filled slot becomes an invisible wrapper: the card inside keeps its
@@ -253,7 +262,11 @@
             min-width: 90px;
             height: 60px;
             padding: 0 18px;
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            
+            /* background: linear-gradient(145deg, #ffffff, #f8fafc);*/
+  
+            background: #7931b4;
+
             color: var(--text);
             border: 2px solid var(--border);
             border-radius: 14px;
@@ -282,6 +295,7 @@
         /* Cards inside a slot keep the exact same styling as everywhere else */
         .slot .card {
             transform: none !important;
+            background: #5d258a;
         }
 
         #game-stats, .stats-style {
@@ -382,7 +396,7 @@
             font-size: 1rem;
             font-weight: 600;
             color: #ffffff;
-            background-color: var(--accent);
+            background-color: #4f46e5;
             border: none;
             border-radius: 99px;
             cursor: pointer;
@@ -410,8 +424,7 @@
 
         .cool-btn:hover {
             transform: translateY(-2px);
-            background-color: #4f46e5;
-            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+                background-color: var(--accent);
         }
 
         .cool-btn:hover i {
@@ -420,9 +433,9 @@
 
         .cool-btn:active {
             transform: translateY(1px);
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
         }
 
+        /*
         #next-btn {
             background-color: var(--correct);
         }
@@ -435,12 +448,28 @@
         #next-btn:active {
             box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
         }
+        */
 
+        #next-btn {
+            background-color: #4f46e5;
+        }
+
+        #next-btn:hover {
+            background-color: #059669;
+        }
+        /*
+        .cool-btn.wrong-btn {
+            background-color: var(--wrong);
+            cursor: default;
+            pointer-events: none;
+        }
+        */
         .cool-btn.wrong-btn {
             background-color: var(--wrong);
             cursor: default;
             pointer-events: none;
             box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
         }
 
     </style>
