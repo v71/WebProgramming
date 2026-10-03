@@ -9,9 +9,7 @@
       const NS = 'http://www.w3.org/2000/svg';
       const PATH = 'M5.5 12.8 L10 17.3 L18.6 7.2';
 
-      function show(opts) {
-
-        console.log("ciao");
+      async function show(opts) {
           opts = opts || {};
           if (typeof document === 'undefined') return Promise.resolve();
 

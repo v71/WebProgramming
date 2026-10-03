@@ -35,8 +35,8 @@
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background:
-                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
                 var(--bg-0);
             color: var(--text);
             margin: 0;
@@ -262,11 +262,7 @@
             min-width: 90px;
             height: 60px;
             padding: 0 18px;
-            
-            /* background: linear-gradient(145deg, #ffffff, #f8fafc);*/
-  
             background: #7931b4;
-
             color: var(--text);
             border: 2px solid var(--border);
             border-radius: 14px;
@@ -435,21 +431,6 @@
             transform: translateY(1px);
         }
 
-        /*
-        #next-btn {
-            background-color: var(--correct);
-        }
-
-        #next-btn:hover {
-            background-color: #059669;
-            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
-        }
-
-        #next-btn:active {
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
-        }
-        */
-
         #next-btn {
             background-color: #4f46e5;
         }
@@ -457,13 +438,7 @@
         #next-btn:hover {
             background-color: #059669;
         }
-        /*
-        .cool-btn.wrong-btn {
-            background-color: var(--wrong);
-            cursor: default;
-            pointer-events: none;
-        }
-        */
+
         .cool-btn.wrong-btn {
             background-color: var(--wrong);
             cursor: default;
@@ -769,82 +744,6 @@
                 syncContainerWidths();
             });
         }
-
-        /*
-        function setupCardTapToMove(card) {
-            card.addEventListener('click', async (e) => {
-                e.stopPropagation();
-                if (sentenceCompleted) return;
-
-                if (card.parentNode === sourceContainer) {
-                    const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
-                    if (emptySlotMeta) {
-                        emptySlotMeta.element.appendChild(card);
-                        emptySlotMeta.element.classList.add('filled');
-                        registerMove();
-                    }
-                } else if (card.parentNode.classList.contains('slot')) {
-                    const slot = card.parentNode;
-                    sourceContainer.appendChild(card);
-                    slot.classList.remove('filled');
-
-                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
-                    if (revealBtn.classList.contains('wrong-btn')) {
-                        revealBtn.classList.remove('wrong-btn');
-                        revealBtn.disabled = false;
-                        revealBtn.innerHTML = "<span>💡 Help!</span>";
-                    }
-
-                    registerMove();
-                }
-            });
-        }
-        */
-        /*
-        function setupCardTapToMove(card) {
-            card.addEventListener('click', async (e) => { // 1. Rendiamo la funzione async
-                e.stopPropagation();
-                if (sentenceCompleted) return;
-
-                if (card.parentNode === sourceContainer) {
-                    const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
-                    if (emptySlotMeta) {
-                        emptySlotMeta.element.appendChild(card);
-                        emptySlotMeta.element.classList.add('filled');
-                        
-                        // 2. VERIFICHIAMO SE LA PAROLA È QUELLA GIUSTA PER QUESTO SLOT!
-                        // Confrontiamo la parola della carta con l'attesa dello slot
-                        const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
-
-                        if (isWordCorrect) {
-                            // Se è corretta, facciamo partire il checkmark direttamente sopra questo slot!
-                            await Checkmark.show({
-                                element: emptySlotMeta.element,
-                                size: 48,  // Un po' più compatto per la singola parola
-                                rise: 70,
-                                duration: 1600
-                            });
-                        }
-
-                        registerMove();
-                    }
-                } else if (card.parentNode.classList.contains('slot')) {
-                    const slot = card.parentNode;
-                    sourceContainer.appendChild(card);
-                    slot.classList.remove('filled');
-
-                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
-                    if (revealBtn.classList.contains('wrong-btn')) {
-                        revealBtn.classList.remove('wrong-btn');
-                        revealBtn.disabled = false;
-                        revealBtn.innerHTML = "<span>💡 Help!</span>";
-                    }
-
-                    registerMove();
-                }
-            });
-        }
-        */
 
         function setupCardTapToMove(card) {
             card.addEventListener('click', async (e) => {

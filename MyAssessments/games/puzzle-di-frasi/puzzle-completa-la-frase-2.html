@@ -4,30 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Completa la Frase</title>
+
+    <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../js/checkmark.js"></script>
+    <script src="../js/celebrazion.js"></script>
+
     <style>
+
         :root {
-            --bg-0: #e6e6e6;
-            --bg-1: #ffffff;
-            --bg-2: #f1f5f9;
-            --accent: #6366f1;
-            --accent-2: #06b6d4;
-            --correct: #10b981;
+            --bg-0: #2a113d;
+            --bg-1: #4a1d6e;
+            --bg-2: #553d94;
+            --accent: #ff9800;
+
+            --accent-2: #ffffff;
+            --correct: #ffffff;
             --wrong: #ef4444;
-            --text: #0f172a;
-            --text-dim: #64748b;
-            --border: #e2e8f0;
+            
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #000205;
+            
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
         }
+
 
         * { box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background:
-                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
                 var(--bg-0);
             color: var(--text);
             margin: 0;
@@ -46,6 +56,13 @@
             letter-spacing: -0.5px;
             color: var(--accent);
             text-align: center;
+            /* Contorno nero nitido attorno al testo */
+            text-shadow: 
+                -2px -2px 0 #000,  
+                 2px -2px 0 #000,  
+                -2px  2px 0 #000,  
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5); /* Aggiunge anche una leggera ombra tridimensionale */
         }
 
         .controls {
@@ -61,7 +78,7 @@
             min-height: 52px;
         }
 
-        .section-wrapper {
+         .section-wrapper {
             width: 100%;
             max-width: 1100px;
             margin-bottom: 16px;
@@ -102,7 +119,8 @@
         }
 
         /* Container sizes dynamically and stays centered */
-        .card-container {
+
+         .card-container {
             display: flex;
             flex-wrap: wrap;
             gap: 14px;
@@ -115,7 +133,7 @@
             box-sizing: border-box;
             background-color: var(--bg-1);
             box-shadow: var(--shadow-md);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             margin: 0 auto;
         }
 
@@ -124,12 +142,11 @@
         }
 
         #target-container {
-            border: 2px solid #a5b4fc;
-            background-color: #faf8ff;
+            border: 2px solid #000000;
+            background-color: #37275e;
             /* Border is 1px thicker per side than #source-container's 1px
                border; trim padding by that same 1px per side so the two
-               containers end up with identical usable (content) width even
-               though their outer width is set equal in JS. */
+               containers end up with identical usable (content) width. */
             padding: 19px;
         }
 
@@ -147,16 +164,19 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Only properties that do NOT change the slot's size are animated.
+               "transition: all" used to animate the border going from 2px to none,
+               so the slot kept changing width for 0.25s after a word was placed. */
+            transition: border-color 0.25s ease, background-color 0.25s ease,
+                        box-shadow 0.25s ease, transform 0.25s ease;
             cursor: pointer;
         }
 
         /* Highlight for the current active slot */
         .slot.active-slot {
-            border-color: var(--accent);
+            border-color: #ffffff;
             border-style: solid;
-            background-color: #ede9fe;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            background-color: #544b7a;
         }
 
         /* Filled slot becomes an invisible wrapper: the card inside keeps its
@@ -177,7 +197,7 @@
 
         /* Error state for incorrect slots — styled on the card itself, since the
            filled slot no longer has its own border/background to color. */
-        .slot.error-slot {
+         .slot.error-slot {
             animation: shake 0.4s ease;
         }
 
@@ -217,7 +237,7 @@
             height: 20px;
             border-radius: 50%;
             background: var(--accent-2);
-            color: #ffffff;
+            color: #0c0000;
             font-size: 0.7rem;
             font-weight: 700;
             display: flex;
@@ -239,7 +259,7 @@
             margin: 0 auto;
         }
 
-        #reveal-overlay {
+         #reveal-overlay {
             position: absolute;
             top: 0;
             left: 50%;
@@ -265,11 +285,11 @@
             z-index: 10;
             box-sizing: border-box;
         }
-
+        
         #reveal-overlay.visible {
             opacity: 1;
         }
-
+ 
         .card.reveal-letter {
             border-color: var(--correct);
             background-color: rgba(16, 185, 129, 0.1);
@@ -280,12 +300,12 @@
         }
 
         /* Cards now hold a whole word: flexible width, no fixed square */
-        .card {
+         .card {
             flex-shrink: 0;
             min-width: 90px;
             height: 60px;
             padding: 0 18px;
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            background: #7931b4;
             color: var(--text);
             border: 2px solid var(--border);
             border-radius: 14px;
@@ -310,15 +330,16 @@
             color: var(--accent);
             z-index: 5;
         }
-
+        
         /* Cards inside a slot keep the exact same styling as everywhere else
            (see .card above) — no width/padding/border overrides here, so a
            placed word, a source word, and a revealed word are always the
            same size. */
-        .slot .card {
+         .slot .card {
             transform: none !important;
+            background: #5d258a;
         }
-
+        
         #game-stats, .stats-style {
             margin: 0 0 14px;
             display: flex;
@@ -343,6 +364,7 @@
         }
 
         /* Results Summary Screen */
+
         #summary-screen {
             display: none;
             width: 100%;
@@ -354,13 +376,13 @@
             text-align: center;
             box-shadow: var(--shadow-lg);
         }
-
+        
         #summary-screen h2 {
             margin-top: 0;
             color: var(--correct);
             font-size: 2rem;
         }
-
+        
         .summary-table {
             width: 100%;
             margin: 24px 0;
@@ -400,7 +422,7 @@
             filter: brightness(1.05);
         }
 
-        button:disabled {
+         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             filter: none;
@@ -417,7 +439,7 @@
             font-size: 1rem;
             font-weight: 600;
             color: #ffffff;
-            background-color: var(--accent);
+            background-color: #4f46e5;
             border: none;
             border-radius: 99px;
             cursor: pointer;
@@ -443,32 +465,25 @@
             transition: transform 0.25s ease;
         }
 
-        .cool-btn:hover {
+         .cool-btn:hover {
             transform: translateY(-2px);
-            background-color: #4f46e5;
-            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+                background-color: var(--accent);
         }
-
+      
         .cool-btn:hover i {
             transform: translateX(3px);
         }
 
         .cool-btn:active {
             transform: translateY(1px);
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
         }
 
         #next-btn {
-            background-color: var(--correct);
+            background-color: #4f46e5;
         }
 
         #next-btn:hover {
             background-color: #059669;
-            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
-        }
-
-        #next-btn:active {
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
         }
 
         .cool-btn.wrong-btn {
@@ -476,8 +491,8 @@
             cursor: default;
             pointer-events: none;
             box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
         }
-
     </style>
 </head>
 <body>
@@ -651,18 +666,7 @@
             puzzleWorkspace.removeChild(temp);
             return width;
         }
-        /*
-        function syncContainerWidths() {
-            // Re-locks both containers to the width the current sentence
-            // needs, based on live measurement — safe to call any time,
-            // including on window resize, since it never touches slot or
-            // card contents, only the container width.
-            if (!originalWords.length) return;
-            const fullWidth = measureFullRowWidth(originalWords);
-            sourceContainer.style.width = fullWidth + 'px';
-            targetContainer.style.width = fullWidth + 'px';
-        }
-        */
+
         function syncContainerWidths() {
             // Re-locks both containers to the width the current sentence
             // needs, based on live measurement — safe to call any time,
@@ -788,7 +792,7 @@
         }
 
         function setupCardTapToMove(card) {
-            card.addEventListener('click', (e) => {
+            card.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 if (sentenceCompleted) return;
 
@@ -797,7 +801,26 @@
                     if (emptySlotMeta) {
                         emptySlotMeta.element.appendChild(card);
                         emptySlotMeta.element.classList.add('filled');
-                        registerMove();
+                   //     registerMove();
+
+                    //    if (sentenceCompleted) return;
+                        moveCount++;
+                        updateMovesDisplay();
+                        updateSlotHighlights();
+
+                        const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
+
+                         if (isWordCorrect) {
+                            await Checkmark.show({
+                                element: emptySlotMeta.element,
+                                size: 48,
+                                rise: 70,
+                                duration: 1600
+                            });
+                        }
+
+                         // Controllo finale della frase (senza richiamare registerMove duplicato)
+                        checkSentenceAutomatic();
                     }
                 } else if (card.parentNode.classList.contains('slot')) {
                     const slot = card.parentNode;
@@ -811,7 +834,11 @@
                         revealBtn.innerHTML = "<span>💡 Help!</span>";
                     }
 
-                    registerMove();
+                    moveCount++;
+                    updateMovesDisplay();
+                    updateSlotHighlights();
+                    fitTargetContainer();
+                    checkSentenceAutomatic();
                 }
             });
         }
@@ -843,15 +870,17 @@
 
                 slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
 
+                // Esplosione festosa dai lati dello schermo
+                Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60,  spread: 60, count: 90 });
+                Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                Confetti.burst({ origin: { x: 0.5 , y: 0.5 }, angle: 90, spread: 60, count: 90 });
+
                 // Reflect the round just finished right away (not just when a
                 // new round starts), so completing the last sentence visibly
                 // fills the bar to 100% instead of jumping straight to the
                 // (hidden) summary screen.
                 progressBarFill.style.width = (((currentSentenceIndex + 1) / PUZZLE_SENTENCES.length) * 100) + '%';
 
-            //    const effectiveTime = Math.max(elapsedSeconds, 1);
-            //    const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
-                
                 // Score this round directly on a 0–100 scale: start at 100, lose points
                 // for each wrong guess and each reveal used. No time-based formula, so
                 // there's no arbitrary "perfect value" left to guess at.
@@ -923,9 +952,6 @@
                 row.innerHTML = `<td><strong>${res.sentence}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
                 summaryTbody.appendChild(row);
             });
-
-        //    const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-        //    const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
 
             // averageMetric is already 0–100 per round (see handleOptionClick),
             // so no rescaling is needed — just average and clamp for safety.
