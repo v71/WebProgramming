@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>La pasticceria delle lettere</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage takes all the space that is left; everything inside the frame
+           is sized from it (see fitStage / fitFonts), so the page never scrolls. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            position: relative;
+            width: min(100%, 720px);       /* replaced by fitStage() */
+            height: 100%;                  /* replaced by fitStage() */
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- The bakery ---------- */
+        #chip {
+            position: absolute;
+            top: 10px;
+            left: 12px;
+            z-index: 3;
+            padding: 3px 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #4338ca;
+            background: #e0e7ff;
+            border-radius: 99px;
+            pointer-events: none;
+        }
+
+        #scene {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* The order slip: the picture of the word to bake */
+        #order {
+            flex: 0 0 var(--ticketh, 70px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 0 22px;
+            background: #fffdf5;
+            border: 3px dashed #cbd5e1;
+            border-radius: 16px;
+        }
+        #pic { font-size: var(--efs, 48px); line-height: 1; }
+        #spk {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--accent);
+            background: #e0e7ff;
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        /* The area that holds the word to complete */
+        #board {
+            width: 100%;
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* The word to complete */
+        #wordrow {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.1em;
+            padding: 6px 14px;
+            background: #fffdf5;
+            border: 3px solid #e2e8f0;
+            border-radius: 18px;
+            transition: border-color 0.3s ease, background-color 0.3s ease;
+            font-size: var(--lfs, 40px);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            line-height: 1;
+            white-space: nowrap;
+        }
+        .fx { padding: 0 0.02em; }
+
+        /* Word completed */
+        #board.done #wordrow { border-color: #059669; background: #ecfdf5; }
+
+        /* All gaps have the same width, so the width never hints at the answer */
+        .gap {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: calc(var(--lfs, 40px) * var(--slotu, 1.2));
+            height: calc(var(--lfs, 40px) * 1.35);
+            padding: 0;
+            font-family: inherit;
+            font-size: inherit;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--text);
+            background: #f1f5f9;
+            border: 3px dashed #94a3b8;
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative;
+        }
+        .gap.over { border-color: var(--accent); background: #e0e7ff; }
+        .gap.sel { border-style: solid; border-color: var(--accent); background: #e0e7ff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2); }
+        .gap.filled { cursor: default; border-style: solid; border-color: #059669; background: #bbf7d0; color: #047857; }
+        .gap.wobble { animation: wobble 0.45s ease; }
+
+        /* ---------- Letter tiles (the ingredients) ---------- */
+        #tray {
+            flex: 0 0 var(--trayh, 70px);
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tile {
+            height: var(--th, 60px);
+            min-width: var(--th, 60px);
+            padding: 0 14px;
+            font-size: var(--tfs, 32px);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            color: var(--text);
+            background: #ffffff;
+            border: 3px solid #94a3b8;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            cursor: grab;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .tile:hover { border-color: var(--accent); }
+        .tile.sel { border-color: var(--accent); background: #e0e7ff; box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25); }
+        .tile.used { visibility: hidden; }
+        .tile.dragging { opacity: 0.3; }
+        .tile.wobble { animation: wobble 0.45s ease; }
+        .tile.ghost {
+            position: fixed;
+            z-index: 1000;
+            pointer-events: none;
+            cursor: grabbing;
+            border-color: var(--accent);
+            background: #e0e7ff;
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.25);
+            transform: scale(1.1);
+        }
+
+        /* Help (hold): the next gaps show the missing letters in a thick ring,
+           and the tiles that belong there pulse (shape and motion, not only colour) */
+        #game-area.peeking .gap:not(.filled) {
+            border: 4px solid var(--accent);
+            background: #eef2ff;
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+        #game-area.peeking .gap:not(.filled)::before {
+            content: attr(data-exp);
+            color: var(--accent);
+            opacity: 0.8;
+        }
+        #game-area.peeking .tile.need {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.4);
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0); }
+            20% { transform: rotate(-7deg); }
+            40% { transform: rotate(6deg); }
+            60% { transform: rotate(-4deg); }
+            80% { transform: rotate(2deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #game-area.peeking .gap:not(.filled), #game-area.peeking .tile.need { animation: none; }
+            .gap.wobble, .tile.wobble { animation: none; }
+            .progress-bar-fill, .cool-btn, #wordrow { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+            #game-area { padding: 8px; }
+            #order { padding: 0 14px; gap: 10px; }
+            #spk { width: 38px; height: 38px; }
+            .tile { padding: 0 10px; }
+            #tray { gap: 6px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">La pasticceria delle lettere</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <div id="chip"></div>
+
+            <div id="scene">
+                <div id="order">
+                    <span id="pic" role="img" aria-label="Immagine della parola"></span>
+                    <button type="button" id="spk" aria-label="Ascolta la parola">🔊</button>
+                </div>
+
+                <div id="board">
+                    <div id="wordrow" role="group" aria-label="Parola da completare"></div>
+                </div>
+            </div>
+
+            <div id="tray" role="group" aria-label="Lettere disponibili"></div>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           title: the topic, shown in the corner of the game
+           words: the words to bake. For each one:
+             word:  the complete word
+             parts: the word cut into pieces (letters or digraphs); joined
+                    together they must give `word`
+             gaps:  which pieces are missing, as positions in `parts`
+             extra: wrong tiles added to the tray
+             pic:   emoji placeholder (use img: 'images/x.png' for a real picture)
+           ===================================================== */
+        const ROUNDS = [
+            { title: 'Le vocali', words: [
+                { word: 'casa',  parts: ['c','a','s','a'],     gaps: [1], extra: ['e','i','o','u'], pic: '🏠' },
+                { word: 'luna',  parts: ['l','u','n','a'],     gaps: [1], extra: ['a','e','i','o'], pic: '🌙' },
+                { word: 'mela',  parts: ['m','e','l','a'],     gaps: [1], extra: ['a','i','o','u'], pic: '🍎' },
+                { word: 'sole',  parts: ['s','o','l','e'],     gaps: [1], extra: ['a','e','i','u'], pic: '☀️' },
+                { word: 'libro', parts: ['l','i','b','r','o'], gaps: [1], extra: ['a','e','o','u'], pic: '📖' } ] },
+
+            { title: 'Lettere simili', words: [
+                { word: 'pane',  parts: ['p','a','n','e'],     gaps: [0], extra: ['b','d','q'], pic: '🍞' },
+                { word: 'barca', parts: ['b','a','r','c','a'], gaps: [0], extra: ['d','p','q'], pic: '⛵' },
+                { word: 'mano',  parts: ['m','a','n','o'],     gaps: [0], extra: ['n','r','l'], pic: '✋' },
+                { word: 'fiore', parts: ['f','i','o','r','e'], gaps: [0], extra: ['v','t','s'], pic: '🌸' },
+                { word: 'topo',  parts: ['t','o','p','o'],     gaps: [2], extra: ['b','q','d'], pic: '🐭' } ] },
+
+            { title: 'Le doppie', words: [
+                { word: 'gatto', parts: ['g','a','tt','o'], gaps: [2], extra: ['t','dd','pp'], pic: '🐱' },
+                { word: 'mamma', parts: ['m','a','mm','a'], gaps: [2], extra: ['m','nn','tt'], pic: '👩' },
+                { word: 'pizza', parts: ['p','i','zz','a'], gaps: [2], extra: ['z','ss','tt'], pic: '🍕' },
+                { word: 'palla', parts: ['p','a','ll','a'], gaps: [2], extra: ['l','rr','pp'], pic: '⚽' },
+                { word: 'nonno', parts: ['n','o','nn','o'], gaps: [2], extra: ['n','mm','tt'], pic: '👴' } ] },
+
+            { title: 'I digrammi', words: [
+                { word: 'scarpa', parts: ['sc','a','r','p','a'], gaps: [0], extra: ['ch','gn','gl'], pic: '👟' },
+                { word: 'ragno',  parts: ['r','a','gn','o'],      gaps: [2], extra: ['gl','sc','ch'], pic: '🕷️' },
+                { word: 'aglio',  parts: ['a','gl','i','o'],      gaps: [1], extra: ['gn','sc','qu'], pic: '🧄' },
+                { word: 'quadro', parts: ['qu','a','d','r','o'],  gaps: [0], extra: ['ch','sc','gh'], pic: '🖼️' },
+                { word: 'chiave', parts: ['ch','i','a','v','e'],  gaps: [0], extra: ['gh','sc','qu'], pic: '🔑' } ] },
+
+            { title: 'Due pezzi mancanti', words: [
+                { word: 'gelato',     parts: ['g','e','l','a','t','o'],  gaps: [1, 3], extra: ['i','o','u'],     pic: '🍦' },
+                { word: 'scimmia',    parts: ['sc','i','mm','i','a'],    gaps: [0, 2], extra: ['ch','m','nn'],   pic: '🐵' },
+                { word: 'coniglio',   parts: ['c','o','n','i','gli','o'], gaps: [2, 4], extra: ['m','gni','l'],  pic: '🐰' },
+                { word: 'cappello',   parts: ['c','a','pp','e','ll','o'], gaps: [2, 4], extra: ['p','l','tt'],   pic: '🎩' },
+                { word: 'ghiaccio',   parts: ['ghi','a','cc','io'],      gaps: [0, 2], extra: ['gi','c','chi'], pic: '🧊' } ] }
+        ];
+
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:          speak words aloud
+           autoSpeakWord:  say the word when it appears
+           showTime:       show the timer in the stats bar
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            autoSpeakWord: true,
+            showTime: true
+        };
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { frameEl.classList.add('peeking'); }
+        function onHelpEnd() { frameEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Missing Letter Bakery
+           ===================================================== */
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+        const sceneEl = document.getElementById('scene');
+        const orderEl = document.getElementById('order');
+        const picEl = document.getElementById('pic');
+        const boardEl = document.getElementById('board');
+        const wordRowEl = document.getElementById('wordrow');
+        const trayEl = document.getElementById('tray');
+        const chipEl = document.getElementById('chip');
+        const infoMainEl = document.getElementById('info-main');
+        const spkBtn = document.getElementById('spk');
+
+        let roundIdx = 0;
+        let wordIdx = 0;
+        let parts = [];            // pieces of the current word
+        let filled = [];           // filled[i] = true once the gap at position i is correct
+        let tiles = [];            // { id, text, used }
+        let selectedTile = null;
+        let selectedGap = null;
+        let done = false;
+        let wordsDone = 0;
+        let timerStarted = false;
+        let nextMode = false;
+        let nextTileId = 0;
+        let statusHtml = '';
+        let statusKind = '';
+
+        const TOTAL_WORDS = ROUNDS.reduce((n, r) => n + r.words.length, 0);
+
+        function current() { return ROUNDS[roundIdx].words[wordIdx]; }
+
+        /* ---------- Voice ---------- */
+        function say(text, force) {
+            if (!prefs.voice && !force) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'it-IT';
+                u.rate = 0.8;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        spkBtn.addEventListener('click', () => say(current().word, true));
+
+        /* ---------- Info bar ---------- */
+        function renderInfo() {
+            const total = ROUNDS[roundIdx].words.length;
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>Completa la parola</span><span class="cnt">Parola ' + (wordIdx + 1) + ' / ' + total + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- Helpers ---------- */
+        function shuffle(arr) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        function emptyGaps() {
+            return current().gaps.filter(g => !filled[g]);
+        }
+
+        /* ---------- Layout: size the frame, then everything inside it ---------- */
+        function tileWidthEst(text, tfs, th) {
+            return Math.max(th, text.length * 0.74 * tfs + 28);
+        }
+
+        function fitFonts() {
+            const r = ROUNDS[roundIdx];
+            const g = getComputedStyle(frameEl);
+            const innerW = frameEl.clientWidth - parseFloat(g.paddingLeft) - parseFloat(g.paddingRight);
+            const innerH = frameEl.clientHeight - parseFloat(g.paddingTop) - parseFloat(g.paddingBottom);
+            const gap = 8;
+
+            // Tiles and the tray (reserve the rows the biggest tile set needs)
+            const th = Math.max(42, Math.min(innerH * 0.13, 70));
+            const tfs = th * 0.56;
+            let rows = 1;
+            r.words.forEach(w => {
+                const texts = w.gaps.map(i => w.parts[i]).concat(w.extra);
+                const total = texts.reduce((s, t) => s + tileWidthEst(t, tfs, th), 0) + gap * (texts.length - 1);
+                rows = Math.max(rows, Math.ceil(total / innerW));
+            });
+            rows = Math.min(rows, 3);
+            const trayH = rows * th + (rows - 1) * 6;
+
+            // Order slip and word share what is left
+            const sceneH = innerH - trayH - gap;
+            const ticketH = Math.max(46, Math.min(sceneH * 0.2, 90));
+
+            frameEl.style.setProperty('--th', th + 'px');
+            frameEl.style.setProperty('--tfs', tfs.toFixed(1) + 'px');
+            frameEl.style.setProperty('--trayh', trayH + 'px');
+            frameEl.style.setProperty('--ticketh', ticketH + 'px');
+            frameEl.style.setProperty('--efs', (ticketH * 0.74).toFixed(1) + 'px');
+
+            // Letters of the word: the longest word must fit in the board
+            const maxExp = Math.max.apply(null, r.words.map(w => Math.max.apply(null, w.gaps.map(i => w.parts[i].length))));
+            const slotU = 0.5 + 0.74 * maxExp;
+            let units = 0;
+            r.words.forEach(w => {
+                const fixed = w.parts.reduce((s, p, i) => s + (w.gaps.indexOf(i) === -1 ? p.length * 0.78 : 0), 0);
+                units = Math.max(units, fixed + w.gaps.length * (slotU + 0.14) + 0.7);
+            });
+            const boardW = boardEl.clientWidth;
+            const boardH = boardEl.clientHeight;
+            const lfs = Math.max(20, Math.min((boardW * 0.94) / units, boardH * 0.5, 80));
+
+            frameEl.style.setProperty('--lfs', lfs.toFixed(1) + 'px');
+            frameEl.style.setProperty('--slotu', slotU.toFixed(2));
+        }
+
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const h = Math.max(320, avail - used);
+            stageEl.style.height = h + 'px';
+            frameEl.style.height = h + 'px';
+            frameEl.style.width = Math.min(stageEl.clientWidth, 720) + 'px';
+            fitFonts();
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Drawing the word and the tray ---------- */
+        function renderWordRow() {
+            const w = current();
+            wordRowEl.innerHTML = parts.map((p, i) => {
+                if (w.gaps.indexOf(i) === -1) return '<span class="fx">' + p + '</span>';
+                return '<button type="button" class="gap' + (filled[i] ? ' filled' : '') + (selectedGap === i ? ' sel' : '') +
+                       '" data-g="' + i + '" data-exp="' + p + '" aria-label="' + (filled[i] ? p : 'Spazio vuoto') + '">' +
+                       (filled[i] ? p : '') + '</button>';
+            }).join('');
+        }
+
+        function renderTray() {
+            trayEl.innerHTML = tiles.map(t =>
+                '<button type="button" class="tile' + (t.used ? ' used' : '') + '" data-id="' + t.id + '">' + t.text + '</button>'
+            ).join('');
+            markNeeded();
+        }
+
+        /* Tiles that belong in a gap that is still empty (used by Help) */
+        function markNeeded() {
+            const w = current();
+            const need = new Set(emptyGaps().map(g => w.parts[g]));
+            Array.from(trayEl.querySelectorAll('.tile')).forEach(el => {
+                const t = tiles.find(x => x.id === parseInt(el.dataset.id, 10));
+                el.classList.toggle('need', !!t && !t.used && need.has(t.text));
+            });
+        }
+
+        function updateSelectionUI() {
+            Array.from(trayEl.querySelectorAll('.tile')).forEach(el =>
+                el.classList.toggle('sel', parseInt(el.dataset.id, 10) === selectedTile));
+            Array.from(wordRowEl.querySelectorAll('.gap')).forEach(el =>
+                el.classList.toggle('sel', parseInt(el.dataset.g, 10) === selectedGap));
+        }
+
+        function clearSelection() {
+            selectedTile = null;
+            selectedGap = null;
+            updateSelectionUI();
+        }
+
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadWord() {
+            const w = current();
+            parts = w.parts.slice();
+            filled = parts.map(() => false);
+            done = false;
+            selectedTile = null;
+            selectedGap = null;
+            hidePeek();
+            setNextMode(false);
+            boardEl.classList.remove('done');
+
+            const needed = w.gaps.map(i => w.parts[i]);
+            tiles = shuffle(needed.concat(w.extra)).map(text => ({ id: nextTileId++, text: text, used: false }));
+
+            chipEl.textContent = ROUNDS[roundIdx].title;
+            if (w.img) picEl.innerHTML = '<img src="' + w.img + '" alt="" style="height:1em">';
+            else picEl.textContent = w.pic;
+            updateRoundDisplay();
+            setStatus('');
+            renderWordRow();
+            renderTray();
+            fitFonts();
+
+            if (prefs.autoSpeakWord) setTimeout(() => say(w.word), 400);
+        }
+
+        /* ---------- Placing a tile ---------- */
+        function wobble(el) {
+            if (!el) return;
+            el.classList.remove('wobble');
+            void el.offsetWidth;
+            el.classList.add('wobble');
+        }
+
+        function attemptPlace(tileId, gapIdx) {
+            const tile = tiles.find(t => t.id === tileId);
+            if (!tile || tile.used || filled[gapIdx] || done) return;
+
+            startTimerOnce();
+            addMove();
+            clearSelection();
+
+            if (tile.text === parts[gapIdx]) {
+                tile.used = true;
+                filled[gapIdx] = true;
+                setStatus('');
+                renderWordRow();
+                renderTray();
+                if (emptyGaps().length === 0) completeWord();
+            } else {
+                setStatus('Non va qui. Riprova!', 'retry');
+                wobble(trayEl.querySelector('.tile[data-id="' + tileId + '"]'));
+                wobble(wordRowEl.querySelector('.gap[data-g="' + gapIdx + '"]'));
+            }
+        }
+
+        function completeWord() {
+            const w = current();
+            done = true;
+            hidePeek();
+            wordsDone++;
+            setProgress((wordsDone / TOTAL_WORDS) * 100);
+            boardEl.classList.add('done');
+            setTimeout(() => say(w.word), 300);
+
+            const lastWord = wordIdx === ROUNDS[roundIdx].words.length - 1;
+            const lastRound = roundIdx === ROUNDS.length - 1;
+            if (lastWord && lastRound) {
+                stopElapsedTimer();
+                setStatus('Bravo! Hai finito tutti i round!', 'ok');
+            } else if (lastWord) {
+                setStatus('Bravo! Round completato: ' + w.word, 'ok');
+            } else {
+                setStatus('Bravo! ' + w.word, 'ok');
+            }
+            setNextMode(true, lastWord && lastRound);
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (wordIdx < ROUNDS[roundIdx].words.length - 1) {
+                wordIdx++;
+                loadWord();
+            } else if (roundIdx < ROUNDS.length - 1) {
+                roundIdx++;
+                wordIdx = 0;
+                loadWord();
+            } else {
+                roundIdx = 0;
+                wordIdx = 0;
+                initGame();
+            }
+        }
+
+        /* ---------- Tap: tile, then gap (or just the tile when only one gap is left) ---------- */
+        function onTileTap(id) {
+            const tile = tiles.find(t => t.id === id);
+            if (!tile || tile.used || done) return;
+
+            const empties = emptyGaps();
+            if (selectedGap !== null) attemptPlace(id, selectedGap);
+            else if (empties.length === 1) attemptPlace(id, empties[0]);
+            else {
+                selectedTile = selectedTile === id ? null : id;
+                updateSelectionUI();
+            }
+        }
+
+        function onGapTap(i) {
+            if (done || filled[i]) return;
+            if (selectedTile !== null) attemptPlace(selectedTile, i);
+            else {
+                selectedGap = selectedGap === i ? null : i;
+                updateSelectionUI();
+            }
+        }
+
+        wordRowEl.addEventListener('click', (e) => {
+            const gapEl = e.target.closest('.gap');
+            if (gapEl) onGapTap(parseInt(gapEl.dataset.g, 10));
+        });
+
+        // Keyboard activation of a tile (mouse and touch go through pointer events below)
+        trayEl.addEventListener('click', (e) => {
+            if (e.detail !== 0) return;
+            const el = e.target.closest('.tile');
+            if (el) onTileTap(parseInt(el.dataset.id, 10));
+        });
+
+        /* ---------- Drag and drop with pointer events (mouse, touch and pen) ---------- */
+        let drag = null;
+
+        function gapAtPoint(x, y) {
+            let best = -1, bestDist = Infinity;
+            Array.from(wordRowEl.querySelectorAll('.gap:not(.filled)')).forEach(el => {
+                const r = el.getBoundingClientRect();
+                const pad = 18;
+                if (x >= r.left - pad && x <= r.right + pad && y >= r.top - pad && y <= r.bottom + pad) {
+                    const d = Math.hypot(x - (r.left + r.width / 2), y - (r.top + r.height / 2));
+                    if (d < bestDist) { bestDist = d; best = parseInt(el.dataset.g, 10); }
+                }
+            });
+            return best;
+        }
+
+        function showHover(g) {
+            Array.from(wordRowEl.querySelectorAll('.gap')).forEach(el =>
+                el.classList.toggle('over', parseInt(el.dataset.g, 10) === g));
+        }
+
+        function startGhost(e) {
+            const src = drag.el;
+            const ghost = src.cloneNode(true);
+            ghost.classList.add('ghost');
+            ghost.classList.remove('sel', 'need');
+            const r = src.getBoundingClientRect();
+            ghost.style.width = r.width + 'px';
+            ghost.style.height = r.height + 'px';
+            document.body.appendChild(ghost);
+            src.classList.add('dragging');
+            drag.ghost = ghost;
+            drag.w = r.width;
+            drag.h = r.height;
+        }
+
+        function moveGhost(e) {
+            // The tile floats a little above the finger so the finger does not hide it
+            drag.cx = e.clientX;
+            drag.cy = e.clientY - (e.pointerType === 'touch' ? 36 : 0);
+            drag.ghost.style.left = (drag.cx - drag.w / 2) + 'px';
+            drag.ghost.style.top = (drag.cy - drag.h / 2) + 'px';
+        }
+
+        function endDrag() {
+            if (!drag) return;
+            if (drag.ghost) drag.ghost.remove();
+            drag.el.classList.remove('dragging');
+            showHover(-1);
+            drag = null;
+        }
+
+        trayEl.addEventListener('pointerdown', (e) => {
+            const el = e.target.closest('.tile');
+            if (!el || done || el.classList.contains('used')) return;
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            drag = { el: el, id: parseInt(el.dataset.id, 10), startX: e.clientX, startY: e.clientY, moved: false, ghost: null, pid: e.pointerId };
+            try { el.setPointerCapture(e.pointerId); } catch (err) {}
+        });
+
+        trayEl.addEventListener('pointermove', (e) => {
+            if (!drag || e.pointerId !== drag.pid) return;
+            if (!drag.moved && Math.hypot(e.clientX - drag.startX, e.clientY - drag.startY) > 8) {
+                drag.moved = true;
+                startGhost(e);
+            }
+            if (drag.moved) {
+                moveGhost(e);
+                showHover(gapAtPoint(drag.cx, drag.cy));
+            }
+        });
+
+        trayEl.addEventListener('pointerup', (e) => {
+            if (!drag || e.pointerId !== drag.pid) return;
+            const d = drag;
+            try { d.el.releasePointerCapture(e.pointerId); } catch (err) {}
+
+            if (d.moved) {
+                const g = gapAtPoint(d.cx, d.cy);
+                endDrag();
+                if (g !== -1) attemptPlace(d.id, g);
+            } else {
+                endDrag();
+                onTileTap(d.id);
+            }
+        });
+
+        trayEl.addEventListener('pointercancel', endDrag);
+
+        document.addEventListener('animationend', (e) => {
+            if (e.animationName === 'wobble') e.target.classList.remove('wobble');
+        });
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            wordsDone = 0;
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            loadWord();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

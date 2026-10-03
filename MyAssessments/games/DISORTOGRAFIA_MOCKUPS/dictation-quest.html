@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>La missione del dettato</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage takes all the space that is left; everything inside the frame
+           is sized from it (see fitStage / fitFonts), so the page never scrolls. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            position: relative;
+            width: min(100%, 720px);       /* replaced by fitStage() */
+            height: 100%;                  /* replaced by fitStage() */
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover:not(:disabled) { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Dictation Quest ---------- */
+        /* The row with the listening buttons and, once the word is right, its picture */
+        #panel {
+            flex: 0 0 var(--panelh, 60px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        #play-btn {
+            height: 100%;
+            min-width: 150px;
+            font-size: 1.15rem;
+            padding: 0 24px;
+        }
+
+        #syl-btn {
+            height: 100%;
+            padding: 0 18px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent);
+            background: #ffffff;
+            border: 3px solid var(--accent);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+        }
+
+        #pic {
+            width: var(--panelh, 60px);
+            text-align: center;
+            font-size: calc(var(--panelh, 60px) * 0.8);
+            line-height: 1;
+            visibility: hidden;          /* shown when the word is right (keeps the layout still) */
+        }
+        #pic.show { visibility: visible; }
+
+        /* The slots: one per letter of the word */
+        #slots {
+            flex: 1;
+            min-height: 0;
+            align-self: center;
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            justify-content: center;
+            gap: 6px 6px;
+            padding-bottom: 10px;          /* room for the syllable bars */
+        }
+
+        .slot {
+            width: var(--sw, 50px);
+            height: var(--sh, 64px);
+            padding: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--sfs, 36px);
+            font-weight: 500;
+            line-height: 1;
+            color: var(--text);
+            background: #f1f5f9;
+            border: 3px dashed #94a3b8;
+            border-radius: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .slot.f { border-style: solid; border-color: #6366f1; background: #ffffff; }
+        .slot.locked { border-style: solid; border-color: #059669; background: #ecfdf5; cursor: default; }
+        .slot.bad { border-style: solid; border-color: #d97706; background: #fff7ed; animation: wobble 0.45s ease; }
+        #slots.done .slot { border-style: solid; border-color: #059669; background: #bbf7d0; cursor: default; }
+
+        /* Syllable hint: a coloured bar under the letters of each syllable */
+        #slots.syl .slot.s0 { box-shadow: 0 7px 0 #818cf8; }
+        #slots.syl .slot.s1 { box-shadow: 0 7px 0 #22d3ee; }
+        #slots.syl .slot.s2 { box-shadow: 0 7px 0 #fbbf24; }
+        #slots.syl .slot.s3 { box-shadow: 0 7px 0 #f472b6; }
+        #slots.syl .slot.sylhi { transform: translateY(-4px) scale(1.06); }
+
+        /* ---------- Letter bank ---------- */
+        #bank {
+            flex: 0 0 var(--bankh, 60px);
+            display: flex;
+            flex-wrap: wrap;
+            align-content: flex-start;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .tile {
+            width: var(--tw, 50px);
+            height: var(--th, 54px);
+            padding: 0;
+            font-size: var(--tfs, 30px);
+            font-weight: 500;
+            line-height: 1;
+            color: var(--text);
+            background: #ffffff;
+            border: 3px solid #94a3b8;
+            border-radius: 14px;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+            touch-action: manipulation;
+        }
+        .tile:hover { border-color: var(--accent); }
+        .tile.used { visibility: hidden; }
+
+        /* Help (hold): the next empty slot shows its letter in a thick ring, and the
+           tile with that letter pulses (shape and motion, not only colour) */
+        #game-area.peeking .slot:not(.f):not(.locked)::before {
+            content: attr(data-exp);
+            color: var(--accent);
+            opacity: 0.55;
+        }
+        #game-area.peeking .slot.next {
+            outline: 4px solid var(--accent);
+            outline-offset: 3px;
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+        #game-area.peeking .tile.need {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.4);
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0); }
+            20% { transform: rotate(-6deg); }
+            40% { transform: rotate(5deg); }
+            60% { transform: rotate(-3deg); }
+            80% { transform: rotate(2deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #game-area.peeking .slot.next, #game-area.peeking .tile.need { animation: none; }
+            .slot.bad { animation: none; }
+            .progress-bar-fill, .cool-btn, .slot { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+            #game-area { padding: 8px; }
+            #play-btn { min-width: 120px; padding: 0 16px; font-size: 1rem; }
+            #syl-btn { padding: 0 12px; font-size: 0.9rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">La missione del dettato</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <div id="panel">
+                <button type="button" id="play-btn" class="cool-btn"><span>🔊 Ascolta</span></button>
+                <button type="button" id="syl-btn" aria-label="Mostra le sillabe">✂️ Sillabe</button>
+                <span id="pic" aria-hidden="true"></span>
+            </div>
+
+            <div id="slots" role="group" aria-label="Scrivi la parola qui"></div>
+
+            <div id="bank" role="group" aria-label="Lettere disponibili"></div>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           title:  the topic of the round (for you; not shown to the child)
+           extra:  how many wrong letters are added to the letter bank
+           words:  { word, syl, pic }
+             word: the word that is dictated
+             syl:  the word cut into syllables; joined they must give `word`
+             pic:  emoji shown when the word is right
+                   (use img: 'images/x.png' for a real picture)
+           ===================================================== */
+        const ROUNDS = [
+            { title: 'Parole corte', extra: 2, words: [
+                { word: 'casa',  syl: ['ca', 'sa'], pic: '🏠' },
+                { word: 'luna',  syl: ['lu', 'na'], pic: '🌙' },
+                { word: 'mela',  syl: ['me', 'la'], pic: '🍎' },
+                { word: 'sole',  syl: ['so', 'le'], pic: '☀️' },
+                { word: 'pane',  syl: ['pa', 'ne'], pic: '🍞' } ] },
+
+            { title: 'Doppie e gruppi', extra: 3, words: [
+                { word: 'fiore',  syl: ['fio', 're'],      pic: '🌸' },
+                { word: 'gatto',  syl: ['gat', 'to'],      pic: '🐱' },
+                { word: 'pesce',  syl: ['pe', 'sce'],      pic: '🐟' },
+                { word: 'albero', syl: ['al', 'be', 'ro'], pic: '🌳' },
+                { word: 'palla',  syl: ['pal', 'la'],      pic: '⚽' } ] },
+
+            { title: 'Digrammi', extra: 3, words: [
+                { word: 'chiave', syl: ['chia', 've'], pic: '🔑' },
+                { word: 'scuola', syl: ['scuo', 'la'], pic: '🏫' },
+                { word: 'bagno',  syl: ['ba', 'gno'],  pic: '🛁' },
+                { word: 'aglio',  syl: ['a', 'glio'],  pic: '🧄' },
+                { word: 'quadro', syl: ['qua', 'dro'], pic: '🖼️' } ] },
+
+            { title: 'Tre o quattro sillabe', extra: 3, words: [
+                { word: 'farfalla',  syl: ['far', 'fal', 'la'],       pic: '🦋' },
+                { word: 'telefono',  syl: ['te', 'le', 'fo', 'no'],   pic: '📞' },
+                { word: 'gelato',    syl: ['ge', 'la', 'to'],         pic: '🍦' },
+                { word: 'banana',    syl: ['ba', 'na', 'na'],         pic: '🍌' },
+                { word: 'pomodoro',  syl: ['po', 'mo', 'do', 'ro'],   pic: '🍅' } ] },
+
+            { title: 'Parole lunghe', extra: 4, words: [
+                { word: 'coniglio',   syl: ['co', 'ni', 'glio'],       pic: '🐰' },
+                { word: 'elefante',   syl: ['e', 'le', 'fan', 'te'],   pic: '🐘' },
+                { word: 'scimmia',    syl: ['scim', 'mia'],            pic: '🐵' },
+                { word: 'cappello',   syl: ['cap', 'pel', 'lo'],       pic: '🎩' },
+                { word: 'bicicletta', syl: ['bi', 'ci', 'clet', 'ta'], pic: '🚲' } ] }
+        ];
+
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:        speak the words aloud
+           autoPlay:     say the word as soon as it appears
+                         (the very first word needs a tap on "Ascolta")
+           allowReplay:  false = the word can be heard only once
+           speed:        speaking speed of the word (0.5 slow ... 1 normal)
+           showTime:     show the timer in the stats bar
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            autoPlay: true,
+            allowReplay: true,
+            speed: 0.8,
+            showTime: true
+        };
+
+        // Letters that are easy to mix up: they are preferred as wrong letters in the bank
+        const CONFUSABLE = {
+            b: 'dpq', d: 'bpq', p: 'bdq', q: 'pbd', m: 'n', n: 'mu', u: 'nv', v: 'uf',
+            f: 't', t: 'fl', a: 'oe', e: 'ao', o: 'ae', i: 'l', l: 'it', c: 'oe', g: 'q', s: 'z', z: 's'
+        };
+        const FILLER = 'aeiourstnlcmpdbfgvz'.split('');
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { frameEl.classList.add('peeking'); }
+        function onHelpEnd() { frameEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Dictation Quest
+           ===================================================== */
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+        const slotsEl = document.getElementById('slots');
+        const bankEl = document.getElementById('bank');
+        const picEl = document.getElementById('pic');
+        const playBtn = document.getElementById('play-btn');
+        const sylBtn = document.getElementById('syl-btn');
+        const infoMainEl = document.getElementById('info-main');
+
+        const HAS_VOICE = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+
+        let roundIdx = 0;
+        let wordIdx = 0;
+        let letters = [];          // the letters of the word
+        let sylOf = [];            // syllable number of each letter
+        let slots = [];            // tile placed in each slot (or null)
+        let locked = [];           // locked[i] = the letter in slot i has been checked and is right
+        let tiles = [];            // letter bank: { id, ch, used }
+        let done = false;
+        let busy = false;          // wrong letters are about to go back to the bank
+        let wordsDone = 0;
+        let hintUsed = false;      // the syllable hint counts once per word
+        let listensLeft = Infinity;
+        let userActed = false;     // browsers only allow sound after a tap
+        let timerStarted = false;
+        let nextMode = false;
+        let nextTileId = 0;
+        let statusHtml = '';
+        let statusKind = '';
+
+        const TOTAL_WORDS = ROUNDS.reduce((n, r) => n + r.words.length, 0);
+
+        function current() { return ROUNDS[roundIdx].words[wordIdx]; }
+
+        window.addEventListener('pointerdown', () => { userActed = true; }, { once: true });
+        window.addEventListener('keydown', () => { userActed = true; }, { once: true });
+
+        /* ---------- Voice ---------- */
+        function say(text, rate) {
+            if (!prefs.voice || !HAS_VOICE) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'it-IT';
+                u.rate = rate || prefs.speed;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        function listen() {
+            if (listensLeft <= 0) return;
+            if (listensLeft !== Infinity) listensLeft--;
+            say(current().word);
+            updateListenBtn();
+        }
+
+        function updateListenBtn() {
+            playBtn.disabled = !HAS_VOICE || !prefs.voice || listensLeft <= 0;
+            playBtn.querySelector('span').textContent = '🔊 ' + (listensLeft === Infinity ? 'Ascolta' : (listensLeft > 0 ? 'Ascolta' : 'Ascoltata'));
+        }
+
+        playBtn.addEventListener('click', listen);
+
+        /* ---------- Info bar ---------- */
+        function renderInfo() {
+            const total = ROUNDS[roundIdx].words.length;
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>Ascolta e scrivi la parola</span><span class="cnt">Parola ' + (wordIdx + 1) + ' / ' + total + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- Helpers ---------- */
+        function shuffle(arr) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* Wrong letters for the bank: look-alikes of the word's letters first */
+        function pickDistractors(word, count) {
+            const have = new Set(word.split(''));
+            const near = [];
+            Array.from(have).forEach(ch => {
+                (CONFUSABLE[ch] || '').split('').forEach(c => { if (!have.has(c) && near.indexOf(c) === -1) near.push(c); });
+            });
+            const filler = shuffle(FILLER.filter(c => !have.has(c) && near.indexOf(c) === -1));
+            return shuffle(near).concat(filler).slice(0, count);
+        }
+
+        function firstEmpty() {
+            return slots.findIndex(s => s === null);
+        }
+
+        /* ---------- Layout: size the frame, then everything inside it ---------- */
+        function fitFonts() {
+            const r = ROUNDS[roundIdx];
+            const g = getComputedStyle(frameEl);
+            const innerW = frameEl.clientWidth - parseFloat(g.paddingLeft) - parseFloat(g.paddingRight);
+            const innerH = frameEl.clientHeight - parseFloat(g.paddingTop) - parseFloat(g.paddingBottom);
+            const gap = 8;
+            const sGap = 6;
+
+            const panelH = Math.max(46, Math.min(innerH * 0.15, 68));
+
+            // Letter bank: reserve the rows the biggest bank of the round needs
+            const th = Math.max(38, Math.min(innerH * 0.115, 56));
+            const tw = Math.round(th * 0.95);
+            const tfs = th * 0.56;
+            const maxLetters = Math.max.apply(null, r.words.map(w => w.word.length));
+            const maxTiles = maxLetters + r.extra;
+            const perRowT = Math.max(1, Math.floor((innerW + sGap) / (tw + sGap)));
+            const bankRows = Math.min(3, Math.ceil(maxTiles / perRowT));
+            const bankH = bankRows * th + (bankRows - 1) * sGap;
+
+            // Slots: one row if they are big enough, otherwise two
+            const availSlotsH = innerH - panelH - bankH - gap * 2 - 10;
+            let rows = 1;
+            let perRow = maxLetters;
+            let sw = (innerW - sGap * (perRow - 1)) / perRow;
+            if (sw < 44) {
+                rows = 2;
+                perRow = Math.ceil(maxLetters / 2);
+                sw = (innerW - sGap * (perRow - 1)) / perRow;
+            }
+            sw = Math.floor(Math.min(sw, 74));
+            let sh = Math.min(sw * 1.3, (availSlotsH - sGap * (rows - 1)) / rows);
+            sh = Math.floor(Math.max(sh, 34));
+
+            frameEl.style.setProperty('--panelh', panelH + 'px');
+            frameEl.style.setProperty('--th', th + 'px');
+            frameEl.style.setProperty('--tw', tw + 'px');
+            frameEl.style.setProperty('--tfs', tfs.toFixed(1) + 'px');
+            frameEl.style.setProperty('--bankh', bankH + 'px');
+            frameEl.style.setProperty('--sw', sw + 'px');
+            frameEl.style.setProperty('--sh', sh + 'px');
+            frameEl.style.setProperty('--sfs', (sh * 0.58).toFixed(1) + 'px');
+            slotsEl.style.maxWidth = (perRow * (sw + sGap) - sGap) + 'px';
+        }
+
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const h = Math.max(320, avail - used);
+            stageEl.style.height = h + 'px';
+            frameEl.style.height = h + 'px';
+            frameEl.style.width = Math.min(stageEl.clientWidth, 720) + 'px';
+            fitFonts();
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Drawing ---------- */
+        function renderSlots() {
+            slotsEl.innerHTML = letters.map((ch, i) => {
+                const tile = slots[i];
+                return '<button type="button" class="slot s' + (sylOf[i] % 4) +
+                    (tile ? ' f' : '') + (locked[i] ? ' locked' : '') +
+                    '" data-i="' + i + '" data-exp="' + ch + '" data-syl="' + sylOf[i] + '" aria-label="' +
+                    (tile ? 'Lettera ' + tile.ch : 'Spazio vuoto') + '">' + (tile ? tile.ch : '') + '</button>';
+            }).join('');
+            markNext();
+        }
+
+        function renderBank() {
+            bankEl.innerHTML = tiles.map(t =>
+                '<button type="button" class="tile' + (t.used ? ' used' : '') + '" data-id="' + t.id + '" aria-label="Lettera ' + t.ch + '">' + t.ch + '</button>'
+            ).join('');
+            markNext();
+        }
+
+        /* For Help: the next empty slot, and one tile that fits it */
+        function markNext() {
+            Array.from(slotsEl.querySelectorAll('.slot')).forEach(el => el.classList.remove('next'));
+            Array.from(bankEl.querySelectorAll('.tile')).forEach(el => el.classList.remove('need'));
+            const i = firstEmpty();
+            if (i === -1 || done) return;
+            const slotEl = slotsEl.querySelector('.slot[data-i="' + i + '"]');
+            if (slotEl) slotEl.classList.add('next');
+            const tile = tiles.find(t => !t.used && t.ch === letters[i]);
+            if (tile) {
+                const tileEl = bankEl.querySelector('.tile[data-id="' + tile.id + '"]');
+                if (tileEl) tileEl.classList.add('need');
+            }
+        }
+
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadWord() {
+            const w = current();
+            const r = ROUNDS[roundIdx];
+
+            letters = w.word.split('');
+            sylOf = [];
+            w.syl.forEach((s, k) => { for (let c = 0; c < s.length; c++) sylOf.push(k); });
+            slots = letters.map(() => null);
+            locked = letters.map(() => false);
+            done = false;
+            busy = false;
+            hintUsed = false;
+            listensLeft = prefs.allowReplay ? Infinity : 1;
+            hidePeek();
+            setNextMode(false);
+
+            tiles = shuffle(letters.concat(pickDistractors(w.word, r.extra))).map(ch => ({ id: nextTileId++, ch: ch, used: false }));
+
+            slotsEl.classList.remove('syl', 'done');
+            picEl.classList.remove('show');
+            picEl.innerHTML = '';
+            updateRoundDisplay();
+            setStatus('');
+            slotsEl.setAttribute('aria-label', 'Scrivi la parola qui: ' + r.title);
+            renderSlots();
+            renderBank();
+            updateListenBtn();
+            fitFonts();
+
+            // The browser only plays sound after the child has tapped something
+            if (prefs.autoPlay && userActed) setTimeout(listen, 400);
+        }
+
+        /* ---------- Placing and removing letters ---------- */
+        function placeTile(id) {
+            if (done || busy) return;
+            const tile = tiles.find(t => t.id === id);
+            const i = firstEmpty();
+            if (!tile || tile.used || i === -1) return;
+
+            startTimerOnce();
+            addMove();
+            if (statusKind === 'retry') setStatus('');
+
+            tile.used = true;
+            slots[i] = tile;
+            renderSlots();
+            renderBank();
+
+            if (firstEmpty() === -1) checkWord();
+        }
+
+        function removeFromSlot(i) {
+            if (done || busy || locked[i] || !slots[i]) return;
+            slots[i].used = false;
+            slots[i] = null;
+            if (statusKind === 'retry') setStatus('');
+            renderSlots();
+            renderBank();
+        }
+
+        function removeLast() {
+            for (let i = slots.length - 1; i >= 0; i--) {
+                if (slots[i] && !locked[i]) { removeFromSlot(i); return; }
+            }
+        }
+
+        function checkWord() {
+            const wrong = [];
+            slots.forEach((t, i) => { if (!locked[i] && t.ch !== letters[i]) wrong.push(i); });
+
+            if (wrong.length === 0) {
+                completeWord();
+                return;
+            }
+
+            busy = true;
+            setStatus('Quasi! Controlla le lettere arancioni', 'retry');
+            wrong.forEach(i => {
+                const el = slotsEl.querySelector('.slot[data-i="' + i + '"]');
+                if (el) el.classList.add('bad');
+            });
+
+            // After a moment the wrong letters go back to the bank; the right ones stay
+            setTimeout(() => {
+                slots.forEach((t, i) => {
+                    if (wrong.indexOf(i) !== -1) { t.used = false; slots[i] = null; }
+                    else locked[i] = true;
+                });
+                busy = false;
+                renderSlots();
+                renderBank();
+            }, 1500);
+        }
+
+        function completeWord() {
+            const w = current();
+            done = true;
+            hidePeek();
+            slots.forEach((t, i) => { locked[i] = true; });
+            slotsEl.classList.add('done');
+            renderSlots();
+            markNext();
+
+            if (w.img) picEl.innerHTML = '<img src="' + w.img + '" alt="" style="height:1em">';
+            else picEl.textContent = w.pic;
+            picEl.classList.add('show');
+
+            wordsDone++;
+            setProgress((wordsDone / TOTAL_WORDS) * 100);
+            setTimeout(() => say(w.word), 300);
+
+            const lastWord = wordIdx === ROUNDS[roundIdx].words.length - 1;
+            const lastRound = roundIdx === ROUNDS.length - 1;
+            if (lastWord && lastRound) {
+                stopElapsedTimer();
+                setStatus('Bravo! Hai finito tutti i round!', 'ok');
+            } else if (lastWord) {
+                setStatus('Bravo! Round completato: ' + w.word, 'ok');
+            } else {
+                setStatus('Bravo! ' + w.word, 'ok');
+            }
+            setNextMode(true, lastWord && lastRound);
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (wordIdx < ROUNDS[roundIdx].words.length - 1) {
+                wordIdx++;
+                loadWord();
+            } else if (roundIdx < ROUNDS.length - 1) {
+                roundIdx++;
+                wordIdx = 0;
+                loadWord();
+            } else {
+                roundIdx = 0;
+                wordIdx = 0;
+                initGame();
+            }
+        }
+
+        /* ---------- Syllable hint: bars under the letters, and the syllables spoken one by one ---------- */
+        function highlightSyl(k) {
+            Array.from(slotsEl.querySelectorAll('.slot')).forEach(el =>
+                el.classList.toggle('sylhi', parseInt(el.dataset.syl, 10) === k));
+        }
+
+        sylBtn.addEventListener('click', () => {
+            if (done) return;
+            const w = current();
+            userActed = true;
+
+            if (!hintUsed) {
+                hintUsed = true;
+                revealCount++;
+                updateRevealsDisplay();
+            }
+            slotsEl.classList.add('syl');
+
+            if (!prefs.voice || !HAS_VOICE) return;
+            try {
+                speechSynthesis.cancel();
+                w.syl.forEach((s, k) => {
+                    const u = new SpeechSynthesisUtterance(s);
+                    u.lang = 'it-IT';
+                    u.rate = 0.6;
+                    u.onstart = () => highlightSyl(k);
+                    if (k === w.syl.length - 1) u.onend = () => highlightSyl(-1);
+                    speechSynthesis.speak(u);
+                });
+            } catch (e) {}
+        });
+
+        /* ---------- Taps and keyboard ---------- */
+        bankEl.addEventListener('click', (e) => {
+            const el = e.target.closest('.tile');
+            if (el) placeTile(parseInt(el.dataset.id, 10));
+        });
+
+        slotsEl.addEventListener('click', (e) => {
+            const el = e.target.closest('.slot');
+            if (el) removeFromSlot(parseInt(el.dataset.i, 10));
+        });
+
+        // On a computer the child can also type the letters
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey || e.altKey || done || busy) return;
+            const k = e.key.toLowerCase();
+            if (k === 'backspace') { e.preventDefault(); removeLast(); return; }
+            if (/^[a-zàèéìòù]$/.test(k)) {
+                const tile = tiles.find(t => !t.used && t.ch === k);
+                if (tile) placeTile(tile.id);
+            }
+        });
+
+        document.addEventListener('animationend', (e) => {
+            if (e.animationName === 'wobble') e.target.classList.remove('bad');
+        });
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            wordsDone = 0;
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            loadWord();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

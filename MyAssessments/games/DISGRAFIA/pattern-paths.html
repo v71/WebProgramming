@@ -1,0 +1,1049 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>I sentieri da disegnare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --frame-pad: 10px;   /* space between the frame border and the picture */
+            --frame-bd: 1px;     /* frame border width */
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage is exactly as tall as the frame (set by fitStage() in the script),
+           so the frame hugs the picture and the page is centered. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            width: 300px;                  /* replaced by fitStage() */
+            padding: var(--frame-pad);
+            border: var(--frame-bd) solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover:not(:disabled) { transform: translateY(-2px); background-color: #4f46e5; }
+
+        .cool-btn.ghost {
+            color: var(--accent);
+            background: #ffffff;
+            border: 3px solid var(--accent);
+            padding: 5px 20px;
+            box-shadow: var(--shadow-sm);
+        }
+        .cool-btn.ghost:hover:not(:disabled) { background: #eef2ff; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+        #reset-btn { min-height: 40px; }
+
+        /* ---------- Pattern Paths ---------- */
+        #scene {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 5 / 4;
+            border-radius: 12px;
+            overflow: hidden;
+            touch-action: none;            /* the finger draws, the page must not scroll */
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: crosshair;
+        }
+
+        /* Wavy road: sand border, light inside, dotted line in the middle */
+        .road-edge   { fill: none; stroke: #d3c08a; stroke-linecap: round; stroke-linejoin: round; }
+        .road-inside { fill: none; stroke: #fff8e1; stroke-linecap: round; stroke-linejoin: round; }
+        .road-dots   { fill: none; stroke: #e6d9ae; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 14; }
+
+        /* Maze */
+        .maze-floor { fill: #fff8e1; stroke: #d3c08a; stroke-width: 3; }
+        .maze-walls { fill: none; stroke: #475569; stroke-width: 8; stroke-linecap: round; stroke-linejoin: round; }
+
+        .mark-start circle { fill: #22c55e; stroke: #ffffff; stroke-width: 3; }
+        .mark-start path { fill: #ffffff; }
+        .mark-goal circle { fill: #ffffff; stroke: #475569; stroke-width: 3; }
+        .mark-goal text { font-size: 26px; }
+
+        #ink { fill: none; stroke: #4f46e5; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 3px rgba(79, 70, 229, 0.45)); }
+
+        /* The pencil tip: a ring pulses around it whenever the child has to put the finger back on it */
+        #pen { pointer-events: none; }
+        #pen .dot  { fill: #4f46e5; stroke: #ffffff; stroke-width: 3; }
+        #pen .ring { fill: none; stroke: #4f46e5; stroke-width: 4; stroke-dasharray: 6 6; opacity: 0; transform-box: fill-box; transform-origin: center; }
+        #pen.wait .ring { opacity: 1; animation: beat 1.1s ease-in-out infinite; }
+
+        .hit { fill: #f97316; pointer-events: none; animation: fade 0.6s ease-out forwards; }
+        .confetti { pointer-events: none; animation: twinkle 1.6s ease-in-out infinite; }
+
+        /* Help (hold): the way through the maze, or the middle of the road, lights up */
+        #solution { fill: none; stroke: #f59e0b; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 2 14; opacity: 0; pointer-events: none; }
+        #scene.peeking #solution { opacity: 1; stroke-width: 11; animation: march 0.8s linear infinite; }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+        @keyframes fade {
+            from { opacity: 0.9; transform: scale(1); }
+            to { opacity: 0; transform: scale(2.2); }
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+        @keyframes march {
+            to { stroke-dashoffset: -16; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #pen.wait .ring, .confetti, #scene.peeking #solution { animation: none; }
+            .progress-bar-fill, .cool-btn { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --frame-pad: 6px; --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+            #reveal-btn { min-width: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">I sentieri da disegnare</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+        <button id="reset-btn" class="cool-btn ghost"><span>↺ Ricomincia</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <svg id="scene" viewBox="0 0 600 480" role="img" aria-label="Il percorso da disegnare con il dito">
+                <defs>
+                    <linearGradient id="meadow" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#d9f2e6"/>
+                        <stop offset="1" stop-color="#bfe8d2"/>
+                    </linearGradient>
+                    <path id="star" d="M0 -10 L2.35 -3.24 L9.51 -3.09 L3.8 1.24 L5.88 8.09 L0 4 L-5.88 8.09 L-3.8 1.24 L-9.51 -3.09 L-2.35 -3.24 Z"/>
+                </defs>
+
+                <rect width="600" height="480" fill="url(#meadow)"/>
+
+                <g id="level"></g>
+                <path id="solution" d=""/>
+                <g id="markers"></g>
+                <path id="ink" d=""/>
+                <g id="pen" class="wait" visibility="hidden">
+                    <circle class="ring" r="24"/>
+                    <circle class="dot" r="9"/>
+                </g>
+                <g id="fx"></g>
+            </svg>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <!-- ===================== GAME DATA AND RULES (no page elements here) ===================== -->
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           title: the topic of the round
+           width: width of the road, in drawing units (waves only;
+                  bigger = easier). Mazes get their size from cols / rows.
+           items: the paths to draw. For each one:
+             label, say:  name shown / spoken at the end
+             type:        'sine'    periods, amp          wave
+                          'zigzag'  peaks, amp            zigzag
+                          'steps'   n                     square wave
+                          'arches'  n                     row of arches
+                          'spiral'  turns                 spiral going in
+                          'snake'   rows                  snake / serpentine
+                          'maze'    cols, rows            a new maze every time
+           ===================================================== */
+        const ROUNDS = [
+            { title: 'Onde dolci', width: 92, items: [
+                { label: 'onda',       say: 'l\'onda',        type: 'sine',   periods: 1, amp: 110 },
+                { label: 'onda lunga', say: 'l\'onda lunga',  type: 'sine',   periods: 2, amp: 100 },
+                { label: 'zigzag',     say: 'lo zigzag',      type: 'zigzag', peaks: 3, amp: 130 } ] },
+
+            { title: 'Onde strette', width: 66, items: [
+                { label: 'onde',    say: 'le onde',    type: 'sine',   periods: 3, amp: 80 },
+                { label: 'scalini', say: 'i scalini',  type: 'steps',  n: 2 },
+                { label: 'archi',   say: 'gli archi',  type: 'arches', n: 5 } ] },
+
+            { title: 'Spirale e serpentina', width: 56, items: [
+                { label: 'spirale',    say: 'la spirale',    type: 'spiral', turns: 2.2 },
+                { label: 'serpentina', say: 'la serpentina', type: 'snake',  rows: 4 } ] },
+
+            { title: 'Labirinti piccoli', items: [
+                { label: 'labirinto', say: 'il labirinto', type: 'maze', cols: 3, rows: 3 },
+                { label: 'labirinto', say: 'il labirinto', type: 'maze', cols: 4, rows: 3 },
+                { label: 'labirinto', say: 'il labirinto', type: 'maze', cols: 4, rows: 4 } ] },
+
+            { title: 'Labirinti grandi', items: [
+                { label: 'labirinto', say: 'il labirinto', type: 'maze', cols: 5, rows: 4 },
+                { label: 'labirinto', say: 'il labirinto', type: 'maze', cols: 5, rows: 5 },
+                { label: 'labirinto', say: 'il labirinto', type: 'maze', cols: 6, rows: 5 } ] }
+        ];
+
+        const VIEW = { w: 600, h: 480 };
+        const PEN_R = 7;           // radius of the pencil tip
+        const WALL_HALF = 4;       // half thickness of a maze wall
+        const GOAL_R = 26;         // how close to the flag counts as arrived
+
+        /* ---------- Geometry ---------- */
+        function pointSegDist(px, py, x1, y1, x2, y2) {
+            const dx = x2 - x1, dy = y2 - y1;
+            const l2 = dx * dx + dy * dy;
+            let t = l2 ? ((px - x1) * dx + (py - y1) * dy) / l2 : 0;
+            t = Math.max(0, Math.min(1, t));
+            return Math.hypot(px - (x1 + t * dx), py - (y1 + t * dy));
+        }
+
+        /* Re-sample a polyline so that points are evenly spaced */
+        function resample(pts, step) {
+            const out = [{ x: pts[0].x, y: pts[0].y }];
+            let carry = 0;
+            for (let i = 1; i < pts.length; i++) {
+                const a = pts[i - 1], b = pts[i];
+                const segLen = Math.hypot(b.x - a.x, b.y - a.y);
+                let pos = step - carry;
+                while (pos <= segLen) {
+                    out.push({ x: a.x + (b.x - a.x) * pos / segLen, y: a.y + (b.y - a.y) * pos / segLen });
+                    pos += step;
+                }
+                carry = segLen - (pos - step);
+            }
+            const lastIn = pts[pts.length - 1], lastOut = out[out.length - 1];
+            if (Math.hypot(lastIn.x - lastOut.x, lastIn.y - lastOut.y) > 0.5) out.push({ x: lastIn.x, y: lastIn.y });
+            return out;
+        }
+
+        /* ---------- Wave-like roads: the centre line of the road ---------- */
+        function lineSine(it) {
+            const pts = [];
+            for (let x = 50; x <= 550; x += 2) pts.push({ x: x, y: 240 - it.amp * Math.sin(2 * Math.PI * it.periods * (x - 50) / 500) });
+            return pts;
+        }
+
+        function lineZigzag(it) {
+            const legs = it.peaks * 2, pts = [];
+            for (let k = 0; k <= legs; k++) pts.push({ x: 50 + 500 * k / legs, y: k % 2 === 0 ? 240 + it.amp : 240 - it.amp });
+            return pts;
+        }
+
+        function lineSteps(it) {
+            const low = 330, high = 150, parts = it.n * 2;
+            const xs = []; for (let j = 0; j <= parts; j++) xs.push(50 + 500 * j / parts);
+            let level = low;
+            const pts = [{ x: xs[0], y: level }];
+            for (let j = 1; j <= parts; j++) {
+                pts.push({ x: xs[j], y: level });
+                if (j < parts) { level = level === low ? high : low; pts.push({ x: xs[j], y: level }); }
+            }
+            return pts;
+        }
+
+        function lineArches(it) {
+            const w = 500 / it.n, base = 350, h = 150, pts = [];
+            for (let k = 0; k < it.n; k++) {
+                for (let t = 0; t <= Math.PI + 1e-9; t += Math.PI / 40) {
+                    pts.push({ x: 50 + k * w + (1 - Math.cos(t)) / 2 * w, y: base - h * Math.sin(t) });
+                }
+            }
+            return pts;
+        }
+
+        function lineSpiral(it) {
+            const R0 = 200, Rend = 26, total = it.turns * 2 * Math.PI, b = (R0 - Rend) / total, pts = [];
+            for (let th = 0; th <= total; ) {
+                const r = R0 - b * th;
+                pts.push({ x: 300 + r * Math.cos(th), y: 240 + r * Math.sin(th) });
+                th += 3 / Math.max(r, 20);
+            }
+            return pts;
+        }
+
+        function lineSnake(it) {
+            const xL = 110, xR = 490, gap = 100, y0 = 90, pts = [];
+            let y = y0;
+            for (let row = 0; row < it.rows; row++) {
+                const leftToRight = row % 2 === 0;
+                if (leftToRight) {
+                    pts.push({ x: row === 0 ? 60 : xL, y: y }, { x: xR, y: y });
+                } else {
+                    pts.push({ x: xR, y: y }, { x: row === it.rows - 1 ? 60 : xL, y: y });
+                }
+                if (row < it.rows - 1) {
+                    for (let a = -Math.PI / 2; a <= Math.PI / 2 + 1e-9; a += Math.PI / 30) {
+                        const cx = leftToRight ? xR : xL;
+                        const dir = leftToRight ? 1 : -1;
+                        pts.push({ x: cx + dir * (gap / 2) * Math.cos(a), y: y + gap / 2 + (gap / 2) * Math.sin(a) });
+                    }
+                    y += gap;
+                }
+            }
+            return pts;
+        }
+
+        /* ---------- Mazes ---------- */
+        function makeMaze(cols, rows, rand) {
+            rand = rand || Math.random;
+            const cell = [];
+            for (let r = 0; r < rows; r++) { cell.push([]); for (let c = 0; c < cols; c++) cell[r].push({ right: false, down: false, seen: false }); }
+            const stack = [[0, 0]];
+            cell[0][0].seen = true;
+            while (stack.length) {
+                const [c, r] = stack[stack.length - 1];
+                const next = [];
+                if (c > 0 && !cell[r][c - 1].seen) next.push([c - 1, r, 'L']);
+                if (c < cols - 1 && !cell[r][c + 1].seen) next.push([c + 1, r, 'R']);
+                if (r > 0 && !cell[r - 1][c].seen) next.push([c, r - 1, 'U']);
+                if (r < rows - 1 && !cell[r + 1][c].seen) next.push([c, r + 1, 'D']);
+                if (!next.length) { stack.pop(); continue; }
+                const [nc, nr, dir] = next[Math.floor(rand() * next.length)];
+                if (dir === 'R') cell[r][c].right = true;
+                if (dir === 'L') cell[nr][nc].right = true;
+                if (dir === 'D') cell[r][c].down = true;
+                if (dir === 'U') cell[nr][nc].down = true;
+                cell[nr][nc].seen = true;
+                stack.push([nc, nr]);
+            }
+            return cell;
+        }
+
+        function solveMaze(cell, cols, rows) {
+            const prev = {};
+            const key = (c, r) => c + ',' + r;
+            const queue = [[0, 0]];
+            prev[key(0, 0)] = null;
+            while (queue.length) {
+                const [c, r] = queue.shift();
+                if (c === cols - 1 && r === rows - 1) break;
+                const nb = [];
+                if (cell[r][c].right) nb.push([c + 1, r]);
+                if (c > 0 && cell[r][c - 1].right) nb.push([c - 1, r]);
+                if (cell[r][c].down) nb.push([c, r + 1]);
+                if (r > 0 && cell[r - 1][c].down) nb.push([c, r - 1]);
+                nb.forEach(([nc, nr]) => { if (!(key(nc, nr) in prev)) { prev[key(nc, nr)] = [c, r]; queue.push([nc, nr]); } });
+            }
+            const path = [];
+            let at = [cols - 1, rows - 1];
+            while (at) { path.push(at); at = prev[key(at[0], at[1])]; }
+            return path.reverse();
+        }
+
+        /* ---------- A playable level: where the pencil may go, start and flag ---------- */
+        function buildLevel(item, round) {
+            if (item.type === 'maze') {
+                const cols = item.cols, rows = item.rows;
+                const size = Math.min((VIEW.w - 60) / cols, (VIEW.h - 60) / rows);
+                const ox = (VIEW.w - cols * size) / 2, oy = (VIEW.h - rows * size) / 2;
+                const cells = makeMaze(cols, rows);
+                const walls = [
+                    { x1: ox, y1: oy, x2: ox + cols * size, y2: oy },
+                    { x1: ox, y1: oy + rows * size, x2: ox + cols * size, y2: oy + rows * size },
+                    { x1: ox, y1: oy, x2: ox, y2: oy + rows * size },
+                    { x1: ox + cols * size, y1: oy, x2: ox + cols * size, y2: oy + rows * size }
+                ];
+                for (let r = 0; r < rows; r++) {
+                    for (let c = 0; c < cols; c++) {
+                        if (c < cols - 1 && !cells[r][c].right) walls.push({ x1: ox + (c + 1) * size, y1: oy + r * size, x2: ox + (c + 1) * size, y2: oy + (r + 1) * size });
+                        if (r < rows - 1 && !cells[r][c].down) walls.push({ x1: ox + c * size, y1: oy + (r + 1) * size, x2: ox + (c + 1) * size, y2: oy + (r + 1) * size });
+                    }
+                }
+                const center = ([c, r]) => ({ x: ox + (c + 0.5) * size, y: oy + (r + 0.5) * size });
+                const solution = solveMaze(cells, cols, rows).map(center);
+                return {
+                    kind: 'maze', walls: walls, size: size, ox: ox, oy: oy, cols: cols, rows: rows,
+                    clearance: WALL_HALF + PEN_R,
+                    start: center([0, 0]), goal: center([cols - 1, rows - 1]), solution: solution
+                };
+            }
+
+            const makers = { sine: lineSine, zigzag: lineZigzag, steps: lineSteps, arches: lineArches, spiral: lineSpiral, snake: lineSnake };
+            const line = resample(makers[item.type](item), 3);
+            const segs = [];
+            for (let i = 1; i < line.length; i++) segs.push({ x1: line[i - 1].x, y1: line[i - 1].y, x2: line[i].x, y2: line[i].y });
+            return {
+                kind: 'wave', line: line, segs: segs, width: round.width, half: round.width / 2 - PEN_R,
+                start: line[0], goal: line[line.length - 1], solution: line
+            };
+        }
+
+        /* Can the pencil tip be at this spot? */
+        function isFree(level, x, y) {
+            if (level.kind === 'maze') {
+                for (let i = 0; i < level.walls.length; i++) {
+                    const w = level.walls[i];
+                    if (pointSegDist(x, y, w.x1, w.y1, w.x2, w.y2) < level.clearance) return false;
+                }
+                return true;
+            }
+            for (let i = 0; i < level.segs.length; i++) {
+                const s = level.segs[i];
+                if (pointSegDist(x, y, s.x1, s.y1, s.x2, s.y2) <= level.half) return true;
+            }
+            return false;
+        }
+
+        /* Moves the tip towards the finger, stopping at the first wall (or edge of the road) */
+        function moveToward(level, from, tx, ty) {
+            const dx = tx - from.x, dy = ty - from.y;
+            const n = Math.max(1, Math.ceil(Math.hypot(dx, dy) / 3));
+            let x = from.x, y = from.y;
+            for (let i = 1; i <= n; i++) {
+                const nx = from.x + dx * i / n, ny = from.y + dy * i / n;
+                if (!isFree(level, nx, ny)) return { x: x, y: y, blocked: true, hitX: nx, hitY: ny };
+                x = nx; y = ny;
+            }
+            return { x: x, y: y, blocked: false };
+        }
+    </script>
+
+    <!-- ===================== THE GAME (page elements) ===================== -->
+    <script>
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:     say the name of the path when it is finished
+           showTime:  show the timer in the stats bar
+           grab:      how close (in drawing units) the finger must start to the pencil tip
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            showTime: true,
+            grab: 46
+        };
+        const ATTACH = 36;         // after a bump, the finger must come back this close to the tip
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+        const resetBtn = document.getElementById('reset-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { sceneEl.classList.add('peeking'); }
+        function onHelpEnd() { sceneEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Pattern Paths
+           ===================================================== */
+        const NS = 'http://www.w3.org/2000/svg';
+        const sceneEl = document.getElementById('scene');
+        const levelEl = document.getElementById('level');
+        const markersEl = document.getElementById('markers');
+        const solutionEl = document.getElementById('solution');
+        const inkEl = document.getElementById('ink');
+        const penEl = document.getElementById('pen');
+        const fxEl = document.getElementById('fx');
+        const infoMainEl = document.getElementById('info-main');
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+
+        let roundIdx = 0;
+        let itemIdx = 0;
+        let level = null;
+        let ink = [];              // the line drawn so far
+        let tip = { x: 0, y: 0 };  // the pencil tip
+        let tracing = false;       // the finger is down
+        let attached = false;      // the tip follows the finger
+        let done = false;
+        let inkDirty = false;
+        let lastHit = 0;
+        let pathsDone = 0;
+        let timerStarted = false;
+        let nextMode = false;
+        let statusHtml = '';
+        let statusKind = '';
+
+        const TOTAL_ITEMS = ROUNDS.reduce((n, r) => n + r.items.length, 0);
+
+        function current() { return ROUNDS[roundIdx].items[itemIdx]; }
+
+        function make(tag, attrs) {
+            const el = document.createElementNS(NS, tag);
+            Object.keys(attrs || {}).forEach(k => el.setAttribute(k, attrs[k]));
+            return el;
+        }
+
+        function pathOf(pts) {
+            return 'M' + pts.map(p => p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(' L');
+        }
+
+        /* ---------- Voice ---------- */
+        function say(text) {
+            if (!prefs.voice) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'it-IT';
+                u.rate = 0.8;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        /* ---------- Info bar ---------- */
+        function renderInfo() {
+            const total = ROUNDS[roundIdx].items.length;
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>Disegna la linea fino alla bandiera</span><span class="cnt">Percorso ' + (itemIdx + 1) + ' / ' + total + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- Layout: the frame hugs the picture (5:4) ---------- */
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const g = getComputedStyle(frameEl);
+            const extraW = parseFloat(g.paddingLeft) + parseFloat(g.paddingRight)
+                         + parseFloat(g.borderLeftWidth) + parseFloat(g.borderRightWidth);
+            const extraH = parseFloat(g.paddingTop) + parseFloat(g.paddingBottom)
+                         + parseFloat(g.borderTopWidth) + parseFloat(g.borderBottomWidth);
+
+            const maxH = Math.max(160, avail - used);
+            const maxW = Math.min(stageEl.clientWidth, 700);
+            const picW = Math.max(120, Math.min(maxW - extraW, (maxH - extraH) * 1.25));   // the picture is 5:4
+
+            frameEl.style.width = (picW + extraW) + 'px';
+            stageEl.style.height = (picW * 0.8 + extraH) + 'px';
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Drawing the level ---------- */
+        function drawLevel() {
+            levelEl.innerHTML = '';
+            markersEl.innerHTML = '';
+            fxEl.innerHTML = '';
+
+            if (level.kind === 'maze') {
+                levelEl.appendChild(make('rect', {
+                    class: 'maze-floor', x: level.ox, y: level.oy,
+                    width: level.cols * level.size, height: level.rows * level.size, rx: 10
+                }));
+                levelEl.appendChild(make('path', {
+                    class: 'maze-walls',
+                    d: level.walls.map(w => 'M' + w.x1.toFixed(1) + ' ' + w.y1.toFixed(1) + ' L' + w.x2.toFixed(1) + ' ' + w.y2.toFixed(1)).join(' ')
+                }));
+            } else {
+                const d = pathOf(level.line);
+                levelEl.appendChild(make('path', { class: 'road-edge', d: d, 'stroke-width': level.width + 10 }));
+                levelEl.appendChild(make('path', { class: 'road-inside', d: d, 'stroke-width': level.width }));
+                levelEl.appendChild(make('path', { class: 'road-dots', d: d }));
+            }
+
+            solutionEl.setAttribute('d', pathOf(level.solution));
+
+            // Start (green disc with an arrow) and the flag
+            const s = level.start, g = level.goal;
+            const start = make('g', { class: 'mark-start', transform: 'translate(' + s.x.toFixed(1) + ' ' + s.y.toFixed(1) + ')' });
+            start.appendChild(make('circle', { r: 17 }));
+            start.appendChild(make('path', { d: 'M-5 -8 L9 0 L-5 8 Z' }));
+            markersEl.appendChild(start);
+
+            const goal = make('g', { class: 'mark-goal', transform: 'translate(' + g.x.toFixed(1) + ' ' + g.y.toFixed(1) + ')' });
+            goal.appendChild(make('circle', { r: 20 }));
+            const flag = make('text', { 'text-anchor': 'middle', y: 9 });
+            flag.textContent = '🏁';
+            goal.appendChild(flag);
+            markersEl.appendChild(goal);
+        }
+
+        function updatePen() {
+            penEl.setAttribute('transform', 'translate(' + tip.x.toFixed(1) + ' ' + tip.y.toFixed(1) + ')');
+            penEl.classList.toggle('wait', !(tracing && attached) && !done);
+        }
+
+        function scheduleInk() {
+            if (inkDirty) return;
+            inkDirty = true;
+            requestAnimationFrame(() => {
+                inkDirty = false;
+                inkEl.setAttribute('d', ink.length > 1 ? pathOf(ink) : '');
+            });
+        }
+
+        function appendInk() {
+            const last = ink[ink.length - 1];
+            if (!last || Math.hypot(tip.x - last.x, tip.y - last.y) >= 2.5) {
+                ink.push({ x: tip.x, y: tip.y });
+                scheduleInk();
+            }
+        }
+
+        function clearDrawing() {
+            ink = [{ x: level.start.x, y: level.start.y }];
+            tip = { x: level.start.x, y: level.start.y };
+            tracing = false;
+            attached = false;
+            inkEl.setAttribute('d', '');
+            penEl.setAttribute('visibility', 'visible');
+            updatePen();
+        }
+
+        /* ---------- Effects ---------- */
+        function bump(x, y) {
+            const now = performance.now();
+            if (now - lastHit < 350) return;
+            lastHit = now;
+            const c = make('circle', { class: 'hit', cx: x.toFixed(1), cy: y.toFixed(1), r: 8 });
+            c.style.transformBox = 'fill-box';
+            c.style.transformOrigin = 'center';
+            fxEl.appendChild(c);
+            setTimeout(() => { if (c.parentNode) c.parentNode.removeChild(c); }, 650);
+            try { if (navigator.vibrate) navigator.vibrate(15); } catch (e) {}
+        }
+
+        function celebrate() {
+            const colors = ['#fde047', '#ffffff', '#67e8f9', '#f9a8d4', '#fdba74'];
+            for (let i = 0; i < 26; i++) {
+                const base = i % 2 ? level.goal : ink[Math.floor(Math.random() * ink.length)];
+                const sc = 1 + Math.random() * 1.1;
+                const star = make('use', {
+                    href: '#star',
+                    class: 'confetti',
+                    transform: 'translate(' + (base.x + (Math.random() - 0.5) * 70).toFixed(1) + ' ' + (base.y + (Math.random() - 0.5) * 70).toFixed(1) +
+                               ') rotate(' + Math.round(Math.random() * 72) + ') scale(' + sc.toFixed(2) + ')',
+                    fill: colors[Math.floor(Math.random() * colors.length)]
+                });
+                star.style.animationDelay = (-Math.random() * 1.6).toFixed(2) + 's';
+                fxEl.appendChild(star);
+            }
+        }
+
+        /* ---------- Following the finger ---------- */
+        function toSky(e) {
+            const pt = sceneEl.createSVGPoint();
+            pt.x = e.clientX;
+            pt.y = e.clientY;
+            const p = pt.matrixTransform(sceneEl.getScreenCTM().inverse());
+            return { x: p.x, y: p.y };
+        }
+
+        function fingerAt(p) {
+            if (!attached) {
+                // After a bump the finger has to come back to the pencil tip
+                if (Math.hypot(p.x - tip.x, p.y - tip.y) > ATTACH) return;
+                attached = true;
+                if (statusKind === 'retry') setStatus('');
+            }
+
+            const r = moveToward(level, tip, p.x, p.y);
+            if (r.x !== tip.x || r.y !== tip.y) {
+                tip.x = r.x; tip.y = r.y;
+                appendInk();
+            }
+
+            if (r.blocked) {
+                attached = false;
+                bump(r.hitX, r.hitY);
+                setStatus(level.kind === 'maze' ? 'C\'è un muro! Torna alla punta' : 'Resta nella strada! Torna alla punta', 'retry');
+            }
+            updatePen();
+
+            if (Math.hypot(tip.x - level.goal.x, tip.y - level.goal.y) <= GOAL_R) finishPath();
+        }
+
+        sceneEl.addEventListener('pointerdown', (e) => {
+            if (done || nextMode) return;
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            e.preventDefault();
+
+            const p = toSky(e);
+            if (Math.hypot(p.x - tip.x, p.y - tip.y) > prefs.grab) {
+                setStatus(ink.length > 1 ? 'Riparti dalla punta della matita' : 'Parti dal cerchio verde', 'retry');
+                setTimeout(() => { if (statusKind === 'retry' && !tracing) setStatus(''); }, 1600);
+                return;
+            }
+
+            if (!timerStarted) { timerStarted = true; startElapsedTimer(); }
+            addMove();
+            tracing = true;
+            attached = true;
+            if (statusKind === 'retry') setStatus('');
+            try { sceneEl.setPointerCapture(e.pointerId); } catch (err) {}
+            updatePen();
+        });
+
+        sceneEl.addEventListener('pointermove', (e) => {
+            if (!tracing || done) return;
+            const events = (e.getCoalescedEvents && e.getCoalescedEvents().length) ? e.getCoalescedEvents() : [e];
+            events.forEach(ev => { if (tracing && !done) fingerAt(toSky(ev)); });
+        });
+
+        function liftFinger() {
+            tracing = false;
+            attached = false;
+            if (!done) updatePen();
+        }
+        sceneEl.addEventListener('pointerup', liftFinger);
+        sceneEl.addEventListener('pointercancel', liftFinger);
+        sceneEl.addEventListener('lostpointercapture', liftFinger);
+
+        resetBtn.addEventListener('click', () => {
+            if (done) return;
+            setStatus('');
+            clearDrawing();
+        });
+
+        /* ---------- Finishing and moving on ---------- */
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+            resetBtn.disabled = on;
+        }
+
+        function finishPath() {
+            const item = current();
+            done = true;
+            tracing = false;
+            attached = false;
+            hidePeek();
+            updatePen();
+            celebrate();
+
+            pathsDone++;
+            setProgress((pathsDone / TOTAL_ITEMS) * 100);
+            say(item.say);
+
+            const lastItem = itemIdx === ROUNDS[roundIdx].items.length - 1;
+            const lastRound = roundIdx === ROUNDS.length - 1;
+            if (lastItem && lastRound) {
+                stopElapsedTimer();
+                setStatus('Bravo! Hai finito tutti i round!', 'ok');
+            } else if (lastItem) {
+                setStatus('Bravo! Round completato: ' + item.label, 'ok');
+            } else {
+                setStatus('Bravo! Hai disegnato ' + item.say, 'ok');
+            }
+            setNextMode(true, lastItem && lastRound);
+        }
+
+        function loadPath() {
+            done = false;
+            hidePeek();
+            setNextMode(false);
+            level = buildLevel(current(), ROUNDS[roundIdx]);
+            drawLevel();
+            clearDrawing();
+            updateRoundDisplay();
+            setStatus('');
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (itemIdx < ROUNDS[roundIdx].items.length - 1) {
+                itemIdx++;
+                loadPath();
+            } else if (roundIdx < ROUNDS.length - 1) {
+                roundIdx++;
+                itemIdx = 0;
+                loadPath();
+            } else {
+                roundIdx = 0;
+                itemIdx = 0;
+                initGame();
+            }
+        }
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            pathsDone = 0;
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            loadPath();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

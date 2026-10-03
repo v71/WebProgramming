@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>L'esploratore della tastiera</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage takes all the space that is left; everything inside the frame
+           is sized from it (see fitStage / fitFonts), so the page never scrolls. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            position: relative;
+            width: min(100%, 720px);       /* replaced by fitStage() */
+            height: 100%;                  /* replaced by fitStage() */
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Keyboard Explorer ---------- */
+        /* The letters to type */
+        #wordcard {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--lgap, 8px);
+        }
+
+        .lt {
+            width: var(--bw, 60px);
+            height: var(--bh, 76px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--lfs, 44px);
+            font-weight: 500;
+            line-height: 1;
+            color: var(--text);
+            background: #ffffff;
+            border: 3px solid #cbd5e1;
+            border-radius: 16px;
+            position: relative;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+        }
+        .lt.done { background: #bbf7d0; border-color: #059669; color: #047857; }
+        .lt.cur { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.25); }
+        .lt.cur::after {                 /* the little bar that shows where you are */
+            content: '';
+            position: absolute;
+            left: 20%;
+            right: 20%;
+            bottom: 10%;
+            height: 4px;
+            border-radius: 4px;
+            background: var(--accent);
+        }
+        #wordcard.finished .lt { background: #bbf7d0; border-color: #059669; color: #047857; box-shadow: none; }
+        #wordcard.finished .lt::after { content: none; }
+
+        /* Which finger to use, and the picture of the word when it is finished */
+        #fingerbar {
+            flex: 0 0 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+        }
+        #fingerpill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 14px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text);
+            background: #f8fafc;
+            border: 2px solid #cbd5e1;
+            border-radius: 99px;
+            visibility: hidden;          /* shown with the hint (keeps the layout still) */
+        }
+        #fingerpill.show { visibility: visible; }
+        #fingerpill .dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #475569; }
+        #pic { font-size: 30px; line-height: 1; visibility: hidden; }
+        #pic.show { visibility: visible; }
+
+        /* The on-screen keyboard */
+        #kbd {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: var(--kg, 6px);
+            margin: 0 auto;
+        }
+        .krow { display: flex; gap: var(--kg, 6px); }
+        .krow.r2 { margin-left: calc((var(--kw, 40px) + var(--kg, 6px)) * 0.25); }
+        .krow.r3 { margin-left: calc((var(--kw, 40px) + var(--kg, 6px)) * 0.75); }
+
+        .key {
+            position: relative;
+            width: var(--kw, 40px);
+            height: var(--kh, 42px);
+            padding: 0;
+            font-size: calc(var(--kw, 40px) * 0.5);
+            font-weight: 500;
+            line-height: 1;
+            color: var(--text);
+            background: var(--fc, #f1f5f9);
+            border: 2px solid rgba(15, 23, 42, 0.28);
+            border-bottom-width: 4px;
+            border-radius: 10px;
+            cursor: pointer;
+            touch-action: manipulation;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .key:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+        /* The bump that real keyboards have on F and J, to find the home position */
+        .key.home::after {
+            content: '';
+            position: absolute;
+            left: 30%;
+            right: 30%;
+            bottom: 12%;
+            height: 3px;
+            border-radius: 3px;
+            background: rgba(15, 23, 42, 0.55);
+        }
+
+        /* Keys that have not been introduced yet are faded out */
+        .key.dim { background: #f1f5f9; color: #94a3b8; border-color: #e2e8f0; opacity: 0.6; }
+
+        .key.target {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.5);
+            animation: pulse 0.9s ease-in-out infinite;
+            z-index: 2;
+        }
+        .key.ok { animation: good 0.35s ease; }
+        .key.bad { animation: wobble 0.4s ease; }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.14); }
+        }
+        @keyframes good {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.18); background: #bbf7d0; }
+            100% { transform: scale(1); }
+        }
+        @keyframes wobble {
+            0%, 100% { transform: rotate(0); }
+            20% { transform: rotate(-7deg); }
+            40% { transform: rotate(6deg); }
+            60% { transform: rotate(-4deg); }
+            80% { transform: rotate(2deg); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .key.target, .key.ok, .key.bad { animation: none; }
+            .progress-bar-fill, .cool-btn, .lt { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+            #game-area { padding: 8px 6px; }
+            #fingerpill { font-size: 0.85rem; padding: 3px 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">L'esploratore della tastiera</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <div id="wordcard" role="group" aria-label="Lettere da scrivere"></div>
+
+            <div id="fingerbar">
+                <span id="fingerpill"><span class="dot"></span><span id="fingertext"></span></span>
+                <span id="pic" aria-hidden="true"></span>
+            </div>
+
+            <div id="kbd" role="group" aria-label="Tastiera"></div>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <!-- ===================== DATA AND RULES (no page elements here) ===================== -->
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Keys are introduced a few at a time.
+           title:    the topic of the round
+           newKeys:  the keys that are new in this round (they are lit up,
+                     and keys that are not introduced yet stay faded)
+           hint:     how much help the child gets for words
+                       'always' = the next key is always lit
+                       'delay'  = it lights up after a few seconds without a key
+                       'help'   = only when the child asks (Help button)
+                     A single letter is always lit, so new keys can be found.
+           items:    what to type: single letters first, then words.
+                     Use only letters of this round and the ones before it.
+           ===================================================== */
+        const ROUNDS = [
+            { title: 'Gli indici',            newKeys: ['f', 'j'],      hint: 'always', items: ['f', 'j', 'fj', 'jf', 'fjf'] },
+            { title: 'Le dita di mezzo',      newKeys: ['d', 'k'],      hint: 'always', items: ['d', 'k', 'dk', 'kd', 'fdjk'] },
+            { title: 'Anulari e mignolo',     newKeys: ['s', 'l', 'a'], hint: 'always', items: ['s', 'l', 'a', 'sala', 'alfa'] },
+            { title: 'Il centro',             newKeys: ['g', 'h'],      hint: 'always', items: ['g', 'h', 'gas', 'gala', 'alga'] },
+            { title: 'La fila in alto: e i',  newKeys: ['e', 'i'],      hint: 'delay',  items: ['e', 'i', 'sale', 'file', 'sedia'] },
+            { title: 'La fila in alto: r u',  newKeys: ['r', 'u'],      hint: 'delay',  items: ['r', 'u', 'sera', 'fare', 'urla'] },
+            { title: 'La fila in alto: t o',  newKeys: ['t', 'o'],      hint: 'delay',  items: ['t', 'o', 'rosa', 'dito', 'tigre'] },
+            { title: 'La fila in alto: p q',  newKeys: ['p', 'q'],      hint: 'delay',  items: ['p', 'q', 'pera', 'sopra', 'quadro'] },
+            { title: 'La fila in basso: c v', newKeys: ['c', 'v'],      hint: 'help',   items: ['c', 'v', 'casa', 'vela', 'cielo'] },
+            { title: 'La fila in basso: b n m', newKeys: ['b', 'n', 'm'], hint: 'help', items: ['b', 'n', 'm', 'bene', 'mano'] },
+            { title: 'La z',                  newKeys: ['z'],           hint: 'help',   items: ['z', 'zero', 'pizza', 'tazza', 'zebra'] },
+            { title: 'Parole lunghe',         newKeys: [],              hint: 'help',   items: ['cavallo', 'bambino', 'montagna', 'azzurro', 'farfalla'] }
+        ];
+
+        // A picture shown when a word is finished (optional: words not listed have none)
+        const PICS = {
+            pera: '🍐', rosa: '🌹', dito: '☝️', tigre: '🐅', quadro: '🖼️', casa: '🏠', vela: '⛵', cielo: '🌤️',
+            mano: '✋', pizza: '🍕', tazza: '☕', zebra: '🦓', cavallo: '🐴', bambino: '👶', montagna: '⛰️',
+            farfalla: '🦋', gas: '🔥', zero: '0️⃣'
+        };
+
+        // The keyboard and the finger that presses each key
+        const KEY_ROWS = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+        const FINGER_OF = {
+            q: 'lp', a: 'lp', z: 'lp',  w: 'lr', s: 'lr', x: 'lr',  e: 'lm', d: 'lm', c: 'lm',
+            r: 'li', f: 'li', v: 'li', t: 'li', g: 'li', b: 'li',
+            y: 'ri', h: 'ri', n: 'ri', u: 'ri', j: 'ri', m: 'ri',  i: 'rm', k: 'rm',  o: 'rr', l: 'rr',  p: 'rp'
+        };
+        const FINGERS = {
+            lp: { name: 'mano sinistra · mignolo',  color: '#f9a8d4' },
+            lr: { name: 'mano sinistra · anulare',  color: '#fdba74' },
+            lm: { name: 'mano sinistra · medio',    color: '#fde047' },
+            li: { name: 'mano sinistra · indice',   color: '#86efac' },
+            ri: { name: 'mano destra · indice',     color: '#67e8f9' },
+            rm: { name: 'mano destra · medio',      color: '#a5b4fc' },
+            rr: { name: 'mano destra · anulare',    color: '#d8b4fe' },
+            rp: { name: 'mano destra · mignolo',    color: '#fca5a5' }
+        };
+
+        /* Letters the child has met up to (and including) a round */
+        function introducedUpTo(roundIdx) {
+            const set = new Set();
+            for (let r = 0; r <= roundIdx; r++) ROUNDS[r].newKeys.forEach(k => set.add(k));
+            return set;
+        }
+    </script>
+
+    <!-- ===================== THE GAME (page elements) ===================== -->
+    <script>
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:         say the finished word aloud
+           speakLetters:  say the name of each letter when it is typed right
+           hintDelayMs:   how long to wait before the key lights up ('delay' rounds)
+           wrongBeforeHint: after this many wrong keys in a row the key lights up
+           remember:      start again from the round where the child stopped
+                          (saved in this browser; use ?round=1 in the address to start over)
+           showTime:      show the timer in the stats bar
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            speakLetters: false,
+            hintDelayMs: 5000,
+            wrongBeforeHint: 2,
+            remember: true,
+            showTime: true
+        };
+        const STORAGE_KEY = 'keyboard-explorer-round';
+
+        const LETTER_NAMES = {
+            a: 'a', b: 'bi', c: 'ci', d: 'di', e: 'e', f: 'effe', g: 'gi', h: 'acca', i: 'i', j: 'i lunga', k: 'cappa', l: 'elle',
+            m: 'emme', n: 'enne', o: 'o', p: 'pi', q: 'cu', r: 'erre', s: 'esse', t: 'ti', u: 'u', v: 'vu', z: 'zeta'
+        };
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { peekOn = true; updateHint(); }
+        function onHelpEnd() { peekOn = false; updateHint(); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Keyboard Explorer
+           ===================================================== */
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+        const wordcardEl = document.getElementById('wordcard');
+        const kbdEl = document.getElementById('kbd');
+        const fingerPillEl = document.getElementById('fingerpill');
+        const fingerTextEl = document.getElementById('fingertext');
+        const picEl = document.getElementById('pic');
+        const infoMainEl = document.getElementById('info-main');
+
+        let roundIdx = 0;
+        let itemIdx = 0;
+        let text = '';             // what is being typed
+        let pos = 0;               // next letter to type
+        let wrongStreak = 0;
+        let forceHint = false;     // lit up after too many wrong keys
+        let delayPassed = false;   // lit up after waiting ('delay' rounds)
+        let delayTimer = null;
+        let peekOn = false;        // Help is being held
+        let done = false;
+        let itemsDone = 0;
+        let timerStarted = false;
+        let nextMode = false;
+        let statusHtml = '';
+        let statusKind = '';
+        let keyEls = {};
+
+        const TOTAL_ITEMS = ROUNDS.reduce((n, r) => n + r.items.length, 0);
+
+        function currentRound() { return ROUNDS[roundIdx]; }
+
+        /* ---------- Voice ---------- */
+        function say(t) {
+            if (!prefs.voice) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(t);
+                u.lang = 'it-IT';
+                u.rate = 0.8;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        /* ---------- Info bar ---------- */
+        function leadText() {
+            const r = currentRound();
+            if (itemIdx === 0 && r.newKeys.length) return 'Nuovi tasti: ' + r.newKeys.join('  ');
+            return text.length === 1 ? 'Premi il tasto' : 'Scrivi la parola';
+        }
+
+        function renderInfo() {
+            const total = currentRound().items.length;
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>' + leadText() + '</span><span class="cnt">Esercizio ' + (itemIdx + 1) + ' / ' + total + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- Layout: size the frame, then the letters and the keyboard ---------- */
+        function fitFonts() {
+            const g = getComputedStyle(frameEl);
+            const innerW = frameEl.clientWidth - parseFloat(g.paddingLeft) - parseFloat(g.paddingRight);
+            const innerH = frameEl.clientHeight - parseFloat(g.paddingTop) - parseFloat(g.paddingBottom);
+            const gap = 8;
+            const kg = innerW < 420 ? 4 : 6;
+
+            // Keyboard: 10 keys across, but never more than ~45% of the height
+            let kw = (innerW - 9 * kg) / 10;
+            kw = Math.min(kw, (innerH * 0.45 - 2 * kg) / 3, 66);
+            kw = Math.floor(Math.max(kw, 22));
+            const kh = Math.floor(kw * 1.04);
+            const kbdH = 3 * kh + 2 * kg;
+
+            frameEl.style.setProperty('--kw', kw + 'px');
+            frameEl.style.setProperty('--kh', kh + 'px');
+            frameEl.style.setProperty('--kg', kg + 'px');
+            kbdEl.style.width = (10 * kw + 9 * kg) + 'px';
+
+            // Letters to type
+            const wordH = innerH - kbdH - 38 - gap * 2;
+            const maxLen = Math.max.apply(null, currentRound().items.map(s => s.length));
+            const lgap = 8;
+            let bw = (innerW - lgap * (maxLen - 1)) / maxLen;
+            bw = Math.floor(Math.min(bw, wordH * 0.78, 92));
+            bw = Math.max(bw, 26);
+            const bh = Math.floor(Math.min(bw * 1.25, wordH * 0.95));
+
+            frameEl.style.setProperty('--bw', bw + 'px');
+            frameEl.style.setProperty('--bh', bh + 'px');
+            frameEl.style.setProperty('--lfs', (bh * 0.58).toFixed(1) + 'px');
+            frameEl.style.setProperty('--lgap', lgap + 'px');
+        }
+
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const h = Math.max(300, avail - used);
+            stageEl.style.height = h + 'px';
+            frameEl.style.height = h + 'px';
+            frameEl.style.width = Math.min(stageEl.clientWidth, 720) + 'px';
+            fitFonts();
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Drawing the keyboard and the letters ---------- */
+        function buildKeyboard() {
+            kbdEl.innerHTML = '';
+            keyEls = {};
+            KEY_ROWS.forEach((row, i) => {
+                const rowEl = document.createElement('div');
+                rowEl.className = 'krow r' + (i + 1);
+                row.split('').forEach(ch => {
+                    const b = document.createElement('button');
+                    b.type = 'button';
+                    b.className = 'key' + (ch === 'f' || ch === 'j' ? ' home' : '');
+                    b.dataset.k = ch;
+                    b.tabIndex = -1;
+                    b.textContent = ch;
+                    b.style.setProperty('--fc', FINGERS[FINGER_OF[ch]].color);
+                    b.setAttribute('aria-label', 'Tasto ' + ch);
+                    rowEl.appendChild(b);
+                    keyEls[ch] = b;
+                });
+                kbdEl.appendChild(rowEl);
+            });
+        }
+
+        function markDimKeys() {
+            const known = introducedUpTo(roundIdx);
+            Object.keys(keyEls).forEach(ch => keyEls[ch].classList.toggle('dim', !known.has(ch)));
+        }
+
+        function renderLetters() {
+            wordcardEl.innerHTML = text.split('').map((ch, i) =>
+                '<span class="lt' + (i < pos ? ' done' : '') + (i === pos && !done ? ' cur' : '') + '">' + ch + '</span>'
+            ).join('');
+            wordcardEl.classList.toggle('finished', done);
+        }
+
+        /* ---------- Hints: which key is lit, and which finger to use ---------- */
+        function hintVisible() {
+            if (done) return false;
+            const mode = currentRound().hint;
+            return peekOn || forceHint || text.length === 1 || mode === 'always' || (mode === 'delay' && delayPassed);
+        }
+
+        function updateHint() {
+            Object.keys(keyEls).forEach(ch => keyEls[ch].classList.remove('target'));
+            const show = hintVisible();
+            const target = text[pos];
+
+            if (show && target && keyEls[target]) {
+                keyEls[target].classList.add('target');
+                const f = FINGERS[FINGER_OF[target]];
+                fingerTextEl.textContent = f.name;
+                fingerPillEl.querySelector('.dot').style.background = f.color;
+                fingerPillEl.classList.add('show');
+            } else {
+                fingerPillEl.classList.remove('show');
+            }
+        }
+
+        function restartDelay() {
+            clearTimeout(delayTimer);
+            delayPassed = false;
+            if (currentRound().hint === 'delay' && text.length > 1) {
+                delayTimer = setTimeout(() => { delayPassed = true; updateHint(); }, prefs.hintDelayMs);
+            }
+        }
+
+        /* ---------- Typing ---------- */
+        function flash(ch, cls) {
+            const el = keyEls[ch];
+            if (!el) return;
+            el.classList.remove('ok', 'bad');
+            void el.offsetWidth;
+            el.classList.add(cls);
+        }
+
+        function pressKey(ch) {
+            if (done || nextMode || !text) return;
+            if (!timerStarted) { timerStarted = true; startElapsedTimer(); }
+            addMove();
+
+            if (ch === text[pos]) {
+                flash(ch, 'ok');
+                if (prefs.speakLetters && LETTER_NAMES[ch]) say(LETTER_NAMES[ch]);
+                pos++;
+                wrongStreak = 0;
+                forceHint = false;
+                if (statusKind === 'retry') setStatus('');
+                renderLetters();
+                if (pos >= text.length) { completeItem(); return; }
+                restartDelay();
+                updateHint();
+            } else {
+                // A wrong key: a gentle wobble, nobody is told off
+                flash(ch, 'bad');
+                wrongStreak++;
+                if (wrongStreak >= prefs.wrongBeforeHint) {
+                    forceHint = true;
+                    setStatus('Cerca il tasto illuminato', 'retry');
+                    updateHint();
+                }
+            }
+        }
+
+        function completeItem() {
+            done = true;
+            clearTimeout(delayTimer);
+            hidePeek();
+            updateHint();
+            renderLetters();
+
+            if (PICS[text]) { picEl.textContent = PICS[text]; picEl.classList.add('show'); }
+            if (text.length > 1) setTimeout(() => say(text), 250);
+
+            itemsDone++;
+            setProgress((itemsDone / TOTAL_ITEMS) * 100);
+
+            const lastItem = itemIdx === currentRound().items.length - 1;
+            const lastRound = roundIdx === ROUNDS.length - 1;
+            if (lastItem) remember(Math.min(roundIdx + 1, ROUNDS.length - 1));
+
+            if (lastItem && lastRound) {
+                stopElapsedTimer();
+                setStatus('Bravo! Hai imparato tutti i tasti!', 'ok');
+            } else if (lastItem) {
+                setStatus('Bravo! Round completato', 'ok');
+            } else {
+                setStatus('Bravo!', 'ok');
+            }
+            setNextMode(true, lastItem && lastRound);
+        }
+
+        // Keys on the real keyboard
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+            if (nextMode) {
+                // Enter or Space moves on, so the hands can stay on the keyboard
+                if ((e.key === 'Enter' || e.key === ' ') && !e.defaultPrevented && e.target !== revealBtn) {
+                    e.preventDefault();
+                    goNext();
+                }
+                return;
+            }
+
+            if (e.repeat) return;
+            const ch = e.key.length === 1 ? e.key.toLowerCase() : '';
+            if (ch >= 'a' && ch <= 'z') {
+                e.preventDefault();
+                pressKey(ch);
+            }
+        });
+
+        // Keys on the screen (touch, mouse)
+        kbdEl.addEventListener('pointerdown', (e) => {
+            const k = e.target.closest('.key');
+            if (!k) return;
+            e.preventDefault();
+            pressKey(k.dataset.k);
+        });
+
+        /* ---------- Rounds and exercises ---------- */
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function remember(idx) {
+            if (!prefs.remember) return;
+            try { localStorage.setItem(STORAGE_KEY, String(idx)); } catch (e) {}
+        }
+
+        function loadItem() {
+            text = currentRound().items[itemIdx];
+            pos = 0;
+            wrongStreak = 0;
+            forceHint = false;
+            done = false;
+            peekOn = false;
+            hidePeek();
+            setNextMode(false);
+            picEl.classList.remove('show');
+            picEl.textContent = '';
+            updateRoundDisplay();
+            setStatus('');
+            markDimKeys();
+            renderLetters();
+            fitFonts();
+            restartDelay();
+            updateHint();
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (itemIdx < currentRound().items.length - 1) {
+                itemIdx++;
+                loadItem();
+            } else if (roundIdx < ROUNDS.length - 1) {
+                roundIdx++;
+                itemIdx = 0;
+                loadItem();
+            } else {
+                roundIdx = 0;
+                itemIdx = 0;
+                remember(0);
+                initGame();
+            }
+        }
+
+        /* Which round to start from: ?round=N in the address, or where the child stopped last time */
+        function firstRound() {
+            let n = NaN;
+            try { n = parseInt(new URLSearchParams(location.search).get('round'), 10) - 1; } catch (e) {}
+            if (isNaN(n) && prefs.remember) {
+                try { n = parseInt(localStorage.getItem(STORAGE_KEY), 10); } catch (e) {}
+            }
+            return isNaN(n) ? 0 : Math.max(0, Math.min(n, ROUNDS.length - 1));
+        }
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            itemsDone = 0;
+            for (let r = 0; r < roundIdx; r++) itemsDone += ROUNDS[r].items.length;   // earlier rounds count as done
+            setProgress((itemsDone / TOTAL_ITEMS) * 100);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            buildKeyboard();
+            loadItem();
+            fitStage();
+        }
+
+        roundIdx = firstRound();
+        initGame();
+    </script>
+</body>
+</html>

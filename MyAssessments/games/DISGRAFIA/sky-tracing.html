@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Il cielo da tracciare</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --frame-pad: 10px;   /* space between the frame border and the sky */
+            --frame-bd: 1px;     /* frame border width */
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage is exactly as tall as the frame (set by fitStage() in the script),
+           so the frame hugs the sky and the page is centered. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            width: 300px;                  /* replaced by fitStage() */
+            padding: var(--frame-pad);
+            border: var(--frame-bd) solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Sky Tracing ---------- */
+        #scene {
+            display: block;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 5 / 4;
+            border-radius: 12px;
+            overflow: hidden;
+            touch-action: none;            /* the finger draws, the page must not scroll */
+            -webkit-user-select: none;
+            user-select: none;
+            cursor: crosshair;
+        }
+
+        /* The wide soft band is the tolerance zone: staying inside it is enough */
+        .band  { fill: none; stroke: rgba(255, 255, 255, 0.13); stroke-linecap: round; stroke-linejoin: round; }
+        .guide { fill: none; stroke: rgba(255, 255, 255, 0.85); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 13; }
+        .lit   { fill: none; stroke: #fde047; stroke-width: 11; stroke-linecap: round; stroke-linejoin: round; filter: drop-shadow(0 0 6px rgba(253, 224, 71, 0.9)); }
+
+        /* Start marker: green disc with a triangle that points where to go */
+        .mk { display: none; pointer-events: none; }
+        .mk.cur { display: block; }
+        #scene.peeking .mk { display: block; }
+        .mk circle { fill: #22c55e; stroke: #ffffff; stroke-width: 3; }
+        .mk .tri { fill: #ffffff; }
+        .mk text { font-family: 'Lexend', system-ui, sans-serif; font-size: 15px; font-weight: 700; fill: #052e16; }
+
+        /* The star to follow: it waits where the tracing has arrived */
+        #follow { pointer-events: none; }
+        #follow use { fill: #fde047; stroke: #ffffff; stroke-width: 1.5; filter: drop-shadow(0 0 7px rgba(253, 224, 71, 1)); animation: beat 1s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+        .trail-star { pointer-events: none; animation: twinkle 1.6s ease-in-out infinite; }
+        .spark { fill: rgba(255, 255, 255, 0.6); pointer-events: none; animation: fade 0.8s ease-out forwards; }
+
+        /* Help (hold): the whole path shines, and the start of every stroke is shown */
+        #scene.peeking .guide { stroke: #ffffff; stroke-width: 8; stroke-dasharray: 2 11; }
+        #scene.peeking .band { stroke: rgba(253, 224, 71, 0.28); }
+
+        @keyframes beat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.35); }
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+        @keyframes fade {
+            from { opacity: 0.8; }
+            to { opacity: 0; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            #follow use, .trail-star { animation: none; }
+            .progress-bar-fill, .cool-btn { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --frame-pad: 6px; --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">Il cielo da tracciare</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <svg id="scene" viewBox="0 0 600 480" role="img" aria-label="Cielo stellato dove tracciare la figura">
+                <defs>
+                    <linearGradient id="night" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0" stop-color="#1e1b4b"/>
+                        <stop offset="1" stop-color="#312e81"/>
+                    </linearGradient>
+                    <path id="star" d="M0 -10 L2.35 -3.24 L9.51 -3.09 L3.8 1.24 L5.88 8.09 L0 4 L-5.88 8.09 L-3.8 1.24 L-9.51 -3.09 L-2.35 -3.24 Z"/>
+                </defs>
+
+                <rect width="600" height="480" fill="url(#night)"/>
+
+                <!-- Decoration: faraway stars and a moon -->
+                <g fill="#ffffff" opacity="0.8">
+                    <circle cx="30" cy="30" r="2"/><circle cx="96" cy="16" r="1.5"/><circle cx="170" cy="40" r="2"/>
+                    <circle cx="250" cy="14" r="1.5"/><circle cx="330" cy="34" r="2"/><circle cx="410" cy="12" r="1.5"/>
+                    <circle cx="470" cy="40" r="2"/><circle cx="560" cy="18" r="1.5"/><circle cx="582" cy="110" r="2"/>
+                    <circle cx="14" cy="130" r="1.5"/><circle cx="590" cy="250" r="1.5"/><circle cx="12" cy="260" r="2"/>
+                    <circle cx="20" cy="360" r="1.5"/><circle cx="586" cy="360" r="2"/><circle cx="60" cy="450" r="2"/>
+                    <circle cx="150" cy="462" r="1.5"/><circle cx="300" cy="466" r="2"/><circle cx="440" cy="460" r="1.5"/>
+                    <circle cx="540" cy="452" r="2"/>
+                </g>
+                <circle cx="545" cy="62" r="26" fill="#fef9c3"/>
+                <circle cx="556" cy="54" r="22" fill="#2a2766"/>
+
+                <g id="shape"></g>
+                <g id="markers"></g>
+                <g id="trail"></g>
+                <g id="follow" visibility="hidden"><use href="#star" transform="scale(1.7)"/></g>
+            </svg>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           title:     the topic of the round
+           tolerance: half width of the tolerance zone, in drawing units.
+                      Bigger = more forgiving (the soft band you see is 2 x tolerance wide)
+           items:     the figures to trace. For each one:
+             label:   name shown to the child
+             say:     what the voice says
+             strokes: one SVG path per stroke ("M x y L x y C ..."), drawn in
+                      any size: the figure is scaled and centred automatically.
+                      Stroke 1 is traced first, then stroke 2, ...
+           ===================================================== */
+        const ROUNDS = [
+            { title: 'Linee e onde', tolerance: 34, items: [
+                { label: 'riga',      say: 'la riga',      strokes: ['M0 0 L100 0'] },
+                { label: 'riga alta', say: 'la riga alta', strokes: ['M0 0 L0 100'] },
+                { label: 'onda',      say: 'l\'onda',      strokes: ['M0 50 C25 0 50 0 75 50 C100 100 125 100 150 50 C175 0 200 0 225 50'] },
+                { label: 'zigzag',    say: 'lo zigzag',    strokes: ['M0 80 L40 0 L80 80 L120 0 L160 80'] },
+                { label: 'cerchio',   say: 'il cerchio',   strokes: ['M50 0 C22.4 0 0 22.4 0 50 C0 77.6 22.4 100 50 100 C77.6 100 100 77.6 100 50 C100 22.4 77.6 0 50 0'] } ] },
+
+            { title: 'Le forme', tolerance: 30, items: [
+                { label: 'quadrato',   say: 'il quadrato',   strokes: ['M0 0 L100 0 L100 100 L0 100 L0 0'] },
+                { label: 'triangolo',  say: 'il triangolo',  strokes: ['M50 0 L100 90 L0 90 L50 0'] },
+                { label: 'rombo',      say: 'il rombo',      strokes: ['M50 0 L100 50 L50 100 L0 50 L50 0'] },
+                { label: 'stella',     say: 'la stella',     strokes: ['M50 0 L61 35 L98 35 L68 57 L79 92 L50 70 L21 92 L32 57 L2 35 L39 35 L50 0'] } ] },
+
+            { title: 'Lettere rotonde', tolerance: 27, items: [
+                { label: 'o', say: 'o',    strokes: ['M30 0 C13.4 0 0 13.4 0 30 C0 46.6 13.4 60 30 60 C46.6 60 60 46.6 60 30 C60 13.4 46.6 0 30 0'] },
+                { label: 'c', say: 'ci',   strokes: ['M52 10 C44 3 38 0 30 0 C13.4 0 0 13.4 0 30 C0 46.6 13.4 60 30 60 C38 60 44 57 52 50'] },
+                { label: 'e', say: 'e',    strokes: ['M0 30 L60 30 C60 12 46 0 30 0 C13.4 0 0 13.4 0 30 C0 46.6 13.4 60 30 60 C40 60 50 56 56 48'] },
+                { label: 's', say: 'esse', strokes: ['M52 10 C46 3 38 0 30 0 C16 0 8 8 8 16 C8 26 18 29 30 31 C44 34 54 38 54 46 C54 54 44 60 30 60 C20 60 10 56 4 48'] },
+                { label: 'a', say: 'a',    strokes: ['M54 14 C48 4 40 0 30 0 C14 0 2 14 2 30 C2 46 14 60 30 60 C42 60 50 54 54 46', 'M56 0 L56 60'] } ] },
+
+            { title: 'Lettere dritte', tolerance: 25, items: [
+                { label: 'l', say: 'elle', strokes: ['M10 -50 L10 60'] },
+                { label: 'v', say: 'vu',    strokes: ['M0 0 L30 60 L60 0'] },
+                { label: 'u', say: 'u',     strokes: ['M0 0 L0 40 C0 55 12 60 30 60 C48 60 60 55 60 40 L60 0', 'M60 0 L60 60'] },
+                { label: 'n', say: 'enne',  strokes: ['M0 0 L0 60', 'M0 24 C6 6 18 0 32 0 C48 0 58 10 58 26 L58 60'] },
+                { label: 't', say: 'ti',    strokes: ['M20 -20 L20 50 C20 58 26 60 34 60 C40 60 44 59 48 56', 'M4 10 L40 10'] } ] },
+
+            { title: 'b, d, p, q', tolerance: 23, items: [
+                { label: 'b', say: 'bi', strokes: ['M4 -50 L4 60', 'M4 24 C10 8 20 0 32 0 C48 0 58 14 58 30 C58 46 48 60 32 60 C20 60 10 52 4 38'] },
+                { label: 'd', say: 'di', strokes: ['M54 14 C48 4 40 0 30 0 C14 0 2 14 2 30 C2 46 14 60 30 60 C42 60 50 54 54 46', 'M56 -50 L56 60'] },
+                { label: 'p', say: 'pi', strokes: ['M4 0 L4 110', 'M4 24 C10 8 20 0 32 0 C48 0 58 14 58 30 C58 46 48 60 32 60 C20 60 10 52 4 38'] },
+                { label: 'q', say: 'cu', strokes: ['M54 14 C48 4 40 0 30 0 C14 0 2 14 2 30 C2 46 14 60 30 60 C42 60 50 54 54 46', 'M56 0 L56 110'] } ] }
+        ];
+
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:           say the name of the figure when it is finished
+           showTime:        show the timer in the stats bar
+           toleranceScale:  1 = as written in ROUNDS; 1.3 = 30% more forgiving
+           maxStars:        how many stars the trail keeps on the sky
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            showTime: true,
+            toleranceScale: 1,
+            maxStars: 140
+        };
+
+        const AREA = { w: 380, h: 300, cx: 300, cy: 240, maxScale: 4.5 };   // where the figure is drawn, in sky units
+        const STAR_COLORS = ['#fde047', '#ffffff', '#67e8f9', '#f9a8d4', '#fdba74'];
+
+        /* The heart of the game: given where the finger is, how far along the path is the child?
+           Progress only moves forward and only looks a short way ahead, so a path that
+           crosses or comes back near itself (e, 8, a square) cannot be shortcut. */
+        function advanceProgress(pts, prog, px, py, tol, look) {
+            const from = Math.max(0, prog - 2);
+            const to = Math.min(pts.length - 1, prog + look);
+            let best = -1, bd = Infinity;
+            for (let i = from; i <= to; i++) {
+                const dx = pts[i].x - px, dy = pts[i].y - py;
+                const d = Math.sqrt(dx * dx + dy * dy);
+                if (d < bd) { bd = d; best = i; }
+            }
+            if (bd <= tol && best > prog) return { prog: best, dist: bd, on: true };
+            return { prog: prog, dist: bd, on: bd <= tol };
+        }
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { sceneEl.classList.add('peeking'); }
+        function onHelpEnd() { sceneEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Sky Tracing
+           ===================================================== */
+        const NS = 'http://www.w3.org/2000/svg';
+        const sceneEl = document.getElementById('scene');
+        const shapeEl = document.getElementById('shape');
+        const markersEl = document.getElementById('markers');
+        const trailEl = document.getElementById('trail');
+        const followEl = document.getElementById('follow');
+        const infoMainEl = document.getElementById('info-main');
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+
+        let roundIdx = 0;
+        let itemIdx = 0;
+        let strokes = [];          // [{ pts, total, litEl, mkEl, step }]
+        let si = 0;                // stroke being traced
+        let prog = 0;              // how far along that stroke (index of a sample point)
+        let tol = 30;
+        let look = 20;
+        let tracing = false;
+        let last = null;           // last finger position
+        let sinceStar = 0;         // distance walked since the last star
+        let offSince = 0;
+        let done = false;
+        let figuresDone = 0;
+        let timerStarted = false;
+        let nextMode = false;
+        let statusHtml = '';
+        let statusKind = '';
+
+        const TOTAL_ITEMS = ROUNDS.reduce((n, r) => n + r.items.length, 0);
+
+        function current() { return ROUNDS[roundIdx].items[itemIdx]; }
+
+        /* ---------- Voice ---------- */
+        function say(text) {
+            if (!prefs.voice) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(text);
+                u.lang = 'it-IT';
+                u.rate = 0.8;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        /* ---------- Info bar ---------- */
+        function renderInfo() {
+            const total = ROUNDS[roundIdx].items.length;
+            const multi = strokes.length > 1 && !done;
+            const lead = multi ? 'Segui la scia · tratto ' + (si + 1) + ' di ' + strokes.length : 'Segui la scia di stelle';
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>' + lead + '</span><span class="cnt">Figura ' + (itemIdx + 1) + ' / ' + total + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- Layout: the frame hugs the sky (5:4) ---------- */
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const g = getComputedStyle(frameEl);
+            const extraW = parseFloat(g.paddingLeft) + parseFloat(g.paddingRight)
+                         + parseFloat(g.borderLeftWidth) + parseFloat(g.borderRightWidth);
+            const extraH = parseFloat(g.paddingTop) + parseFloat(g.paddingBottom)
+                         + parseFloat(g.borderTopWidth) + parseFloat(g.borderBottomWidth);
+
+            const maxH = Math.max(160, avail - used);
+            const maxW = Math.min(stageEl.clientWidth, 700);
+            const picW = Math.max(120, Math.min(maxW - extraW, (maxH - extraH) * 1.25));   // the sky is 5:4
+
+            frameEl.style.width = (picW + extraW) + 'px';
+            stageEl.style.height = (picW * 0.8 + extraH) + 'px';
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Building a figure ---------- */
+        function pathOf(pts) {
+            return 'M' + pts.map(p => p.x.toFixed(1) + ' ' + p.y.toFixed(1)).join(' L');
+        }
+
+        function make(tag, attrs) {
+            const el = document.createElementNS(NS, tag);
+            Object.keys(attrs || {}).forEach(k => el.setAttribute(k, attrs[k]));
+            return el;
+        }
+
+        /* Turns the SVG paths of an item into evenly spaced points, scaled and centred in the sky */
+        function samplePaths(item) {
+            const probe = make('path', { visibility: 'hidden' });
+            sceneEl.appendChild(probe);
+
+            const raw = item.strokes.map(d => {
+                probe.setAttribute('d', d);
+                const len = probe.getTotalLength();
+                const n = Math.max(2, Math.ceil(len));
+                const pts = [];
+                for (let i = 0; i <= n; i++) {
+                    const p = probe.getPointAtLength(len * i / n);
+                    pts.push({ x: p.x, y: p.y });
+                }
+                return pts;
+            });
+            probe.remove();
+
+            let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+            raw.forEach(pts => pts.forEach(p => {
+                minX = Math.min(minX, p.x); maxX = Math.max(maxX, p.x);
+                minY = Math.min(minY, p.y); maxY = Math.max(maxY, p.y);
+            }));
+            const bw = Math.max(maxX - minX, 1), bh = Math.max(maxY - minY, 1);
+            const s = Math.min(AREA.w / bw, AREA.h / bh, AREA.maxScale);
+            const ox = AREA.cx - ((minX + maxX) / 2) * s;
+            const oy = AREA.cy - ((minY + maxY) / 2) * s;
+
+            return raw.map(pts => pts.map(p => ({ x: p.x * s + ox, y: p.y * s + oy })));
+        }
+
+        function strokeLength(pts) {
+            let total = 0;
+            for (let i = 1; i < pts.length; i++) total += Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+            return total;
+        }
+
+        function buildFigure() {
+            const round = ROUNDS[roundIdx];
+            const item = current();
+            tol = round.tolerance * prefs.toleranceScale;
+
+            shapeEl.innerHTML = '';
+            markersEl.innerHTML = '';
+            trailEl.innerHTML = '';
+
+            const sampled = samplePaths(item);
+            strokes = sampled.map((pts, k) => {
+                const total = strokeLength(pts);
+                const d = pathOf(pts);
+                shapeEl.appendChild(make('path', { class: 'band', d: d, 'stroke-width': (tol * 2).toFixed(1) }));
+                shapeEl.appendChild(make('path', { class: 'guide', d: d }));
+                const litEl = make('path', { class: 'lit', d: d, 'stroke-dasharray': '0 ' + (total + 20) });
+                shapeEl.appendChild(litEl);
+
+                // Start marker: green disc, a triangle pointing along the first part of the stroke
+                const a = pts[0], b = pts[Math.min(pts.length - 1, 6)];
+                const angle = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+                const mk = make('g', { class: 'mk', transform: 'translate(' + a.x.toFixed(1) + ' ' + a.y.toFixed(1) + ')' });
+                mk.appendChild(make('circle', { r: 19 }));
+                mk.appendChild(make('path', { class: 'tri', d: 'M-5 -7 L8 0 L-5 7 Z', transform: 'rotate(' + angle.toFixed(0) + ')' }));
+                if (sampled.length > 1) {
+                    const num = make('text', { x: 0, y: -26, 'text-anchor': 'middle' });
+                    num.textContent = String(k + 1);
+                    mk.appendChild(num);
+                }
+                markersEl.appendChild(mk);
+
+                return { pts: pts, total: total, litEl: litEl, mkEl: mk, step: total / (pts.length - 1) };
+            });
+        }
+
+        /* ---------- Showing the progress ---------- */
+        function litLength(st, p) {
+            let len = 0;
+            for (let i = 1; i <= p; i++) len += Math.hypot(st.pts[i].x - st.pts[i - 1].x, st.pts[i].y - st.pts[i - 1].y);
+            return len;
+        }
+
+        function updateTrace() {
+            const st = strokes[si];
+            st.litEl.setAttribute('stroke-dasharray', litLength(st, prog).toFixed(1) + ' ' + (st.total + 20));
+            const p = st.pts[prog];
+            followEl.setAttribute('transform', 'translate(' + p.x.toFixed(1) + ' ' + p.y.toFixed(1) + ')');
+        }
+
+        function showCurrentStroke() {
+            strokes.forEach((st, k) => st.mkEl.classList.toggle('cur', k === si && !done));
+            const st = strokes[si];
+            look = Math.max(4, Math.ceil((tol * 2.6) / st.step));
+            followEl.setAttribute('visibility', done ? 'hidden' : 'visible');
+            if (!done) updateTrace();
+            renderInfo();
+        }
+
+        /* ---------- The trail of stars ---------- */
+        function spawnStar(x, y, big) {
+            const sc = (big ? 1.2 : 0.55) + Math.random() * (big ? 0.9 : 0.7);
+            const star = make('use', {
+                href: '#star',
+                class: 'trail-star',
+                transform: 'translate(' + x.toFixed(1) + ' ' + y.toFixed(1) + ') rotate(' + Math.round(Math.random() * 72) + ') scale(' + sc.toFixed(2) + ')',
+                fill: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)]
+            });
+            star.style.animationDelay = (-Math.random() * 1.6).toFixed(2) + 's';
+            trailEl.appendChild(star);
+            while (trailEl.childNodes.length > prefs.maxStars) trailEl.removeChild(trailEl.firstChild);
+        }
+
+        function spawnSpark(x, y) {
+            const dot = make('circle', { class: 'spark', cx: x.toFixed(1), cy: y.toFixed(1), r: 4 });
+            trailEl.appendChild(dot);
+            setTimeout(() => { if (dot.parentNode) dot.parentNode.removeChild(dot); }, 850);
+        }
+
+        /* ---------- Finishing ---------- */
+        function strokeDone() {
+            const st = strokes[si];
+            st.litEl.setAttribute('stroke-dasharray', (st.total + 20) + ' ' + (st.total + 20));
+            tracing = false;
+
+            if (si < strokes.length - 1) {
+                si++;
+                prog = 0;
+                setStatus('Bene! Ora il prossimo tratto', 'ok');
+                setTimeout(() => { if (statusKind === 'ok' && !done) setStatus(''); }, 1600);
+                showCurrentStroke();
+            } else {
+                figureDone();
+            }
+        }
+
+        function figureDone() {
+            const item = current();
+            done = true;
+            hidePeek();
+            followEl.setAttribute('visibility', 'hidden');
+            strokes.forEach(st => st.mkEl.classList.remove('cur'));
+
+            // A shower of stars along the whole figure
+            strokes.forEach(st => {
+                for (let i = 0; i < 16; i++) {
+                    const p = st.pts[Math.floor(Math.random() * st.pts.length)];
+                    spawnStar(p.x + (Math.random() - 0.5) * 40, p.y + (Math.random() - 0.5) * 40, true);
+                }
+            });
+
+            figuresDone++;
+            setProgress((figuresDone / TOTAL_ITEMS) * 100);
+            say(item.say);
+
+            const lastItem = itemIdx === ROUNDS[roundIdx].items.length - 1;
+            const lastRound = roundIdx === ROUNDS.length - 1;
+            if (lastItem && lastRound) {
+                stopElapsedTimer();
+                setStatus('Bravo! Hai finito tutti i round!', 'ok');
+            } else if (lastItem) {
+                setStatus('Bravo! Round completato: ' + item.label, 'ok');
+            } else {
+                setStatus('Bravo! ' + item.label, 'ok');
+            }
+            setNextMode(true, lastItem && lastRound);
+        }
+
+        /* ---------- Following the finger ---------- */
+        function toSky(e) {
+            const pt = sceneEl.createSVGPoint();
+            pt.x = e.clientX;
+            pt.y = e.clientY;
+            const m = sceneEl.getScreenCTM();
+            const p = pt.matrixTransform(m.inverse());
+            return { x: p.x, y: p.y };
+        }
+
+        function handlePoint(p) {
+            const st = strokes[si];
+            const r = advanceProgress(st.pts, prog, p.x, p.y, tol, look);
+
+            if (r.on) {
+                offSince = 0;
+                if (statusKind === 'retry') setStatus('');
+                if (r.prog > prog) {
+                    prog = r.prog;
+                    updateTrace();
+                }
+                // A star every so often while the finger is on the path
+                if (last) sinceStar += Math.hypot(p.x - last.x, p.y - last.y);
+                if (sinceStar >= 16) {
+                    spawnStar(p.x, p.y, false);
+                    sinceStar = 0;
+                }
+                if (prog >= st.pts.length - 1 - Math.ceil((tol * 0.5) / st.step)) strokeDone();
+            } else {
+                // Off the path: no stars, only a faint spark; nobody is told off
+                spawnSpark(p.x, p.y);
+                const now = performance.now();
+                if (!offSince) offSince = now;
+                else if (now - offSince > 900 && !statusHtml) setStatus('Torna alla stella luminosa', 'retry');
+            }
+            last = p;
+        }
+
+        function movePoints(p) {
+            // Fill in the points between two finger positions so a fast swipe cannot skip the path
+            if (last) {
+                const dist = Math.hypot(p.x - last.x, p.y - last.y);
+                const n = Math.floor(dist / 6);
+                const from = { x: last.x, y: last.y };
+                for (let i = 1; i <= n && tracing && !done; i++) {
+                    handlePoint({ x: from.x + (p.x - from.x) * i / (n + 1), y: from.y + (p.y - from.y) * i / (n + 1) });
+                }
+            }
+            if (tracing && !done) handlePoint(p);
+        }
+
+        sceneEl.addEventListener('pointerdown', (e) => {
+            if (done || nextMode) return;
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            e.preventDefault();
+
+            const p = toSky(e);
+            const st = strokes[si];
+            const spot = st.pts[prog];
+
+            // The finger must start on (or near) the star that waits on the path
+            if (Math.hypot(p.x - spot.x, p.y - spot.y) > tol * 1.9) {
+                if (!statusHtml) {
+                    setStatus('Parti dalla stella luminosa', 'retry');
+                    setTimeout(() => { if (statusKind === 'retry') setStatus(''); }, 1600);
+                }
+                return;
+            }
+
+            if (!timerStarted) { timerStarted = true; startElapsedTimer(); }
+            addMove();
+            tracing = true;
+            last = null;
+            sinceStar = 0;
+            offSince = 0;
+            if (statusKind === 'retry') setStatus('');
+            try { sceneEl.setPointerCapture(e.pointerId); } catch (err) {}
+            handlePoint(p);
+        });
+
+        sceneEl.addEventListener('pointermove', (e) => {
+            if (!tracing || done) return;
+            const events = (e.getCoalescedEvents && e.getCoalescedEvents().length) ? e.getCoalescedEvents() : [e];
+            events.forEach(ev => { if (tracing && !done) movePoints(toSky(ev)); });
+        });
+
+        function endTrace() {
+            tracing = false;
+            last = null;
+        }
+        sceneEl.addEventListener('pointerup', endTrace);
+        sceneEl.addEventListener('pointercancel', endTrace);
+        sceneEl.addEventListener('lostpointercapture', endTrace);
+
+        /* ---------- Rounds and figures ---------- */
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadFigure() {
+            done = false;
+            tracing = false;
+            si = 0;
+            prog = 0;
+            hidePeek();
+            setNextMode(false);
+            updateRoundDisplay();
+            setStatus('');
+            buildFigure();
+            showCurrentStroke();
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (itemIdx < ROUNDS[roundIdx].items.length - 1) {
+                itemIdx++;
+                loadFigure();
+            } else if (roundIdx < ROUNDS.length - 1) {
+                roundIdx++;
+                itemIdx = 0;
+                loadFigure();
+            } else {
+                roundIdx = 0;
+                itemIdx = 0;
+                initGame();
+            }
+        }
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            figuresDone = 0;
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            loadFigure();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

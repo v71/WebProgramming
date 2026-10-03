@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Puzzle di Frasi</title>
+
+    <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../js/checkmark.js"></script>
+    <script src="../js/celebrazion.js"></script>
+
     <style>
         :root {
             --bg-0: #e6e6e6;
@@ -440,7 +445,7 @@
     </style>
 </head>
 <body>
-
+    
     <h1 id="game-title">Puzzle di Frasi</h1>
 
     <div id="game-stats">
@@ -735,8 +740,9 @@
             });
         }
 
+        /*
         function setupCardTapToMove(card) {
-            card.addEventListener('click', (e) => {
+            card.addEventListener('click', async (e) => {
                 e.stopPropagation();
                 if (sentenceCompleted) return;
 
@@ -760,6 +766,104 @@
                     }
 
                     registerMove();
+                }
+            });
+        }
+        */
+        /*
+        function setupCardTapToMove(card) {
+            card.addEventListener('click', async (e) => { // 1. Rendiamo la funzione async
+                e.stopPropagation();
+                if (sentenceCompleted) return;
+
+                if (card.parentNode === sourceContainer) {
+                    const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+                    if (emptySlotMeta) {
+                        emptySlotMeta.element.appendChild(card);
+                        emptySlotMeta.element.classList.add('filled');
+                        
+                        // 2. VERIFICHIAMO SE LA PAROLA È QUELLA GIUSTA PER QUESTO SLOT!
+                        // Confrontiamo la parola della carta con l'attesa dello slot
+                        const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
+
+                        if (isWordCorrect) {
+                            // Se è corretta, facciamo partire il checkmark direttamente sopra questo slot!
+                            await Checkmark.show({
+                                element: emptySlotMeta.element,
+                                size: 48,  // Un po' più compatto per la singola parola
+                                rise: 70,
+                                duration: 1600
+                            });
+                        }
+
+                        registerMove();
+                    }
+                } else if (card.parentNode.classList.contains('slot')) {
+                    const slot = card.parentNode;
+                    sourceContainer.appendChild(card);
+                    slot.classList.remove('filled');
+
+                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                    if (revealBtn.classList.contains('wrong-btn')) {
+                        revealBtn.classList.remove('wrong-btn');
+                        revealBtn.disabled = false;
+                        revealBtn.innerHTML = "<span>💡 Help!</span>";
+                    }
+
+                    registerMove();
+                }
+            });
+        }
+        */
+
+        function setupCardTapToMove(card) {
+            card.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (sentenceCompleted) return;
+
+                if (card.parentNode === sourceContainer) {
+                    const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+                    if (emptySlotMeta) {
+                        emptySlotMeta.element.appendChild(card);
+                        emptySlotMeta.element.classList.add('filled');
+                        
+                        // Aggiorniamo subito i movimenti e la griglia
+                        moveCount++;
+                        updateMovesDisplay();
+                        updateSlotHighlights();
+                        fitTargetContainer(); // Ricalcola subito prima del checkmark!
+
+                        const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
+
+                        if (isWordCorrect) {
+                            await Checkmark.show({
+                                element: emptySlotMeta.element,
+                                size: 48,
+                                rise: 70,
+                                duration: 1600
+                            });
+                        }
+
+                        // Controllo finale della frase (senza richiamare registerMove duplicato)
+                        checkSentenceAutomatic();
+                    }
+                } else if (card.parentNode.classList.contains('slot')) {
+                    const slot = card.parentNode;
+                    sourceContainer.appendChild(card);
+                    slot.classList.remove('filled');
+
+                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                    if (revealBtn.classList.contains('wrong-btn')) {
+                        revealBtn.classList.remove('wrong-btn');
+                        revealBtn.disabled = false;
+                        revealBtn.innerHTML = "<span>💡 Help!</span>";
+                    }
+
+                    moveCount++;
+                    updateMovesDisplay();
+                    updateSlotHighlights();
+                    fitTargetContainer();
+                    checkSentenceAutomatic();
                 }
             });
         }
@@ -790,6 +894,11 @@
                 updateSlotHighlights();
 
                 slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+                // Esplosione festosa dai lati dello schermo
+                Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60,  spread: 60, count: 90 });
+                Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                Confetti.burst({ origin: { x: 0.5 , y: 0.5 }, angle: 90, spread: 60, count: 90 });
 
                 progressBarFill.style.width = (((currentSentenceIndex + 1) / PUZZLE_SENTENCES.length) * 100) + '%';
 
@@ -905,7 +1014,7 @@
 
         async function initGame() {
             try {
-                const response = await fetch('sentences.json');
+                const response = await fetch('sentences-set-1.json');
                 const data = await response.json();
                 PUZZLE_SENTENCES = data.sentences;
 
@@ -944,7 +1053,6 @@
         initGame();
 
     </script>
-
 
 </body>
 </html>
