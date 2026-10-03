@@ -16,20 +16,16 @@
             --bg-1: #4a1d6e;
             --bg-2: #553d94;
             --accent: #ff9800;
-
             --accent-2: #ffffff;
             --correct: #ffffff;
             --wrong: #ef4444;
-            
             --text: #ffffff;
             --text-dim: #a0a0a0;
             --border: #000205;
-            
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
         }
-
 
         * { box-sizing: border-box; }
 
@@ -259,7 +255,7 @@
             margin: 0 auto;
         }
 
-         #reveal-overlay {
+        #reveal-overlay {
             position: absolute;
             top: 0;
             left: 50%;
@@ -276,7 +272,7 @@
             gap: 14px;
             padding: 19px;
             border-radius: 20px;
-            background-color: var(--bg-1);
+            background-color: #37275e;
             border: 2px solid var(--correct);
             opacity: 0;
             pointer-events: none;
@@ -289,13 +285,14 @@
         #reveal-overlay.visible {
             opacity: 1;
         }
- 
+         
+        /* Stile specifico per le lettere rivelate con il tasto Help */
         .card.reveal-letter {
-            border-color: var(--correct);
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--correct);
+            border-color: #ffffff !important;
+            background-color: #10b981 !important; /* Verde brillante e ben visibile */
+            color: #ffffff !important;
             cursor: default;
-            box-shadow: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transform: none !important;
         }
 
@@ -465,11 +462,11 @@
             transition: transform 0.25s ease;
         }
 
-         .cool-btn:hover {
+       .cool-btn:hover {
             transform: translateY(-2px);
-                background-color: var(--accent);
+            background-color: #059669;
         }
-      
+
         .cool-btn:hover i {
             transform: translateX(3px);
         }

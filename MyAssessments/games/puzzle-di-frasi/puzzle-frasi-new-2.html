@@ -16,15 +16,12 @@
             --bg-1: #4a1d6e;
             --bg-2: #553d94;
             --accent: #ff9800;
-
             --accent-2: #06b6d4;
             --correct: #ffffff;
             --wrong: #ef4444;
-            
             --text: #ffffff;
             --text-dim: #a0a0a0;
             --border: #000205;
-            
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
@@ -139,13 +136,13 @@
             border-color: var(--border);
         }
 
-        #target-container {
+       #target-container {
             border: 2px solid #000000;
             background-color: #37275e;
-            /* Border is 1px thicker per side than #source-container's 1px
-               border; trim padding by that same 1px per side so the two
-               containers end up with identical usable (content) width. */
-            padding: 19px;
+            padding: 20px;
+            width: fit-content;
+            max-width: 100%;
+            justify-content: center; /* Centra gli elementi slot se avanzano spazi */
         }
 
         /* Slot styles for Drop Zone */
@@ -170,6 +167,7 @@
             cursor: pointer;
         }
 
+        
         /* Highlight for the current active slot */
         .slot.active-slot {
             border-color: #ffffff;
@@ -233,7 +231,7 @@
             gap: 14px;
             padding: 19px;
             border-radius: 20px;
-            background-color: var(--bg-1);
+            background-color: #37275e;
             border: 2px solid var(--correct);
             opacity: 0;
             pointer-events: none;
@@ -246,14 +244,32 @@
         #reveal-overlay.visible {
             opacity: 1;
         }
-
+        
+        /* Stile specifico per le lettere rivelate con il tasto Help */
         .card.reveal-letter {
-            border-color: var(--correct);
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--correct);
+            border-color: #ffffff !important;
+            background-color: #10b981 !important; /* Verde brillante e ben visibile */
+            color: #ffffff !important;
             cursor: default;
-            box-shadow: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transform: none !important;
+        }
+
+        /* 2. Reintegra lo stile per gli spazi vuoti nell'overlay */
+        .card.reveal-letter.space {
+            background-color: rgba(255, 255, 255, 0.15); /* Sfondo traslucido chiaro per lo spazio */
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card.space::after {
+            content: '';
+            width: 30px;
+            height: 14px;
+            margin-top: 14px;
+            border: 4px solid currentColor;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            opacity: 0.85;
         }
 
         /* Cards hold a whole word: flexible width, no fixed square */
@@ -288,11 +304,6 @@
             z-index: 5;
         }
 
-        /* Cards inside a slot keep the exact same styling as everywhere else */
-        .slot .card {
-            transform: none !important;
-            background: #5d258a;
-        }
 
         #game-stats, .stats-style {
             margin: 0 0 14px;
@@ -420,7 +431,7 @@
 
         .cool-btn:hover {
             transform: translateY(-2px);
-                background-color: var(--accent);
+            background-color: #059669;
         }
 
         .cool-btn:hover i {
@@ -622,7 +633,8 @@
         /* The source container gets the width of the whole sentence on one row
            (capped to the available space). That same value is the maximum width
            the target container may use. */
-        function syncContainerWidths() {
+       
+           function syncContainerWidths() {
             if (!originalWords.length) return;
 
             const fullWidth = measureFullRowWidth(originalWords);
@@ -637,7 +649,9 @@
            It does NOT measure the container's current layout: it reads only the
            width of each slot (a slot's width never depends on the container),
            then simulates the line wrapping and adds padding and border. */
-        function fitTargetContainer() {
+       
+       /*
+           function fitTargetContainer() {
             const slots = Array.from(targetContainer.children);
             if (!slots.length) return;
 
@@ -666,6 +680,13 @@
 
             const finalWidth = Math.min(Math.ceil(widest + extras) + 1, cap); // +1 avoids sub-pixel re-wrap
             targetContainer.style.width = finalWidth + 'px';
+        }
+        */
+        function fitTargetContainer() {
+            // Mantiene il target container della stessa identica larghezza del source container (rowCap)
+            if (rowCap) {
+                targetContainer.style.width = rowCap + 'px';
+            }
         }
 
         function loadSentence(index) {

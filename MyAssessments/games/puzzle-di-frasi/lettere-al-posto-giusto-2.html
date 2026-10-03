@@ -4,20 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Puzzle di Lettere</title>
-    <style>
 
-        
+    <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../js/checkmark.js"></script>
+    <script src="../js/celebrazion.js"></script>
+
+    <style>
         :root {
-            --bg-0: #e6e6e6;
-            --bg-1: #ffffff;
-            --bg-2: #f1f5f9;
-            --accent: #6366f1;
+            /* One size for every letter card: the cards to move, the slots and the Help overlay.
+               Change these two values to resize all of them together. */
+            --card-w: 72px;
+            --card-h: 94px;
+
+            --bg-0: #2a113d;
+            --bg-1: #4a1d6e;
+            --bg-2: #553d94;
+            --accent: #ff9800;
             --accent-2: #06b6d4;
-            --correct: #10b981;
+            --correct: #ffffff;
             --wrong: #ef4444;
-            --text: #0f172a;
-            --text-dim: #64748b;
-            --border: #e2e8f0;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #000205;
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
@@ -27,9 +35,9 @@
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: 
-                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+            background:
+                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
                 var(--bg-0);
             color: var(--text);
             margin: 0;
@@ -48,6 +56,13 @@
             letter-spacing: -0.5px;
             color: var(--accent);
             text-align: center;
+            /* Contorno nero nitido attorno al testo */
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
         }
 
         .controls {
@@ -110,14 +125,14 @@
             gap: 14px;
             width: fit-content;
             max-width: 100%;
-            min-height: clamp(120px, 16vh, 190px);
+            min-height: clamp(90px, 14vh, 130px);
             padding: 20px;
             border-radius: 20px;
             align-items: center;
             box-sizing: border-box;
             background-color: var(--bg-1);
             box-shadow: var(--shadow-md);
-            border: 1px solid rgba(226, 232, 240, 0.8);
+            border: 2px solid rgba(255, 255, 255, 0.8);
             margin: 0 auto;
         }
 
@@ -126,16 +141,17 @@
         }
 
         #target-container {
-            border: 2px solid #a5b4fc;
-            background-color: #faf8ff;
+            border: 2px solid #000000;
+            background-color: #37275e;
+            padding: 19px;
         }
 
-        /* Slot styles for Drop Zone */
+        /* Slot styles for the drop zone: same size as a card */
         .slot {
             position: relative;
             flex-shrink: 0;
-            width: 72px;
-            height: 94px;
+            width: var(--card-w);
+            height: var(--card-h);
             background-color: var(--bg-2);
             border: 2px solid var(--border);
             border-radius: 14px;
@@ -149,36 +165,33 @@
 
         /* Highlight for the current active slot */
         .slot.active-slot {
-            border-color: var(--accent);
+            border-color: #ffffff;
             border-style: solid;
-            background-color: #ede9fe;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.15);
+            background-color: #544b7a;
         }
 
-        /* Filled slot acts as a unified card container and lifts together smoothly */
-        .slot.filled {
-            border-style: solid;
-            border-color: var(--border);
-            background-color: var(--bg-1);
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+        /* Filled slot becomes an invisible wrapper */
+        .slot.filled,
+        .slot.revealed {
+            border: none;
+            background: transparent;
+            box-shadow: none;
         }
 
         .slot.filled:hover {
             transform: translateY(-4px);
-            border-color: var(--accent);
             box-shadow: var(--shadow-md);
             z-index: 5;
         }
 
         /* Error state for incorrect slots */
         .slot.error-slot {
-            border-color: var(--wrong) !important;
-            background-color: rgba(239, 68, 68, 0.05) !important;
             animation: shake 0.4s ease;
         }
 
         .slot.error-slot .card {
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.05);
             color: var(--wrong);
         }
 
@@ -197,41 +210,53 @@
 
         #reveal-overlay {
             position: absolute;
-            inset: 0;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: min(92vw, 1060px);
+            min-width: 100%;
+            height: max-content;
+            min-height: 100%;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             gap: 14px;
-            padding: 20px;
+            padding: 19px;
             border-radius: 20px;
-            background-color: var(--bg-1);
+            background-color: #37275e;
             border: 2px solid var(--correct);
             opacity: 0;
             pointer-events: none;
             transition: opacity 0.2s ease;
             box-shadow: var(--shadow-lg);
             z-index: 10;
+            box-sizing: border-box;
         }
+
 
         #reveal-overlay.visible {
             opacity: 1;
         }
-
+ 
+        /* Stile specifico per le lettere rivelate con il tasto Help */
         .card.reveal-letter {
-            border-color: var(--correct);
-            background-color: rgba(16, 185, 129, 0.1);
-            color: var(--correct);
+            border-color: #ffffff !important;
+            background-color: #10b981 !important; /* Verde brillante e ben visibile */
+            color: #ffffff !important;
             cursor: default;
-            box-shadow: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transform: none !important;
         }
 
+        /* Letter cards */
         .card {
             flex-shrink: 0;
-            width: 72px;
-            height: 94px;
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            width: var(--card-w);
+            height: var(--card-h);
+            padding: 0;
+            background: #7931b4;
             color: var(--text);
             border: 2px solid var(--border);
             border-radius: 14px;
@@ -246,7 +271,17 @@
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
         }
 
-        /* Hover effect for source cards */
+        .card.space::after {
+            content: '';
+            width: 30px;
+            height: 14px;
+            margin-top: 14px;
+            border: 4px solid currentColor;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            opacity: 0.85;
+        }
+
         #source-container .card:hover {
             border-color: var(--accent);
             transform: translateY(-4px);
@@ -256,26 +291,11 @@
             z-index: 5;
         }
 
-        /* Inside slots, cards don't translate independently and borders are reset */
-        .slot .card,
-        .slot .card.space {
-            border: none;
-            box-shadow: none;
-            background: transparent;
+        .slot .card {
+            transform: none !important;
+            background: #5d258a;
             width: 100%;
             height: 100%;
-            transform: none !important;
-        }
-
-        .card.space {
-            border-style: solid;
-            border-color: var(--border);
-        }
-
-        .card.space::after {
-            content: '␣';
-            font-size: 1.2rem;
-            color: var(--text-dim);
         }
 
         #game-stats, .stats-style {
@@ -376,7 +396,7 @@
             font-size: 1rem;
             font-weight: 600;
             color: #ffffff;
-            background-color: var(--accent);
+            background-color: #4f46e5; /* Blu fisso a riposo */
             border: none;
             border-radius: 99px;
             cursor: pointer;
@@ -398,14 +418,13 @@
 
         .cool-btn i {
             font-size: 1.1rem;
-            -webkit-text-stroke: 1px currentColor; 
+            -webkit-text-stroke: 1px currentColor;
             transition: transform 0.25s ease;
         }
 
         .cool-btn:hover {
             transform: translateY(-2px);
-            background-color: #4f46e5;
-            box-shadow: 0 15px 30px -5px rgba(99, 102, 241, 0.4);
+            background-color: #4338ca; /* Blu leggermente più scuro all'hover */
         }
 
         .cool-btn:hover i {
@@ -414,20 +433,14 @@
 
         .cool-btn:active {
             transform: translateY(1px);
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
         }
 
         #next-btn {
-            background-color: var(--correct);
+            background-color: #4f46e5;
         }
 
         #next-btn:hover {
-            background-color: #059669;
-            box-shadow: 0 15px 30px -5px rgba(16, 185, 129, 0.4);
-        }
-
-        #next-btn:active {
-            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+            background-color: #4338ca;
         }
 
         .cool-btn.wrong-btn {
@@ -435,6 +448,7 @@
             cursor: default;
             pointer-events: none;
             box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+            opacity: 1 !important; /* Mantiene il colore pieno senza trasparenza */
         }
 
     </style>
@@ -442,7 +456,7 @@
 <body>
 
     <h1 id="game-title">Puzzle di Lettere</h1>
-    
+
     <div id="game-stats">
         <span>Round: <strong id="progress-value">1 / 4</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
@@ -451,7 +465,6 @@
     </div>
 
     <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
-
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
@@ -465,12 +478,10 @@
 
     <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
         <div class="section-wrapper">
-            <!--<div class="section-title">Lettere disponibili (tocca per spostare)</div>-->
             <div id="source-container" class="card-container"></div>
         </div>
 
         <div class="section-wrapper" style="margin-bottom:0;">
-            <!--<div class="section-title">Componi qui (la casella attiva è evidenziata)</div>-->
             <div class="target-wrapper">
                 <div id="target-container" class="card-container"></div>
                 <div id="reveal-overlay" aria-hidden="true"></div>
@@ -593,14 +604,15 @@
             progressBarFill.style.width = progressRatio + '%';
 
             originalTextString = PUZZLE_WORDS[index];
-            sourceContainer.style.width = ''; 
-            sourceContainer.innerHTML = ''; 
-            targetContainer.innerHTML = ''; 
+            sourceContainer.style.width = '';
+            sourceContainer.style.minHeight = '';
+            sourceContainer.innerHTML = '';
+            targetContainer.innerHTML = '';
             wordCompleted = false;
             moveCount = 0;
             revealCount = 0;
             slotsMeta = [];
-            
+
             progressValueEl.textContent = `${index + 1} / ${PUZZLE_WORDS.length}`;
             updateMovesDisplay();
             updateRevealsDisplay();
@@ -615,22 +627,21 @@
             for (let i = 0; i < originalTextString.length; i++) {
                 const slot = document.createElement('div');
                 slot.classList.add('slot');
-                
+
                 slot.addEventListener('click', () => {
                     if (wordCompleted) return;
                     const card = slot.querySelector('.card');
                     if (card) {
                         sourceContainer.appendChild(card);
                         slot.classList.remove('filled');
-                        
-                        // Clear error states and restore Help button immediately on click
+
                         slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
                         if (revealBtn.classList.contains('wrong-btn')) {
                             revealBtn.classList.remove('wrong-btn');
                             revealBtn.disabled = false;
                             revealBtn.innerHTML = "<span>💡 Help!</span>";
                         }
-                        
+
                         registerMove();
                     }
                 });
@@ -660,13 +671,14 @@
             });
 
             requestAnimationFrame(() => {
-                const initialWidth = sourceContainer.getBoundingClientRect().width;
-                sourceContainer.style.width = initialWidth + 'px';
+                const box = sourceContainer.getBoundingClientRect();
+                sourceContainer.style.width = box.width + 'px';
+                sourceContainer.style.minHeight = box.height + 'px';
             });
         }
 
         function setupCardTapToMove(card) {
-            card.addEventListener('click', (e) => {
+            card.addEventListener('click', async(e) => {
                 e.stopPropagation();
                 if (wordCompleted) return;
 
@@ -675,13 +687,30 @@
                     if (emptySlotMeta) {
                         emptySlotMeta.element.appendChild(card);
                         emptySlotMeta.element.classList.add('filled');
-                        registerMove();
+
+                        moveCount++;
+                        updateMovesDisplay();
+                        updateSlotHighlights();
+
+                        const cardValue = card.textContent.trim();
+                        const isWordCorrect = (cardValue === emptySlotMeta.expected);
+                        
+                        if (isWordCorrect) {
+                            await Checkmark.show({
+                                element: emptySlotMeta.element,
+                                size: 48,
+                                rise: 70,
+                                duration: 1600
+                            });
+                        }
+
+                        checkWordAutomatic();
                     }
                 } else if (card.parentNode.classList.contains('slot')) {
                     const slot = card.parentNode;
                     sourceContainer.appendChild(card);
                     slot.classList.remove('filled');
-                    
+
                     slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
                     if (revealBtn.classList.contains('wrong-btn')) {
                         revealBtn.classList.remove('wrong-btn');
@@ -689,7 +718,11 @@
                         revealBtn.innerHTML = "<span>💡 Help!</span>";
                     }
 
-                    registerMove();
+                    moveCount++;
+                    updateMovesDisplay();
+                    updateSlotHighlights();
+
+                    checkWordAutomatic();
                 }
             });
         }
@@ -720,13 +753,11 @@
 
                 slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
 
-            //    const effectiveTime = Math.max(elapsedSeconds, 1);
-            //    const metricValue = Number(((moveCount - revealCount) / effectiveTime).toFixed(2));
-
-                // Score this round directly on a 0–100 scale: start at 100, lose points
-                // for each wrong guess and each reveal used. No time-based formula, so
-                // there's no arbitrary "perfect value" left to guess at.
-                const wrongAttempts = moveCount - 1; // moveCount includes the final correct click
+                Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60,  spread: 60, count: 90 });
+                Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                Confetti.burst({ origin: { x: 0.5 , y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                
+                const wrongAttempts = moveCount - 1;
                 const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
 
                 roundResults.push({
@@ -742,16 +773,14 @@
                 } else {
                     nextBtn.textContent = "▶ Prossima parola";
                 }
-                
+
                 revealBtn.classList.remove('wrong-btn');
                 revealBtn.disabled = false;
-                
-                // Smoothly fade out Help and fade in Next button
+
                 revealBtn.classList.add('smooth-hidden');
                 nextBtn.classList.remove('smooth-hidden');
 
             } else if (allSlotsFilled) {
-                // Turn Help! button red and non-clickable
                 revealBtn.innerHTML = "<span>⚠️ Parola errata</span>";
                 revealBtn.classList.add('wrong-btn');
                 revealBtn.disabled = true;
@@ -780,11 +809,11 @@
 
         function showSummaryScreen() {
             puzzleWorkspace.style.display = 'none';
-            instructionBanner.style.display = 'none'; 
+            instructionBanner.style.display = 'none';
             document.getElementById('game-stats').style.display = 'none';
             document.querySelector('.progress-bar-container').style.display = 'none';
             actionControls.style.display = 'none';
-            
+
             summaryTbody.innerHTML = '';
             let totalMetric = 0;
 
@@ -795,11 +824,6 @@
                 summaryTbody.appendChild(row);
             });
 
-        //    const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-        //    const normalizedScore = Math.min(Math.max((averageMetric / 5) * 100, 0), 100);
-            
-            // averageMetric is already 0–100 per round (see handleOptionClick),
-            // so no rescaling is needed — just average and clamp for safety.
             const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
             const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
 
@@ -814,7 +838,7 @@
         function showReveal() {
             if (wordCompleted || isRevealing || revealBtn.disabled) return;
             isRevealing = true;
-            
+
             revealCount++;
             updateRevealsDisplay();
 
