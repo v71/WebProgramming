@@ -431,7 +431,7 @@
 
         .cool-btn:hover {
             transform: translateY(-2px);
-            background-color: #059669;
+            background-color: #10b981;
         }
 
         .cool-btn:hover i {
@@ -447,7 +447,7 @@
         }
 
         #next-btn:hover {
-            background-color: #059669;
+            background-color: #10b981;
         }
 
         .cool-btn.wrong-btn {
@@ -650,38 +650,6 @@
            width of each slot (a slot's width never depends on the container),
            then simulates the line wrapping and adds padding and border. */
        
-       /*
-           function fitTargetContainer() {
-            const slots = Array.from(targetContainer.children);
-            if (!slots.length) return;
-
-            const cs = getComputedStyle(targetContainer);
-            const gap = parseFloat(cs.columnGap) || 14;
-            const extras = parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight)
-                         + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
-
-            const cap = rowCap || (puzzleWorkspace.clientWidth - 40);
-            const maxInner = cap - extras;
-
-            let widest = 0;
-            let rowWidth = 0;
-            slots.forEach(slot => {
-                const w = slot.getBoundingClientRect().width;
-                if (rowWidth === 0) {
-                    rowWidth = w;
-                } else if (rowWidth + gap + w <= maxInner) {
-                    rowWidth += gap + w;
-                } else {
-                    widest = Math.max(widest, rowWidth);
-                    rowWidth = w;
-                }
-            });
-            widest = Math.max(widest, rowWidth);
-
-            const finalWidth = Math.min(Math.ceil(widest + extras) + 1, cap); // +1 avoids sub-pixel re-wrap
-            targetContainer.style.width = finalWidth + 'px';
-        }
-        */
         function fitTargetContainer() {
             // Mantiene il target container della stessa identica larghezza del source container (rowCap)
             if (rowCap) {
@@ -866,7 +834,7 @@
                 });
 
                 if (currentSentenceIndex === PUZZLE_SENTENCES.length - 1) {
-                    nextBtn.textContent = "Fatto";
+                    nextBtn.textContent = "✓ Fatto";
                 } else {
                     nextBtn.textContent = "▶ Prossima frase";
                 }
@@ -960,7 +928,6 @@
             isRevealing = false;
             revealOverlay.classList.remove('visible');
         }
-
 
         async function initGame() {
             try {

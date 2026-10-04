@@ -464,7 +464,7 @@
 
        .cool-btn:hover {
             transform: translateY(-2px);
-            background-color: #059669;
+             background-color: #10b981;
         }
 
         .cool-btn:hover i {
@@ -480,7 +480,7 @@
         }
 
         #next-btn:hover {
-            background-color: #059669;
+            background-color: #10b981;
         }
 
         .cool-btn.wrong-btn {
@@ -491,6 +491,7 @@
             opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
         }
     </style>
+    
 </head>
 <body>
 
@@ -893,7 +894,7 @@
                 });
 
                 if (currentSentenceIndex === PUZZLE_SENTENCES.length - 1) {
-                    nextBtn.textContent = "Fatto";
+                    nextBtn.textContent = "✓ Fatto";
                 } else {
                     nextBtn.textContent = "▶ Prossima frase";
                 }

@@ -235,7 +235,6 @@
             box-sizing: border-box;
         }
 
-
         #reveal-overlay.visible {
             opacity: 1;
         }
@@ -424,7 +423,7 @@
 
         .cool-btn:hover {
             transform: translateY(-2px);
-            background-color: #4338ca; /* Blu leggermente più scuro all'hover */
+            background-color: #10b981; /* Blu leggermente più scuro all'hover */
         }
 
         .cool-btn:hover i {
@@ -440,7 +439,7 @@
         }
 
         #next-btn:hover {
-            background-color: #4338ca;
+           background-color: #10b981;
         }
 
         .cool-btn.wrong-btn {
@@ -750,6 +749,7 @@
                 wordCompleted = true;
                 stopElapsedTimer();
                 updateSlotHighlights();
+                progressBarFill.style.width = ((currentWordIndex + 1) / PUZZLE_WORDS.length) * 100 + '%';
 
                 slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
 
@@ -769,7 +769,7 @@
                 });
 
                 if (currentWordIndex === PUZZLE_WORDS.length - 1) {
-                    nextBtn.textContent = "Fatto";
+                    nextBtn.textContent = "✓ Fatto";
                 } else {
                     nextBtn.textContent = "▶ Prossima parola";
                 }
