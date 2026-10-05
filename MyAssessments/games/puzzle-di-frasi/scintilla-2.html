@@ -95,26 +95,6 @@
         /* =========================================
            INFORMATION BOX
         ========================================= */
-        /*
-        #instruction-banner {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            max-width: 1100px;
-            min-height: 52px;
-            padding: 10px 20px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            border-radius: 99px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-            text-align: center;
-        }
-        */
         
         #instruction-banner {
             margin: 0 0 14px;
@@ -369,6 +349,10 @@
             border-color: #ffffff;
         }
 
+        #reveal-btn * {
+            pointer-events: none;
+        }
+
 </style>
 </head>
 
@@ -378,13 +362,11 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        Filtro degli Alimenti
+        Filtra gli Elementi
     </h1>
 
     <!-- COUNTERS -->
-
     <div id="game-stats">
-        <span>Round: <strong id="progress-value">1 / 1</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -393,7 +375,7 @@
     <!-- INFORMATION / INSTRUCTION BOX -->
 
     <div id="instruction-banner">
-       Segna solo le parole che appartengono alla categoria "alimenti" e ignora tutte le altre.
+       Instruzion banner.
     </div>
 
     <div class="controls" id="action-controls">
@@ -407,11 +389,8 @@
     </div>
 
     <!-- EMPTY GAME AREA -->
-
     <div id="game-area">
-
         <div class="button-grid">
-
             <button class="grid-button" data-index="0"></button>
             <button class="grid-button" data-index="1"></button>
             <button class="grid-button" data-index="2"></button>
@@ -427,183 +406,510 @@
             <button class="grid-button" data-index="12"></button>
             <button class="grid-button" data-index="13"></button>
             <button class="grid-button" data-index="14"></button>
-
         </div>
-
     </div>
 
-
-<script>
-    
-        const buttons = [
-            { label: "Mela", value: true },
-            { label: "Sedia", value: false },
-            { label: "Pane", value: true },
-            { label: "Libro", value: false },
-            { label: "Latte", value: true },
-            { label: "Scarpa", value: false },
-            { label: "Pizza", value: true },
-            { label: "Tavolo", value: false },
-            { label: "Banana", value: true },
-            { label: "Penna", value: false },
-            { label: "Zaino", value: false },
-            { label: "Formaggio", value: true },
-            { label: "Pasta", value: true },
-            { label: "Telefono", value: false },
-            { label: "Carota", value: true }
-        ];
-
-        const gridButtons = document.querySelectorAll('.grid-button');
-        gridButtons.forEach(button => {
-            const index = Number(button.dataset.index);
-            button.textContent = buttons[index].label;
-        });
-
-        const timeValueEl = document.getElementById('time-value');
-        
-        let elapsedSeconds = 0;
-        let elapsedTimerInterval = null;
-
-        function startElapsedTimer() {
-            stopElapsedTimer();
-            elapsedSeconds = 0;
-            updateTimerDisplay();
-            elapsedTimerInterval = setInterval(() => {
-                elapsedSeconds++;
-                updateTimerDisplay();
-            }, 1000);
-        }
-
-        function stopElapsedTimer() {
-            if (elapsedTimerInterval) {
-                clearInterval(elapsedTimerInterval);
-                elapsedTimerInterval = null;
-            }
-        }
-
-        function updateTimerDisplay() {
-            timeValueEl.textContent = elapsedSeconds + 's';
-        }
-
-        function loadSentence() {
-            startElapsedTimer();
-        }
-
-    
-        const revealBtn = document.getElementById('reveal-btn');
-
-    revealBtn.addEventListener('pointerdown', () => {
-
-        gridButtons.forEach(button => {
-
-            const index = Number(button.dataset.index);
-            const value = buttons[index].value;
-
-            if (value === true) {
-                button.classList.add('help-correct');
-            }
-
-        });
-
-    });
-
-    revealBtn.addEventListener('pointerup', () => {
-
-        gridButtons.forEach(button => {
-            button.classList.remove('help-correct');
-        });
-
-    });
-
-    revealBtn.addEventListener('pointerleave', () => {
-
-        gridButtons.forEach(button => {
-            button.classList.remove('help-correct');
-        });
-
-    });
-
-</script>
-
-<script>
-
-    async function initGame() {
-        try {
-        } 
-        catch (err) {
-        }
-        loadSentence();
-    }
-
-</script>
-
-<!-- GAME LOGIC -->
-<script>
-  
-         initGame();
-
-</script>
-
-<script>
-
-    gridButtons.forEach(button => {
-
-        button.addEventListener('click', () => {
-
-            // Get the boolean associated with this button
-            const index = Number(button.dataset.index);
-            const value = buttons[index].value;
-
-            // Correct button
-            if (value === true) {
-
-                // Keep the button pressed
-                button.classList.add('selected');
-
-            }
-
-            // Wrong button
-            else {
-
-                // Restart the animation if clicked again
-                button.classList.remove('error');
-                void button.offsetWidth;
-
-                // Shake + red
-                button.classList.add('error');
-
-                // Return to normal after the animation
-                setTimeout(() => {
-                    button.classList.remove('error');
-                }, 450);
-            }
-
-            console.log(
-                'Button:', index + 1,
-                'Value:', value
-            );
-
-        });
-
-    });
-
-</script>
-
     <!-- PROGRESS -->
-
     <h1 id="progress-title">
         Progresso
     </h1>
 
     <div class="progress-bar-container">
-
-        <div
-            id="progress-bar-fill"
-            class="progress-bar-fill"
-            style="width: 0%;">
-        </div>
-
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"> </div>
     </div>
-  
+
+    <!--<div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>-->
+
+<script>
+/*
+    let buttons = []; 
+    let buttonFoundState=[];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let totalCorrectItems = 0;  // Contatore degli elementi corretti
+    let foundCorrectCount = 0;  // Contatore degli elementi corretti trovati
+    let isGameCompleted = false;
+    let moveCount = 0;
+    let revealCount = 0;
+          
+    // 1. Dichiariamo prima tutte le funzioni di utilità e del timer
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        const timeValueEl = document.getElementById('time-value');
+        if (timeValueEl) {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function updateGridUI(title) {
+        const istruzionBanner = document.getElementById('instruction-banner');
+        if (istruzionBanner) {
+            istruzionBanner.textContent = title;
+        }
+        const gridButtons = document.querySelectorAll('.grid-button');
+        gridButtons.forEach(button => {
+            const index = Number(button.dataset.index);
+            if (buttons[index]) {
+                button.textContent = buttons[index].label;
+                button.classList.remove('selected', 'error');
+            }
+        });
+    }
+
+    // 2. Funzione asincrona per caricare il gioco
+    async function initGame() {
+        try {
+            const response = await fetch('categories.json');
+            if (!response.ok) {
+                throw new Error(`Errore HTTP! Stato: ${response.status}`);
+            }
+
+            const data = await response.json();
+            
+            let totalCategories = data.categories.length;
+            if (totalCategories === 0) return;
+            
+            const randomIndex = Math.floor(Math.random() * totalCategories);
+            const currentCategoryData = data.categories[randomIndex];
+
+        //    console.log("Categoria scelta:", currentCategoryData.title);
+
+            buttons = [...currentCategoryData.buttons];
+
+            // Crea un array separato della stessa lunghezza, tutto a false
+            buttonFoundState = new Array(buttons.length).fill(false);
+
+            totalCorrectItems = 0;
+            for (let i = 0; i < buttons.length; i++) {
+                if (buttons[i].value === true) {
+                    totalCorrectItems++;
+                }
+            }
+
+        //    console.log("Total correct Items:",totalCorrectItems);
+
+            isGameCompleted = false;
+            moveCount = 0;
+            revealCount = 0;
+            foundCorrectCount = 0;
+
+            updateMovesDisplay();
+            updateRevealDisplay();
+            updateProgressBar(0);
+            updateGridUI(currentCategoryData.instruction);
+            startElapsedTimer();
+
+        } 
+        catch (err) {
+            console.error('Could not load categories.json:', err);
+        }
+    }
+
+    // 3. Avvio del gioco
+    initGame();
+
+    // 4. Gestione eventi (Reveal e Click sui bottoni)
+    const revealBtn = document.getElementById('reveal-btn');
+    const gridButtons = document.querySelectorAll('.grid-button');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+
+    function updateProgressBar(value) {
+        if (progressBarFill) {
+            progressBarFill.style.width = (value * 100) + '%';
+        }
+    }
+
+    function updateMovesDisplay() {
+        if (movesValueEl) {
+            movesValueEl.textContent = moveCount;
+        }
+    }
+
+     function updateRevealDisplay() {
+        if (revealsValueEl) {
+            revealsValueEl.textContent = revealCount;
+        }
+    }
+
+    if (revealBtn) {
+        revealBtn.addEventListener('pointerdown', () => {
+            if (isGameCompleted) return;
+            revealCount++;
+            updateRevealDisplay();
+            gridButtons.forEach(button => {
+                const index = Number(button.dataset.index);
+                if (buttons[index] && buttons[index].value === true) {
+                    button.classList.add('help-correct');
+                }
+            });
+        });
+
+        revealBtn.addEventListener('pointerup', () => {
+            if (isGameCompleted) return;
+            gridButtons.forEach(button => {
+                button.classList.remove('help-correct');
+            });
+        });
+
+        revealBtn.addEventListener('pointerleave', () => {
+            if (isGameCompleted) return;
+            gridButtons.forEach(button => {
+                button.classList.remove('help-correct');
+            });
+        });
+    }
+
+    function onCategoryComplete() {
+        // Se il gioco è già stato completato, blocca le chiamate successive
+        if (isGameCompleted) return;
+        isGameCompleted = true;
+
+        // Esplosione festosa dai lati dello schermo
+        Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60,  spread: 60, count: 90 });
+        Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+        Confetti.burst({ origin: { x: 0.5 , y: 0.5 }, angle: 90, spread: 60, count: 90 });
+
+        stopElapsedTimer();
+        
+    //    console.log("Livello completato con successo! 🎉");
+        // Inserisci qui il resto della tua logica (es. apertura modale, blocco dei click, ecc.)
+    }
+
+    gridButtons.forEach(button => {
+        button.addEventListener('click', async() => {
+            if (isGameCompleted) return;
+            const index = Number(button.dataset.index);
+            if (!buttons[index]) return;
+            moveCount++;
+            updateMovesDisplay();
+
+            const value = buttons[index].value;
+
+            if (value === true) {
+                // Controlla lo stato usando l'array separato
+                if (!buttonFoundState[index]) {
+                    buttonFoundState[index] = true; // Segna come trovato nell'array separato
+
+                    // Controlla se l'oggetto nel nostro array è già stato trovato
+                    button.classList.add('selected');
+                    foundCorrectCount++;
+
+                    // 2. Esegui l'animazione asincrona sul bottone cliccato
+                    await Checkmark.show({
+                        element: button, // Usiamo il bottone corrente come elemento target
+                        size: 48,
+                        rise: 70,
+                        duration: 1600
+                    });
+
+                    let ratio=foundCorrectCount / totalCorrectItems;
+//                    console.log(ratio);
+                    updateProgressBar(ratio);
+
+                    //  console.log(`Corretti trovati: ${foundCorrectCount} su ${totalCorrectItems}`);
+
+                    // --- CONTROLLO DI VITTORIA ---
+                    if (foundCorrectCount === totalCorrectItems) {
+                        // Chiama la funzione di fine livello/vittoria
+                        onCategoryComplete();
+                    }
+                }
+
+            } else {
+                button.classList.remove('error');
+                void button.offsetWidth; // Forza il reflow
+                button.classList.add('error');
+                setTimeout(() => {
+                    button.classList.remove('error');
+                }, 450);
+            }
+
+        //    console.log('Button:', index + 1, 'Value:', value);
+        });
+    });
+
+*/
+
+
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    let buttons = []; 
+    let buttonFoundState = [];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let totalCorrectItems = 0; 
+    let foundCorrectCount = 0; 
+    let isGameCompleted = false;
+    let isGameLoading = true; // Added loading guard flag
+    let moveCount = 0;
+    let revealCount = 0;
+
+    const revealBtn = document.getElementById('reveal-btn');
+    const gridButtons = document.querySelectorAll('.grid-button');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        const timeValueEl = document.getElementById('time-value');
+        if (timeValueEl) {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function updateGridUI(title) {
+        const istruzionBanner = document.getElementById('instruction-banner');
+        if (istruzionBanner) {
+            istruzionBanner.textContent = title;
+        }
+        gridButtons.forEach(button => {
+            const index = Number(button.dataset.index);
+            if (buttons[index]) {
+                button.textContent = buttons[index].label;
+                button.classList.remove('selected', 'error');
+            }
+        });
+    }
+
+    function updateProgressBar(value) {
+        if (progressBarFill) {
+            progressBarFill.style.width = (value * 100) + '%';
+        }
+    }
+
+    function updateMovesDisplay() {
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealDisplay() {
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+    }
+
+    async function initGame() {
+        try {
+            isGameLoading = true;
+            const response = await fetch('categories.json');
+            if (!response.ok) {
+                throw new Error(`HTTP Error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            let totalCategories = data.categories.length;
+            if (totalCategories === 0) return;
+            
+            const randomIndex = Math.floor(Math.random() * totalCategories);
+            const currentCategoryData = data.categories[randomIndex];
+
+            buttons = [...currentCategoryData.buttons];
+            buttonFoundState = new Array(buttons.length).fill(false);
+
+            totalCorrectItems = buttons.filter(b => b.value === true).length;
+
+            isGameCompleted = false;
+            isGameLoading = false; // Loading complete
+            moveCount = 0;
+            revealCount = 0;
+            foundCorrectCount = 0;
+
+            updateMovesDisplay();
+            updateRevealDisplay();
+            updateProgressBar(0);
+            updateGridUI(currentCategoryData.instruction);
+            startElapsedTimer();
+
+        } catch (err) {
+            isGameLoading = false;
+            console.error('Could not load categories.json:', err);
+        }
+    }
+
+    // Reveal button events
+    /*
+    if (revealBtn) {
+        revealBtn.addEventListener('pointerdown', () => {
+            if (isGameCompleted || isGameLoading) return;
+            revealCount++;
+            updateRevealDisplay();
+            gridButtons.forEach(button => {
+                const index = Number(button.dataset.index);
+                if (buttons[index] && buttons[index].value === true) {
+                    button.classList.add('help-correct');
+                }
+            });
+        });
+
+        const hideHelp = () => {
+            if (isGameCompleted || isGameLoading) return;
+            gridButtons.forEach(button => button.classList.remove('help-correct'));
+        };
+
+        revealBtn.addEventListener('pointerup', hideHelp);
+        revealBtn.addEventListener('pointerleave', hideHelp);
+    }
+    */
+
+    // Reveal button events with Pointer Capture to prevent flickering
+    if (revealBtn) {
+        revealBtn.addEventListener('pointerdown', (e) => {
+            if (isGameCompleted || isGameLoading) return;
+            
+            // Lock pointer events to this button so it won't flicker if the cursor moves slightly
+            revealBtn.setPointerCapture(e.pointerId);
+
+            revealCount++;
+            updateRevealDisplay();
+            
+            gridButtons.forEach(button => {
+                const index = Number(button.dataset.index);
+                if (buttons[index] && buttons[index].value === true) {
+                    button.classList.add('help-correct');
+                }
+            });
+        });
+
+        const hideHelp = (e) => {
+            if (isGameCompleted || isGameLoading) return;
+            
+            // Release pointer capture if it was set
+            if (revealBtn.hasPointerCapture(e.pointerId)) {
+                revealBtn.releasePointerCapture(e.pointerId);
+            }
+
+            gridButtons.forEach(button => {
+                button.classList.remove('help-correct');
+            });
+        };
+
+        revealBtn.addEventListener('pointerup', hideHelp);
+        revealBtn.addEventListener('pointercancel', hideHelp);
+        revealBtn.addEventListener('lostpointercapture', hideHelp);
+    }
+
+    function onCategoryComplete() {
+        if (isGameCompleted) return;
+        isGameCompleted = true;
+
+        if (typeof Confetti !== 'undefined') {
+            Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+            Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+            Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+        }
+
+        stopElapsedTimer();
+    }
+
+    // Grid buttons click events
+    gridButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            // Guard clauses against interaction during load, completion, or already-found states
+            if (isGameCompleted || isGameLoading) return;
+            
+            const index = Number(button.dataset.index);
+            if (!buttons[index] || buttonFoundState[index]) return; // Ignore if already found
+
+            const value = buttons[index].value;
+
+            if (value === true) {
+                // Mark as found immediately to lock out concurrent double-clicks during animation
+                buttonFoundState[index] = true; 
+                
+                // Increment move count only on valid, unclicked interactions
+                moveCount++;
+                updateMovesDisplay();
+
+                button.classList.add('selected');
+                foundCorrectCount++;
+
+                if (typeof Checkmark !== 'undefined') {
+                    await Checkmark.show({
+                        element: button,
+                        size: 48,
+                        rise: 70,
+                        duration: 1600
+                    });
+                }
+
+                let ratio = foundCorrectCount / totalCorrectItems;
+                updateProgressBar(ratio);
+
+                if (foundCorrectCount === totalCorrectItems) {
+                    onCategoryComplete();
+                }
+            } else {
+                // Incorrect item click
+                moveCount++;
+                updateMovesDisplay();
+
+                button.classList.remove('error');
+                void button.offsetWidth; // Force reflow
+                button.classList.add('error');
+                setTimeout(() => {
+                    button.classList.remove('error');
+                }, 450);
+            }
+        });
+    });
+
+    // Start the game loop
+    initGame();
+});
+
+</script>
+
+
 </body>
 </html>

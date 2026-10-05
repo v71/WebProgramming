@@ -1,0 +1,257 @@
+{
+    "title": "Filtro degli Alimenti",
+    "description": "Seleziona gli Elementi.",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "15 elementi 8 alimenti e 7 oggetti",
+        "instruction": "Segna solo le parole che appartengono alla categoria degli Alimenti.",
+
+        "buttons": [
+          { "label": "Mela", "value": true },
+          { "label": "Sedia", "value": false },
+          { "label": "Pane", "value": true },
+          { "label": "Libro", "value": false },
+          { "label": "Latte", "value": true },
+          { "label": "Scarpa", "value": false },
+          { "label": "Pizza", "value": true },
+          { "label": "Tavolo", "value": false },
+          { "label": "Banana", "value": true },
+          { "label": "Penna", "value": false },
+          { "label": "Zaino", "value": false },
+          { "label": "Formaggio", "value": true },
+          { "label": "Pasta", "value": true },
+          { "label": "Telefono", "value": false },
+          { "label": "Carota", "value": true }
+        ]
+      },
+
+      {
+        "id": 2,
+        "title": "Categoria 2",
+        "text": "15 elementi 8 sportivi e 7 oggetti",
+        "instruction": "Segna solo le parole che appartengono alla categoria Sportiva.",
+
+        "buttons": [
+          { "label": "Calcio", "value": true },
+          { "label": "Cacciavite", "value": false },
+          { "label": "Tennis", "value": true },
+          { "label": "Martello", "value": false },
+          { "label": "Basket", "value": true },
+          { "label": "Trapano", "value": false },
+          { "label": "Nuoto", "value": true },
+          { "label": "Chiave inglese", "value": false },
+          { "label": "Pallavolo", "value": true },
+          { "label": "Sega", "value": false },
+          { "label": "Pinza", "value": false },
+          { "label": "Ciclismo", "value": true },
+          { "label": "Atletica", "value": true },
+          { "label": "Livella", "value": false },
+          { "label": "Sci", "value": true }
+        ]
+      },
+
+      {
+        "id": 3,
+        "title": "Categoria 3",
+        "text": "15 elementi 8 animali e 7 oggetti",
+        "instruction": "Segna solo le parole che appartengono alla categoria degli Animali.",
+  
+        "buttons": [
+          { "label": "Leone", "value": true },
+          { "label": "Divano", "value": false },
+          { "label": "Aquila", "value": true },
+          { "label": "Armadio", "value": false },
+          { "label": "Delfino", "value": true },
+          { "label": "Comodino", "value": false },
+          { "label": "Cavallo", "value": true },
+          { "label": "Scrivania", "value": false },
+          { "label": "Elefante", "value": true },
+          { "label": "Libreria", "value": false },
+          { "label": "Poltrona", "value": false },
+          { "label": "Serpente", "value": true },
+          { "label": "Gatto", "value": true },
+          { "label": "Credenza", "value": false },
+          { "label": "Lupo", "value": true }
+        ]
+      },
+
+      {
+        "id": 4,
+        "title": "Categoria 4",
+        "text": "15 elementi 8 macchina e 7 indumenti",
+        "instruction": "Segna solo le parole che appartengono alla categoria delle Automobili.",
+
+        "buttons": [
+          { "label": "Automobile", "value": true },
+          { "label": "Giacca", "value": false },
+          { "label": "Treno", "value": true },
+          { "label": "Pantalone", "value": false },
+          { "label": "Aereo", "value": true },
+          { "label": "Cappotto", "value": false },
+          { "label": "Bicicletta", "value": true },
+          { "label": "Maglione", "value": false },
+          { "label": "Nave", "value": true },
+          { "label": "Camicia", "value": false },
+          { "label": "Vestito", "value": false },
+          { "label": "Metropolitana", "value": true },
+          { "label": "Motocicletta", "value": true },
+          { "label": "Gonna", "value": false },
+          { "label": "Elicottero", "value": true }
+        ]
+      },
+
+      {
+        "id": 5,
+        "title": "Categoria 5",
+        "text": "15 elementi 8 strumenti musicali e 7 oggetti",
+        "instruction": "Segna solo le parole che appartengono alla categoria degli Strumenti Musicali.",
+
+        "buttons": [
+          { "label": "Chitarra", "value": true },
+          { "label": "Penna biro", "value": false },
+          { "label": "Pianoforte", "value": true },
+          { "label": "Evidenziatore", "value": false },
+          { "label": "Violino", "value": true },
+          { "label": "Righello", "value": false },
+          { "label": "Flauto", "value": true },
+          { "label": "Graffetta", "value": false },
+          { "label": "Xilofono", "value": true },
+          { "label": "Correttore", "value": false },
+          { "label": "Quaderno", "value": false },
+          { "label": "Sassofono", "value": true },
+          { "label": "Tromba", "value": true },
+          { "label": "Compasso", "value": false },
+          { "label": "Arpa", "value": true }
+        ]
+    },
+
+    {
+      "id": 6,
+      "title": "Categoria 6",
+      "text": "15 elementi 8 elettrodomestici e 7 elementi naturali",
+      "instruction": "Segna solo le parole che appartengono alla categoria degli Elettrodomestici.",
+
+      "buttons": [
+        { "label": "Frigorifero", "value": true },
+        { "label": "Montagna", "value": false },
+        { "label": "Lavatrice", "value": true },
+        { "label": "Fiume", "value": false },
+        { "label": "Microonde", "value": true },
+        { "label": "Oceano", "value": false },
+        { "label": "Aspirapolvere", "value": true },
+        { "label": "Deserto", "value": false },
+        { "label": "Ferro da stiro", "value": true },
+        { "label": "Valle", "value": false },
+        { "label": "Isola", "value": false },
+        { "label": "Tostapane", "value": true },
+        { "label": "Lavastoviglie", "value": true },
+        { "label": "Vulcano", "value": false },
+        { "label": "Forno", "value": true }
+      ]
+    },
+
+    {
+      "id": 7,
+      "title": "Categoria 7",
+      "text": "15 elementi 8 professioni e 7 alimenti",
+      "instruction": "Segna solo le parole che appartengono alla categoria delle Professioni.",
+
+      "buttons": [
+        { "label": "Medico", "value": true },
+        { "label": "Zucchina", "value": false },
+        { "label": "Ingegnere", "value": true },
+        { "label": "Cavolfiore", "value": false },
+        { "label": "Falegname", "value": true },
+        { "label": "Melanzana", "value": false },
+        { "label": "Avvocato", "value": true },
+        { "label": "Broccolo", "value": false },
+        { "label": "Insegnante", "value": true },
+        { "label": "Cetriolo", "value": false },
+        { "label": "Peperone", "value": false },
+        { "label": "Elettricista", "value": true },
+        { "label": "Cuoco", "value": true },
+        { "label": "Spinacio", "value": false },
+        { "label": "Architetto", "value": true }
+      ]
+    },
+
+    {
+      "id": 8,
+      "title": "Categoria 8",
+      "text": "15 elementi 8 informatici e 7 oggetti",
+      "instruction": "Segna solo le parole che appartengono alla categoria Informatica.",
+ 
+      "buttons": [
+        { "label": "Processore", "value": true },
+        { "label": "Mestolo", "value": false },
+        { "label": "Scheda madre", "value": true },
+        { "label": "Scolapasta", "value": false },
+        { "label": "Memoria RAM", "value": true },
+        { "label": "Padella", "value": false },
+        { "label": "Scheda video", "value": true },
+        { "label": "Grattugia", "value": false },
+        { "label": "Hard disk", "value": true },
+        { "label": "Mattarello", "value": false },
+        { "label": "Pentola", "value": false },
+        { "label": "Alimentatore", "value": true },
+        { "label": "Dissipatore", "value": true },
+        { "label": "Spremiagrumi", "value": false },
+        { "label": "Case", "value": true }
+      ]
+    },
+
+    {
+      "id": 9,
+      "title": "Categoria 9",
+      "text": "15 elementi 8 fiori e 7 oggetti",
+      "instruction": "Segna solo le parole che appartengono alla categoria dei Fiori.",
+ 
+      "buttons": [
+        { "label": "Rosa", "value": true },
+        { "label": "Matita", "value": false },
+        { "label": "Tulipano", "value": true },
+        { "label": "Gomma", "value": false },
+        { "label": "Girasole", "value": true },
+        { "label": "Righello", "value": false },
+        { "label": "Orchidea", "value": true },
+        { "label": "Forbici", "value": false },
+        { "label": "Margherita", "value": true },
+        { "label": "Compasso", "value": false },
+        { "label": "Evidenziatore", "value": false },
+        { "label": "Gelsomino", "value": true },
+        { "label": "Lavanda", "value": true },
+        { "label": "Temperino", "value": false },
+        { "label": "Ortensia", "value": true }
+      ]
+    },
+
+    {
+      "id": 10,
+      "title": "Categoria 10",
+      "text": "15 elementi 8 pianeti e 7 indumenti",
+      "instruction": "Segna solo le parole che appartengono alla categoria dei Pianeti.",
+
+      "buttons": [
+        { "label": "Marte", "value": true },
+        { "label": "Giacca", "value": false },
+        { "label": "Giove", "value": true },
+        { "label": "Pantaloni", "value": false },
+        { "label": "Saturno", "value": true },
+        { "label": "Felpa", "value": false },
+        { "label": "Venere", "value": true },
+        { "label": "Calzini", "value": false },
+        { "label": "Mercurio", "value": true },
+        { "label": "Camicia", "value": false },
+        { "label": "Cappello", "value": false },
+        { "label": "Nettuno", "value": true },
+        { "label": "Urano", "value": true },
+        { "label": "Sciarpa", "value": false },
+        { "label": "Terra", "value": true }
+      ]
+    }
+        
+  ]
+}

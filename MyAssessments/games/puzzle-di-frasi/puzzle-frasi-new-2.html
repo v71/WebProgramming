@@ -937,12 +937,13 @@
                     document.getElementById('game-title').textContent = data.title;
                 }
 
+                loadSentence(currentSentenceIndex);
+
             } catch (err) {
                 console.error('Could not load sentences.json:', err);
-                PUZZLE_SENTENCES = ["QUALCOSA é ANDATO STORTO"]; // fallback so it still runs
+         //       PUZZLE_SENTENCES = ["QUALCOSA é ANDATO STORTO"]; // fallback so it still runs
             }
 
-            loadSentence(currentSentenceIndex);
         }
 
         revealBtn.addEventListener('mousedown', showReveal);
