@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>La pizza a fette</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+        :root {
+            --bg-0: #e6e6e6;
+            --bg-1: #ffffff;
+            --bg-2: #f1f5f9;
+            --accent: #6366f1;
+            --accent-2: #06b6d4;
+            --correct: #10b981;
+            --wrong: #ef4444;
+            --text: #0f172a;
+            --text-dim: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --page-space: 24px;  /* free space above the title and under the progress bar */
+            --label-gap: 8px;    /* gap between the frame and the "Progresso" label */
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scrollbar-gutter: stable; }
+
+        body {
+            font-family: 'Lexend', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: var(--page-space) 16px calc(var(--page-space) + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            justify-content: safe center;
+            height: 100vh;
+            height: 100dvh;
+            overflow-x: hidden;
+        }
+
+        h1 {
+            margin: 0 0 4px;
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        /* "Progresso" keeps the original template size */
+        .section-heading { font-size: 2.2rem; margin: 0 0 6px; flex-shrink: 0; }
+
+        #game-stats, .stats-style {
+            margin: 0 0 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 5px 16px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats { flex-wrap: wrap; }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* ---------- Info bar: one line, tightly wrapped around its content ---------- */
+        #instruction-banner {
+            padding: 3px 18px;
+            max-width: 100%;
+            font-weight: 500;
+        }
+
+        .info-main {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            white-space: nowrap;
+            min-height: 1.7em;
+        }
+
+        .info-main.ok { color: #047857; font-weight: 600; }
+        .info-main.retry { color: #92400e; font-weight: 600; }
+        .cnt { color: var(--text-dim); font-variant-numeric: tabular-nums; }
+
+        .controls {
+            margin-top: 0;
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 1050px;
+            min-height: 40px;
+            flex-wrap: wrap;
+        }
+
+        /* The stage takes all the space that is left; everything inside the frame
+           is sized from it (see fitStage / fitFonts), so the page never scrolls. */
+        #stage {
+            flex: none;
+            width: 100%;
+            max-width: 1050px;
+            height: 300px;                 /* replaced by fitStage() */
+            margin: 6px 0 var(--label-gap);
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        #game-area {
+            position: relative;
+            width: min(100%, 720px);       /* replaced by fitStage() */
+            height: 100%;                  /* replaced by fitStage() */
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-1);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1050px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            height: 8px;
+            border-radius: 99px;
+            margin-bottom: 0;
+            flex-shrink: 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button { font-family: inherit; }
+        button:hover { filter: brightness(1.05); }
+        button:disabled { cursor: not-allowed; }
+        button:focus-visible { outline: 3px solid var(--accent-2); outline-offset: 3px; }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
+
+        #reveal-btn { min-width: 170px; min-height: 40px; -webkit-user-select: none; user-select: none; touch-action: none; }
+        #reveal-btn.next-mode { background-color: var(--correct); touch-action: manipulation; }
+        #reveal-btn.next-mode:hover { background-color: #059669; }
+
+        /* ---------- Fraction Pizza ---------- */
+        /* A fraction written the way it is at school: numerator over denominator */
+        .frac {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.72em;
+            line-height: 1.05;
+            vertical-align: middle;
+        }
+        .frac .fn { padding: 0 0.22em 0.05em; border-bottom: 0.09em solid currentColor; }
+        .frac .fd { padding-top: 0.05em; }
+
+        /* The order on top */
+        #eq {
+            flex: 0 0 var(--eqh, 90px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+        #eqline {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35em;
+            font-size: var(--efs, 40px);
+            font-weight: 600;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+        #eqline .t   { font-size: 0.7em; font-weight: 500; color: var(--text-dim); }
+        #eqline .op  { color: var(--accent); }
+        #eqline .q   { color: #94a3b8; }
+        #eqline .res { color: #047857; }
+        #cap { font-size: calc(var(--efs, 40px) * 0.42); font-weight: 500; color: var(--text-dim); line-height: 1.15; text-align: center; }
+        #cap.hidden { display: none; }
+
+        /* The table */
+        #scenewrap {
+            flex: 1;
+            min-height: 0;
+            border-radius: 14px;
+            overflow: hidden;
+            background:
+                repeating-conic-gradient(#ffe4e6 0% 25%, #fff1f2 0% 50%) 50% / 28px 28px;
+        }
+        #scene { display: block; width: 100%; height: 100%; }
+
+        .base   { fill: #ffffff; stroke: #cbd5e1; stroke-width: 4; }
+        .cheese { fill: #fcd34d; stroke: #b45309; stroke-width: 2.5; stroke-linejoin: round; }
+        .crust  { fill: none; stroke: #d97706; stroke-width: 11; stroke-linecap: butt; }
+        .pepper { fill: #dc2626; stroke: #991b1b; stroke-width: 1.5; }
+        .hole   { fill: rgba(100, 116, 139, 0.10); stroke: #94a3b8; stroke-width: 2.5; stroke-dasharray: 6 6; stroke-linejoin: round; pointer-events: none; }
+        .slice  { cursor: grab; touch-action: none; }
+        .slice.dragging { opacity: 0.3; }
+        .slice-drag { pointer-events: none; filter: drop-shadow(0 8px 10px rgba(15, 23, 42, 0.35)); }
+        .slice:hover .cheese { stroke: var(--accent); stroke-width: 4; }
+
+        .label { font-family: 'Lexend', system-ui, sans-serif; font-size: 17px; font-weight: 600; fill: #475569; text-anchor: middle; }
+        .arrow { font-family: system-ui, sans-serif; font-size: 40px; fill: #94a3b8; text-anchor: middle; }
+        .qmark { font-family: 'Lexend', system-ui, sans-serif; font-size: 64px; font-weight: 700; fill: #94a3b8; text-anchor: middle; }
+
+        /* Comparison: the bars show how much of a whole each pizza is */
+        .barbg   { fill: #ffffff; stroke: #94a3b8; stroke-width: 3; }
+        .barfill { fill: #fbbf24; stroke: #b45309; stroke-width: 2; }
+        .winner  { font-size: 34px; text-anchor: middle; }
+        .hideable { transition: opacity 0.2s ease; }
+        .hideable.off { opacity: 0; pointer-events: none; }
+        #game-area.peeking .hideable.off { opacity: 1; }
+
+        /* Help (hold): the slices that belong on the plate, drawn in gold */
+        .ghost { fill: none; stroke: #f59e0b; stroke-width: 5; stroke-dasharray: 8 6; stroke-linejoin: round; opacity: 0; pointer-events: none; }
+        #game-area.peeking .ghost { opacity: 1; animation: pulse 0.9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+        .ring { fill: none; stroke: var(--accent); stroke-width: 6; opacity: 0; pointer-events: none; }
+        #game-area.peeking .ring { opacity: 1; animation: pulse 0.9s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+
+        .star-fx { pointer-events: none; animation: twinkle 1.6s ease-in-out infinite; }
+
+        /* The buttons under the table */
+        #actions {
+            flex: 0 0 var(--acth, 64px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .big {
+            height: 100%;
+            min-width: 140px;
+            padding: 0 24px;
+            font-size: calc(var(--acth, 64px) * 0.34);
+            font-weight: 600;
+            color: #ffffff;
+            background: var(--accent);
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+        }
+        .big:hover:not(:disabled) { background: #4f46e5; }
+        .big:disabled { opacity: 0.5; }
+        .big.ghostbtn { color: var(--accent); background: #ffffff; border: 3px solid var(--accent); box-shadow: var(--shadow-sm); }
+        .big.go { background: var(--correct); }
+        .big.go:hover:not(:disabled) { background: #059669; }
+
+        .opt {
+            flex: 1;
+            max-width: 190px;
+            height: 100%;
+            font-size: calc(var(--acth, 64px) * 0.5);
+            font-weight: 600;
+            color: var(--text);
+            background: #ffffff;
+            border: 3px solid #94a3b8;
+            border-radius: 18px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+        .opt.eqbtn { font-size: calc(var(--acth, 64px) * 0.3); }
+        .opt:hover:not(:disabled) { border-color: var(--accent); }
+        .opt.wrong { opacity: 0.35; }
+        .opt.good { background: #bbf7d0; border-color: #059669; opacity: 1; }
+        .opt:disabled:not(.wrong):not(.good) { opacity: 0.6; }
+        #game-area.peeking .opt.right:not(:disabled) {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 5px rgba(99, 102, 241, 0.4);
+            animation: pulse 0.9s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+        @keyframes twinkle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .star-fx, #game-area.peeking .ghost, #game-area.peeking .ring, #game-area.peeking .opt.right { animation: none; }
+            .progress-bar-fill, .cool-btn, .hideable { transition: none; }
+        }
+
+        @media (max-width: 600px) {
+            :root { --page-space: 14px; }
+            body { padding: var(--page-space) 10px calc(var(--page-space) + env(safe-area-inset-bottom, 0px)); }
+            h1 { font-size: 1.2rem; }
+            #game-stats { gap: 4px 12px; padding: 5px 14px; font-size: 0.9rem; }
+            #instruction-banner { font-size: 0.9rem; padding: 3px 12px; }
+            #game-area { padding: 8px; }
+            .big { min-width: 110px; padding: 0 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="game-title">La pizza a fette</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span id="time-wrap">Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        <div class="info-main" id="info-main"></div>
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    </div>
+
+    <div id="stage">
+        <div id="game-area">
+            <div id="eq" aria-live="polite">
+                <div id="eqline"></div>
+                <div id="cap" class="hidden"></div>
+            </div>
+
+            <div id="scenewrap">
+                <svg id="scene" viewBox="0 0 600 300" preserveAspectRatio="xMidYMid meet" role="group" aria-label="Le pizze">
+                    <defs>
+                        <path id="star" d="M0 -10 L2.35 -3.24 L9.51 -3.09 L3.8 1.24 L5.88 8.09 L0 4 L-5.88 8.09 L-3.8 1.24 L-9.51 -3.09 L-2.35 -3.24 Z"/>
+                    </defs>
+                    <g id="layer"></g>
+                    <g id="draglayer"></g>
+                    <g id="fx"></g>
+                </svg>
+            </div>
+
+            <div id="actions"></div>
+        </div>
+    </div>
+
+    <h1 class="section-heading">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <!-- ===================== DATA AND RULES (no page elements here) ===================== -->
+    <script>
+        /* =====================================================
+           ROUNDS - edit here. Ordered from easy to hard.
+           title:  the topic of the round
+           mode:   'build'    "Vorrei 3/4 di pizza": drag the slices onto the plate
+                   'compare'  two fractions: which pizza is bigger, or are they equal?
+                   'match'    the same amount with smaller slices ("1/2 = ?/4")
+           dens:   the denominators used (how many slices a whole pizza has)
+           count:  how many questions in the round
+           showFraction: (build) show "Sul piatto: 3/4" while the child builds (extra support)
+           kinds:  (compare) which pairs can come up:
+                     'sameDen' same slices, different amount   (2/4 and 3/4)
+                     'sameNum' same amount of slices, different size (1/3 and 1/4)
+                     'equal'   two ways to write the same amount (1/2 and 2/4)
+                     'mixed'   different denominators, different amounts (2/3 and 3/4)
+           visual: (compare) true = the pizzas are shown; false = only the numbers
+                   (the pizzas appear after the answer, or when Help is held)
+           ===================================================== */
+        const ROUNDS = [
+            { title: 'Metà, terzi e quarti', mode: 'build',   dens: [2, 3, 4],        count: 5, showFraction: true },
+            { title: 'Sesti e ottavi',       mode: 'build',   dens: [6, 8],           count: 5 },
+            { title: 'Chi ne ha di più?',    mode: 'compare', dens: [2, 3, 4, 6, 8],  count: 6, kinds: ['sameDen', 'sameNum', 'equal'], visual: true },
+            { title: 'Stessa quantità',      mode: 'match',   count: 5 },
+            { title: 'Chi ne ha di più? (numeri)', mode: 'compare', dens: [2, 3, 4, 6, 8], count: 6, kinds: ['sameDen', 'sameNum', 'equal', 'mixed'], visual: false },
+            { title: 'Ordini difficili',     mode: 'build',   dens: [5, 6, 8, 10],    count: 5 }
+        ];
+
+        const NUM_WORDS = ['zero', 'uno', 'due', 'tre', 'quattro', 'cinque', 'sei', 'sette', 'otto', 'nove', 'dieci'];
+        const PARTS = { 2: ['mezzo', 'mezzi'], 3: ['terzo', 'terzi'], 4: ['quarto', 'quarti'], 5: ['quinto', 'quinti'],
+                        6: ['sesto', 'sesti'], 7: ['settimo', 'settimi'], 8: ['ottavo', 'ottavi'], 9: ['nono', 'noni'], 10: ['decimo', 'decimi'] };
+
+        // Two ways of writing the same amount: used for 'equal' comparisons
+        const EQUAL_PAIRS = [[1, 2, 2, 4], [1, 2, 3, 6], [1, 2, 4, 8], [1, 3, 2, 6], [2, 4, 3, 6], [2, 3, 4, 6], [3, 4, 6, 8]];
+        // Fractions to copy in 'match', and the smaller slices that can be used
+        const MATCH_REFS = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4]];
+        const MATCH_DENS = [4, 6, 8];
+
+        function shuffled(arr, rand) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor((rand || Math.random)() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function pick(arr, rand) { return arr[Math.floor((rand || Math.random)() * arr.length)]; }
+
+        /* Which fraction is bigger: 'L', 'R', or 'E' if they are equal (cross multiplication, no decimals) */
+        function compareFractions(a, b) {
+            const l = a.n * b.d, r = b.n * a.d;
+            return l > r ? 'L' : (l < r ? 'R' : 'E');
+        }
+
+        function fractionWords(n, d) {
+            if (d === 2 && n === 1) return 'metà';
+            const p = PARTS[d] || ['parte', 'parti'];
+            return n === 1 ? 'un ' + p[0] : NUM_WORDS[n] + ' ' + p[1];
+        }
+
+        function frac(n, d) { return { n: n, d: d }; }
+        function key(f) { return f.n + '/' + f.d; }
+
+        function comparePair(kind, dens, rand) {
+            if (kind === 'sameDen') {
+                const d = pick(dens.filter(x => x >= 3), rand);
+                const ns = shuffled(Array.from({ length: d - 1 }, (_, i) => i + 1), rand);
+                return [frac(ns[0], d), frac(ns[1], d)];
+            }
+            if (kind === 'sameNum') {
+                const n = pick([1, 2, 3], rand);
+                const ds = shuffled(dens.filter(x => x > n), rand);
+                return [frac(n, ds[0]), frac(n, ds[1])];
+            }
+            if (kind === 'equal') {
+                const ok = EQUAL_PAIRS.filter(p => dens.indexOf(p[1]) !== -1 && dens.indexOf(p[3]) !== -1);
+                const p = pick(ok, rand);
+                return [frac(p[0], p[1]), frac(p[2], p[3])];
+            }
+            // mixed: different denominators, clearly different amounts
+            for (let t = 0; t < 200; t++) {
+                const d1 = pick(dens, rand), d2 = pick(dens, rand);
+                if (d1 === d2) continue;
+                const a = frac(1 + Math.floor((rand || Math.random)() * (d1 - 1)), d1);
+                const b = frac(1 + Math.floor((rand || Math.random)() * (d2 - 1)), d2);
+                if (Math.abs(a.n / a.d - b.n / b.d) >= 0.07) return [a, b];
+            }
+            return [frac(2, 3), frac(3, 4)];
+        }
+
+        /* The questions of a round: no repeats */
+        function makeProblems(round, rand) {
+            const out = [];
+            if (round.mode === 'build') {
+                const pool = [];
+                round.dens.forEach(d => { for (let n = 1; n < d; n++) pool.push({ n: n, d: d }); });
+                return shuffled(pool, rand).slice(0, round.count);
+            }
+
+            if (round.mode === 'match') {
+                const pool = [];
+                MATCH_REFS.forEach(r => MATCH_DENS.forEach(d2 => {
+                    if (d2 > r[1] && d2 % r[1] === 0) pool.push({ ref: frac(r[0], r[1]), d2: d2, n2: r[0] * d2 / r[1] });
+                }));
+                return shuffled(pool, rand).slice(0, round.count);
+            }
+
+            // compare
+            const seen = {};
+            const kinds = shuffled(round.kinds, rand);
+            let tries = 0;
+            while (out.length < round.count && tries++ < 2000) {
+                const kind = kinds[out.length % kinds.length];
+                const pair = comparePair(kind, round.dens, rand);
+                const k = pair.map(key).sort().join('|');
+                if (seen[k]) continue;
+                seen[k] = true;
+                const flip = (rand || Math.random)() < 0.5;
+                const a = flip ? pair[1] : pair[0], b = flip ? pair[0] : pair[1];
+                out.push({ a: a, b: b, kind: kind, ans: compareFractions(a, b) });
+            }
+            return out;
+        }
+
+        function sayCompare(p) {
+            const wa = fractionWords(p.a.n, p.a.d), wb = fractionWords(p.b.n, p.b.d);
+            if (p.ans === 'E') return wa + ' è uguale a ' + wb;
+            return p.ans === 'L' ? wa + ' è più grande di ' + wb : wb + ' è più grande di ' + wa;
+        }
+    </script>
+
+    <!-- ===================== THE GAME (page elements) ===================== -->
+    <script>
+        /* =====================================================
+           OPTIONS - change these values in code
+           voice:      speak the orders and the results
+           showTime:   show the timer in the stats bar
+           ===================================================== */
+        const prefs = {
+            voice: true,
+            showTime: true
+        };
+
+        /* ---------- Template elements and state ---------- */
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const roundValueEl = document.getElementById('round-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const revealBtn = document.getElementById('reveal-btn');
+
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let isPeeking = false;
+
+        /* ---------- Timer ---------- */
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        /* ---------- Stats ---------- */
+        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
+        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+        function updateRoundDisplay() { roundValueEl.textContent = (roundIdx + 1) + ' / ' + ROUNDS.length; }
+
+        function addMove() {
+            moveCount++;
+            updateMovesDisplay();
+        }
+
+        function resetStats() {
+            moveCount = 0;
+            revealCount = 0;
+            updateMovesDisplay();
+            updateRevealsDisplay();
+        }
+
+        function setProgress(percent) {
+            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+        }
+
+        /* ---------- Help button (hold to show, release to hide) ---------- */
+        function onHelpStart() { frameEl.classList.add('peeking'); }
+        function onHelpEnd() { frameEl.classList.remove('peeking'); }
+
+        function showPeek() {
+            if (nextMode) { goNext(); return; }
+            if (isPeeking || revealBtn.disabled) return;
+            isPeeking = true;
+            revealCount++;
+            updateRevealsDisplay();
+            onHelpStart();
+        }
+
+        function hidePeek() {
+            if (!isPeeking) return;
+            isPeeking = false;
+            onHelpEnd();
+        }
+
+        revealBtn.addEventListener('mousedown', showPeek);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
+        revealBtn.addEventListener('mouseup', hidePeek);
+        revealBtn.addEventListener('mouseleave', hidePeek);
+        revealBtn.addEventListener('touchend', hidePeek);
+        revealBtn.addEventListener('touchcancel', hidePeek);
+        revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); showPeek(); }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek();
+        });
+
+        /* =====================================================
+           Fraction Pizza
+           ===================================================== */
+        const NS = 'http://www.w3.org/2000/svg';
+
+        const stageEl = document.getElementById('stage');
+        const frameEl = document.getElementById('game-area');
+        const eqLineEl = document.getElementById('eqline');
+        const capEl = document.getElementById('cap');
+        const sceneEl = document.getElementById('scene');
+        const layerEl = document.getElementById('layer');
+        const dragLayerEl = document.getElementById('draglayer');
+        const fxEl = document.getElementById('fx');
+        const actionsEl = document.getElementById('actions');
+        const infoMainEl = document.getElementById('info-main');
+
+        let roundIdx = 0;
+        let problems = [];
+        let probIdx = 0;
+        let prob = null;
+        let d = 4;                 // slices in a whole pizza (build, match)
+        let need = 0;              // slices that must be on the plate
+        let boardHas = [];         // boardHas[i] = slice i is still on the board
+        let plateHas = [];         // plateHas[s] = the plate has a slice in place s
+        let wrongPicks = {};
+        let reveal = false;        // (compare) the pizzas and bars are shown
+        let done = false;
+        let problemsDone = 0;
+        let timerStarted = false;
+        let nextMode = false;
+        let statusHtml = '';
+        let statusKind = '';
+        let drag = null;
+
+        const TOTAL_PROBLEMS = ROUNDS.reduce((n, r) => n + r.count, 0);
+
+        function round() { return ROUNDS[roundIdx]; }
+        function mode() { return round().mode; }
+        function plateCount() { return plateHas.filter(Boolean).length; }
+
+        function make(tag, attrs) {
+            const el = document.createElementNS(NS, tag);
+            Object.keys(attrs || {}).forEach(k => el.setAttribute(k, attrs[k]));
+            return el;
+        }
+
+        function fracHtml(n, dd, cls) {
+            return '<span class="frac ' + (cls || '') + '"><span class="fn">' + n + '</span><span class="fd">' + dd + '</span></span>';
+        }
+
+        /* ---------- Voice ---------- */
+        function say(t) {
+            if (!prefs.voice) return;
+            try {
+                speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(t);
+                u.lang = 'it-IT';
+                u.rate = 0.85;
+                speechSynthesis.speak(u);
+            } catch (e) {}
+        }
+
+        /* ---------- Info bar ---------- */
+        function leadText() {
+            switch (mode()) {
+                case 'build':   return round().showFraction ? 'Sul piatto: ' + plateCount() + '/' + d : 'Trascina le fette sul piatto';
+                case 'match':   return 'Fai la stessa quantità';
+                default:        return 'Quale è più grande?';
+            }
+        }
+
+        function renderInfo() {
+            infoMainEl.className = 'info-main' + (statusHtml && statusKind ? ' ' + statusKind : '');
+            infoMainEl.innerHTML = statusHtml ||
+                ('<span>' + leadText() + '</span><span class="cnt">Domanda ' + (probIdx + 1) + ' / ' + problems.length + '</span>');
+        }
+
+        function setStatus(html, kind) {
+            statusHtml = html || '';
+            statusKind = kind || '';
+            renderInfo();
+        }
+
+        /* ---------- The question on top ---------- */
+        function renderQuestion(solved) {
+            const m = mode(), p = prob;
+            let html = '', cap = '';
+            if (m === 'build') {
+                html = '<span class="t">Vorrei</span>' + fracHtml(p.n, p.d);
+                cap = fractionWords(p.n, p.d) + ' di pizza';
+            } else if (m === 'match') {
+                html = fracHtml(p.ref.n, p.ref.d) + '<span class="op">=</span>' +
+                       (solved ? fracHtml(p.n2, p.d2, 'res') : fracHtml('?', p.d2, 'q'));
+                cap = solved ? '' : 'Stessa quantità, con fette più piccole';
+            } else {
+                html = fracHtml(p.a.n, p.a.d) + '<span class="op">' + (solved ? (p.ans === 'E' ? '=' : '?') : '?') + '</span>' + fracHtml(p.b.n, p.b.d);
+                cap = solved ? sayCompare(p) : '';
+            }
+            eqLineEl.innerHTML = html;
+            capEl.textContent = cap;
+            capEl.classList.toggle('hidden', !cap);
+        }
+
+        /* ---------- Layout ---------- */
+        function fitFonts() {
+            const g = getComputedStyle(frameEl);
+            const innerW = frameEl.clientWidth - parseFloat(g.paddingLeft) - parseFloat(g.paddingRight);
+            const innerH = frameEl.clientHeight - parseFloat(g.paddingTop) - parseFloat(g.paddingBottom);
+
+            const eqH = Math.max(76, Math.min(innerH * 0.27, 130));
+            const efs = Math.max(26, Math.min(eqH * 0.42, innerW / 8));
+            const actH = Math.max(46, Math.min(innerH * 0.17, 80));
+            frameEl.style.setProperty('--eqh', eqH + 'px');
+            frameEl.style.setProperty('--efs', efs.toFixed(1) + 'px');
+            frameEl.style.setProperty('--acth', actH + 'px');
+        }
+
+        function fitStage() {
+            const body = document.body;
+            const bcs = getComputedStyle(body);
+            const avail = body.clientHeight - parseFloat(bcs.paddingTop) - parseFloat(bcs.paddingBottom);
+
+            let used = 0;
+            Array.from(body.children).forEach(el => {
+                if (el === stageEl || el.tagName === 'SCRIPT') return;
+                const c = getComputedStyle(el);
+                if (c.display === 'none') return;
+                used += el.offsetHeight + parseFloat(c.marginTop) + parseFloat(c.marginBottom);
+            });
+            const scs = getComputedStyle(stageEl);
+            used += parseFloat(scs.marginTop) + parseFloat(scs.marginBottom);
+
+            const h = Math.max(340, avail - used);
+            stageEl.style.height = h + 'px';
+            frameEl.style.height = h + 'px';
+            frameEl.style.width = Math.min(stageEl.clientWidth, 720) + 'px';
+            fitFonts();
+        }
+
+        window.addEventListener('resize', fitStage);
+        window.addEventListener('orientationchange', fitStage);
+        window.addEventListener('load', fitStage);
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStage);
+
+        /* ---------- Drawing pizzas ---------- */
+        function angle(i, n) { return -Math.PI / 2 + i * 2 * Math.PI / n; }
+
+        function sectorPath(cx, cy, R, i, n) {
+            const a0 = angle(i, n), a1 = angle(i + 1, n);
+            const x0 = cx + R * Math.cos(a0), y0 = cy + R * Math.sin(a0);
+            const x1 = cx + R * Math.cos(a1), y1 = cy + R * Math.sin(a1);
+            return 'M' + cx + ' ' + cy + ' L' + x0.toFixed(1) + ' ' + y0.toFixed(1) +
+                   ' A' + R + ' ' + R + ' 0 ' + (a1 - a0 > Math.PI ? 1 : 0) + ' 1 ' + x1.toFixed(1) + ' ' + y1.toFixed(1) + ' Z';
+        }
+
+        function crustPath(cx, cy, R, i, n) {
+            const r = R - 6, a0 = angle(i, n) + 0.02, a1 = angle(i + 1, n) - 0.02;
+            return 'M' + (cx + r * Math.cos(a0)).toFixed(1) + ' ' + (cy + r * Math.sin(a0)).toFixed(1) +
+                   ' A' + r + ' ' + r + ' 0 0 1 ' + (cx + r * Math.cos(a1)).toFixed(1) + ' ' + (cy + r * Math.sin(a1)).toFixed(1);
+        }
+
+        function pizzaSlice(cx, cy, R, i, n, extra) {
+            const g = make('g', extra || {});
+            g.setAttribute('class', ((extra && extra.class) || '') + ' slice');
+            g.appendChild(make('path', { class: 'cheese', d: sectorPath(cx, cy, R, i, n) }));
+            g.appendChild(make('path', { class: 'crust', d: crustPath(cx, cy, R, i, n) }));
+            const am = (angle(i, n) + angle(i + 1, n)) / 2;
+            [0.46, 0.72].forEach(f => g.appendChild(make('circle', {
+                class: 'pepper', r: Math.max(4, R * 0.075),
+                cx: (cx + R * f * Math.cos(am)).toFixed(1), cy: (cy + R * f * Math.sin(am)).toFixed(1)
+            })));
+            return g;
+        }
+
+        function pizzaHole(cx, cy, R, i, n) {
+            return make('path', { class: 'hole', d: sectorPath(cx, cy, R, i, n) });
+        }
+
+        function pizzaBase(cx, cy, R) {
+            return make('circle', { class: 'base', cx: cx, cy: cy, r: R + 7 });
+        }
+
+        function text(x, y, str, cls) {
+            const t = make('text', { class: cls, x: x, y: y });
+            t.textContent = str;
+            return t;
+        }
+
+        /* A whole pizza of n slices with the first k filled (comparison and the copy to match) */
+        function wholePizza(parent, cx, cy, R, k, n) {
+            parent.appendChild(pizzaBase(cx, cy, R));
+            for (let i = 0; i < n; i++) {
+                parent.appendChild(i < k ? pizzaSlice(cx, cy, R, i, n) : pizzaHole(cx, cy, R, i, n));
+            }
+        }
+
+        /* ---------- The scene of each kind of question ---------- */
+        function geometry() {
+            const m = mode();
+            if (m === 'build') return { board: { x: 150, y: 128, R: 104 }, plate: { x: 450, y: 128, R: 104 } };
+            if (m === 'match') return { ref: { x: 100, y: 120, R: 80 }, board: { x: 300, y: 120, R: 80 }, plate: { x: 500, y: 120, R: 80 } };
+            return { left: { x: 150, y: 118, R: 98 }, right: { x: 450, y: 118, R: 98 } };
+        }
+
+        function drawScene() {
+            layerEl.innerHTML = '';
+            const gm = geometry(), m = mode();
+
+            if (m === 'compare') { drawCompare(gm); return; }
+
+            const b = gm.board, p = gm.plate;
+            layerEl.appendChild(pizzaBase(b.x, b.y, b.R));
+            layerEl.appendChild(pizzaBase(p.x, p.y, p.R));
+
+            for (let i = 0; i < d; i++) {
+                layerEl.appendChild(boardHas[i]
+                    ? pizzaSlice(b.x, b.y, b.R, i, d, { 'data-where': 'board', 'data-i': i })
+                    : pizzaHole(b.x, b.y, b.R, i, d));
+                layerEl.appendChild(plateHas[i]
+                    ? pizzaSlice(p.x, p.y, p.R, i, d, { 'data-where': 'plate', 'data-i': i })
+                    : pizzaHole(p.x, p.y, p.R, i, d));
+            }
+
+            // Help: where the slices go
+            for (let i = 0; i < need; i++) {
+                if (!plateHas[i]) layerEl.appendChild(make('path', { class: 'ghost', d: sectorPath(p.x, p.y, p.R, i, d) }));
+            }
+            layerEl.appendChild(make('circle', { class: 'ring', cx: p.x, cy: p.y, r: p.R + 14 }));
+
+            if (m === 'match') {
+                wholePizza(layerEl, gm.ref.x, gm.ref.y, gm.ref.R, prob.ref.n, prob.ref.d);
+                layerEl.appendChild(text(gm.ref.x, 248, 'Da copiare', 'label'));
+                layerEl.appendChild(text(gm.board.x, 248, 'Fette', 'label'));
+                layerEl.appendChild(text(gm.plate.x, 248, 'Il tuo piatto', 'label'));
+                layerEl.appendChild(text(200, 134, '➜', 'arrow'));
+                layerEl.appendChild(text(400, 134, '➜', 'arrow'));
+            } else {
+                layerEl.appendChild(text(b.x, 262, 'Tutta la pizza', 'label'));
+                layerEl.appendChild(text(p.x, 262, 'Il tuo piatto', 'label'));
+                layerEl.appendChild(text(300, 142, '➜', 'arrow'));
+            }
+        }
+
+        function drawCompare(gm) {
+            const sides = [['L', gm.left, prob.a], ['R', gm.right, prob.b]];
+            const shown = round().visual || reveal || done;
+
+            const pizzas = make('g', { class: 'hideable' + (shown ? '' : ' off') });
+            sides.forEach(s => wholePizza(pizzas, s[1].x, s[1].y, s[1].R, s[2].n, s[2].d));
+            layerEl.appendChild(pizzas);
+
+            // Bars: how much of a whole each pizza is
+            const bars = make('g', { class: 'hideable' + ((reveal || done) ? '' : ' off') });
+            sides.forEach(s => {
+                const w = 190, x0 = s[1].x - w / 2, y0 = 236;
+                bars.appendChild(make('rect', { class: 'barbg', x: x0, y: y0, width: w, height: 22, rx: 8 }));
+                bars.appendChild(make('rect', { class: 'barfill', x: x0, y: y0, width: Math.max(2, w * s[2].n / s[2].d), height: 22, rx: 8 }));
+                if (done && prob.ans === s[0]) bars.appendChild(text(s[1].x, 226, '⭐', 'winner'));
+            });
+            layerEl.appendChild(bars);
+
+            const center = text(300, 140, done && prob.ans === 'E' ? '=' : '?', 'qmark');
+            layerEl.appendChild(center);
+
+            // Help: the bigger pizza gets a ring
+            if (prob.ans !== 'E') {
+                const big = prob.ans === 'L' ? gm.left : gm.right;
+                layerEl.appendChild(make('circle', { class: 'ring', cx: big.x, cy: big.y, r: big.R + 14 }));
+            }
+        }
+
+        /* ---------- The buttons under the table ---------- */
+        function renderActions() {
+            if (mode() === 'compare') {
+                const p = prob;
+                actionsEl.innerHTML =
+                    '<button type="button" class="opt' + (p.ans === 'L' ? ' right' : '') + (wrongPicks.L ? ' wrong' : '') + '" data-pick="L"' + (wrongPicks.L ? ' disabled' : '') + '>' + fracHtml(p.a.n, p.a.d) + '</button>' +
+                    '<button type="button" class="opt eqbtn' + (p.ans === 'E' ? ' right' : '') + (wrongPicks.E ? ' wrong' : '') + '" data-pick="E"' + (wrongPicks.E ? ' disabled' : '') + '>Uguali</button>' +
+                    '<button type="button" class="opt' + (p.ans === 'R' ? ' right' : '') + (wrongPicks.R ? ' wrong' : '') + '" data-pick="R"' + (wrongPicks.R ? ' disabled' : '') + '>' + fracHtml(p.b.n, p.b.d) + '</button>';
+            } else {
+                actionsEl.innerHTML =
+                    '<button type="button" class="big ghostbtn" id="clear-btn">↺ Svuota</button>' +
+                    '<button type="button" class="big go" id="ok-btn">✔ Ecco!</button>';
+            }
+        }
+
+        function setButtons(enabled) {
+            Array.from(actionsEl.querySelectorAll('button')).forEach(b => {
+                b.disabled = !enabled || done || b.classList.contains('wrong');
+            });
+        }
+
+        function startTimerOnce() {
+            if (timerStarted) return;
+            timerStarted = true;
+            startElapsedTimer();
+        }
+
+        /* ---------- Moving slices: drag or tap ---------- */
+        function toPlate(i) {
+            const slot = plateHas.indexOf(false);
+            if (!boardHas[i] || slot === -1) return;
+            boardHas[i] = false;
+            plateHas[slot] = true;
+        }
+
+        function toBoard(s) {
+            if (!plateHas[s]) return;
+            plateHas[s] = false;
+            boardHas[boardHas.indexOf(false)] = true;
+        }
+
+        function afterMove() {
+            startTimerOnce();
+            if (statusKind === 'retry') setStatus('');
+            drawScene();
+            renderInfo();
+        }
+
+        function toSky(e) {
+            const pt = sceneEl.createSVGPoint();
+            pt.x = e.clientX;
+            pt.y = e.clientY;
+            const p = pt.matrixTransform(sceneEl.getScreenCTM().inverse());
+            return { x: p.x, y: p.y };
+        }
+
+        function insideCircle(p, c) { return Math.hypot(p.x - c.x, p.y - c.y) <= c.R + 16; }
+
+        sceneEl.addEventListener('pointerdown', (e) => {
+            if (done || (mode() !== 'build' && mode() !== 'match')) return;
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            const el = e.target.closest('.slice');
+            if (!el) return;
+            e.preventDefault();
+            drag = { el: el, where: el.dataset.where, i: parseInt(el.dataset.i, 10), sx: e.clientX, sy: e.clientY, p0: toSky(e), moved: false, ghost: null, pid: e.pointerId };
+            try { sceneEl.setPointerCapture(e.pointerId); } catch (err) {}
+        });
+
+        sceneEl.addEventListener('pointermove', (e) => {
+            if (!drag || e.pointerId !== drag.pid) return;
+            if (!drag.moved && Math.hypot(e.clientX - drag.sx, e.clientY - drag.sy) > 8) {
+                drag.moved = true;
+                drag.ghost = drag.el.cloneNode(true);
+                drag.ghost.setAttribute('class', 'slice-drag');
+                dragLayerEl.appendChild(drag.ghost);
+                drag.el.classList.add('dragging');
+            }
+            if (drag.moved) {
+                const p = toSky(e);
+                drag.ghost.setAttribute('transform', 'translate(' + (p.x - drag.p0.x).toFixed(1) + ' ' + (p.y - drag.p0.y).toFixed(1) + ')');
+            }
+        });
+
+        function endDrag(e, cancelled) {
+            if (!drag || (e && e.pointerId !== drag.pid)) return;
+            const d0 = drag;
+            drag = null;
+            dragLayerEl.innerHTML = '';
+            d0.el.classList.remove('dragging');
+            if (cancelled) return;
+
+            const gm = geometry();
+            if (d0.moved) {
+                const p = toSky(e);
+                if (d0.where === 'board' && insideCircle(p, gm.plate)) toPlate(d0.i);
+                else if (d0.where === 'plate' && insideCircle(p, gm.board)) toBoard(d0.i);
+                else { drawScene(); return; }
+            } else if (d0.where === 'board') toPlate(d0.i);
+            else toBoard(d0.i);
+            afterMove();
+        }
+
+        sceneEl.addEventListener('pointerup', (e) => endDrag(e, false));
+        sceneEl.addEventListener('pointercancel', (e) => endDrag(e, true));
+
+        /* ---------- Checking ---------- */
+        function checkPlate() {
+            if (done) return;
+            startTimerOnce();
+            addMove();
+            const c = plateCount();
+
+            if (mode() === 'build') {
+                if (c === need) { solved(); return; }
+                setStatus('Sul piatto ci sono ' + c + ' fette su ' + d, 'retry');
+                return;
+            }
+
+            // match: same amount as the pizza on the left
+            const mine = frac(c, d);
+            const cmp = compareFractions(mine, prob.ref);
+            if (cmp === 'E' && c > 0) { solved(); return; }
+            setStatus(cmp === 'L' ? 'Ce n\'è troppa: togli una fetta' : 'Ne serve di più', 'retry');
+        }
+
+        function onPick(choice) {
+            if (done || wrongPicks[choice]) return;
+            startTimerOnce();
+            addMove();
+            if (choice === prob.ans) { solved(); return; }
+
+            wrongPicks[choice] = true;
+            reveal = true;                           // the pizzas and bars are shown so the child can look
+            drawScene();
+            renderActions();
+            setButtons(true);
+            setStatus('Guarda bene le fette', 'retry');
+        }
+
+        actionsEl.addEventListener('click', (e) => {
+            if (e.target.closest('#clear-btn')) {
+                if (done) return;
+                boardHas = new Array(d).fill(true);
+                plateHas = new Array(d).fill(false);
+                setStatus('');
+                drawScene();
+                renderInfo();
+                return;
+            }
+            if (e.target.closest('#ok-btn')) { checkPlate(); return; }
+            const b = e.target.closest('[data-pick]');
+            if (b) onPick(b.dataset.pick);
+        });
+
+        /* ---------- Solved ---------- */
+        function celebrate() {
+            const colors = ['#fde047', '#ffffff', '#fdba74', '#f9a8d4', '#a7f3d0'];
+            fxEl.innerHTML = '';
+            for (let i = 0; i < 18; i++) {
+                const star = make('use', {
+                    href: '#star', class: 'star-fx',
+                    transform: 'translate(' + (30 + Math.random() * 540).toFixed(1) + ' ' + (20 + Math.random() * 250).toFixed(1) +
+                               ') rotate(' + Math.round(Math.random() * 72) + ') scale(' + (0.9 + Math.random()).toFixed(2) + ')',
+                    fill: colors[Math.floor(Math.random() * colors.length)]
+                });
+                star.style.animationDelay = (-Math.random() * 1.6).toFixed(2) + 's';
+                fxEl.appendChild(star);
+            }
+        }
+
+        function solved() {
+            done = true;
+            hidePeek();
+            drawScene();
+            renderQuestion(true);
+            Array.from(actionsEl.querySelectorAll('button')).forEach(b => {
+                b.disabled = true;
+                if (b.classList.contains('opt') && b.dataset.pick === prob.ans) b.classList.add('good');
+            });
+            celebrate();
+
+            problemsDone++;
+            setProgress((problemsDone / TOTAL_PROBLEMS) * 100);
+
+            const m = mode();
+            setTimeout(() => {
+                if (m === 'build') say(fractionWords(prob.n, prob.d) + ' di pizza');
+                else if (m === 'match') say(fractionWords(prob.ref.n, prob.ref.d) + ' è come ' + fractionWords(prob.n2, prob.d2));
+                else say(sayCompare(prob));
+            }, 300);
+
+            const lastProb = probIdx === problems.length - 1;
+            const lastRound = roundIdx === ROUNDS.length - 1;
+            if (lastProb && lastRound) {
+                stopElapsedTimer();
+                setStatus('Bravo! Hai finito tutti i round!', 'ok');
+            } else if (lastProb) {
+                setStatus('Bravo! Round completato', 'ok');
+            } else {
+                setStatus('Bravo!', 'ok');
+            }
+            setNextMode(true, lastProb && lastRound);
+        }
+
+        /* ---------- Rounds and questions ---------- */
+        function setNextMode(on, isLast) {
+            nextMode = on;
+            revealBtn.classList.toggle('next-mode', on);
+            revealBtn.querySelector('span').textContent = on ? (isLast ? '🔄 Gioca ancora' : '➡️ Avanti') : '💡 Help!';
+        }
+
+        function loadProblem() {
+            prob = problems[probIdx];
+            const m = mode();
+            if (m === 'build') { d = prob.d; need = prob.n; }
+            else if (m === 'match') { d = prob.d2; need = prob.n2; }
+            boardHas = new Array(d).fill(true);
+            plateHas = new Array(d).fill(false);
+            wrongPicks = {};
+            reveal = false;
+            done = false;
+            drag = null;
+            dragLayerEl.innerHTML = '';
+            hidePeek();
+            setNextMode(false);
+            fxEl.innerHTML = '';
+            updateRoundDisplay();
+            setStatus('');
+            renderQuestion(false);
+            fitFonts();
+            drawScene();
+            renderActions();
+            setButtons(true);
+            renderInfo();
+            if (m === 'build') setTimeout(() => say('Vorrei ' + fractionWords(prob.n, prob.d) + ' di pizza'), 300);
+        }
+
+        function goNext() {
+            if (!done) return;
+            if (probIdx < problems.length - 1) {
+                probIdx++;
+                loadProblem();
+            } else if (roundIdx < ROUNDS.length - 1) {
+                roundIdx++;
+                startRound();
+            } else {
+                roundIdx = 0;
+                initGame();
+            }
+        }
+
+        function startRound() {
+            problems = makeProblems(round());
+            probIdx = 0;
+            loadProblem();
+        }
+
+        /* ---------- Init ---------- */
+        function initGame() {
+            stopElapsedTimer();
+            timerStarted = false;
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            resetStats();
+            problemsDone = 0;
+            setProgress(0);
+            document.getElementById('time-wrap').hidden = !prefs.showTime;
+            startRound();
+            fitStage();
+        }
+
+        initGame();
+    </script>
+</body>
+</html>

@@ -183,10 +183,11 @@
             color: #fff;
         }
 
-        .dd-chip.dd-wrong {
-            border-color: #ef4444;
-            background: #40285c;
-            color: #ef4444;
+        .dd-chip.dd-wrong,
+        .dd-chip.dd-wrong:hover {
+            border-color: #ef4444 !important;
+            background: #40285c !important;
+            color: #ef4444 !important;
         }
 
         .dd-chip:focus-visible {
@@ -249,12 +250,6 @@
             border-color: #ffffff;
             background: #544b7a;
             border-radius: 6px;
-        }
-
-        .dd-blank.dd-error {
-            border-color: #ef4444;
-            background: #5c2635;
-            color: #ff6b6b;
         }
 
         .dd-text.dd-peeking .dd-blank.dd-current {
@@ -714,7 +709,7 @@
             ddPlaced = 0;
             ddMisses = 0;
             ddCurrent = null;
-        //    setProgress(0);
+            setProgress(0);
             const round = GAME_ROUNDS[ currentRoundIndex ];
             gameTitle.textContent = round.title;
             updateRoundDisplay();
@@ -803,7 +798,7 @@
                 targetBlank.classList.add('dd-filled');
                 chip.remove();
                 ddPlaced++;
-              //  setProgress(ddPlaced / ddTotal * 100);
+                //     setProgress(ddPlaced / ddTotal * 100);
 
                 // CHECKMARK ANIMATION
                 if (typeof Checkmark !== 'undefined' && typeof Checkmark.show === 'function') {
@@ -845,22 +840,24 @@
                     // There are still blanks to complete.
                     ddNextBlank();
                 }
+
                 return;
             }
             else {
-                // WRONG ANSWER
-                targetBlank.classList.remove('dd-shake', 'dd-error');
 
-                // Apply error style.
-                targetBlank.classList.add('dd-error');
+                // WRONG ANSWER
+                chip.classList.add('dd-wrong');
 
                 // Force the shake animation to restart.
-                void targetBlank.offsetWidth;
-                targetBlank.classList.add('dd-shake');
+                chip.classList.remove('dd-shake');
+                void chip.offsetWidth;
+                chip.classList.add('dd-shake');
 
                 setTimeout(() => {
-                    targetBlank.classList.remove('dd-shake', 'dd-error');
-                }, 200);
+                    chip.classList.remove('dd-shake');
+                    chip.classList.remove('dd-wrong');
+                }, 250);
+
             }
         }
 
@@ -873,13 +870,15 @@
             stopElapsedTimer();
             hidePeek();
 
+            // Progress is based on completed rounds, not completed words.
+            setProgress(((currentRoundIndex + 1) / GAME_ROUNDS.length) * 100 );
+            
              // Store result for this round.
+
             roundResults[ currentRoundIndex ] = { moves: moveCount - roundStartMoveCount };
 
-            // Progress advances only when the entire round is completed.
-            setProgress(((currentRoundIndex + 1) / GAME_ROUNDS.length) * 100);
+             // MORE ROUNDS REMAIN
 
-            // MORE ROUNDS REMAIN
             if ( currentRoundIndex < GAME_ROUNDS.length - 1 ) {
                 setInstruction('Round completato! Clicca Prossimo Paragrafo per continuare.');
                 revealBtn.disabled = false;

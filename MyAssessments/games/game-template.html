@@ -2,56 +2,72 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Game Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Titolo del gioco</title>
 
-<style>
+    <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../js/checkmark.js"></script>
+    <script src="../js/celebrazion.js"></script>
+
+
+    <style>
         :root {
-            --bg-0: #e6e6e6;
-            --bg-1: #ffffff;
-            --bg-2: #f1f5f9;
-            --accent: #6366f1;
-            --accent-2: #06b6d4;
-            --correct: #10b981;
-            --wrong: #ef4444;
-            --text: #0f172a;
-            --text-dim: #64748b;
-            --border: #e2e8f0;
+            --bg-0: #2a113d;
+            --bg-1: #4a1d6e;
+            --bg-2: #553d94;
+            --accent: #ff9800;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #000205;
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
         }
 
         * { box-sizing: border-box; }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+
             background:
-                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
-                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                radial-gradient(circle at center,rgba(99, 102, 241, 0.06),transparent 40%),
+                radial-gradient(circle at center,rgba(6, 182, 212, 0.06),transparent 40%),
                 var(--bg-0);
             color: var(--text);
             margin: 0;
-            padding: 16px 20px;
+            padding: 20px 20px 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            min-height: 100dvh;
-            overflow-x: hidden;
         }
+
+        /* =========================================
+           GAME TITLE
+        ========================================= */
 
         h1 {
             margin: 0 0 10px;
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             font-weight: 800;
             letter-spacing: -0.5px;
             color: var(--accent);
             text-align: center;
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
         }
 
-        #game-stats, .stats-style {
-            margin: 0 0 10px;
+        /* =========================================
+           COUNTERS
+        ========================================= */
+
+        #game-stats {
+            margin: 0 0 14px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -60,12 +76,13 @@
             font-weight: 500;
             color: var(--text-dim);
             background: var(--bg-1);
-            padding: 8px 20px;
+            padding: 10px 20px;
             border-radius: 99px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border);
             font-variant-numeric: tabular-nums;
             text-align: center;
+            flex-wrap: wrap;
         }
 
         #game-stats strong {
@@ -73,201 +90,173 @@
             font-weight: 700;
         }
 
-        .controls {
-            margin-top: 8px;
-            margin-bottom: 10px;
+        /* =========================================
+           INFORMATION BOX
+        ========================================= */
+
+        #instruction-banner {
+            margin: 0 0 16px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 16px;
             width: 100%;
-            max-width: 1050px;
-            height: 48px;
+            max-width: 1100px;
+            min-height: 52px;
+            padding: 10px 20px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            border-radius: 99px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
         }
 
-        /* Empty area where each game renders its own content */
+        /* =========================================
+           EMPTY GAME AREA
+        ========================================= */
+
         #game-area {
             width: 100%;
-            max-width: 1050px;
-            min-height: 400px;
-            margin-top: 10px;
-            margin-bottom: 10px;
+            max-width: 1100px;
+            min-height: 300px;
+            margin: 0 auto 24px;
+            padding: 24px;
             display: flex;
-            justify-content: center;
             align-items: center;
-            border: 2px dashed #a5b4fc;
+            justify-content: center;
             border-radius: 20px;
-            color: var(--text-dim);
+            background: var(--bg-1);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-md);
         }
+
+        /* This is intentionally empty.
+           Future game content goes here. */
+
+        /* =========================================
+           PROGRESS TITLE
+        ========================================= */
+
+        #progress-title {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* =========================================
+           PROGRESS BAR
+        ========================================= */
 
         .progress-bar-container {
             width: 100%;
-            max-width: 1050px;
+            max-width: 1100px;
+            height: 12px;
+            margin-bottom: 16px;
             background: var(--bg-1);
             border: 1px solid var(--border);
-            height: 10px;
             border-radius: 99px;
-            margin-bottom: 10px;
             overflow: hidden;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
         }
 
         .progress-bar-fill {
             height: 100%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             width: 0%;
+            background: linear-gradient( 135deg,#6366f1 0%,#a855f7 100%);
             border-radius: 99px;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        button:hover { filter: brightness(1.05); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; box-shadow: none !important; transform: none !important; }
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
 
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 10px 24px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: var(--accent);
-            border: none;
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 30px; }
+            h1, #progress-title { font-size: 1.9rem; }
+            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
+            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
+            #game-area { min-height: 260px; padding: 16px; }
         }
-
-        .cool-btn:hover { transform: translateY(-2px); background-color: #4f46e5; }
-
-        #reveal-btn { min-width: 160px; min-height: 44px; }
     </style>
 </head>
+
 <body>
 
-    <h1 id="game-title">Titolo del gioco</h1>
+    <!-- TITLE -->
+
+    <h1 id="game-title">
+        Titolo del gioco
+    </h1>
+
+    <!-- COUNTERS -->
 
     <div id="game-stats">
+        <span>Round: <strong id="progress-value">1 / 1</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
-        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Istruzioni del gioco</h3>
+    <!-- INFORMATION / INSTRUCTION BOX -->
 
-    <div class="controls" id="action-controls">
-        <button id="reveal-btn" class="cool-btn"><span>💡 Help!</span></button>
+    <div id="instruction-banner">
+        Istruzioni del gioco
     </div>
 
-    <!-- Game content goes here -->
-    <div id="game-area">Area di gioco</div>
+    <!-- EMPTY GAME AREA -->
 
-    <h1>Progresso</h1>
+    <div id="game-area">
+        
+    </div>
+
+    <!-- PROGRESS -->
+
+    <h1 id="progress-title">
+        Progresso
+    </h1>
 
     <div class="progress-bar-container">
-        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+
+        <div
+            id="progress-bar-fill"
+            class="progress-bar-fill"
+            style="width: 0%;">
+        </div>
+
     </div>
 
+    <!-- NO GAME LOGIC -->
+
     <script>
-        const timeValueEl = document.getElementById('time-value');
-        const movesValueEl = document.getElementById('moves-value');
-        const revealsValueEl = document.getElementById('reveals-value');
-        const progressBarFill = document.getElementById('progress-bar-fill');
-        const revealBtn = document.getElementById('reveal-btn');
-
-        let elapsedSeconds = 0;
-        let elapsedTimerInterval = null;
-        let moveCount = 0;
-        let revealCount = 0;
-        let isPeeking = false;
-
-        /* ---------- Timer ---------- */
-        function startElapsedTimer() {
-            stopElapsedTimer();
-            elapsedSeconds = 0;
-            updateTimerDisplay();
-            elapsedTimerInterval = setInterval(() => {
-                elapsedSeconds++;
-                updateTimerDisplay();
-            }, 1000);
-        }
-
-        function stopElapsedTimer() {
-            if (elapsedTimerInterval) {
-                clearInterval(elapsedTimerInterval);
-                elapsedTimerInterval = null;
-            }
-        }
-
-        /* ---------- Stats ---------- */
-        function updateTimerDisplay() { timeValueEl.textContent = elapsedSeconds + 's'; }
-        function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
-        function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
-
-        function addMove() {
-            moveCount++;
-            updateMovesDisplay();
-        }
-
-        function resetStats() {
-            moveCount = 0;
-            revealCount = 0;
-            updateMovesDisplay();
-            updateRevealsDisplay();
-        }
-
-        /* ---------- Info bar ---------- */
-        function setInstruction(text) {
-            document.getElementById('instruction-banner').textContent = text;
-        }
-
-        /* ---------- Progress bar (0 to 100) ---------- */
-        function setProgress(percent) {
-            progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
-        }
-
-        /* ---------- Help button (hold to show, release to hide) ---------- */
-        function onHelpStart() {
-            // TODO: game logic, e.g. highlight the correct answer
-        }
-
-        function onHelpEnd() {
-            // TODO: game logic, e.g. remove the highlight
-        }
-
-        function showPeek() {
-            if (isPeeking || revealBtn.disabled) return;
-            isPeeking = true;
-            revealCount++;
-            updateRevealsDisplay();
-            onHelpStart();
-        }
-
-        function hidePeek() {
-            if (!isPeeking) return;
-            isPeeking = false;
-            onHelpEnd();
-        }
-
-        revealBtn.addEventListener('mousedown', showPeek);
-        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showPeek(); }, { passive: false });
-        revealBtn.addEventListener('mouseup', hidePeek);
-        revealBtn.addEventListener('mouseleave', hidePeek);
-        revealBtn.addEventListener('touchend', hidePeek);
-        revealBtn.addEventListener('touchcancel', hidePeek);
-
-        /* ---------- Init ---------- */
-        function initGame() {
-            resetStats();
-            setProgress(0);
-            startElapsedTimer();
-            // TODO: game logic
-        }
-
-        initGame();
+        /*
+         * TEMPLATE
+         *
+         * Nessuna logica di gioco presente.
+         *
+         * Il prossimo gioco potrà utilizzare:
+         *
+         * #game-area
+         * #progress-value
+         * #time-value
+         * #moves-value
+         * #reveals-value
+         * #progress-bar-fill
+         *
+         * come elementi di base.
+         */
     </script>
+
 </body>
 </html>
