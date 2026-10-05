@@ -750,6 +750,9 @@
 
                         const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
 
+                        // Controllo finale della frase (senza richiamare registerMove duplicato)
+                        checkSentenceAutomatic();
+
                         if (isWordCorrect) {
                             await Checkmark.show({
                                 element: emptySlotMeta.element,
@@ -758,9 +761,6 @@
                                 duration: 1600
                             });
                         }
-
-                        // Controllo finale della frase (senza richiamare registerMove duplicato)
-                        checkSentenceAutomatic();
                     }
                 } else if (card.parentNode.classList.contains('slot')) {
                     const slot = card.parentNode;

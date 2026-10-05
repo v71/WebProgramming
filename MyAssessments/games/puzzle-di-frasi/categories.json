@@ -44,7 +44,7 @@
           { "label": "Nuoto", "value": true },
           { "label": "Chiave inglese", "value": false },
           { "label": "Pallavolo", "value": true },
-          { "label": "Sega", "value": false },
+          { "label": "Bullone", "value": false },
           { "label": "Pinza", "value": false },
           { "label": "Ciclismo", "value": true },
           { "label": "Atletica", "value": true },
@@ -82,7 +82,7 @@
         "id": 4,
         "title": "Categoria 4",
         "text": "15 elementi 8 macchina e 7 indumenti",
-        "instruction": "Segna solo le parole che appartengono alla categoria delle Automobili.",
+        "instruction": "Segna solo le parole che appartengono alla categoria dei Mezzi di Trasporto.",
 
         "buttons": [
           { "label": "Automobile", "value": true },

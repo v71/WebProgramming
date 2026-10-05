@@ -23,37 +23,30 @@
             --text: #ffffff;
             --text-dim: #a0a0a0;
             --border: #000205;
-            --shadow-sm:
-                0 4px 6px -1px rgba(0, 0, 0, 0.05),
-                0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-md:
-                0 10px 25px -3px rgba(0, 0, 0, 0.08),
-                0 4px 6px -4px rgba(0, 0, 0, 0.08);
-            --shadow-lg:
-                0 20px 35px -5px rgba(99, 102, 241, 0.15);
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
         }
 
         * { box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-
-            background:
-                radial-gradient( circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40% ),
-                radial-gradient( circle at 90% 90%, rgba(6, 182, 212, 0.06),  transparent 40% ),
-                var(--bg-0);
-
-            color: var(--text);
-            margin: 0;
-            padding: 20px 20px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            height: 100dvh;
-            min-height: 100vh;
-            overflow: hidden;
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+                background:
+                    radial-gradient( circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40% ),
+                    radial-gradient( circle at 90% 90%, rgba(6, 182, 212, 0.06),  transparent 40% ),
+                    var(--bg-0);
+                color: var(--text);
+                margin: 0;
+                padding: 20px 20px 40px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                height: 100dvh;
+                min-height: 100vh;
+                overflow: hidden;
         }
 
         h1 {
@@ -183,11 +176,10 @@
             color: #fff;
         }
 
-        .dd-chip.dd-wrong,
-        .dd-chip.dd-wrong:hover {
-            border-color: #ef4444 !important;
-            background: #40285c !important;
-            color: #ef4444 !important;
+        .dd-chip.dd-wrong {
+            border-color: #ef4444;
+            background: #40285c;
+            color: #ef4444;
         }
 
         .dd-chip:focus-visible {
@@ -252,6 +244,12 @@
             border-radius: 6px;
         }
 
+        .dd-blank.dd-error {
+            border-color: #ef4444;
+            background: #5c2635;
+            color: #ff6b6b;
+        }
+
         .dd-text.dd-peeking .dd-blank.dd-current {
             border-color: #ffffff !important;
             background: #10b981 !important;
@@ -294,6 +292,13 @@
 
         .dd-shake {
             animation: dd-shake 0.12s;
+        }
+
+        .dd.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            cursor: default;
+            filter: grayscale(100%);
         }
 
         @keyframes dd-shake {
@@ -488,6 +493,7 @@
         </div>
     </div>
 
+
     <script>
 
         /* =========================================================
@@ -568,7 +574,6 @@
 
         ];
 
-
         /* =========================================================
            TIMER
            ========================================================= */
@@ -591,8 +596,7 @@
         }
 
         function updateTimerDisplay() {
-            timeValueEl.textContent =
-                elapsedSeconds + 's';
+            timeValueEl.textContent = elapsedSeconds + 's';
         }
 
         /* =========================================================
@@ -600,20 +604,15 @@
            ========================================================= */
 
         function updateMovesDisplay() {
-            movesValueEl.textContent =
-                moveCount;
+            movesValueEl.textContent = moveCount;
         }
 
         function updateRevealsDisplay() {
-            revealsValueEl.textContent =
-                revealCount;
+            revealsValueEl.textContent = revealCount;
         }
 
         function updateRoundDisplay() {
-            roundValueEl.textContent =
-                (currentRoundIndex + 1) +
-                '/' +
-                GAME_ROUNDS.length;
+            roundValueEl.textContent = (currentRoundIndex + 1) + '/' + GAME_ROUNDS.length;
         }
 
         function addMove() {
@@ -663,12 +662,10 @@
             onHelpStart();
         }
 
-
         function hidePeek() {
             if (!isPeeking) {
                 return;
             }
-
             isPeeking = false;
             onHelpEnd();
         }
@@ -709,13 +706,11 @@
             ddPlaced = 0;
             ddMisses = 0;
             ddCurrent = null;
-            setProgress(0);
+
             const round = GAME_ROUNDS[ currentRoundIndex ];
             gameTitle.textContent = round.title;
             updateRoundDisplay();
             const answers = [];
-
-            // Correct placeholder parsing.
 
             round.text
                 .split(/(\{[^}]+\})/)
@@ -736,7 +731,6 @@
                     sizer.textContent = answer;
                     blank.appendChild( sizer );
                     ddText.appendChild( blank );
-
                 });
 
             ddTotal = answers.length;
@@ -759,18 +753,16 @@
             roundStartMoveCount = moveCount;
         }
 
-
         /* =========================================================
            FIND NEXT EMPTY PLACEHOLDER
            ========================================================= */
 
         function ddNextBlank() {
-
             if (ddCurrent) {
                 ddCurrent.classList.remove( 'dd-current' ); 
             }
 
-            ddCurrent =ddText.querySelector('.dd-blank:not(.dd-filled)' );
+            ddCurrent = ddText.querySelector('.dd-blank:not(.dd-filled)' );
 
             if (ddCurrent) {
                 ddCurrent.classList.add( 'dd-current' );
@@ -783,7 +775,7 @@
            ========================================================= */
 
         async function ddChoose(chip) {
-            if (!ddCurrent || isPeeking) {
+            if (!ddCurrent || isPeeking || chip.disabled) {
                 return;
             }
 
@@ -794,25 +786,25 @@
 
             // CORRECT ANSWER
             if (isCorrect) {
-
                 targetBlank.classList.add('dd-filled');
-                chip.remove();
+                
+                // Keep the chip in place and disable it instead of removing
+                chip.classList.add('dd-disabled');
+                chip.disabled = true;
+
                 ddPlaced++;
-                //     setProgress(ddPlaced / ddTotal * 100);
 
                 // CHECKMARK ANIMATION
                 if (typeof Checkmark !== 'undefined' && typeof Checkmark.show === 'function') {
                     try {
-
                         await Checkmark.show({
                             element: targetBlank,
                             size: 48,
                             rise: 70,
                             duration: 1600
                         });
-
                     } catch (error) {
-                        console.warn('Checkmark animation failed:',error);
+                        console.warn('Checkmark animation failed:', error);
                     }
                 }
 
@@ -822,42 +814,35 @@
 
                 // AFTER CHECKMARK FINISHES
                 if (completed) {
-
                     ddCurrent = null;
-                    // All correct answers have been inserted.
                     ddFinish();
 
-                     try {
-                        // Esplosione festosa dai lati dello schermo
-                        Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60,  spread: 60, count: 90 });
-                        Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
-                        Confetti.burst({ origin: { x: 0.5 , y: 0.5 }, angle: 90, spread: 60, count: 90 });
-                    } catch (error) {
-                        console.warn('Confetti animation failed:',error);
+                    if (typeof Confetti !== 'undefined') {
+                        try {
+                            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                        } catch (err) {
+                            console.warn('Confetti animation failed:', err);
+                        }
                     }
 
                 } else {
-                    // There are still blanks to complete.
                     ddNextBlank();
                 }
-
                 return;
             }
             else {
-
                 // WRONG ANSWER
-                chip.classList.add('dd-wrong');
+                targetBlank.classList.remove('dd-shake', 'dd-error');
 
-                // Force the shake animation to restart.
-                chip.classList.remove('dd-shake');
-                void chip.offsetWidth;
-                chip.classList.add('dd-shake');
+                targetBlank.classList.add('dd-error');
+                void targetBlank.offsetWidth;
+                targetBlank.classList.add('dd-shake');
 
                 setTimeout(() => {
-                    chip.classList.remove('dd-shake');
-                    chip.classList.remove('dd-wrong');
-                }, 250);
-
+                    targetBlank.classList.remove('dd-shake', 'dd-error');
+                }, 200);
             }
         }
 
@@ -866,18 +851,12 @@
            ========================================================= */
 
         function ddFinish() {
-
             stopElapsedTimer();
             hidePeek();
 
-            // Progress is based on completed rounds, not completed words.
-            setProgress(((currentRoundIndex + 1) / GAME_ROUNDS.length) * 100 );
-            
-             // Store result for this round.
-
             roundResults[ currentRoundIndex ] = { moves: moveCount - roundStartMoveCount };
 
-             // MORE ROUNDS REMAIN
+            setProgress(((currentRoundIndex + 1) / GAME_ROUNDS.length) * 100);
 
             if ( currentRoundIndex < GAME_ROUNDS.length - 1 ) {
                 setInstruction('Round completato! Clicca Prossimo Paragrafo per continuare.');
@@ -885,8 +864,6 @@
                 revealBtn.querySelector('span').textContent ='▶ Prossimo Paragrafo';
                 return;
             }
-
-             // ALL ROUNDS COMPLETED
 
             setInstruction('Hai completato tutti i paragrafi!');
             revealBtn.disabled = false;
@@ -898,12 +875,7 @@
            ========================================================= */
 
         function handleActionButton() {
-            const buttonText =
-                revealBtn.querySelector(
-                    'span'
-                ).textContent;
-
-             // NEXT ROUND
+            const buttonText = revealBtn.querySelector('span').textContent;
 
             if ( buttonText.includes('Prossimo Paragrafo')) {
                 currentRoundIndex++;
@@ -915,14 +887,10 @@
                 return;
             }
 
-             // FINAL "FATTO"
-
             if ( buttonText.includes('Fatto')) {
                 showSummaryScreen();
                 return;
             }
-
-            // NORMAL HELP
 
             if ( isPeeking || revealBtn.disabled ) {
                 return;
@@ -930,7 +898,6 @@
 
             showPeek();
         }
-
 
         /* =========================================================
            BUTTON EVENTS
@@ -956,27 +923,19 @@
            ========================================================= */
 
         function showSummaryScreen() {
-
             stopElapsedTimer();
             hidePeek();
-
-            // Build report rows.
 
             summaryTbody.innerHTML = '';
 
             GAME_ROUNDS.forEach( (round, index) => {
-                    const result = roundResults[index] || { moves: 0 };
-                    const row =document.createElement('tr' );
-                    row.innerHTML = `<td>${index + 1}. ${round.title}</td> <td>${result.moves}</td>`;
-                    summaryTbody.appendChild(row);
-                }
-            );
+                const result = roundResults[index] || { moves: 0 };
+                const row = document.createElement('tr' );
+                row.innerHTML = `<td>${index + 1}. ${round.title}</td> <td>${result.moves}</td>`;
+                summaryTbody.appendChild(row);
+            });
 
-            // Totals.
-
-            summaryTotals.innerHTML =  `Tentativi totali: <strong>${moveCount}</strong><br>` + `Aiuti utilizzati: <strong>${revealCount}</strong>`;
-
-            // Hide game interface.
+            summaryTotals.innerHTML = `Tentativi totali: <strong>${moveCount}</strong><br>` + `Aiuti utilizzati: <strong>${revealCount}</strong>`;
 
             gameTitle.style.display = 'none';
             gameStats.style.display = 'none';
@@ -985,8 +944,6 @@
             gameArea.style.display = 'none';
             progressTitle.style.display = 'none';
             progressContainer.style.display = 'none';
-
-             // Show final report.
 
             summaryScreen.style.display = 'block';
         }
@@ -997,23 +954,21 @@
 
         const DD_FONT_SCALE = 0.85;
 
-
         function ddFitText() {
-
             let lo = 12;
             let hi = 44;
 
             while ( hi - lo > 0.5 ) {
                 const mid = (lo + hi) / 2;
                 ddText.style.fontSize = mid + 'px';
-                if (ddText.scrollHeight <=ddText.clientHeight + 1) {
+                if (ddText.scrollHeight <= ddText.clientHeight + 1) {
                     lo = mid;
                 } else {
                     hi = mid;
                 }
             }
 
-            ddText.style.fontSize = Math.max(12,lo * DD_FONT_SCALE ) + 'px';
+            ddText.style.fontSize = Math.max(12, lo * DD_FONT_SCALE ) + 'px';
         }
 
         /* =========================================================
@@ -1022,7 +977,7 @@
 
         let ddResizeTimer = null;
 
-        window.addEventListener( 'resize',() => {
+        window.addEventListener( 'resize', () => {
                 clearTimeout(ddResizeTimer);
                 ddResizeTimer = setTimeout(ddFitText, 100 );
             }
@@ -1033,7 +988,6 @@
            ========================================================= */
 
         function initGame() {
-
             currentRoundIndex = 0;
             roundResults.length = 0;
             resetStats();
@@ -1054,11 +1008,8 @@
 
             ddBuild();
 
-            /* Keep the tray height stable. */
-
             ddTray.style.minHeight = '';
-            ddTray.style.minHeight =
-            ddTray.offsetHeight + 'px';
+            ddTray.style.minHeight = ddTray.offsetHeight + 'px';
 
             ddFitText();
             startElapsedTimer();
@@ -1067,6 +1018,6 @@
         initGame();
 
     </script>
-
+    
 </body>
 </html>
