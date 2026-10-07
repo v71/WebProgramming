@@ -1,0 +1,33 @@
+{
+    "title": "Due Regole Simultanee",
+    "description": "Seleziona gli Elementi.",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "15 elementi 8 alimenti e 7 oggetti",
+        "instruction": "Sottolinea le voci della categoria «Oggetti» che iniziano con una vocale.",
+
+        "buttons": [
+          { "label": "Anatra", "value": false },
+          { "label": "Riso", "value": false },
+          { "label": "Zucchina", "value": false },
+          { "label": "Matita", "value": false },
+          { "label": "Mucca", "value": false },
+          { "label": "Specchio", "value": false },
+          { "label": "Marmotta", "value": false },
+          { "label": "Uva", "value": true },
+          { "label": "Piatto", "value": false },
+          { "label": "Tigre", "value": false },
+          { "label": "Cipolla", "value": false },
+          { "label": "Delfino", "value": false },
+          { "label": "Cartina", "value": false },
+          { "label": "Cavallo", "value": false },
+          { "label": "Termometro", "value": false },
+          { "label": "Armardio", "value": true }
+        ]
+      }
+        
+  ]
+}

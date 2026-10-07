@@ -1,0 +1,36 @@
+{
+    "title": "Applica la regola",
+    "description": "Seleziona gli Elementi.",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "4 elementi in 4 righe",
+        "instruction": "Scorri la sequenza da sinistra a destra e segna solo la parola «porta». Non tornare indietro a correggere prima di arrivare in fondo.",
+
+        "buttons": [
+          { "label": "Fotografia", "value": false },
+          { "label": "Tavolo", "value": false },
+          { "label": "Porta", "value": true },
+          { "label": "Porta", "value": true },
+
+          { "label": "Uccello", "value": false },
+          { "label": "Giardino", "value": false },
+          { "label": "Città", "value": false },
+          { "label": "Memoria", "value": false },
+
+          { "label": "Porta", "value": true },
+          { "label": "Quadro", "value": false },
+          { "label": "Libro", "value": false },
+          { "label": "Porta", "value": true },
+          
+          { "label": "Ritratto", "value": true },
+          { "label": "Torta", "value": false },
+          { "label": "Spiaggia", "value": false },
+          { "label": "Porta", "value": true }
+        ]
+      }
+        
+  ]
+}

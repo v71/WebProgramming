@@ -46,7 +46,7 @@
         }
 
         /* =========================================
-           GAME TITLE
+            GAME TITLE
         ========================================= */
 
         h1 {
@@ -65,7 +65,7 @@
         }
 
         /* =========================================
-           COUNTERS
+            COUNTERS
         ========================================= */
 
         #game-stats {
@@ -93,7 +93,7 @@
         }
 
         /* =========================================
-           INFORMATION BOX
+            INFORMATION BOX
         ========================================= */
         
         #instruction-banner {
@@ -115,7 +115,7 @@
         }
 
         /* =========================================
-           EMPTY GAME AREA
+            EMPTY GAME AREA
         ========================================= */
 
         #game-area {
@@ -133,11 +133,8 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* This is intentionally empty.
-           Future game content goes here. */
-
         /* =========================================
-           PROGRESS TITLE
+            PROGRESS TITLE
         ========================================= */
 
         #progress-title {
@@ -156,7 +153,7 @@
         }
 
         /* =========================================
-           PROGRESS BAR
+            PROGRESS BAR
         ========================================= */
 
         .progress-bar-container {
@@ -180,7 +177,7 @@
         }
 
         /* =========================================
-           RESPONSIVE
+            RESPONSIVE
         ========================================= */
 
         @media (max-width: 700px) {
@@ -201,18 +198,18 @@
         .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            gap: 14px;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(3, 1fr);
+            gap: 12px;
         }
 
         .grid-button {
-            min-height: 70px;
+            min-height: 42px; /* Reduced from 70px */
             border: 2px solid #000205;
-            border-radius: 14px;
+            border-radius: 12px;
             background: #7931b4;
             color: #ffffff;
-            font-size: 1.15rem;
+            font-size: 0.9rem; /* Reduced from 1.15rem */
             font-weight: 700;
             cursor: pointer;
             transition:
@@ -223,7 +220,7 @@
 
         .grid-button:hover {
             border-color: var(--accent);
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             box-shadow: var(--shadow-md);
             background: #ffffff;
             color: var(--accent);
@@ -236,11 +233,12 @@
             color: #ffffff;
         }
 
-        @media (max-width: 700px) { .button-grid { gap: 10px; }
-        .grid-button {
-            min-height: 60px;
-            font-size: 1rem;
-        }
+        @media (max-width: 700px) { 
+            .button-grid { gap: 8px; }
+            .grid-button {
+                min-height: 46px;
+                font-size: 0.85rem;
+            }
         }
 
     </style>
@@ -265,7 +263,7 @@
 
     </style>
 
-<style>
+    <style>
 
         .controls {
             margin-bottom: 16px;
@@ -280,7 +278,7 @@
             min-height: 52px;
         }
         
-            .cool-btn {
+        .cool-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -341,7 +339,7 @@
             cursor: default;
             pointer-events: none;
             box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
-            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
+            opacity: 1 !important;
         }
 
         .grid-button.help-correct {
@@ -413,6 +411,43 @@
     
 </style>
 
+<style>
+
+    #game-area {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    #debug-container {
+        width: 100%;
+    }
+
+    #debug-container label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    #debug-text-area {
+        width: 100%;
+        background:var(--bg-2);
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        font-family: 'Segoe UI';
+        font-size: 1.25rem; /* Increased from 0.9rem */
+        resize: none; /* Enabled vertical resizing */
+        min-height: 120px; /* Enlarged initial height (approx 5 rows) */
+        outline: none;
+    }
+
+</style>
+
 </head>
 
 <body>
@@ -420,7 +455,7 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        Filtra gli Elementi
+        Il dettaglio da non perdere
     </h1>
 
     <!-- COUNTERS -->
@@ -433,7 +468,7 @@
     <!-- INFORMATION / INSTRUCTION BOX -->
 
     <div id="instruction-banner">
-       Instruzion banner.
+        Instruzion banner.
     </div>
 
     <div class="controls" id="action-controls">
@@ -448,6 +483,11 @@
 
     <!-- EMPTY GAME AREA -->
     <div id="game-area">
+        <!-- Read-only debug text area placed above the buttons -->
+        <div id="debug-container">
+            <textarea id="debug-text-area" readonly rows="5"></textarea>
+        </div>
+
         <div class="button-grid">
             <button class="grid-button" data-index="0"></button>
             <button class="grid-button" data-index="1"></button>
@@ -455,15 +495,6 @@
             <button class="grid-button" data-index="3"></button>
             <button class="grid-button" data-index="4"></button>
             <button class="grid-button" data-index="5"></button>
-            <button class="grid-button" data-index="6"></button>
-            <button class="grid-button" data-index="7"></button>
-            <button class="grid-button" data-index="8"></button>
-            <button class="grid-button" data-index="9"></button>
-            <button class="grid-button" data-index="10"></button>
-            <button class="grid-button" data-index="11"></button>
-            <button class="grid-button" data-index="12"></button>
-            <button class="grid-button" data-index="13"></button>
-            <button class="grid-button" data-index="14"></button>
         </div>
     </div>
 
@@ -509,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameLoading = true;
     let moveCount = 0;
     let revealCount = 0;
-    let currentCategoryTitle = ''; // Stores the current instruction/phrase
+    let currentCategoryTitle = '';
 
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
@@ -523,7 +554,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryScreen = document.getElementById('summary-screen');
     const summaryTbody = document.getElementById('summary-tbody');
     const summaryTotals = document.getElementById('summary-totals');
-
+    
+    const debugTextArea = document.getElementById('debug-text-area');
+    
+    function logDebug(message) {
+        if (debugTextArea) {
+            debugTextArea.value = message;
+        }
+    }
+    
     function showSummaryScreen() {
         gameArea.style.display = 'none';
         instructionBanner.style.display = 'none';
@@ -535,7 +574,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         summaryTbody.innerHTML = '';
         
-        // Calculate a simple metric (e.g., efficiency based on moves and time)
         const metricValue = Math.max(0, 100 - (moveCount * 2) - elapsedSeconds);
 
         const row = document.createElement('tr');
@@ -610,7 +648,12 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initGame() {
         try {
             isGameLoading = true;
-            const response = await fetch('categories.json');
+            
+            if (revealBtn) {
+                revealBtn.innerHTML = "<span>💡 Help</span>";
+            }
+
+            const response = await fetch('categorie-il-dettaglio-da-non-perdere.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -622,7 +665,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentCategoryData = data.categories[randomIndex];
 
             buttons = [...currentCategoryData.buttons];
-            currentCategoryTitle = currentCategoryData.instruction; // Save phrase
+            currentCategoryTitle = currentCategoryData.instruction;
             buttonFoundState = new Array(buttons.length).fill(false);
             totalCorrectItems = buttons.filter(b => b.value === true).length;
 
@@ -632,6 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
             revealCount = 0;
             foundCorrectCount = 0;
 
+            logDebug(currentCategoryData.text);
             updateMovesDisplay();
             updateRevealDisplay();
             updateProgressBar(0);
@@ -640,11 +684,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             isGameLoading = false;
-            console.error('Could not load categories.json:', err);
+            console.error('Could not load categorie-il-dettaglio-da-non-perdere.json:', err);
         }
     }
 
-    // Standard Reveal / Help button events
     if (revealBtn) {
         const showHelp = () => {
             if (isGameCompleted || isGameLoading) return;
@@ -672,9 +715,14 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showHelp(); }, { passive: false });
         revealBtn.addEventListener('touchend', hideHelp);
         revealBtn.addEventListener('touchcancel', hideHelp);
+
+        revealBtn.addEventListener('click', () => {
+            if (isGameCompleted) {
+                showSummaryScreen();
+            }
+        });
     }
 
-    // Grid buttons click events
     gridButtons.forEach(button => {
         button.addEventListener('click', async () => {
             if (isGameCompleted || isGameLoading) return;
@@ -721,15 +769,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
-                    // Trigger the summary screen after celebration
-                    setTimeout(() => {
-                        showSummaryScreen();
-                    }, 800);
+                    if (revealBtn) {
+                        revealBtn.innerHTML = "<span>✓ Fatto</span>";
+                    }
                 }
 
             } else {
                 button.classList.remove('error');
-                void button.offsetWidth; // Force reflow for shake animation
+                void button.offsetWidth;
                 button.classList.add('error');
                 setTimeout(() => {
                     button.classList.remove('error');

@@ -1,0 +1,23 @@
+{
+    "title": "Il dettaglio da non perdere",
+    "description": "Leggi con attenzione il breve testo e rispondi solo a questa domanda: «Per quanto tempo Elena ha aspettato Vincenzo?»",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "Vincenzo si è dato appuntamento con Elena in palestra, alle sette di sera. Prima di uscire ha preparato l'agenda e la spazzola. Lungo la strada si è accorto di aver dimenticato la cartina ed è tornato a casa a prenderla. Quando è arrivato, Elena lo aspettava già da dieci minuti.",
+        "instruction": "Leggi con attenzione il breve testo e rispondi solo a questa domanda: «Per quanto tempo Elena ha aspettato Vincenzo?»",
+
+        "buttons": [
+          { "label": "10 Minuti", "value": true },
+          { "label": "20 Minuti", "value": false },
+          { "label": "30 Minuti", "value": false },
+          { "label": "40 Minuti", "value": false },
+          { "label": "60 Minuti", "value": false },
+          { "label": "Vincenzo non si è mai presentato.", "value": false }
+        ]
+      }
+        
+  ]
+}

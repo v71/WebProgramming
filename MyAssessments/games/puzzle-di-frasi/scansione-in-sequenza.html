@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Applica la regola</title>
+
+    <!-- External Shared Libraries -->
+    <script src="../js/checkmark.js"></script>
+    <script src="../js/celebrazion.js"></script>
+
+    <style>
+        :root {
+            --bg-0: #2a113d;
+            --bg-1: #4a1d6e;
+            --bg-2: #553d94;
+            --accent: #ff9800;
+            --accent-2: #06b6d4;
+            --correct: #ffffff;
+            --wrong: #ef4444;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #000205;
+            
+            /* Card Specific Theme */
+            --row-label-color: #8b5cf6;
+            --word-color: #ffffff;
+            --word-selected: #059669;
+            --word-error: #ef4444;
+
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: 20px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* TITLE */
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-align: center;
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* COUNTERS */
+        #game-stats {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* INSTRUCTION BANNER */
+       #instruction-banner {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        /* GAME AREA & ROW CONTAINERS */
+        #game-area {
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Row Card Container - Hover transform removed */
+        .row-card {
+            background: var(--bg-1);
+            border: 2px solid var(--border);
+            border-radius: 18px;
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .row-label {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--row-label-color);
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+            user-select: none;
+            transform: translateY(-3px);
+        }
+
+        .row-words-container {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--word-color);
+        }
+
+        .word-bullet {
+            color: var(--word-color);
+            font-size: 1rem;
+            opacity: 0.6;
+            user-select: none;
+        }
+
+        .word-btn {
+            background: #7931b4;
+            /* Fixed 2px border using transparent in base state to reserve layout space */
+            border: 2px solid var(--border); 
+            color: var(--word-color);
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 4px 10px;
+            border-radius: 8px;
+            /* Animate transform and box-shadow without triggering layout reflows */
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            outline: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .word-btn:hover {
+            /* Keep font-size and font-weight identical to base state */
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            background: #ffffff;
+            color: var(--accent);
+            z-index: 5;
+        }
+
+        .word-btn.selected {
+            background: var(--word-selected);
+            color: #ffffff;
+            cursor: default;
+        }
+
+        .word-btn.help-correct {
+            background: #22c55e;
+            color: #ffffff;
+        }
+
+        .word-btn.error { 
+            animation: buttonErrorShake 0.45s ease; 
+            background-color: rgba(239, 68, 68, 0.05);
+            color: var(--word-error);
+            border: 2px solid var(--word-error);
+        } 
+        
+        @keyframes buttonErrorShake { 
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-8px); } 
+            40% { transform: translateX(8px); } 
+            60% { transform: translateX(-6px); } 
+            80% { transform: translateX(6px); } 
+            100% { transform: translateX(0); } 
+        }
+
+        /* PROGRESS & CONTROLS */
+        #progress-title {
+            margin: 0 0 10px;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+            text-align: center;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 900px;
+            height: 12px;
+            margin-bottom: 16px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border-radius: 99px;
+            transition: width 0.5s ease;
+        }
+
+        .controls {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 900px;
+        }
+        
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #4f46e5;
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #10b981;
+        }
+
+        /* SUMMARY SCREEN */
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--correct);
+            font-size: 2rem;
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 24px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .summary-totals {
+            margin-top: 20px;
+            padding: 18px;
+            background: var(--bg-2);
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 30px; }
+            .row-card { padding: 14px 16px; gap: 12px; flex-direction: column; align-items: flex-start; }
+            .row-words-container { font-size: 1.05rem; }
+            .word-btn { font-size: 1.05rem; padding: 2px 6px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="game-title">Applica la regola</h1>
+
+    <div id="game-stats">
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <div id="instruction-banner">Caricamento istruzioni...</div>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Help!</span>
+        </button>
+    </div>
+
+    <!-- DYNAMIC GAME AREA -->
+    <div id="game-area"></div>
+
+    <h1 id="progress-title">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Punteggio</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    let rowsData = [];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let totalCorrectItems = 0; 
+    let foundCorrectCount = 0; 
+    let isGameCompleted = false;
+    let isGameLoading = true;
+    let moveCount = 0;
+    let revealCount = 0;
+    let currentCategoryTitle = '';
+
+    const gameArea = document.getElementById('game-area');
+    const revealBtn = document.getElementById('reveal-btn');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const timeValueEl = document.getElementById('time-value');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+
+    function showSummaryScreen() {
+        gameArea.style.display = 'none';
+        instructionBanner.style.display = 'none';
+        document.getElementById('game-stats').style.display = 'none';
+        document.querySelector('.progress-bar-container').style.display = 'none';
+        document.getElementById('progress-title').style.display = 'none';
+        document.getElementById('game-title').style.display = 'none';
+        document.getElementById('action-controls').style.display = 'none';
+        
+        summaryTbody.innerHTML = '';
+        const metricValue = Math.max(0, 100 - (moveCount * 2) - elapsedSeconds);
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><strong>${currentCategoryTitle}</strong></td>
+            <td>${elapsedSeconds}s</td>
+            <td>${moveCount}</td>
+            <td>${revealCount}</td>
+            <td><strong>${metricValue.toFixed(2)}</strong></td>
+        `;
+        summaryTbody.appendChild(row);
+        
+        summaryTotals.innerHTML = `
+            <div>Tempo Totale: <strong>${elapsedSeconds}s</strong></div>
+            <div>Mosse Totali: <strong>${moveCount}</strong></div>
+            <div>Aiuti Totali: <strong>${revealCount}</strong></div>
+        `;
+        summaryScreen.style.display = 'block';
+    }
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        timeValueEl.textContent = '0s';
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }, 1000);
+    }
+
+    function renderRowsUI() {
+        if (instructionBanner) instructionBanner.textContent = currentCategoryTitle;
+        gameArea.innerHTML = '';
+
+        rowsData.forEach((rowWords, rowIndex) => {
+            const card = document.createElement('div');
+            card.className = 'row-card';
+
+            const label = document.createElement('div');
+            label.className = 'row-label';
+            label.textContent = `Riga ${rowIndex + 1}`;
+            card.appendChild(label);
+
+            const wordsContainer = document.createElement('div');
+            wordsContainer.className = 'row-words-container';
+
+            rowWords.forEach((wordObj, wordIndex) => {
+                if (wordIndex > 0) {
+                    const bullet = document.createElement('span');
+                    bullet.className = 'word-bullet';
+                    bullet.innerHTML = '•';
+                    wordsContainer.appendChild(bullet);
+                }
+
+                const btn = document.createElement('button');
+                btn.className = 'word-btn';
+                btn.textContent = wordObj.label;
+                btn.dataset.rowIndex = rowIndex;
+                btn.dataset.wordIndex = wordIndex;
+
+                if (wordObj.found) {
+                    btn.classList.add('selected');
+                    btn.disabled = true;
+                }
+
+                btn.addEventListener('click', () => handleWordClick(btn, wordObj));
+                wordsContainer.appendChild(btn);
+            });
+
+            card.appendChild(wordsContainer);
+            gameArea.appendChild(card);
+        });
+    }
+
+    async function handleWordClick(button, wordObj) {
+        if (isGameCompleted || isGameLoading || wordObj.found) return;
+
+        moveCount++;
+        movesValueEl.textContent = moveCount;
+
+        if (wordObj.value === true) {
+            wordObj.found = true;
+            button.classList.add('selected');
+            button.disabled = true;
+            foundCorrectCount++;
+
+            if (typeof Checkmark !== 'undefined') {
+                try {
+                    await Checkmark.show({
+                        element: button,
+                        size: 36,
+                        rise: 50,
+                        duration: 1400
+                    });
+                } catch (e) {}
+            }
+
+            progressBarFill.style.width = (Math.min(foundCorrectCount / totalCorrectItems, 1) * 100) + '%';
+
+            if (foundCorrectCount === totalCorrectItems && !isGameCompleted) {
+                isGameCompleted = true;
+                stopElapsedTimer();
+
+                if (typeof Confetti !== 'undefined') {
+                    try {
+                          await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                        await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                        await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                    } catch (e) {}
+                }
+
+                if (revealBtn) revealBtn.innerHTML = "<span>✓ Fatto</span>";
+            }
+        } else {
+            button.classList.remove('error');
+            void button.offsetWidth;
+            button.classList.add('error');
+            setTimeout(() => button.classList.remove('error'), 450);
+        }
+    }
+
+    async function initGame() {
+        try {
+            isGameLoading = true;
+            if (revealBtn) revealBtn.innerHTML = "<span>💡 Help</span>";
+
+            const response = await fetch('categorie-scansione-in-sequenza.json');
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const data = await response.json();
+            if (!data.categories || data.categories.length === 0) return;
+
+            const currentCategoryData = data.categories[Math.floor(Math.random() * data.categories.length)];
+            currentCategoryTitle = currentCategoryData.instruction;
+
+            const allButtons = currentCategoryData.buttons.map(b => ({ ...b, found: false }));
+            rowsData = [];
+            
+            if (currentCategoryData.rows) {
+                rowsData = currentCategoryData.rows.map(row => row.map(b => ({ ...b, found: false })));
+            } else {
+                const rowSize = Math.ceil(allButtons.length / 4);
+                for (let i = 0; i < 4; i++) {
+                    const slice = allButtons.slice(i * rowSize, (i + 1) * rowSize);
+                    if (slice.length > 0) rowsData.push(slice);
+                }
+            }
+
+            totalCorrectItems = rowsData.flat().filter(b => b.value === true).length;
+            isGameCompleted = false;
+            isGameLoading = false;
+            moveCount = 0;
+            revealCount = 0;
+            foundCorrectCount = 0;
+
+            movesValueEl.textContent = '0';
+            revealsValueEl.textContent = '0';
+            progressBarFill.style.width = '0%';
+
+            renderRowsUI();
+            startElapsedTimer();
+
+        } catch (err) {
+            isGameLoading = false;
+            console.error('Error loading JSON data:', err);
+        }
+    }
+
+    if (revealBtn) {
+        const showHelp = () => {
+            if (isGameCompleted || isGameLoading) return;
+            revealCount++;
+            revealsValueEl.textContent = revealCount;
+
+            const allWordBtns = gameArea.querySelectorAll('.word-btn');
+            allWordBtns.forEach(btn => {
+                const r = btn.dataset.rowIndex;
+                const w = btn.dataset.wordIndex;
+                if (rowsData[r] && rowsData[r][w] && rowsData[r][w].value === true) {
+                    btn.classList.add('help-correct');
+                }
+            });
+        };
+
+        const hideHelp = () => {
+            if (isGameCompleted || isGameLoading) return;
+            const allWordBtns = gameArea.querySelectorAll('.word-btn');
+            allWordBtns.forEach(btn => btn.classList.remove('help-correct'));
+        };
+
+        revealBtn.addEventListener('mousedown', showHelp);
+        revealBtn.addEventListener('mouseup', hideHelp);
+        revealBtn.addEventListener('mouseleave', hideHelp);
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showHelp(); }, { passive: false });
+        revealBtn.addEventListener('touchend', hideHelp);
+        revealBtn.addEventListener('touchcancel', hideHelp);
+
+        revealBtn.addEventListener('click', () => {
+            if (isGameCompleted) showSummaryScreen();
+        });
+    }
+
+    initGame();
+});
+</script>
+
+</body>
+</html>

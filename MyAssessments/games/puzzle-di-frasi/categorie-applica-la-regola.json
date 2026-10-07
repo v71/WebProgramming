@@ -1,0 +1,27 @@
+{
+    "title": "Applica la regola",
+    "description": "Seleziona gli Elementi.",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "15 elementi 8 alimenti e 7 oggetti",
+        "instruction": "Segna solo le parole che rispettano la regola: «ha otto lettere o più». Leggi ogni parola fino in fondo prima di segnare.",
+
+        "buttons": [
+          { "label": "Pasta", "value": false },
+          { "label": "Gallina", "value": false },
+          { "label": "Ombrello", "value": true },
+          { "label": "Marmotta", "value": true },
+          { "label": "Cappello", "value": false },
+          { "label": "Gatto", "value": false },
+          { "label": "Coniglio", "value": true },
+          { "label": "Olive", "value": false },
+          { "label": "Formica", "value": false },
+          { "label": "Torcia", "value": false }
+        ]
+      }
+        
+  ]
+}
