@@ -1,0 +1,24 @@
+{
+    "title": "Segui il percorso",
+    "description": "Leggi il testo e scrivi, nell'ordine, i quattro luoghi in cui è stata davvero Carolina. Ignora oggetti e luoghi non visitati.",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "Carolina è uscita dal parco e ha camminato fino alla fermata dell'autobus per lasciare un messaggio a un'amica. Non è salita sull'autobus: ha proseguito a piedi fino alla panetteria, con l'ombrello sotto il braccio, e da lì è passata in farmacia, senza fermarsi in banca.",
+        "instruction":"Leggi il testo e scrivi, nell'ordine, i quattro luoghi in cui è stata davvero Carolina. Ignora oggetti e luoghi non visitati.",
+        "solutions":["Parco","Fermata autobus","Panetteria","Farmacia"],
+        "buttons": [
+          { "label": "Parco", "value": 1 },
+          { "label": "Panetteria", "value": 3 },
+          { "label": "Farmacia", "value": 4 },
+          { "label": "Fermata autobus", "value": 2 },
+          { "label": "Pizzeria", "value": 0 },
+          { "label": "Casa di Valentina", "value": 0 },
+          { "label": "Caserma della polizia", "value": 0 }
+        ]
+      }
+        
+  ]
+}
