@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Titolo del gioco</title>
 
-    <!-- 1. Includi qui il file esterno condiviso -->
-    <script src="../js/checkmark.js"></script>
-    <script src="../js/celebrazion.js"></script>
+     <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../../js/checkmark.js"></script>
+    <script src="../../../js/celebrazion.js"></script>
 
     <style>
 
@@ -611,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-applica-la-regola.json');
+            const response = await fetch('categorie-solo-se-la-regola-lo-permette.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }

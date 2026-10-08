@@ -6,8 +6,8 @@
     <title>Titolo del gioco</title>
 
     <!-- 1. Includi qui il file esterno condiviso -->
-    <script src="../js/checkmark.js"></script>
-    <script src="../js/celebrazion.js"></script>
+    <script src="../../../js/checkmark.js"></script>
+    <script src="../../../js/celebrazion.js"></script>
 
     <style>
 
@@ -195,24 +195,41 @@
     <style>
 
         #game-area {
-            padding: 24px;
+            padding: 14px; /* Reduced padding inside game area */
         }
 
         .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            gap: 14px;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(9, 1fr);
+            row-gap: 10px;       /* Keeps vertical spacing between rows */
+            column-gap: 44px;    /* Increases horizontal spacing from the center line */
+            position: relative;  /* Required for the divider line */
+            
+        }
+
+        /* Vertical divider line between the two columns */
+        .button-grid::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: var(--border); /* Change this color to whatever you prefer (e.g., #ff9800, #ffffff, rgba(...)) */
+            transform: translateX(-50%);
+            pointer-events: none;
         }
 
         .grid-button {
-            min-height: 70px;
+            min-height: 34px; /* Reduced height to prevent scrolling */
+            padding: 6px 12px;
             border: 2px solid #000205;
-            border-radius: 14px;
+            border-radius: 12px;
             background: #7931b4;
             color: #ffffff;
-            font-size: 1.15rem;
+            font-size: 1.2rem; /* Slightly smaller text */
             font-weight: 700;
             cursor: pointer;
             transition:
@@ -223,7 +240,7 @@
 
         .grid-button:hover {
             border-color: var(--accent);
-            transform: translateY(-4px);
+            transform: translateY(-2px);
             box-shadow: var(--shadow-md);
             background: #ffffff;
             color: var(--accent);
@@ -236,13 +253,15 @@
             color: #ffffff;
         }
 
-        @media (max-width: 700px) { .button-grid { gap: 10px; }
-        .grid-button {
-            min-height: 60px;
-            font-size: 1rem;
+        @media (max-width: 700px) { 
+            .button-grid { gap: 8px; }
+            .grid-button {
+                min-height: 38px;
+                font-size: 0.85rem;
+                padding: 4px 8px;
+            }
         }
-        }
-
+    
     </style>
 
     <style>
@@ -280,7 +299,7 @@
             min-height: 52px;
         }
         
-            .cool-btn {
+        .cool-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -420,7 +439,7 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        Filtro degli elementi
+        Chi entra e chi resta fuori
     </h1>
 
     <!-- COUNTERS -->
@@ -464,6 +483,10 @@
             <button class="grid-button" data-index="12"></button>
             <button class="grid-button" data-index="13"></button>
             <button class="grid-button" data-index="14"></button>
+            <button class="grid-button" data-index="15"></button>
+            <button class="grid-button" data-index="16"></button>
+            <button class="grid-button" data-index="17"></button>
+
         </div>
     </div>
 
@@ -535,7 +558,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         summaryTbody.innerHTML = '';
         
-        // Calculate a simple metric (e.g., efficiency based on moves and time)
         const metricValue = Math.max(0, 100 - (moveCount * 2) - elapsedSeconds);
 
         const row = document.createElement('tr');
@@ -611,12 +633,11 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             isGameLoading = true;
             
-            // Reset Reveal Button back to original state for a new game
             if (revealBtn) {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-filtro-elementi.json');
+            const response = await fetch('categorie-cambio-di-regola-a-metà.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -628,9 +649,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentCategoryData = data.categories[randomIndex];
 
             buttons = [...currentCategoryData.buttons];
-            currentCategoryTitle = currentCategoryData.instruction; // Save phrase
+            currentCategoryTitle = currentCategoryData.instruction; 
             buttonFoundState = new Array(buttons.length).fill(false);
-            totalCorrectItems = buttons.filter(b => b.value === true).length;
+            
+            // Total correct items are those with value 1 or 2
+            totalCorrectItems = buttons.filter(b => b.value === 1 || b.value === 2).length;
 
             isGameCompleted = false;
             isGameLoading = false;
@@ -646,11 +669,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             isGameLoading = false;
-            console.error('Could not load categories.json:', err);
+            console.error('Could not load json:', err);
         }
     }
 
-    // Standard Reveal / Help button events
     if (revealBtn) {
         const showHelp = () => {
             if (isGameCompleted || isGameLoading) return;
@@ -659,7 +681,8 @@ document.addEventListener('DOMContentLoaded', () => {
             
             gridButtons.forEach(button => {
                 const index = Number(button.dataset.index);
-                if (buttons[index] && buttons[index].value === true) {
+                // Highlight items where value is 1 or 2
+                if (buttons[index] && (buttons[index].value === 1 || buttons[index].value === 2)) {
                     button.classList.add('help-correct');
                 }
             });
@@ -679,7 +702,6 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.addEventListener('touchend', hideHelp);
         revealBtn.addEventListener('touchcancel', hideHelp);
 
-        // Click handler to trigger summary screen when game is completed
         revealBtn.addEventListener('click', () => {
             if (isGameCompleted) {
                 showSummaryScreen();
@@ -687,7 +709,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Grid buttons click events
     gridButtons.forEach(button => {
         button.addEventListener('click', async () => {
             if (isGameCompleted || isGameLoading) return;
@@ -695,7 +716,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const index = Number(button.dataset.index);
             if (!buttons[index] || buttonFoundState[index]) return;
 
-            const isCorrect = buttons[index].value === true;
+            // Determine column based on grid layout: 
+            // Since there are 2 columns, items with index % 2 === 0 are in Column 1, 
+            // and items with index % 2 === 1 are in Column 2.
+            const columnNumber = (index % 2) + 1; // 1 for first column, 2 for second column
+            const itemTargetValue = buttons[index].value;
+
+            // Check if clicked in the correct column corresponding to the JSON value (1 or 2)
+            const isCorrect = (itemTargetValue === columnNumber);
+
             moveCount++;
             updateMovesDisplay();
 
@@ -734,7 +763,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
-                    // Turn the Help button into "Fatto"
                     if (revealBtn) {
                         revealBtn.innerHTML = "<span>✓ Fatto</span>";
                     }
@@ -742,7 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } else {
                 button.classList.remove('error');
-                void button.offsetWidth; // Force reflow for shake animation
+                void button.offsetWidth; 
                 button.classList.add('error');
                 setTimeout(() => {
                     button.classList.remove('error');

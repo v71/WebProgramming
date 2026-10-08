@@ -1,0 +1,36 @@
+{
+    "title": "Chi entra e chi resta fuori",
+    "description": "Seleziona gli Elementi.",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "15 elementi 8 alimenti e 7 oggetti",
+        "instruction": "Prima colonna: clicca solo su «alimenti». Dopo la linea divisoria la regola cambia: seconda colonna, clicca solo su «animali».",
+
+        "buttons": [
+          { "label": "Cartina" , "value": 0 },
+          { "label": "Zaino"   , "value": 0 },
+          { "label": "Patata"  , "value": 1 },
+          { "label": "Cane"    , "value": 2 },
+          { "label": "Olive"   , "value": 1 },
+          { "label": "Mais"    , "value": 0 },
+          { "label": "Cigno"   , "value": 0 },
+          { "label": "Marmotta", "value": 2 },
+          { "label": "Candela" , "value": 0 },
+          { "label": "Pecora"  , "value": 2 },
+          { "label": "Teatro"  , "value": 0 },
+          { "label": "Piazza"  , "value": 0 },
+          { "label": "Giraffa" , "value": 0 },
+          { "label": "Cervo"   , "value": 2 },
+          { "label": "Pomodoro", "value": 1 },
+          { "label": "Parco"   , "value": 0 },
+          { "label": "Arancia" , "value": 1 },
+          { "label": "Uva"     , "value": 0 }
+        
+        ]
+      }
+
+  ]
+}

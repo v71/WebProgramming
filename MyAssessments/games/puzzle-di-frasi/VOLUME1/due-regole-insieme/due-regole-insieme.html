@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Titolo del gioco</title>
 
-    <!-- 1. Includi qui il file esterno condiviso -->
-    <script src="../js/checkmark.js"></script>
-    <script src="../js/celebrazion.js"></script>
+     <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../../js/checkmark.js"></script>
+    <script src="../../../js/celebrazion.js"></script>
 
     <style>
 
@@ -201,8 +201,8 @@
         .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Changed from 3 to 2 */
-            grid-template-rows: repeat(3, 1fr);    /* Changed from 5 to 3 */
+            grid-template-columns: repeat(4, 1fr); /* Changed from 3 to 2 */
+            grid-template-rows: repeat(4, 1fr);    /* Changed from 5 to 3 */
             gap: 14px;
         }
 
@@ -280,7 +280,7 @@
             min-height: 52px;
         }
         
-            .cool-btn {
+        .cool-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -420,7 +420,7 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        La riga fuoriposto
+       Due regole simultanee
     </h1>
 
     <!-- COUNTERS -->
@@ -455,6 +455,17 @@
             <button class="grid-button" data-index="3"></button>
             <button class="grid-button" data-index="4"></button>
             <button class="grid-button" data-index="5"></button>
+            <button class="grid-button" data-index="6"></button>
+            <button class="grid-button" data-index="7"></button>
+            <button class="grid-button" data-index="8"></button>
+            <button class="grid-button" data-index="9"></button>
+            <button class="grid-button" data-index="10"></button>
+            <button class="grid-button" data-index="11"></button>
+            <button class="grid-button" data-index="12"></button>
+            <button class="grid-button" data-index="13"></button>
+            <button class="grid-button" data-index="14"></button>
+            <button class="grid-button" data-index="15"></button>
+            
         </div>
     </div>
 
@@ -607,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-la-riga-fuoriposto.json');
+            const response = await fetch('categorie-due-regole-insieme.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }

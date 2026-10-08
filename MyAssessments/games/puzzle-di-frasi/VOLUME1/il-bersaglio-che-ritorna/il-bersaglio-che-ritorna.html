@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Applica la regola</title>
 
-    <!-- External Shared Libraries -->
-    <script src="../js/checkmark.js"></script>
-    <script src="../js/celebrazion.js"></script>
+ <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../../js/checkmark.js"></script>
+    <script src="../../../js/celebrazion.js"></script>
 
     <style>
         :root {
@@ -533,7 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameLoading = true;
             if (revealBtn) revealBtn.innerHTML = "<span>💡 Help</span>";
 
-            const response = await fetch('categorie-scansione-in-sequenza.json');
+            const response = await fetch('categorie-il-bersaglio-che-ritorna.json');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const data = await response.json();
