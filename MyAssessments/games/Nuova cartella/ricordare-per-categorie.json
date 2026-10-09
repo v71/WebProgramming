@@ -1,0 +1,272 @@
+[
+  {
+    "id": "001",
+    "label": "Adolescente / Adulto · Base",
+    "words": [
+      "uva",
+      "cavallo",
+      "mucca",
+      "mela",
+      "banana",
+      "gatto",
+      "pecora",
+      "pera"
+    ],
+    "groups": {
+      "Animali": [
+        "cavallo",
+        "gatto",
+        "mucca",
+        "pecora"
+      ],
+      "Frutta": [
+        "mela",
+        "pera",
+        "uva",
+        "banana"
+      ]
+    }
+  },
+  {
+    "id": "017",
+    "label": "Adulto · Intermedio",
+    "words": [
+      "calcio",
+      "giallo",
+      "margherita",
+      "nuoto",
+      "verde",
+      "garofano",
+      "tulipano",
+      "tennis"
+    ],
+    "groups": {
+      "Fiori": [
+        "tulipano",
+        "margherita",
+        "garofano"
+      ],
+      "Sport": [
+        "calcio",
+        "nuoto",
+        "tennis"
+      ],
+      "Colori": [
+        "giallo",
+        "verde"
+      ]
+    }
+  },
+  {
+    "id": "033",
+    "label": "Anziano · Avanzato",
+    "words": [
+      "formica",
+      "aquila",
+      "serpente",
+      "tonno",
+      "passero",
+      "lucertola",
+      "zanzara",
+      "trota"
+    ],
+    "groups": {
+      "Uccelli": [
+        "aquila",
+        "passero"
+      ],
+      "Pesci": [
+        "tonno",
+        "trota"
+      ],
+      "Insetti": [
+        "formica",
+        "zanzara"
+      ],
+      "Rettili": [
+        "serpente",
+        "lucertola"
+      ]
+    }
+  },
+  {
+    "id": "049",
+    "label": "Adolescente · Base",
+    "words": [
+      "treno",
+      "infermiere",
+      "idraulico",
+      "nave",
+      "tram",
+      "maestra",
+      "cuoca",
+      "bicicletta"
+    ],
+    "groups": {
+      "Mestieri": [
+        "infermiere",
+        "cuoca",
+        "idraulico",
+        "maestra"
+      ],
+      "Mezzi di trasporto": [
+        "treno",
+        "tram",
+        "bicicletta",
+        "nave"
+      ]
+    }
+  },
+  {
+    "id": "065",
+    "label": "Adulto / Anziano · Intermedio",
+    "words": [
+      "annaffiatoio",
+      "pentola",
+      "padella",
+      "matita",
+      "righello",
+      "mestolo",
+      "rastrello",
+      "quaderno"
+    ],
+    "groups": {
+      "Utensili da cucina": [
+        "pentola",
+        "padella",
+        "mestolo"
+      ],
+      "Cancelleria": [
+        "quaderno",
+        "matita",
+        "righello"
+      ],
+      "Attrezzi da giardino": [
+        "rastrello",
+        "annaffiatoio"
+      ]
+    }
+  },
+  {
+    "id": "081",
+    "label": "Adolescente / Adulto · Avanzato",
+    "words": [
+      "Cervino",
+      "Como",
+      "Arno",
+      "Sicilia",
+      "Sardegna",
+      "Po",
+      "Garda",
+      "Monviso"
+    ],
+    "groups": {
+      "Fiumi": [
+        "Po",
+        "Arno"
+      ],
+      "Laghi": [
+        "Garda",
+        "Como"
+      ],
+      "Montagne": [
+        "Cervino",
+        "Monviso"
+      ],
+      "Isole": [
+        "Sicilia",
+        "Sardegna"
+      ]
+    }
+  },
+  {
+    "id": "097",
+    "label": "Adulto · Base",
+    "words": [
+      "giacca",
+      "sedia",
+      "tavolo",
+      "gonna",
+      "calze",
+      "armadio",
+      "divano",
+      "sciarpa"
+    ],
+    "groups": {
+      "Capi di abbigliamento": [
+        "sciarpa",
+        "giacca",
+        "gonna",
+        "calze"
+      ],
+      "Mobili": [
+        "tavolo",
+        "sedia",
+        "armadio",
+        "divano"
+      ]
+    }
+  },
+  {
+    "id": "113",
+    "label": "Anziano · Intermedio",
+    "words": [
+      "penne",
+      "tiramisù",
+      "cannolo",
+      "parmigiano",
+      "mozzarella",
+      "spaghetti",
+      "fusilli",
+      "pecorino"
+    ],
+    "groups": {
+      "Formaggi": [
+        "mozzarella",
+        "parmigiano",
+        "pecorino"
+      ],
+      "Formati di pasta": [
+        "penne",
+        "spaghetti",
+        "fusilli"
+      ],
+      "Dolci": [
+        "tiramisù",
+        "cannolo"
+      ]
+    }
+  },
+  {
+    "id": "129",
+    "label": "Adolescente · Avanzato",
+    "words": [
+      "gioia",
+      "medico",
+      "zio",
+      "nebbia",
+      "infermiera",
+      "paura",
+      "cugino",
+      "grandine"
+    ],
+    "groups": {
+      "Parenti": [
+        "zio",
+        "cugino"
+      ],
+      "Professioni sanitarie": [
+        "medico",
+        "infermiera"
+      ],
+      "Emozioni": [
+        "gioia",
+        "paura"
+      ],
+      "Fenomeni del tempo": [
+        "nebbia",
+        "grandine"
+      ]
+    }
+  }
+]

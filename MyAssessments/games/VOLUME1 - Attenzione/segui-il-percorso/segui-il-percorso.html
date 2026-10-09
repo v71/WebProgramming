@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titolo del gioco</title>
+    <title>Segui il percorso</title>
 
-     <!-- 1. Includi qui il file esterno condiviso -->
-    <script src="../../../js/checkmark.js"></script>
-    <script src="../../../js/celebrazion.js"></script>
+     <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
     
     <style>
 
@@ -125,8 +125,9 @@
             margin: 0 auto 24px;
             padding: 24px;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
             border-radius: 20px;
             background: var(--bg-1);
             border: 2px solid var(--border);
@@ -171,99 +172,98 @@
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient( 135deg,#6366f1 0%,#a855f7 100%);
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             border-radius: 99px;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* =========================================
-            RESPONSIVE
+            COMBO BOXES CONTAINER & 2X2 GRID
         ========================================= */
 
-        @media (max-width: 700px) {
-            body { padding: 16px 12px 30px; }
-            h1, #progress-title { font-size: 1.9rem; }
-            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
-            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
-            #game-area { min-height: 260px; padding: 16px; }
-        }
-    </style>
-
-    <style>
-
-        #game-area {
-            padding: 24px;
-        }
-
-        .button-grid {
+        .combo-container {
             width: 100%;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 12px;
+            gap: 16px;
         }
 
-        .grid-button {
-            min-height: 42px; /* Reduced from 70px */
-            border: 2px solid #000205;
-            border-radius: 12px;
-            background: #7931b4;
-            color: #ffffff;
-            font-size: 0.9rem; /* Reduced from 1.15rem */
-            font-weight: 700;
+        .combo-item {
+            width: 100%;
+            padding: 8px;
+        }
+
+        /* WRAPPER RIGIDO PER EVITARE SLITTAMENTI DELLA FRECCIA */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+            display: inline-block;
+        }
+
+        .game-select {
+            width: 100%;
+            height: 42px;
+            padding: 0 45px 0 14px !important;
+            font-size: 1.25rem;
+            font-family: inherit;
+            color: var(--text);
+            background-color: var(--bg-2);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            outline: none;
             cursor: pointer;
-            transition:
-                background 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.15s ease;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: var(--shadow-sm);
         }
 
-        .grid-button:hover {
+        .game-select option {
+            background-color: var(--bg-1);
+            color: var(--text);
+            padding: 10px;
+        }
+
+        .game-select:hover {
             border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-            background: #ffffff;
-            color: var(--accent);
-            z-index: 5;
+            background-color: #624b9e;
         }
 
-        .grid-button.selected {
-            background: #ff9800;
-            border-color: #000205;
-            color: #ffffff;
+        .game-select:focus {
+            border-color: var(--accent);
         }
 
-        @media (max-width: 700px) { 
-            .button-grid { gap: 8px; }
-            .grid-button {
-                min-height: 46px;
-                font-size: 0.85rem;
-            }
+       .game-select:disabled,
+       .game-select.selected {
+            color: #ffffff !important;
+            opacity: 1 !important; /* Evita lo sbiadimento grigio tipico dei select disabilitati su iOS/Firefox */
         }
 
-    </style>
+        .game-select.error { 
+            animation: selectErrorShake 0.45s ease; 
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--wrong);
+        }
 
-    <style>
-
-    .grid-button.error { 
-        animation: buttonErrorShake 0.45s ease; 
-        border-color: var(--wrong);
-        background-color: rgba(239, 68, 68, 0.05);
-        color: var(--wrong);
-    } 
+        .game-select.help-correct {
+            background-color: #4caf50 !important;
+            border-color: #ffffff;
+        }
     
-    @keyframes buttonErrorShake { 
-        0% { transform: translateX(0); }
-        20% { transform: translateX(-10px); } 
-        40% { transform: translateX(10px); } 
-        60% { transform: translateX(-8px); } 
-        80% { transform: translateX(8px); } 
-        100% { transform: translateX(0); } 
-    }
+        @keyframes selectErrorShake { 
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); } 
+            40% { transform: translateX(10px); } 
+            60% { transform: translateX(-8px); } 
+            80% { transform: translateX(8px); } 
+            100% { transform: translateX(0); } 
+        }
 
-    </style>
-
-    <style>
+        /* =========================================
+            CONTROLS
+        ========================================= */
 
         .controls {
             margin-bottom: 16px;
@@ -307,19 +307,9 @@
             position: absolute;
         }
 
-        .cool-btn i {
-            font-size: 1.1rem;
-            -webkit-text-stroke: 1px currentColor;
-            transition: transform 0.25s ease;
-        }
-
         .cool-btn:hover {
             transform: translateY(-2px);
             background-color: #10b981;
-        }
-
-        .cool-btn:hover i {
-            transform: translateX(3px);
         }
 
         .cool-btn:active {
@@ -334,28 +324,10 @@
             background-color: #10b981;
         }
 
-        .cool-btn.wrong-btn {
-            background-color: var(--wrong);
-            cursor: default;
-            pointer-events: none;
-            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
-            opacity: 1 !important;
-        }
+        /* =========================================
+            SUMMARY SCREEN
+        ========================================= */
 
-        .grid-button.help-correct {
-            background: #4caf50;
-            border-color: #ffffff;
-        }
-
-        #reveal-btn * {
-            pointer-events: none;
-        }
-
-</style>
-
-<style>
-
-        /* Results Summary Screen */
         #summary-screen {
             display: none;
             width: 100%;
@@ -408,43 +380,105 @@
         .summary-totals strong {
             color: var(--accent);
         }
-    
-</style>
+
+        /* =========================================
+            DEBUG AREA
+        ========================================= */
+
+        #debug-container {
+            width: 100%;
+        }
+
+        #debug-text-area {
+            width: 100%;
+            background: var(--bg-2);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: 'Segoe UI';
+            font-size: 1.25rem;
+            resize: none;
+            min-height: 120px;
+            outline: none;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 30px; }
+            h1, #progress-title { font-size: 1.9rem; }
+            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
+            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
+            #game-area { min-height: 260px; padding: 16px; }
+            .combo-container { grid-template-columns: 1fr; }
+        }
+    </style>
 
 <style>
 
-    #game-area {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-    }
+        .cool-btn-2 {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
 
-    #debug-container {
-        width: 100%;
-    }
+        .cool-btn-2.smooth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
+        }
 
-    #debug-container label {
-        display: block;
-        font-size: 0.85rem;
-        color: var(--text-dim);
-        margin-bottom: 6px;
-        font-weight: 600;
-    }
+        .cool-btn-2:hover {
+            transform: translateY(-2px);
+            background-color: #10b981;
+        }
 
-    #debug-text-area {
-        width: 100%;
-        background:var(--bg-2);
-        color: var(--text);
-        border: 2px solid var(--border);
-        border-radius: 10px;
-        padding: 14px;
-        font-family: 'Segoe UI';
-        font-size: 1.25rem; /* Increased from 0.9rem */
-        resize: none; /* Enabled vertical resizing */
-        min-height: 120px; /* Enlarged initial height (approx 5 rows) */
-        outline: none;
-    }
+        .cool-btn-2:active {
+            transform: translateY(1px);
+        }
+
+        .cool-btn-2 {
+            pointer-events: none;
+        }
+
+        .game-buttons-container {
+            display: flex;
+            justify-content: center; /* Centra i bottoni in orizzontale */
+            align-items: center;     /* Allinea i bottoni in verticale */
+            gap: 12px;               /* Spazio tra i pulsanti */
+            margin: 0px 0;          /* Distanza sopra e sotto il blocco dei bottoni */
+            width: 100%;
+            flex-wrap: wrap;         /* Fa andare a capo i bottoni se lo schermo è troppo piccolo */
+        }
+
+        ::placeholder {
+            color: #ffffff;
+            opacity: 1; /* Ensures full opacity across different browsers */
+        }
+
+        /* For older browsers */
+        :-ms-input-placeholder {
+            color: #ffffff;
+        }
+        ::-ms-input-placeholder {
+            color: #ffffff;
+        }
 
 </style>
 
@@ -453,9 +487,8 @@
 <body>
 
     <!-- TITLE -->
-
     <h1 id="game-title">
-        Il dettaglio da non perdere
+        Segui il percorso
     </h1>
 
     <!-- COUNTERS -->
@@ -466,7 +499,6 @@
     </div>
 
     <!-- INFORMATION / INSTRUCTION BOX -->
-
     <div id="instruction-banner">
         Instruzion banner.
     </div>
@@ -481,21 +513,43 @@
         </button>
     </div>
 
-    <!-- EMPTY GAME AREA -->
+    <!-- GAME AREA WITH 4 TEXT INPUT BOXES IN A 2x2 GRID -->
     <div id="game-area">
-        <!-- Read-only debug text area placed above the buttons -->
         <div id="debug-container">
             <textarea id="debug-text-area" readonly rows="5"></textarea>
         </div>
 
-        <div class="button-grid">
-            <button class="grid-button" data-index="0"></button>
-            <button class="grid-button" data-index="1"></button>
-            <button class="grid-button" data-index="2"></button>
-            <button class="grid-button" data-index="3"></button>
-            <button class="grid-button" data-index="4"></button>
-            <button class="grid-button" data-index="5"></button>
+        <!-- 4 Action Buttons -->
+        <div class="game-buttons-container">
+            <button type="button" class="cool-btn-2" data-index="0">Prima Tappa</button>
+            <button type="button" class="cool-btn-2" data-index="1">Seconda Tappa</button>
+            <button type="button" class="cool-btn-2" data-index="2">Terza Tappa</button>
+            <button type="button" class="cool-btn-2" data-index="3">Quarta Tappa</button>
         </div>
+
+        <div class="combo-container">
+            <div class="combo-item">
+                <div class="custom-select-wrapper">
+                    <input type="text" id="select-0" class="game-select" data-index="0" placeholder="Prima tappa..." autocomplete="off">
+                </div>
+            </div>
+            <div class="combo-item">
+                <div class="custom-select-wrapper">
+                    <input type="text" id="select-1" class="game-select" data-index="1" placeholder="Terza tappa..." autocomplete="off">
+                </div>
+            </div>
+            <div class="combo-item">
+                <div class="custom-select-wrapper">
+                    <input type="text" id="select-2" class="game-select" data-index="2" placeholder="Seconda tappa..." autocomplete="off">
+                </div>
+            </div>
+            <div class="combo-item">
+                <div class="custom-select-wrapper">
+                    <input type="text" id="select-3" class="game-select" data-index="3" placeholder="Quarta tappa..." autocomplete="off">
+                </div>
+            </div>
+        </div>
+        
     </div>
 
     <!-- PROGRESS -->
@@ -528,24 +582,26 @@
     </div>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', () => {
     let buttons = []; 
-    let buttonFoundState = [];
+    let selectFoundState = [];
     let elapsedSeconds = 0;
     let elapsedTimerInterval = null;
-    let totalCorrectItems = 0; 
+    let totalCorrectItems = 4;
     let foundCorrectCount = 0; 
     let isGameCompleted = false;
     let isGameLoading = true;
     let moveCount = 0;
     let revealCount = 0;
     let currentCategoryTitle = '';
+    let currentExercise = null;
+    let originalButtonTexts = [];
 
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
-    const gridButtons = document.querySelectorAll('.grid-button');
+    const gameSelects = document.querySelectorAll('.game-select');
+    const helpButtons = document.querySelectorAll('.cool-btn-2');
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
@@ -554,8 +610,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryScreen = document.getElementById('summary-screen');
     const summaryTbody = document.getElementById('summary-tbody');
     const summaryTotals = document.getElementById('summary-totals');
-    
     const debugTextArea = document.getElementById('debug-text-area');
+
+    if (helpButtons.length > 0) {
+        originalButtonTexts = Array.from(helpButtons).map(btn => btn.textContent);
+    }
     
     function logDebug(message) {
         if (debugTextArea) {
@@ -621,13 +680,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (instructionBanner) {
             instructionBanner.textContent = title;
         }
-        gridButtons.forEach(button => {
-            const index = Number(button.dataset.index);
-            if (buttons[index]) {
-                button.textContent = buttons[index].label;
-                button.classList.remove('selected', 'error', 'help-correct');
-                button.disabled = false;
-            }
+
+        const placeholders = [
+            "Prima tappa...",
+            "Seconda tappa...",
+            "Terza tappa...",
+            "Quarta tappa..."
+        ];
+
+        gameSelects.forEach((input, index) => {
+            input.value = '';
+            input.placeholder = placeholders[index];
+            input.classList.remove('selected', 'error', 'help-correct');
+            input.style.backgroundColor = '';
+            input.style.color = '';
+            input.style.borderColor = '';
+            input.disabled = false;
         });
     }
 
@@ -645,6 +713,32 @@ document.addEventListener('DOMContentLoaded', () => {
         if (revealsValueEl) revealsValueEl.textContent = revealCount;
     }
 
+    function showHelp() {
+        if (!currentExercise || !currentExercise.solutions) return;
+
+        helpButtons.forEach((btn, index) => {
+            if (currentExercise.solutions[index] !== undefined) {
+                btn.textContent = currentExercise.solutions[index];
+                btn.style.backgroundColor = '#4caf50';
+                btn.style.color = '#ffffff';
+                btn.classList.add('help-active');
+            }
+        });
+    }
+
+    function hideHelp() {
+        if (isGameCompleted || isGameLoading) return;
+
+        helpButtons.forEach((btn, index) => {
+            if (originalButtonTexts[index] !== undefined) {
+                btn.textContent = originalButtonTexts[index];
+            }
+            btn.style.backgroundColor = '';
+            btn.style.color = '';
+            btn.classList.remove('help-active');
+        });
+    }
+
     async function initGame() {
         try {
             isGameLoading = true;
@@ -653,7 +747,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-il-dettaglio-da-non-perdere.json');
+            const response = await fetch('categorie-segui-il-percorso.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -662,12 +756,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!data.categories || data.categories.length === 0) return;
             
             const randomIndex = Math.floor(Math.random() * data.categories.length);
-            const currentCategoryData = data.categories[randomIndex];
+            currentExercise = data.categories[randomIndex];
 
-            buttons = [...currentCategoryData.buttons];
-            currentCategoryTitle = currentCategoryData.instruction;
-            buttonFoundState = new Array(buttons.length).fill(false);
-            totalCorrectItems = buttons.filter(b => b.value === true).length;
+            buttons = [...currentExercise.buttons];
+            currentCategoryTitle = currentExercise.instruction;
+            selectFoundState = new Array(gameSelects.length).fill(false);
+            
+            totalCorrectItems = Math.min(4, buttons.filter(b => b.value === true || typeof b.value === 'number').length || 4);
 
             isGameCompleted = false;
             isGameLoading = false;
@@ -675,7 +770,7 @@ document.addEventListener('DOMContentLoaded', () => {
             revealCount = 0;
             foundCorrectCount = 0;
 
-            logDebug(currentCategoryData.text);
+            logDebug(currentExercise.text);
             updateMovesDisplay();
             updateRevealDisplay();
             updateProgressBar(0);
@@ -684,35 +779,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             isGameLoading = false;
-            console.error('Could not load categorie-il-dettaglio-da-non-perdere.json:', err);
+            console.error('Could not load JSON:', err);
         }
     }
 
     if (revealBtn) {
-        const showHelp = () => {
+        const handleShowHelp = () => {
             if (isGameCompleted || isGameLoading) return;
             revealCount++;
             updateRevealDisplay();
-            
-            gridButtons.forEach(button => {
-                const index = Number(button.dataset.index);
-                if (buttons[index] && buttons[index].value === true) {
-                    button.classList.add('help-correct');
-                }
-            });
+            showHelp();
         };
 
-        const hideHelp = () => {
-            if (isGameCompleted || isGameLoading) return;
-            gridButtons.forEach(button => {
-                button.classList.remove('help-correct');
-            });
-        };
-
-        revealBtn.addEventListener('mousedown', showHelp);
+        revealBtn.addEventListener('mousedown', handleShowHelp);
         revealBtn.addEventListener('mouseup', hideHelp);
         revealBtn.addEventListener('mouseleave', hideHelp);
-        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showHelp(); }, { passive: false });
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleShowHelp(); }, { passive: false });
         revealBtn.addEventListener('touchend', hideHelp);
         revealBtn.addEventListener('touchcancel', hideHelp);
 
@@ -723,27 +805,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    gridButtons.forEach(button => {
-        button.addEventListener('click', async () => {
+    /*
+    // Validation handling for input text boxes on change/blur/enter
+    gameSelects.forEach(input => {
+        const validateInput = async () => {
             if (isGameCompleted || isGameLoading) return;
-            
-            const index = Number(button.dataset.index);
-            if (!buttons[index] || buttonFoundState[index]) return;
 
-            const isCorrect = buttons[index].value === true;
+            const inputIndex = Number(input.dataset.index);
+            const userText = input.value.trim();
+            if (!userText || selectFoundState[inputIndex]) return;
+
+            // Find the button object in buttons whose label matches userText and value corresponds to expected step
+            const expectedValue = foundCorrectCount + 1;
+            const matchedButton = buttons.find(b => b.value === expectedValue && b.label.trim().toLowerCase() === userText.toLowerCase());
+            
             moveCount++;
             updateMovesDisplay();
 
-            if (isCorrect) {
-                buttonFoundState[index] = true;
-                button.disabled = true;
-                button.classList.add('selected');
+            if (matchedButton) {
+                selectFoundState[inputIndex] = true;
+                input.disabled = true;
+                input.classList.add('selected');
+                input.style.backgroundColor = '#ff9800';
+                input.style.color = '#ffffff';
+                input.style.borderColor = '#ffffff';
                 foundCorrectCount++;
 
                 if (typeof Checkmark !== 'undefined') {
                     try {
                         await Checkmark.show({
-                            element: button,
+                            element: input,
                             size: 48,
                             rise: 70,
                             duration: 1600
@@ -775,19 +866,114 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
             } else {
-                button.classList.remove('error');
-                void button.offsetWidth;
-                button.classList.add('error');
+                input.classList.remove('error');
+                void input.offsetWidth;
+                input.classList.add('error');
                 setTimeout(() => {
-                    button.classList.remove('error');
+                    input.classList.remove('error');
                 }, 400);
+            }
+        };
+
+        input.addEventListener('change', validateInput);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                input.blur();
+                validateInput();
+            }
+        });
+    });
+    */
+
+
+
+// Validation handling for input text boxes on change/blur/enter
+    gameSelects.forEach(input => {
+        const validateInput = async () => {
+            if (isGameCompleted || isGameLoading) return;
+
+            const inputIndex = Number(input.dataset.index);
+            const userText = input.value.trim();
+            if (!userText || selectFoundState[inputIndex]) return;
+
+            // The target value this input box must match corresponds to its index + 1
+            // (e.g., input index 0 expects value 1, input index 1 expects value 2, etc.)
+            const expectedValue = inputIndex + 1;
+
+            // Find the button object in the JSON array whose value matches expectedValue
+            const targetButton = buttons.find(b => b.value === expectedValue);
+            
+            // Check if the user's typed text matches the target button's label (case-insensitive)
+            const isCorrect = targetButton && targetButton.label.trim().toLowerCase() === userText.toLowerCase();
+            
+            moveCount++;
+            updateMovesDisplay();
+
+            if (isCorrect) {
+                selectFoundState[inputIndex] = true;
+                input.disabled = true;
+                input.classList.add('selected');
+                input.style.backgroundColor = '#ff9800';
+                input.style.color = '#ffffff';
+                input.style.borderColor = '#ffffff';
+                foundCorrectCount++;
+
+                if (typeof Checkmark !== 'undefined') {
+                    try {
+                        await Checkmark.show({
+                            element: input,
+                            size: 48,
+                            rise: 70,
+                            duration: 1600
+                        });
+                    } catch (err) {
+                        console.warn('Checkmark animation failed:', err);
+                    }
+                }
+
+                updateProgressBar(foundCorrectCount / totalCorrectItems);
+
+                if ((foundCorrectCount === totalCorrectItems) && !isGameCompleted) {
+                    isGameCompleted = true;
+                    stopElapsedTimer();
+
+                    if (typeof Confetti !== 'undefined') {
+                        try {
+                            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                        } catch (err) {
+                            console.warn('Confetti animation failed:', err);
+                        }
+                    }
+
+                    if (revealBtn) {
+                        revealBtn.innerHTML = "<span>✓ Fatto</span>";
+                    }
+                }
+
+            } else {
+                input.classList.remove('error');
+                void input.offsetWidth;
+                input.classList.add('error');
+                setTimeout(() => {
+                    input.classList.remove('error');
+                }, 400);
+            }
+        };
+
+        input.addEventListener('change', validateInput);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                input.blur();
+                validateInput();
             }
         });
     });
 
+
     initGame();
 });
-
 </script>
 
 </body>

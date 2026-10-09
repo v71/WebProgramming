@@ -25,7 +25,7 @@
           { "label": "Libro", "value": false },
           { "label": "Porta", "value": true },
           
-          { "label": "Ritratto", "value": true },
+          { "label": "Ritratto", "value": false },
           { "label": "Torta", "value": false },
           { "label": "Spiaggia", "value": false },
           { "label": "Porta", "value": true }

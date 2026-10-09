@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titolo del gioco</title>
+    <title>Il dettaglio da non perdere</title>
 
-    <!-- 1. Includi qui il file esterno condiviso -->
-    <script src="../../../js/checkmark.js"></script>
-    <script src="../../../js/celebrazion.js"></script>
-
+     <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    
     <style>
 
         :root {
@@ -46,7 +46,7 @@
         }
 
         /* =========================================
-           GAME TITLE
+            GAME TITLE
         ========================================= */
 
         h1 {
@@ -65,7 +65,7 @@
         }
 
         /* =========================================
-           COUNTERS
+            COUNTERS
         ========================================= */
 
         #game-stats {
@@ -93,7 +93,7 @@
         }
 
         /* =========================================
-           INFORMATION BOX
+            INFORMATION BOX
         ========================================= */
         
         #instruction-banner {
@@ -115,7 +115,7 @@
         }
 
         /* =========================================
-           EMPTY GAME AREA
+            EMPTY GAME AREA
         ========================================= */
 
         #game-area {
@@ -133,11 +133,8 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* This is intentionally empty.
-           Future game content goes here. */
-
         /* =========================================
-           PROGRESS TITLE
+            PROGRESS TITLE
         ========================================= */
 
         #progress-title {
@@ -156,7 +153,7 @@
         }
 
         /* =========================================
-           PROGRESS BAR
+            PROGRESS BAR
         ========================================= */
 
         .progress-bar-container {
@@ -180,7 +177,7 @@
         }
 
         /* =========================================
-           RESPONSIVE
+            RESPONSIVE
         ========================================= */
 
         @media (max-width: 700px) {
@@ -195,41 +192,24 @@
     <style>
 
         #game-area {
-            padding: 14px; /* Reduced padding inside game area */
+            padding: 24px;
         }
 
         .button-grid {
             width: 100%;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(9, 1fr);
-            row-gap: 10px;       /* Keeps vertical spacing between rows */
-            column-gap: 44px;    /* Increases horizontal spacing from the center line */
-            position: relative;  /* Required for the divider line */
-            
-        }
-
-        /* Vertical divider line between the two columns */
-        .button-grid::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 10px;
-            bottom: 10px;
-            width: 2px;
-            background: var(--border); /* Change this color to whatever you prefer (e.g., #ff9800, #ffffff, rgba(...)) */
-            transform: translateX(-50%);
-            pointer-events: none;
+            grid-template-rows: repeat(3, 1fr);
+            gap: 12px;
         }
 
         .grid-button {
-            min-height: 34px; /* Reduced height to prevent scrolling */
-            padding: 6px 12px;
+            min-height: 42px; /* Reduced from 70px */
             border: 2px solid #000205;
             border-radius: 12px;
             background: #7931b4;
             color: #ffffff;
-            font-size: 1.2rem; /* Slightly smaller text */
+            font-size: 0.9rem; /* Reduced from 1.15rem */
             font-weight: 700;
             cursor: pointer;
             transition:
@@ -240,7 +220,7 @@
 
         .grid-button:hover {
             border-color: var(--accent);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: var(--shadow-md);
             background: #ffffff;
             color: var(--accent);
@@ -256,12 +236,11 @@
         @media (max-width: 700px) { 
             .button-grid { gap: 8px; }
             .grid-button {
-                min-height: 38px;
+                min-height: 46px;
                 font-size: 0.85rem;
-                padding: 4px 8px;
             }
         }
-    
+
     </style>
 
     <style>
@@ -284,7 +263,7 @@
 
     </style>
 
-<style>
+    <style>
 
         .controls {
             margin-bottom: 16px;
@@ -360,7 +339,7 @@
             cursor: default;
             pointer-events: none;
             box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
-            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
+            opacity: 1 !important;
         }
 
         .grid-button.help-correct {
@@ -432,6 +411,43 @@
     
 </style>
 
+<style>
+
+    #game-area {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    #debug-container {
+        width: 100%;
+    }
+
+    #debug-container label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--text-dim);
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
+
+    #debug-text-area {
+        width: 100%;
+        background:var(--bg-2);
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        font-family: 'Segoe UI';
+        font-size: 1.25rem; /* Increased from 0.9rem */
+        resize: none; /* Enabled vertical resizing */
+        min-height: 120px; /* Enlarged initial height (approx 5 rows) */
+        outline: none;
+    }
+
+</style>
+
 </head>
 
 <body>
@@ -439,7 +455,7 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        Chi entra e chi resta fuori
+        Il dettaglio da non perdere
     </h1>
 
     <!-- COUNTERS -->
@@ -452,7 +468,7 @@
     <!-- INFORMATION / INSTRUCTION BOX -->
 
     <div id="instruction-banner">
-       Instruzion banner.
+        Instruzion banner.
     </div>
 
     <div class="controls" id="action-controls">
@@ -467,6 +483,11 @@
 
     <!-- EMPTY GAME AREA -->
     <div id="game-area">
+        <!-- Read-only debug text area placed above the buttons -->
+        <div id="debug-container">
+            <textarea id="debug-text-area" readonly rows="5"></textarea>
+        </div>
+
         <div class="button-grid">
             <button class="grid-button" data-index="0"></button>
             <button class="grid-button" data-index="1"></button>
@@ -474,19 +495,6 @@
             <button class="grid-button" data-index="3"></button>
             <button class="grid-button" data-index="4"></button>
             <button class="grid-button" data-index="5"></button>
-            <button class="grid-button" data-index="6"></button>
-            <button class="grid-button" data-index="7"></button>
-            <button class="grid-button" data-index="8"></button>
-            <button class="grid-button" data-index="9"></button>
-            <button class="grid-button" data-index="10"></button>
-            <button class="grid-button" data-index="11"></button>
-            <button class="grid-button" data-index="12"></button>
-            <button class="grid-button" data-index="13"></button>
-            <button class="grid-button" data-index="14"></button>
-            <button class="grid-button" data-index="15"></button>
-            <button class="grid-button" data-index="16"></button>
-            <button class="grid-button" data-index="17"></button>
-
         </div>
     </div>
 
@@ -532,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameLoading = true;
     let moveCount = 0;
     let revealCount = 0;
-    let currentCategoryTitle = ''; // Stores the current instruction/phrase
+    let currentCategoryTitle = '';
 
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
@@ -546,7 +554,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryScreen = document.getElementById('summary-screen');
     const summaryTbody = document.getElementById('summary-tbody');
     const summaryTotals = document.getElementById('summary-totals');
-
+    
+    const debugTextArea = document.getElementById('debug-text-area');
+    
+    function logDebug(message) {
+        if (debugTextArea) {
+            debugTextArea.value = message;
+        }
+    }
+    
     function showSummaryScreen() {
         gameArea.style.display = 'none';
         instructionBanner.style.display = 'none';
@@ -637,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-cambio-di-regola-a-metà.json');
+            const response = await fetch('categorie-il-dettaglio-da-non-perdere.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -649,11 +665,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentCategoryData = data.categories[randomIndex];
 
             buttons = [...currentCategoryData.buttons];
-            currentCategoryTitle = currentCategoryData.instruction; 
+            currentCategoryTitle = currentCategoryData.instruction;
             buttonFoundState = new Array(buttons.length).fill(false);
-            
-            // Total correct items are those with value 1 or 2
-            totalCorrectItems = buttons.filter(b => b.value === 1 || b.value === 2).length;
+            totalCorrectItems = buttons.filter(b => b.value === true).length;
 
             isGameCompleted = false;
             isGameLoading = false;
@@ -661,6 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
             revealCount = 0;
             foundCorrectCount = 0;
 
+            logDebug(currentCategoryData.text);
             updateMovesDisplay();
             updateRevealDisplay();
             updateProgressBar(0);
@@ -669,7 +684,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             isGameLoading = false;
-            console.error('Could not load json:', err);
+            console.error('Could not load categorie-il-dettaglio-da-non-perdere.json:', err);
         }
     }
 
@@ -681,8 +696,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             gridButtons.forEach(button => {
                 const index = Number(button.dataset.index);
-                // Highlight items where value is 1 or 2
-                if (buttons[index] && (buttons[index].value === 1 || buttons[index].value === 2)) {
+                if (buttons[index] && buttons[index].value === true) {
                     button.classList.add('help-correct');
                 }
             });
@@ -716,15 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const index = Number(button.dataset.index);
             if (!buttons[index] || buttonFoundState[index]) return;
 
-            // Determine column based on grid layout: 
-            // Since there are 2 columns, items with index % 2 === 0 are in Column 1, 
-            // and items with index % 2 === 1 are in Column 2.
-            const columnNumber = (index % 2) + 1; // 1 for first column, 2 for second column
-            const itemTargetValue = buttons[index].value;
-
-            // Check if clicked in the correct column corresponding to the JSON value (1 or 2)
-            const isCorrect = (itemTargetValue === columnNumber);
-
+            const isCorrect = buttons[index].value === true;
             moveCount++;
             updateMovesDisplay();
 
@@ -770,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             } else {
                 button.classList.remove('error');
-                void button.offsetWidth; 
+                void button.offsetWidth;
                 button.classList.add('error');
                 setTimeout(() => {
                     button.classList.remove('error');

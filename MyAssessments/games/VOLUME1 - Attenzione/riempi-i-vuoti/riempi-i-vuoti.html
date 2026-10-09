@@ -4,10 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <title>Il ciclo dell'acqua</title>
+    <title>Riempi i vuoti</title>
 
-    <script src="../js/checkmark.js"></script>
-    <script src="../js/celebrazion.js"></script>
+     <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
 
     <style>
         :root {
@@ -856,7 +857,7 @@
 
             roundResults[ currentRoundIndex ] = { moves: moveCount - roundStartMoveCount };
 
-            setProgress(((currentRoundIndex + 1) / GAME_ROUNDS.length) * 100);
+            setProgress(( (currentRoundIndex + 1) / GAME_ROUNDS.length) * 100 );
 
             if ( currentRoundIndex < GAME_ROUNDS.length - 1 ) {
                 setInstruction('Round completato! Clicca Prossimo Paragrafo per continuare.');

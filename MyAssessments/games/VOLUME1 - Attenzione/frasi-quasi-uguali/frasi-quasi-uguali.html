@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titolo del gioco</title>
+    <title>Frasi quasi uguali</title>
 
      <!-- 1. Includi qui il file esterno condiviso -->
-    <script src="../../../js/checkmark.js"></script>
-    <script src="../../../js/celebrazion.js"></script>
-
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    
     <style>
 
         :root {
@@ -201,8 +201,8 @@
         .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(5, 1fr);
+            grid-template-columns: repeat(2, 1fr); /* Changed from 3 to 2 */
+            grid-template-rows: repeat(3, 1fr);    /* Changed from 5 to 3 */
             gap: 14px;
         }
 
@@ -420,7 +420,7 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        Applica la regola
+        Frasi quasi uguali
     </h1>
 
     <!-- COUNTERS -->
@@ -455,10 +455,6 @@
             <button class="grid-button" data-index="3"></button>
             <button class="grid-button" data-index="4"></button>
             <button class="grid-button" data-index="5"></button>
-            <button class="grid-button" data-index="6"></button>
-            <button class="grid-button" data-index="7"></button>
-            <button class="grid-button" data-index="8"></button>
-            <button class="grid-button" data-index="9"></button>
         </div>
     </div>
 
@@ -611,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-solo-se-la-regola-lo-permette.json');
+            const response = await fetch('frasi-quasi-uguali.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titolo del gioco</title>
+    <title>Filtro degli elementi</title>
 
-     <!-- File esterni condivisi -->
-    <script src="../../../js/checkmark.js"></script>
-    <script src="../../../js/celebrazion.js"></script>
-    
+    <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
     <style>
 
         :root {
@@ -46,7 +46,7 @@
         }
 
         /* =========================================
-            GAME TITLE
+           GAME TITLE
         ========================================= */
 
         h1 {
@@ -65,7 +65,7 @@
         }
 
         /* =========================================
-            COUNTERS
+           COUNTERS
         ========================================= */
 
         #game-stats {
@@ -93,7 +93,7 @@
         }
 
         /* =========================================
-            INFORMATION BOX
+           INFORMATION BOX
         ========================================= */
         
         #instruction-banner {
@@ -115,7 +115,7 @@
         }
 
         /* =========================================
-            EMPTY GAME AREA
+           EMPTY GAME AREA
         ========================================= */
 
         #game-area {
@@ -125,17 +125,19 @@
             margin: 0 auto 24px;
             padding: 24px;
             display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 16px;
+            align-items: center;
+            justify-content: center;
             border-radius: 20px;
             background: var(--bg-1);
             border: 2px solid var(--border);
             box-shadow: var(--shadow-md);
         }
 
+        /* This is intentionally empty.
+           Future game content goes here. */
+
         /* =========================================
-            PROGRESS TITLE
+           PROGRESS TITLE
         ========================================= */
 
         #progress-title {
@@ -154,7 +156,7 @@
         }
 
         /* =========================================
-            PROGRESS BAR
+           PROGRESS BAR
         ========================================= */
 
         .progress-bar-container {
@@ -172,123 +174,98 @@
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            background: linear-gradient( 135deg,#6366f1 0%,#a855f7 100%);
             border-radius: 99px;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* =========================================
-            COMBO BOXES CONTAINER & 2X2 GRID
+           RESPONSIVE
         ========================================= */
 
-        .combo-container {
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 30px; }
+            h1, #progress-title { font-size: 1.9rem; }
+            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
+            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
+            #game-area { min-height: 260px; padding: 16px; }
+        }
+    </style>
+
+    <style>
+
+        #game-area {
+            padding: 24px;
+        }
+
+        .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 14px;
         }
 
-        .combo-item {
-            width: 100%;
-            padding: 8px;
-        }
-
-        /* WRAPPER RIGIDO PER EVITARE SLITTAMENTI DELLA FRECCIA */
-        .custom-select-wrapper {
-            position: relative;
-            width: 100%;
-            display: inline-block;
-        }
-
-        .game-select {
-            width: 100%;
-            height: 42px;
-            padding: 0 45px 0 14px !important;
-            font-size: 1.25rem;
-            font-family: inherit;
-            color: var(--text);
-            background-color: var(--bg-2);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            outline: none;
+        .grid-button {
+            min-height: 70px;
+            border: 2px solid #000205;
+            border-radius: 14px;
+            background: #7931b4;
+            color: #ffffff;
+            font-size: 1.15rem;
+            font-weight: 700;
             cursor: pointer;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: var(--shadow-sm);
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.15s ease;
         }
 
-        .game-select option {
-            background-color: var(--bg-1);
-            color: var(--text);
-            padding: 10px;
-        }
-
-        .game-select:hover {
+        .grid-button:hover {
             border-color: var(--accent);
-            background-color: #624b9e;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            background: #ffffff;
+            color: var(--accent);
+            z-index: 5;
         }
 
-        .game-select:focus {
-            border-color: var(--accent);
+        .grid-button.selected {
+            background: #ff9800;
+            border-color: #000205;
+            color: #ffffff;
         }
 
-       .game-select:disabled,
-       .game-select.selected {
-            color: #ffffff !important;
-            opacity: 1 !important; /* Evita lo sbiadimento grigio tipico dei select disabilitati su iOS/Firefox */
+        @media (max-width: 700px) { .button-grid { gap: 10px; }
+        .grid-button {
+            min-height: 60px;
+            font-size: 1rem;
+        }
         }
 
-        .game-select.error { 
-            animation: selectErrorShake 0.45s ease; 
-            border-color: var(--wrong);
-            background-color: rgba(239, 68, 68, 0.2);
-            color: var(--wrong);
-        }
+    </style>
 
-        .game-select.help-correct {
-            background-color: #4caf50 !important;
-            border-color: #ffffff;
-        }
+    <style>
 
-        /* FRECCIA ANCORATA IN MODO ASSOLUTO */
-        .select-arrow {
-            position: absolute !important;
-            top: 50% !important;
-            right: 14px !important;
-            transform: translateY(-50%) !important;
-            width: 32px !important;
-            height: 32px !important;
-            pointer-events: none !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            transition: transform 0.25s ease !important;
-        }
+    .grid-button.error { 
+        animation: buttonErrorShake 0.45s ease; 
+        border-color: var(--wrong);
+        background-color: rgba(239, 68, 68, 0.05);
+        color: var(--wrong);
+    } 
+    
+    @keyframes buttonErrorShake { 
+        0% { transform: translateX(0); }
+        20% { transform: translateX(-10px); } 
+        40% { transform: translateX(10px); } 
+        60% { transform: translateX(-8px); } 
+        80% { transform: translateX(8px); } 
+        100% { transform: translateX(0); } 
+    }
 
-        .select-arrow svg {
-            width: 100% !important;
-            height: 100% !important;
-            fill: #ffffff !important;
-        }
+    </style>
 
-        .custom-select-wrapper.open .select-arrow {
-            transform: translateY(-50%) rotate(180deg) !important;
-        }
-        
-        @keyframes selectErrorShake { 
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-10px); } 
-            40% { transform: translateX(10px); } 
-            60% { transform: translateX(-8px); } 
-            80% { transform: translateX(8px); } 
-            100% { transform: translateX(0); } 
-        }
-
-        /* =========================================
-            CONTROLS
-        ========================================= */
+<style>
 
         .controls {
             margin-bottom: 16px;
@@ -303,7 +280,7 @@
             min-height: 52px;
         }
         
-        .cool-btn {
+            .cool-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -332,9 +309,19 @@
             position: absolute;
         }
 
+        .cool-btn i {
+            font-size: 1.1rem;
+            -webkit-text-stroke: 1px currentColor;
+            transition: transform 0.25s ease;
+        }
+
         .cool-btn:hover {
             transform: translateY(-2px);
             background-color: #10b981;
+        }
+
+        .cool-btn:hover i {
+            transform: translateX(3px);
         }
 
         .cool-btn:active {
@@ -349,10 +336,28 @@
             background-color: #10b981;
         }
 
-        /* =========================================
-            SUMMARY SCREEN
-        ========================================= */
+        .cool-btn.wrong-btn {
+            background-color: var(--wrong);
+            cursor: default;
+            pointer-events: none;
+            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
+        }
 
+        .grid-button.help-correct {
+            background: #4caf50;
+            border-color: #ffffff;
+        }
+
+        #reveal-btn * {
+            pointer-events: none;
+        }
+
+</style>
+
+<style>
+
+        /* Results Summary Screen */
         #summary-screen {
             display: none;
             width: 100%;
@@ -405,93 +410,7 @@
         .summary-totals strong {
             color: var(--accent);
         }
-
-        /* =========================================
-            DEBUG AREA
-        ========================================= */
-
-        #debug-container {
-            width: 100%;
-        }
-
-        #debug-text-area {
-            width: 100%;
-            background: var(--bg-2);
-            color: var(--text);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 14px;
-            font-family: 'Segoe UI';
-            font-size: 1.25rem;
-            resize: none;
-            min-height: 120px;
-            outline: none;
-        }
-
-        @media (max-width: 700px) {
-            body { padding: 16px 12px 30px; }
-            h1, #progress-title { font-size: 1.9rem; }
-            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
-            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
-            #game-area { min-height: 260px; padding: 16px; }
-            .combo-container { grid-template-columns: 1fr; }
-        }
-    </style>
-
-<style>
-
-        .cool-btn-2 {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5;
-            border: 2px solid var(--border);
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        .cool-btn-2.smooth-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: scale(0.95);
-            position: absolute;
-        }
-
-        .cool-btn-2:hover {
-            transform: translateY(-2px);
-            background-color: #10b981;
-        }
-
-        .cool-btn-2:active {
-            transform: translateY(1px);
-        }
-
-        .cool-btn-2 {
-            pointer-events: none;
-        }
-
-        .game-buttons-container {
-            display: flex;
-            justify-content: center; /* Centra i bottoni in orizzontale */
-            align-items: center;     /* Allinea i bottoni in verticale */
-            gap: 12px;               /* Spazio tra i pulsanti */
-            margin: 0px 0;          /* Distanza sopra e sotto il blocco dei bottoni */
-            width: 100%;
-            flex-wrap: wrap;         /* Fa andare a capo i bottoni se lo schermo è troppo piccolo */
-        }
-
+    
 </style>
 
 </head>
@@ -499,8 +418,9 @@
 <body>
 
     <!-- TITLE -->
+
     <h1 id="game-title">
-        Segui il percorso
+        Filtro degli elementi
     </h1>
 
     <!-- COUNTERS -->
@@ -511,8 +431,9 @@
     </div>
 
     <!-- INFORMATION / INSTRUCTION BOX -->
+
     <div id="instruction-banner">
-        Instruzion banner.
+       Instruzion banner.
     </div>
 
     <div class="controls" id="action-controls">
@@ -525,71 +446,25 @@
         </button>
     </div>
 
-    <!-- GAME AREA WITH 4 COMBO BOXES IN A 2x2 GRID -->
+    <!-- EMPTY GAME AREA -->
     <div id="game-area">
-        <div id="debug-container">
-            <textarea id="debug-text-area" readonly rows="5"></textarea>
+        <div class="button-grid">
+            <button class="grid-button" data-index="0"></button>
+            <button class="grid-button" data-index="1"></button>
+            <button class="grid-button" data-index="2"></button>
+            <button class="grid-button" data-index="3"></button>
+            <button class="grid-button" data-index="4"></button>
+            <button class="grid-button" data-index="5"></button>
+            <button class="grid-button" data-index="6"></button>
+            <button class="grid-button" data-index="7"></button>
+            <button class="grid-button" data-index="8"></button>
+            <button class="grid-button" data-index="9"></button>
+            <button class="grid-button" data-index="10"></button>
+            <button class="grid-button" data-index="11"></button>
+            <button class="grid-button" data-index="12"></button>
+            <button class="grid-button" data-index="13"></button>
+            <button class="grid-button" data-index="14"></button>
         </div>
-
-        <!-- 4 Action Buttons -->
-        <div class="game-buttons-container">
-            <button type="button" class="cool-btn-2" data-index="0">Prima Tappa</button>
-            <button type="button" class="cool-btn-2" data-index="1">Seconda Tappa</button>
-            <button type="button" class="cool-btn-2" data-index="2">Terza Tappa</button>
-            <button type="button" class="cool-btn-2" data-index="3">Quarta Tappa</button>
-        </div>
-
-        <div class="combo-container">
-            <div class="combo-item">
-                <div class="custom-select-wrapper">
-                    <select id="select-0" class="game-select" data-index="0" required>
-                        <option value="" disabled selected hidden>Prima tappa...</option>
-                    </select>
-                    <span class="select-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
-                        </svg>
-                    </span>
-                </div>
-            </div>
-            <div class="combo-item">
-                <div class="custom-select-wrapper">
-                    <select id="select-1" class="game-select" data-index="1" required>
-                        <option value="" disabled selected hidden>Terza tappa...</option>
-                    </select>
-                    <span class="select-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
-                        </svg>
-                    </span>
-                </div>
-            </div>
-            <div class="combo-item">
-                <div class="custom-select-wrapper">
-                    <select id="select-2" class="game-select" data-index="2" required>
-                        <option value="" disabled selected hidden>Seconda tappa...</option>
-                    </select>
-                    <span class="select-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
-                        </svg>
-                    </span>
-                </div>
-            </div>
-            <div class="combo-item">
-                <div class="custom-select-wrapper">
-                    <select id="select-3" class="game-select" data-index="3" required>
-                        <option value="" disabled selected hidden>Quarta tappa...</option>
-                    </select>
-                    <span class="select-arrow">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.19l3.71-3.96a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd"/>
-                        </svg>
-                    </span>
-                </div>
-            </div>
-        </div>
-        
     </div>
 
     <!-- PROGRESS -->
@@ -622,26 +497,24 @@
     </div>
 
 <script>
+
 document.addEventListener('DOMContentLoaded', () => {
     let buttons = []; 
-    let selectFoundState = [];
+    let buttonFoundState = [];
     let elapsedSeconds = 0;
     let elapsedTimerInterval = null;
-    let totalCorrectItems = 4;
+    let totalCorrectItems = 0; 
     let foundCorrectCount = 0; 
     let isGameCompleted = false;
     let isGameLoading = true;
     let moveCount = 0;
     let revealCount = 0;
-    let currentCategoryTitle = '';
-    let currentExercise = null;
-    let originalButtonTexts = []; // Memorizza i testi originali dei bottoni .cool-btn-2
+    let currentCategoryTitle = ''; // Stores the current instruction/phrase
 
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
-    const gameSelects = document.querySelectorAll('.game-select');
-    const helpButtons = document.querySelectorAll('.cool-btn-2');
+    const gridButtons = document.querySelectorAll('.grid-button');
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
@@ -650,19 +523,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryScreen = document.getElementById('summary-screen');
     const summaryTbody = document.getElementById('summary-tbody');
     const summaryTotals = document.getElementById('summary-totals');
-    const debugTextArea = document.getElementById('debug-text-area');
 
-    // Salva i testi originali dei pulsanti all'avvio
-    if (helpButtons.length > 0) {
-        originalButtonTexts = Array.from(helpButtons).map(btn => btn.textContent);
-    }
-    
-    function logDebug(message) {
-        if (debugTextArea) {
-            debugTextArea.value = message;
-        }
-    }
-    
     function showSummaryScreen() {
         gameArea.style.display = 'none';
         instructionBanner.style.display = 'none';
@@ -674,6 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         summaryTbody.innerHTML = '';
         
+        // Calculate a simple metric (e.g., efficiency based on moves and time)
         const metricValue = Math.max(0, 100 - (moveCount * 2) - elapsedSeconds);
 
         const row = document.createElement('tr');
@@ -721,28 +583,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (instructionBanner) {
             instructionBanner.textContent = title;
         }
-
-        const placeholders = [
-            "Prima tappa...",
-            "Seconda tappa...",
-            "Terza tappa...",
-            "Quarta tappa..."
-        ];
-
-        gameSelects.forEach((select, index) => {
-            const placeholderText = placeholders[index];
-            select.innerHTML = `<option value="" disabled selected hidden>${placeholderText}</option>`;
-            buttons.forEach((btn, idx) => {
-                const opt = document.createElement('option');
-                opt.value = idx;
-                opt.textContent = btn.label;
-                select.appendChild(opt);
-            });
-            select.classList.remove('selected', 'error', 'help-correct');
-            select.style.backgroundColor = '';
-            select.style.color = '';
-            select.style.borderColor = '';
-            select.disabled = false;
+        gridButtons.forEach(button => {
+            const index = Number(button.dataset.index);
+            if (buttons[index]) {
+                button.textContent = buttons[index].label;
+                button.classList.remove('selected', 'error', 'help-correct');
+                button.disabled = false;
+            }
         });
     }
 
@@ -760,43 +607,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (revealsValueEl) revealsValueEl.textContent = revealCount;
     }
 
-    // Mostra le soluzioni e imposta lo sfondo verde sui bottoni .cool-btn-2
-    function showHelp() {
-        if (!currentExercise || !currentExercise.solutions) return;
-
-        helpButtons.forEach((btn, index) => {
-            if (currentExercise.solutions[index] !== undefined) {
-                btn.textContent = currentExercise.solutions[index];
-                btn.style.backgroundColor = '#4caf50'; // Sfondo verde
-                btn.style.color = '#ffffff'; // Testo bianco per leggibilità
-                btn.classList.add('help-active');
-            }
-        });
-    }
-
-    // Ripristina il testo predefinito e rimuove lo sfondo verde al rilascio
-    function hideHelp() {
-        if (isGameCompleted || isGameLoading) return;
-
-        helpButtons.forEach((btn, index) => {
-            if (originalButtonTexts[index] !== undefined) {
-                btn.textContent = originalButtonTexts[index];
-            }
-            btn.style.backgroundColor = '';
-            btn.style.color = '';
-            btn.classList.remove('help-active');
-        });
-    }
-
     async function initGame() {
         try {
             isGameLoading = true;
             
+            // Reset Reveal Button back to original state for a new game
             if (revealBtn) {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-segui-il-percorso.json');
+            const response = await fetch('categorie-filtro-elementi.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -805,13 +625,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!data.categories || data.categories.length === 0) return;
             
             const randomIndex = Math.floor(Math.random() * data.categories.length);
-            currentExercise = data.categories[randomIndex];
+            const currentCategoryData = data.categories[randomIndex];
 
-            buttons = [...currentExercise.buttons];
-            currentCategoryTitle = currentExercise.instruction;
-            selectFoundState = new Array(gameSelects.length).fill(false);
-            
-            totalCorrectItems = Math.min(4, buttons.filter(b => b.value === true).length || 4);
+            buttons = [...currentCategoryData.buttons];
+            currentCategoryTitle = currentCategoryData.instruction; // Save phrase
+            buttonFoundState = new Array(buttons.length).fill(false);
+            totalCorrectItems = buttons.filter(b => b.value === true).length;
 
             isGameCompleted = false;
             isGameLoading = false;
@@ -819,7 +638,6 @@ document.addEventListener('DOMContentLoaded', () => {
             revealCount = 0;
             foundCorrectCount = 0;
 
-            logDebug(currentExercise.text);
             updateMovesDisplay();
             updateRevealDisplay();
             updateProgressBar(0);
@@ -828,57 +646,40 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             isGameLoading = false;
-            console.error('Could not load JSON:', err);
+            console.error('Could not load categories.json:', err);
         }
     }
 
-    // Gestione apertura, scelta e click esterno (blur) per i select
-    gameSelects.forEach(select => {
-        const wrapper = select.closest('.custom-select-wrapper');
-
-        select.addEventListener('focus', () => {
-            wrapper.classList.add('open');
-        });
-
-        select.addEventListener('change', () => {
-            wrapper.classList.remove('open');
-            select.blur();
-        });
-
-        select.addEventListener('blur', () => {
-            setTimeout(() => {
-                if (document.activeElement !== select) {
-                    wrapper.classList.remove('open');
-                }
-            }, 150);
-        });
-    });
-
-    document.addEventListener('click', (e) => {
-        if (!e.target.closest('.custom-select-wrapper')) {
-            gameSelects.forEach(select => {
-                const wrapper = select.closest('.custom-select-wrapper');
-                wrapper.classList.remove('open');
-                select.blur();
-            });
-        }
-    });
-
+    // Standard Reveal / Help button events
     if (revealBtn) {
-        const handleShowHelp = () => {
+        const showHelp = () => {
             if (isGameCompleted || isGameLoading) return;
             revealCount++;
             updateRevealDisplay();
-            showHelp();
+            
+            gridButtons.forEach(button => {
+                const index = Number(button.dataset.index);
+                if (buttons[index] && buttons[index].value === true) {
+                    button.classList.add('help-correct');
+                }
+            });
         };
 
-        revealBtn.addEventListener('mousedown', handleShowHelp);
+        const hideHelp = () => {
+            if (isGameCompleted || isGameLoading) return;
+            gridButtons.forEach(button => {
+                button.classList.remove('help-correct');
+            });
+        };
+
+        revealBtn.addEventListener('mousedown', showHelp);
         revealBtn.addEventListener('mouseup', hideHelp);
         revealBtn.addEventListener('mouseleave', hideHelp);
-        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleShowHelp(); }, { passive: false });
+        revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showHelp(); }, { passive: false });
         revealBtn.addEventListener('touchend', hideHelp);
         revealBtn.addEventListener('touchcancel', hideHelp);
 
+        // Click handler to trigger summary screen when game is completed
         revealBtn.addEventListener('click', () => {
             if (isGameCompleted) {
                 showSummaryScreen();
@@ -886,51 +687,28 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Validazione sequenziale delle scelte
-    gameSelects.forEach(select => {
-        const wrapper = select.closest('.custom-select-wrapper');
-
-        select.addEventListener('focus', () => {
-            wrapper.classList.add('open');
-        });
-
-        select.addEventListener('blur', () => {
-            setTimeout(() => {
-                if (document.activeElement !== select) {
-                    wrapper.classList.remove('open');
-                }
-            }, 150);
-        });
-
-        select.addEventListener('change', async () => {
+    // Grid buttons click events
+    gridButtons.forEach(button => {
+        button.addEventListener('click', async () => {
             if (isGameCompleted || isGameLoading) return;
             
-            wrapper.classList.remove('open');
-            select.blur();
+            const index = Number(button.dataset.index);
+            if (!buttons[index] || buttonFoundState[index]) return;
 
-            const selectIndex = Number(select.dataset.index);
-            const chosenBtnIndex = Number(select.value);
-            if (isNaN(chosenBtnIndex) || selectFoundState[selectIndex]) return;
-
-            const expectedValue = foundCorrectCount + 1;
-            const isCorrect = buttons[chosenBtnIndex] && buttons[chosenBtnIndex].value === expectedValue;
-            
+            const isCorrect = buttons[index].value === true;
             moveCount++;
             updateMovesDisplay();
 
             if (isCorrect) {
-                selectFoundState[selectIndex] = true;
-                select.disabled = true;
-                select.classList.add('selected');
-                select.style.backgroundColor = '#ff9800';
-                select.style.color = '#ffffff';
-                select.style.borderColor = '#ffffff';
+                buttonFoundState[index] = true;
+                button.disabled = true;
+                button.classList.add('selected');
                 foundCorrectCount++;
 
                 if (typeof Checkmark !== 'undefined') {
                     try {
                         await Checkmark.show({
-                            element: select,
+                            element: button,
                             size: 48,
                             rise: 70,
                             duration: 1600
@@ -956,17 +734,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     }
 
+                    // Turn the Help button into "Fatto"
                     if (revealBtn) {
                         revealBtn.innerHTML = "<span>✓ Fatto</span>";
                     }
                 }
 
             } else {
-                select.classList.remove('error');
-                void select.offsetWidth;
-                select.classList.add('error');
+                button.classList.remove('error');
+                void button.offsetWidth; // Force reflow for shake animation
+                button.classList.add('error');
                 setTimeout(() => {
-                    select.classList.remove('error');
+                    button.classList.remove('error');
                 }, 400);
             }
         });
@@ -974,6 +753,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initGame();
 });
+
 </script>
 
 </body>

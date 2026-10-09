@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricordare per categorie</title>
+
+    <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../js/checkmark.js"></script>
+    <script src="../js/celebrazion.js"></script>
+
+    <style>
+        :root {
+            --bg-0: #2a113d;
+            --bg-1: #4a1d6e;
+            --bg-2: #553d94;
+            --accent: #ff9800;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #000205;
+            --word: #7931b4;          /* colore dei pulsanti parola (dal layout di riferimento) */
+            --help: #4f46e5;          /* colore del pulsante Help */
+            --ok: #22c55e;
+            --ko: #ef4444;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+            /* tutte le misure scalano con l'altezza della finestra: a ~920px di altezza
+               coincidono con il layout di riferimento (titolo 2.3rem, parole 20px, area 1100px) */
+            --gap: clamp(6px, 1.7vh, 16px);
+            --maxw: 1100px;
+            --fs-word: clamp(.8rem, 2.2vh, 1.25rem);
+            --fs-ui: clamp(.75rem, 1.85vh, 1.05rem);
+        }
+
+        * { box-sizing: border-box; }
+        html, body { height: 100%; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at center,rgba(99, 102, 241, 0.06),transparent 40%),
+                radial-gradient(circle at center,rgba(6, 182, 212, 0.06),transparent 40%),
+                var(--bg-0);
+            color: var(--text);
+            margin: 0;
+            padding: clamp(6px, 1.6vh, 16px) 20px;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;                /* nessuno scroll */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--gap);
+        }
+        body > * { flex-shrink: 0; }
+
+        h1, #progress-title {
+            margin: 0;
+            font-size: clamp(1.25rem, 4vh, 2.3rem);
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        #game-stats {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px 24px;
+            font-size: var(--fs-ui);
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            padding: clamp(5px, 1.1vh, 10px) 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* Banner: una riga, altezza FISSA (non cambia al variare del testo) */
+        #instruction-banner {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: fit-content;
+            max-width: min(100%, var(--maxw));
+            height: calc(var(--fs-ui) * 1.3 + clamp(10px, 2.2vh, 20px));
+            padding: 0 20px;
+            font-size: var(--fs-ui);
+            line-height: 1.3;
+            font-weight: 600;
+            color: var(--text-dim);
+            background: var(--bg-1);
+            border-radius: 99px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+            overflow: hidden;
+        }
+
+        /* Pulsante Help: sopra l'area di gioco, centrato */
+        #help-btn {
+            font: inherit;
+            font-size: var(--fs-ui);
+            font-weight: 700;
+            color: #fff;
+            background: var(--help);
+            border: none;
+            padding: clamp(6px, 1.3vh, 12px) clamp(18px, 2.6vh, 28px);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, .4);
+            touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
+            transition: filter .12s, opacity .12s;
+        }
+        #help-btn:hover:not(:disabled) { filter: brightness(1.12); }
+        #help-btn.held { background: var(--accent); box-shadow: 0 4px 12px rgba(255,152,0,.45); }
+        #help-btn:disabled { opacity: .4; cursor: not-allowed; }
+        #help-btn:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+        /* L'area di gioco ha SEMPRE le stesse dimensioni, in tutte le fasi */
+        #game-area {
+            flex: 1 1 0;
+            min-height: 0;
+            max-height: 470px;
+            width: 100%;
+            max-width: var(--maxw);
+            margin: 0;
+            padding: clamp(8px, 2.2vh, 22px);
+            border-radius: 20px;
+            background: var(--bg-1);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: var(--maxw);
+            height: clamp(8px, 1.3vh, 12px);
+            margin: 0;
+            background: var(--bg-1);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient( 135deg,#6366f1 0%,#a855f7 100%);
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* =========================================
+           ESERCIZIO: RICORDARE PER CATEGORIE
+           Scheletro unico per tutte le fasi:
+           [ riga alta ] [ zona A ] [ zona B ] [ riga bassa ]
+        ========================================= */
+
+        .frame { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; gap: clamp(5px, 1.2vh, 12px); }
+        .toprow, .bottomrow { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .toprow { height: clamp(20px, 3.4vh, 32px); }
+        .bottomrow { height: clamp(30px, 4.8vh, 46px); }
+        .main { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--gap); text-align: center; }
+        .slotA { flex: 2 1 0; min-height: 0; }
+        .slotB { flex: 3 1 0; min-height: 0; }
+
+        .tag {
+            font-size: clamp(.65rem, 1.5vh, .85rem); font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+            color: var(--text); background: var(--bg-2); padding: 3px 14px; border-radius: 99px; border: 1px solid var(--border);
+        }
+        .big-msg { font-size: var(--fs-word); font-weight: 600; margin: 0; line-height: 1.4; }
+        .sub-msg { font-size: var(--fs-ui); color: var(--text-dim); margin: 0; font-weight: 600; }
+
+        /* pulsanti d'azione (Inizia, Verifica…) */
+        .action {
+            font: inherit; font-weight: 700; font-size: var(--fs-ui); cursor: pointer; height: 100%;
+            color: #fff; background: var(--accent); border: 2px solid var(--border);
+            padding: 0 clamp(18px, 3vh, 32px); border-radius: 99px; box-shadow: var(--shadow-sm); transition: filter .12s;
+        }
+        .action:hover:not(:disabled) { filter: brightness(1.1); }
+        .action:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+        .action.secondary { background: var(--bg-2); }
+        .action:disabled { opacity: .45; cursor: not-allowed; }
+
+        /* timer (riga alta, fase di studio) */
+        .timer { font-size: var(--fs-word); line-height: 1; font-weight: 800; color: var(--accent); font-variant-numeric: tabular-nums; min-width: 3.2ch; text-align: right; }
+        .timer-bar { flex: 1; max-width: 500px; height: clamp(8px, 1.3vh, 12px); background: var(--bg-0); border-radius: 99px; overflow: hidden; border: 1px solid var(--border); }
+        .timer-bar > div { height: 100%; width: 100%; background: var(--accent); }
+
+        /* zone */
+        .zone {
+            background: var(--bg-0); border: 2px dashed var(--text-dim); border-radius: 14px;
+            padding: clamp(6px, 1.2vh, 12px); display: flex; flex-direction: column; gap: clamp(4px, .9vh, 8px);
+            overflow: hidden; min-height: 0; transition: border-color .15s, background .15s;
+        }
+        .zone-label { margin: 0; font-size: var(--fs-ui); font-weight: 800; color: var(--accent); text-align: center; line-height: 1.25; flex: 0 0 auto; }
+        .zone.panel { align-items: center; justify-content: center; text-align: center; }
+
+        /* PULSANTI PAROLA: stile e dimensione del layout di riferimento */
+        .wgrid { display: grid; gap: clamp(4px, 1vh, 10px); width: 100%; min-height: 0; align-content: start; }
+        .pool .wgrid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .wbtn {
+            font: inherit; font-size: var(--fs-word); font-weight: 700; color: #fff; line-height: 1.15;
+            background: var(--word); border: 2px solid var(--border); border-radius: 8px;
+            padding: clamp(2px, .6vh, 6px) 6px; text-align: center; cursor: pointer;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0;
+        }
+        .wbtn.static { cursor: default; }
+        .wbtn.sel { background: var(--accent); box-shadow: 0 0 0 3px #fff; }
+        .wbtn:focus-visible { outline: 3px solid #fff; outline-offset: 1px; }
+        .wbtn.hint { cursor: default; border-color: var(--c); }
+        .wbtn.ok { background: rgba(34,197,94,.35); border-color: var(--ok); }
+        .wbtn.ko { background: rgba(239,68,68,.35); border-color: var(--ko); }
+        .wbtn small { display: block; font-size: .55em; font-weight: 600; color: #ddd; line-height: 1.1; }
+
+        .zone.target { cursor: pointer; }
+        .pool.target { border-color: var(--accent); background: rgba(255,152,0,.10); }
+
+        /* gruppi (smistamento e risultato): colonne fisse */
+        .boxes, .groups { display: grid; grid-template-columns: repeat(var(--n, 2), minmax(0, 1fr)); grid-auto-rows: minmax(0, 1fr); gap: clamp(6px, 1.4vh, 14px); min-height: 0; }
+        .box { position: relative; border-style: solid; border-width: 3px; border-color: var(--c); }
+        .box .wgrid { grid-template-columns: repeat(auto-fill, minmax(clamp(96px, 15vh, 140px), 1fr)); overflow-y: auto; flex: 1 1 0; }
+        .box .zone-label { color: var(--c); padding-bottom: 2px; border-bottom: 2px solid var(--c); }
+        .box.peek .zone-label { color: #fff; background: var(--c); border-radius: 8px; border-bottom-color: transparent; padding: 2px 6px; }
+        .box.empty::after {
+            content: '＋ Tocca qui'; position: absolute; left: 0; right: 0; top: 58%; transform: translateY(-50%);
+            text-align: center; font-weight: 700; font-size: var(--fs-ui); color: var(--text-dim); pointer-events: none;
+        }
+        .box.target { background: rgba(255,255,255,.07); border-style: dashed; }
+        .box.target.empty::after { content: 'Metti qui'; color: var(--c); }
+
+        /* risultato */
+        .group { background: var(--bg-0); border: 3px solid var(--border); border-radius: 14px; padding: clamp(5px, 1.1vh, 10px); overflow: hidden; min-height: 0; display: flex; flex-direction: column; gap: 6px; }
+        .group h3 { margin: 0; font-size: var(--fs-ui); color: var(--accent); text-align: center; line-height: 1.2; }
+        .group .wgrid { grid-template-columns: repeat(auto-fill, minmax(clamp(96px, 15vh, 140px), 1fr)); overflow-y: auto; }
+        .score { font-size: clamp(1.4rem, 4.6vh, 2.6rem); line-height: 1; font-weight: 800; color: var(--accent); text-shadow: 0 2px 4px rgba(0,0,0,.5); }
+
+        @media (max-width: 980px) {
+            #instruction-banner { height: calc(var(--fs-ui) * 3.9 + 12px); padding: 0 16px; border-radius: 18px; }
+        }
+        @media (max-width: 700px) {
+            :root { --fs-ui: .78rem; --fs-word: .82rem; }
+            body { padding: 8px 10px; }
+            h1, #progress-title { font-size: min(clamp(1.1rem, 4vh, 2.3rem), 6vw); }
+            #game-area { padding: 8px; border-radius: 16px; }
+            .pool .wgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .boxes, .groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .box .wgrid, .group .wgrid { grid-template-columns: 1fr; }
+            .zone { padding: 5px; gap: 3px; }
+            .wbtn { padding: 2px 3px; border-radius: 6px; }
+            .wbtn small { font-size: .62em; }
+        }
+        /* schermi bassi: nascondo il titolo "Progresso" (resta la barra) */
+        @media (max-height: 700px) { #progress-title { display: none; } }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="game-title">Ricordare per categorie</h1>
+
+    <div id="game-stats">
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <div id="instruction-banner">
+        Premi Inizia: vedrai le parole per 45 secondi. Prova a raggrupparle per categoria.
+    </div>
+
+    <button id="help-btn" disabled>💡 Help</button>
+
+    <div id="game-area"></div>
+
+    <h1 id="progress-title">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <script>
+    /* I round (esercizi 001, 017, 033, 049, 065, 081, 097, 113, 129 del Metodo Scintilla – Vol. 02 Memoria)
+       sono nel file esterno JSON: per ogni sessione ne viene scelto uno a caso. */
+    const DATA_URL = 'ricordare-per-categorie.json';
+    const STUDY_SECONDS = 45;
+    const COLORS = ['#38bdf8', '#f472b6', '#facc15', '#4ade80'];
+
+    const $ = id => document.getElementById(id);
+    const area = $('game-area');
+    const norm = s => s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+    const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+    let R = null;                       // round scelto a caso per questa sessione
+    let moves = 0, helps = 0, seconds = 0;
+    let clock = null, studyTimer = null;
+    let place = {}, sel = null, order = [];
+    let helpEnabled = false;
+
+    function startClock() {
+        if (clock) return;
+        clock = setInterval(() => { seconds++; $('time-value').textContent = seconds + 's'; }, 1000);
+    }
+    function stopClock() { clearInterval(clock); clock = null; }
+    function updateStats() {
+        $('moves-value').textContent = moves;
+        $('reveals-value').textContent = helps;
+    }
+    function setProgress(pct) { $('progress-bar-fill').style.width = pct + '%'; }
+    function banner(txt) { $('instruction-banner').textContent = txt; }
+    function enableHelp(on) { helpEnabled = on; $('help-btn').disabled = !on; }
+
+    /* Scheletro unico: riga alta / zona A / zona B / riga bassa (oppure un solo blocco "main") */
+    function frame({ top = '', a = '', b = '', main = null, bottom = '' }) {
+        area.innerHTML = `<div class="frame">
+            <div class="toprow">${top}</div>
+            ${main !== null ? `<div class="main">${main}</div>` : a + b}
+            <div class="bottomrow">${bottom}</div>
+        </div>`;
+    }
+
+    /* ---------- Caricamento JSON + scelta casuale ---------- */
+    async function loadRound() {
+        enableHelp(false);
+        frame({ main: '<p class="big-msg">Caricamento…</p>' });
+        try {
+            const res = await fetch(DATA_URL, { cache: 'no-store' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const all = await res.json();
+            if (!Array.isArray(all) || !all.length) throw new Error('JSON vuoto');
+            R = all[Math.floor(Math.random() * all.length)];
+            moves = 0; helps = 0; seconds = 0; $('time-value').textContent = '0s';
+            setProgress(0); updateStats(); showIntro();
+        } catch (err) {
+            frame({ main: `<p class="big-msg">Impossibile caricare gli esercizi.</p>
+                <p class="sub-msg">Controlla che il file <strong>${DATA_URL}</strong> sia nella stessa cartella e che la pagina sia aperta da un server (non da file://).</p>` });
+        }
+    }
+
+    /* ---------- FASE 0: intro ---------- */
+    function showIntro() {
+        enableHelp(false);
+        banner('Premi Inizia: vedrai le parole per 45 secondi. Prova a raggrupparle per categoria.');
+        frame({
+            main: `<span class="tag">Esercizio ${R.id} · ${R.label}</span>
+                   <p class="big-msg">Vedrai ${R.words.length} parole per ${STUDY_SECONDS} secondi.<br>Cerca di ricordarle e di metterle in gruppi.</p>
+                   <p class="sub-msg">Il tempo parte quando premi il pulsante.</p>`,
+            bottom: '<button id="btn-start" class="action">Inizia</button>'
+        });
+        $('btn-start').onclick = () => { startClock(); startStudy(); };
+    }
+
+    /* ---------- FASE 1: studio (stesso scheletro della fase 2) ---------- */
+    function startStudy() {
+        let left = STUDY_SECONDS;
+        enableHelp(false);
+        banner('Studia le parole: tra poco dovrai metterle nei gruppi giusti.');
+        frame({
+            top: `<span class="timer" id="study-left">${left}s</span><div class="timer-bar"><div id="study-bar"></div></div>`,
+            a: `<div class="zone pool slotA"><p class="zone-label">Memorizza queste parole</p>
+                    <div class="wgrid">${R.words.map(w => `<span class="wbtn static">${esc(w)}</span>`).join('')}</div></div>`,
+            b: `<div class="zone panel slotB"><p class="big-msg">Cerca i punti in comune tra le parole:<br>tra poco dovrai dividerle in gruppi.</p></div>`,
+            bottom: '<button id="btn-done" class="action secondary">Ho finito di studiare</button>'
+        });
+        const stop = () => { clearInterval(studyTimer); startSort(); };
+        $('btn-done').onclick = stop;
+        const bar = $('study-bar');
+        bar.style.width = '100%';
+        bar.getBoundingClientRect();
+        bar.style.transition = `width ${STUDY_SECONDS}s linear`;
+        requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = '0%'; }));
+        studyTimer = setInterval(() => {
+            left--;
+            const el = $('study-left'); if (el) el.textContent = left + 's';
+            if (left <= 0) stop();
+        }, 1000);
+    }
+
+    /* ---------- FASE 2: smistamento a tocco ---------- */
+    // A ogni riquadro assegna la categoria che contiene più parole giuste (stato attuale)
+    function assignCategories() {
+        const names = Object.keys(R.groups), n = names.length;
+        const catOf = {};
+        names.forEach((nm, c) => R.groups[nm].forEach(w => catOf[norm(w)] = c));
+        const counts = names.map(() => new Array(n).fill(0));
+        R.words.forEach((w, i) => { if (place[i] !== 'pool') counts[place[i]][catOf[norm(w)]]++; });
+        const assign = new Array(n).fill(-1), usedB = new Set(), usedC = new Set();
+        for (let k = 0; k < n; k++) {
+            let best = -1, bb = -1, bc = -1;
+            for (let b = 0; b < n; b++) if (!usedB.has(b)) for (let c = 0; c < n; c++) if (!usedC.has(c) && counts[b][c] > best) { best = counts[b][c]; bb = b; bc = c; }
+            assign[bb] = bc; usedB.add(bb); usedC.add(bc);
+        }
+        return { names, catOf, assign };
+    }
+
+    function startSort() {
+        place = {}; R.words.forEach((w, i) => place[i] = 'pool');
+        order = shuffle(R.words.map((_, i) => i));
+        sel = null;
+        banner('Tocca una parola e poi il gruppo dove vuoi metterla. Tieni premuto Help per vedere le risposte.');
+        renderSort();
+        enableHelp(true);
+    }
+
+    const wordBtn = i => `<button class="wbtn ${sel === i ? 'sel' : ''}" data-i="${i}">${esc(R.words[i])}</button>`;
+
+    function poolHtml() {
+        const inPool = order.filter(i => place[i] === 'pool');
+        const label = sel !== null && place[sel] !== 'pool'
+            ? `Tocca qui per rimettere «${esc(R.words[sel])}» tra le parole`
+            : sel !== null ? `Ora tocca un gruppo per «${esc(R.words[sel])}»`
+            : `Parole da sistemare (${inPool.length})`;
+        return `<div class="zone pool slotA ${sel !== null ? 'target' : ''}" data-z="pool">
+                    <p class="zone-label">${label}</p><div class="wgrid">${inPool.map(wordBtn).join('')}</div></div>`;
+    }
+    function boxesHtml() {
+        const names = Object.keys(R.groups);
+        return `<div class="boxes slotB" style="--n:${names.length}">` + names.map((nm, b) => {
+            const items = order.filter(i => place[i] === b);
+            return `<div class="zone box ${items.length ? '' : 'empty'} ${sel !== null ? 'target' : ''}" data-z="${b}" style="--c:${COLORS[b % COLORS.length]}">
+                <p class="zone-label">Gruppo ${b + 1}</p><div class="wgrid">${items.map(wordBtn).join('')}</div></div>`;
+        }).join('') + '</div>';
+    }
+
+    function renderSort() {
+        const inPool = order.filter(i => place[i] === 'pool');
+        // la barra avanza di una parola ogni volta che una parola è dentro un gruppo (giusto o sbagliato)
+        setProgress((R.words.length - inPool.length) / R.words.length * 100);
+        frame({
+            top: `<span class="sub-msg">Raggruppa le parole per categoria</span>`,
+            a: poolHtml(),
+            b: boxesHtml(),
+            bottom: `<button id="btn-check" class="action" ${inPool.length ? 'disabled' : ''}>Verifica</button>`
+        });
+        // un solo gestore (delegato): continua a funzionare anche se i riquadri vengono sostituiti
+        area.querySelector('.frame').onclick = e => {
+            const w = e.target.closest('.wbtn');
+            if (w && w.dataset.i !== undefined) { const i = +w.dataset.i; sel = (sel === i) ? null : i; renderSort(); return; }
+            const z = e.target.closest('.zone');
+            if (z && sel !== null && z.dataset.z !== undefined) {
+                const dest = z.dataset.z === 'pool' ? 'pool' : +z.dataset.z;
+                if (place[sel] !== dest) { place[sel] = dest; moves++; updateStats(); }
+                sel = null; renderSort();
+            }
+        };
+        $('btn-check').onclick = showResult;
+    }
+
+    /* Help "tieni premuto": finché il pulsante è premuto ogni gruppo mostra la categoria e TUTTE le sue
+       parole corrette; al rilascio si ripristina lo stato attuale. Si sostituisce solo il contenuto dei
+       riquadri, quindi le dimensioni non cambiano. */
+    (function setupHelp() {
+        const btn = $('help-btn');
+        let held = false;
+        const show = () => {
+            if (held || !helpEnabled) return;
+            held = true; helps++; updateStats();
+            btn.classList.add('held');
+            const { names, assign } = assignCategories();
+            area.querySelector('.boxes').innerHTML = names.map((_, b) => {
+                const nm = names[assign[b]];
+                return `<div class="zone box peek" style="--c:${COLORS[b % COLORS.length]}"><p class="zone-label">${esc(nm)}</p>
+                    <div class="wgrid">${R.groups[nm].map(w => `<span class="wbtn hint">${esc(w)}</span>`).join('')}</div></div>`;
+            }).join('');
+        };
+        const hide = () => {
+            if (!held) return;
+            held = false;
+            btn.classList.remove('held');
+            const old = area.querySelector('.boxes');
+            if (old) old.outerHTML = boxesHtml();
+        };
+        btn.addEventListener('pointerdown', e => { e.preventDefault(); try { btn.setPointerCapture(e.pointerId); } catch (_) {} show(); });
+        ['pointerup', 'pointercancel', 'lostpointercapture', 'pointerleave', 'blur'].forEach(ev => btn.addEventListener(ev, hide));
+        btn.addEventListener('keydown', e => { if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); show(); } });
+        btn.addEventListener('keyup', e => { if (e.key === ' ' || e.key === 'Enter') hide(); });
+        btn.addEventListener('contextmenu', e => e.preventDefault());
+    })();
+
+    /* ---------- FASE 3: risultato (stesso scheletro) ---------- */
+    function showResult() {
+        stopClock();
+        enableHelp(false);
+        const { names, catOf, assign } = assignCategories();
+        let score = 0;
+        const groups = names.map((_, b) => {
+            const idxs = R.words.map((w, i) => i).filter(i => place[i] === b);
+            const btns = idxs.map(i => {
+                const ok = catOf[norm(R.words[i])] === assign[b];
+                if (ok) score++;
+                return `<span class="wbtn static ${ok ? 'ok' : 'ko'}">${esc(R.words[i])}${ok ? '' : `<small>→ ${esc(names[catOf[norm(R.words[i])]])}</small>`}</span>`;
+            }).join('');
+            return `<div class="group" style="border-color:${COLORS[b % COLORS.length]}"><h3>${esc(names[assign[b]])}</h3><div class="wgrid">${btns || '<span class="sub-msg">Vuoto</span>'}</div></div>`;
+        }).join('');
+
+        banner('Ecco il risultato: verde = nel gruppo giusto, rosso = nel gruppo sbagliato.');
+        const msg = score === R.words.length ? 'Perfetto! Tutte le parole nel gruppo giusto.' : score >= 5 ? 'Bel lavoro!' : 'Buon tentativo: la prossima volta cerca i punti in comune tra le parole.';
+        frame({
+            top: `<span class="sub-msg">Risultato</span>`,
+            a: `<div class="zone panel slotA" style="border-style:solid;border-color:var(--bg-2)"><div class="score">${score} / ${R.words.length}</div><p class="big-msg">${msg}</p></div>`,
+            b: `<div class="groups slotB" style="--n:${names.length}">${groups}</div>`,
+            bottom: '<button id="btn-again" class="action">Gioca ancora</button>'
+        });
+        $('btn-again').onclick = loadRound;
+    }
+
+    loadRound();
+    </script>
+</body>
+</html>

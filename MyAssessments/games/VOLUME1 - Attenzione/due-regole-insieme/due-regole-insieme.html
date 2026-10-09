@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titolo del gioco</title>
+    <title>Due regole assieme</title>
 
-    <!-- 1. Includi qui il file esterno condiviso -->
-    <script src="../../../js/checkmark.js"></script>
-    <script src="../../../js/celebrazion.js"></script>
+     <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
 
     <style>
 
@@ -194,7 +194,6 @@
 
     <style>
 
-        /*
         #game-area {
             padding: 24px;
         }
@@ -202,8 +201,8 @@
         .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(6, 1fr);
+            grid-template-columns: repeat(4, 1fr); /* Changed from 3 to 2 */
+            grid-template-rows: repeat(4, 1fr);    /* Changed from 5 to 3 */
             gap: 14px;
         }
 
@@ -243,60 +242,7 @@
             font-size: 1rem;
         }
         }
-        */
 
-        #game-area {
-            padding: 14px; /* Reduced padding inside game area */
-        }
-
-        .button-grid {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(6, 1fr);
-            gap: 10px; /* Reduced gap between buttons */
-        }
-
-        .grid-button {
-            min-height: 64px; /* Reduced height to prevent scrolling */
-            padding: 6px 12px;
-            border: 2px solid #000205;
-            border-radius: 12px;
-            background: #7931b4;
-            color: #ffffff;
-            font-size: 1.2rem; /* Slightly smaller text */
-            font-weight: 700;
-            cursor: pointer;
-            transition:
-                background 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.15s ease;
-        }
-
-        .grid-button:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            background: #ffffff;
-            color: var(--accent);
-            z-index: 5;
-        }
-
-        .grid-button.selected {
-            background: #ff9800;
-            border-color: #000205;
-            color: #ffffff;
-        }
-
-        @media (max-width: 700px) { 
-            .button-grid { gap: 8px; }
-            .grid-button {
-                min-height: 38px;
-                font-size: 0.85rem;
-                padding: 4px 8px;
-            }
-        }
-    
     </style>
 
     <style>
@@ -474,7 +420,7 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        Cambio di regola a metà
+       Due regole simultanee
     </h1>
 
     <!-- COUNTERS -->
@@ -515,6 +461,11 @@
             <button class="grid-button" data-index="9"></button>
             <button class="grid-button" data-index="10"></button>
             <button class="grid-button" data-index="11"></button>
+            <button class="grid-button" data-index="12"></button>
+            <button class="grid-button" data-index="13"></button>
+            <button class="grid-button" data-index="14"></button>
+            <button class="grid-button" data-index="15"></button>
+            
         </div>
     </div>
 
@@ -667,7 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-chi-entra-e-chi-resta-fuori.json');
+            const response = await fetch('categorie-due-regole-insieme.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
