@@ -1,0 +1,16 @@
+{
+    "title": "Segui il percorso",
+    "description": "Leggi il testo e sottolinea solo le parole che indicano una persona o un ruolo di persona. Ignora tutte le altre informazioni.",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "Domenica mattina Giorgio e sua sorella Marta sono andati al mercato con una borsa verde. Hanno comprato tre mele, un formaggio e due pani. Un gatto dormiva sul banco del fruttivendolo, accanto a una bilancia. All'ora di pranzo sono tornati a casa.",
+        "instruction":"Leggi il testo e scrivi solo le parole che indicano una persona o un ruolo di persona. Ignora tutte le altre informazioni.",
+        "solutions":["Giorgio","Marta","Fruttivendolo"],
+        "buttons": []
+      }
+        
+  ]
+}
