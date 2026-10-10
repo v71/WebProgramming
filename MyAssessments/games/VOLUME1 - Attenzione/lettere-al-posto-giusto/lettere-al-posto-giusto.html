@@ -524,7 +524,6 @@
         </div>
     </div>
 
-
 <script>
         
         document.addEventListener('DOMContentLoaded', () => {
@@ -730,18 +729,16 @@
 
                             const isCharCorrect = (card.dataset.char === emptySlotMeta.expected);
 
-                            if (isCharCorrect) {
-                                try {
-                                    await Checkmark.show({
-                                        element: emptySlotMeta.element,
-                                        size: 48,
-                                        rise: 70,
-                                        duration: 1600
-                                    });
-                                }
-                                catch (err) {
-                                     console.warn('Checkmark animation failed:', err);
-                                }
+                            // Remove 'await' so it runs non-blocking in the background
+                            if (isCharCorrect && (typeof Checkmark !== 'undefined')) {
+                                Checkmark.show({
+                                    element: emptySlotMeta.element,
+                                    size: 48,
+                                    rise: 70,
+                                    duration: 1600
+                                }).catch(err => {
+                                    console.warn('Checkmark animation failed:', err);
+                                });
                             }
 
                             checkWordAutomatic();
@@ -844,15 +841,6 @@
                 if (summaryScreen) summaryScreen.style.display = 'block';
             }
 
-            function handleActionButton() {
-                const buttonText = revealBtn.querySelector('span').textContent;
-                if (buttonText.includes('Fatto') || wordCompleted) {
-                    showSummaryScreen();
-                    return;
-                }
-                showReveal();
-            }
-
             function showReveal() {
                 if (wordCompleted || isRevealing || revealBtn.disabled) return;
                 isRevealing = true;
@@ -888,21 +876,35 @@
                 }
             }
            
-            revealBtn.addEventListener('click', handleActionButton);
+            const startHelp = () => {
+                if (wordCompleted || revealBtn.disabled) return;
+                showReveal();
+            };
+
+            revealBtn.addEventListener('mousedown', startHelp);
             revealBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                handleActionButton();
+                startHelp();
             }, { passive: false });
 
             revealBtn.addEventListener('mouseup', hideReveal);
             revealBtn.addEventListener('mouseleave', hideReveal);
             revealBtn.addEventListener('touchend', hideReveal);
             revealBtn.addEventListener('touchcancel', hideReveal);
+
+            revealBtn.addEventListener('click', () => {
+                const buttonText = revealBtn.querySelector('span').textContent;
+                if (buttonText.includes('Fatto') || wordCompleted) {
+                    showSummaryScreen();
+                }
+            });
             
             initGame();
         });
 
     </script>
+
+
 
 </body>
 </html>

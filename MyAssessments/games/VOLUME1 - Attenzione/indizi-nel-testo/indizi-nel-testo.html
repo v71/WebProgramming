@@ -507,6 +507,7 @@
 
     <!-- COUNTERS -->
     <div id="game-stats">
+        <span>Parole Trovate: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -575,10 +576,7 @@
         </div>
     </div>
 
-
     <script>
-
-
 
 document.addEventListener('DOMContentLoaded', () => {
     let elapsedSeconds = 0;
@@ -602,6 +600,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const helpButtons = document.querySelectorAll('.cool-btn-2');
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
     const timeValueEl = document.getElementById('time-value');
@@ -649,6 +648,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <div>Aiuti Totali: <strong>${revealCount}</strong></div>
         `;
         summaryScreen.style.display = 'block';
+    }
+
+    function updateWordCountDisplay() {
+        if (wordCountEl) {
+            wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        }
     }
 
     function stopElapsedTimer() {
@@ -763,6 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
             logDebug(currentExercise.text);
             updateMovesDisplay();
             updateRevealDisplay();
+            updateWordCountDisplay();
             updateProgressBar(0);
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
@@ -817,6 +823,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateMovesDisplay();
                 updateProgressBar(foundCorrectCount / totalCorrectItems);
 
+                updateWordCountDisplay();
+
                 // Trigger checkmark animation immediately for each newly found word
                 if (typeof Checkmark !== 'undefined') {
                     try {
@@ -839,9 +847,6 @@ document.addEventListener('DOMContentLoaded', () => {
 //                textArea.style.backgroundColor = '#ff9800';
                 textArea.style.color = '#ffffff';
 //                textArea.style.borderColor = '#ffffff';
-
-                // Wait a few milliseconds after the final checkmark
-                await new Promise(resolve => setTimeout(resolve, 600));
 
                 // Celebration animation (Confetti)
                 if (typeof Confetti !== 'undefined') {

@@ -1,14 +1,7 @@
 {
-    "title": "Frasi quasi uguali",
-    "description": "Confronta le frasi e trova la coppia quasi identica, che differisce per una sola informazione.",
-
     "categories": [
       {
-        "id": 1,
-        "title": "Categoria 1",
-        "text": "15 elementi 8 alimenti e 7 oggetti",
         "instruction": "Confronta le frasi e trova la coppia quasi identica, che differisce per una sola informazione.",
-
         "buttons": [
           { "label": "Prima di uscire dal teatro, Denise ha controllato le scarpe.", "value": false },
           { "label": "Elisa ha messo via gli occhiali dopo essere arrivata in ospedale.", "value": false },

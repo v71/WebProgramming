@@ -475,6 +475,7 @@
 
     <!-- COUNTERS -->
     <div id="game-stats">
+        <span>Forme Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -575,6 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridButtons = document.querySelectorAll('.button-grid:last-of-type .grid-button');
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
     const timeValueEl = document.getElementById('time-value');
@@ -611,6 +613,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <div>Aiuti Totali: <strong>${revealCount}</strong></div>
         `;
         summaryScreen.style.display = 'block';
+    }
+
+    function updateWordCountDisplay() {
+        if (wordCountEl) {
+            wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        }
     }
 
     function stopElapsedTimer() {
@@ -664,33 +672,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /*
-    function updateGridUI(title) {
-        if (instructionBanner) {
-            instructionBanner.textContent = title;
-        }
-       
-        // Populate the TOP buttons (descriptions)
-        topGridButtons.forEach((button, index) => {
-            if (descriptions[index]) {
-                button.textContent = descriptions[index].shape; // <-- Change .label to .shape here
-                button.style.display = ''; // Ensure the button is visible
-            } else {
-                button.style.display = 'none'; // Hide if HTML has more buttons than JSON items
-            }
-        });
-        // Populate the BOTTOM grid buttons (buttons array) <-- Uncomment this block
-        gridButtons.forEach(button => {
-            const index = Number(button.dataset.index);
-            if (buttons[index]) {
-                button.textContent = buttons[index].label; // Pulls "▲", "●", "■" from buttons array
-                button.classList.remove('selected', 'error', 'help-correct');
-                button.disabled = false;
-            }
-        });
-    }
-    */
-    
     function updateProgressBar(value) {
         if (progressBarFill) {
             progressBarFill.style.width = (Math.min(Math.max(value, 0), 1) * 100) + '%';
@@ -713,7 +694,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('elemento-che-rompe-lo-schema-1.json');
+            const response = await fetch('elemento-che-rompe-lo-schema.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -738,6 +719,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateMovesDisplay();
             updateRevealDisplay();
+            updateWordCountDisplay();
             updateProgressBar(0);
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
@@ -799,6 +781,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.disabled = true;
                 button.classList.add('selected');
                 foundCorrectCount++;
+
+                updateWordCountDisplay();
 
                 if (typeof Checkmark !== 'undefined') {
                     try {

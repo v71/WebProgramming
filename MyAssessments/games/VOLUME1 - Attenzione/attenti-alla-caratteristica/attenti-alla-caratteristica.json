@@ -1,12 +1,6 @@
 {
-    "title": "Attenti alla caratteristica",
-    "description": "Seleziona gli Elementi.",
-
     "categories": [
       {
-        "id": 1,
-        "title": "Categoria 1",
-        "text": "",
         "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «serve per tagliare».",
         "buttons": [
           { "label": "Martello", "value": false },

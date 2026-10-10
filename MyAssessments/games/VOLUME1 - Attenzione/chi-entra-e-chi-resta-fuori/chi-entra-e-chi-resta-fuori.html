@@ -194,57 +194,6 @@
 
     <style>
 
-        /*
-        #game-area {
-            padding: 24px;
-        }
-
-        .button-grid {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(6, 1fr);
-            gap: 14px;
-        }
-
-        .grid-button {
-            min-height: 70px;
-            border: 2px solid #000205;
-            border-radius: 14px;
-            background: #7931b4;
-            color: #ffffff;
-            font-size: 1.15rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition:
-                background 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.15s ease;
-        }
-
-        .grid-button:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-            background: #ffffff;
-            color: var(--accent);
-            z-index: 5;
-        }
-
-        .grid-button.selected {
-            background: #ff9800;
-            border-color: #000205;
-            color: #ffffff;
-        }
-
-        @media (max-width: 700px) { .button-grid { gap: 10px; }
-        .grid-button {
-            min-height: 60px;
-            font-size: 1rem;
-        }
-        }
-        */
-
         #game-area {
             padding: 14px; /* Reduced padding inside game area */
         }
@@ -479,6 +428,7 @@
 
     <!-- COUNTERS -->
     <div id="game-stats">
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -568,6 +518,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridButtons = document.querySelectorAll('.grid-button');
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
     const timeValueEl = document.getElementById('time-value');
@@ -644,6 +595,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function updateWordCountDisplay() {
+        if (wordCountEl) {
+            wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        }
+    }
+
     function updateProgressBar(value) {
         if (progressBarFill) {
             progressBarFill.style.width = (Math.min(Math.max(value, 0), 1) * 100) + '%';
@@ -691,6 +648,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateMovesDisplay();
             updateRevealDisplay();
+            updateWordCountDisplay();
             updateProgressBar(0);
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
@@ -756,6 +714,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.classList.add('selected');
                 foundCorrectCount++;
 
+                 updateWordCountDisplay();
+                 
                 if (typeof Checkmark !== 'undefined') {
                     try {
                         await Checkmark.show({

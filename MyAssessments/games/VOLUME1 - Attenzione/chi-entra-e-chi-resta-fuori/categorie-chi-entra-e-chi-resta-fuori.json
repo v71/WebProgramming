@@ -1,14 +1,7 @@
 {
-    "title": "Chi entra e chi resta fuori",
-    "description": "Seleziona gli Elementi.",
-
     "categories": [
       {
-        "id": 1,
-        "title": "Categoria 1",
-        "text": "15 elementi 8 alimenti e 7 oggetti",
         "instruction": "Clicca solo sulle parole che indicano «oggetti» e non clicclare su quelli che indicano «luoghi»",
-
         "buttons": [
           { "label": "Asciugamano", "value": true },
           { "label": "Bottiglia", "value": true },

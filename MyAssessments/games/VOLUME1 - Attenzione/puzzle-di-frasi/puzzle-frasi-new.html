@@ -470,7 +470,7 @@
     <h1 id="game-title">Puzzle di Frasi</h1>
 
     <div id="game-stats">
-        <span>Parole Corrette: <strong id="progress-value">1 / 4</strong></span>
+        <span>Parole Corrette: <strong id="progress-value">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -529,433 +529,437 @@
 
 
 <script>
-        ///////////////////////////////////////////////////////////////////////////////
-        // LE FRASI SONO LETTE NELLA FUNZIONE INITGAME DAL FILE SENTENCES.JSON
-        ///////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
+    // LE FRASI SONO LETTE NELLA FUNZIONE INITGAME DAL FILE SENTENCES.JSON
+    ///////////////////////////////////////////////////////////////////////////////
 
-        document.addEventListener('DOMContentLoaded', () => {
-    
-            let PUZZLE_SENTENCES = [];
+    document.addEventListener('DOMContentLoaded', () => {
 
-            const revealBtn = document.getElementById('reveal-btn');
-            const revealOverlay = document.getElementById('reveal-overlay');
-            const sourceContainer = document.getElementById('source-container');
-            const targetContainer = document.getElementById('target-container');
-            const timeValueEl = document.getElementById('time-value');
-            const movesValueEl = document.getElementById('moves-value');
-            const revealsValueEl = document.getElementById('reveals-value');
-            const progressValueEl = document.getElementById('progress-value');
-            const progressBarFill = document.getElementById('progress-bar-fill');
-            const puzzleWorkspace = document.getElementById('puzzle-workspace');
-            const instructionBanner = document.getElementById('instruction-banner');
-            const summaryScreen = document.getElementById('summary-screen');
-            const summaryTbody = document.getElementById('summary-tbody');
-            const summaryTotals = document.getElementById('summary-totals');
-            const gameTitle = document.getElementById('game-title');
-            const gameStats = document.getElementById('game-stats');
-            const actionControls = document.getElementById('action-controls');
-            const progressTitle = document.getElementById('progress-title');
-            const progressContainer = document.querySelector('.progress-bar-container');
+        let PUZZLE_SENTENCES = [];
 
-            let originalWords = [];       // array of words for the current sentence
-            let elapsedSeconds = 0;
-            let elapsedTimerInterval = null;
-            let moveCount = 0;
-            let revealCount = 0;
-            let sentenceCompleted = false;
-            let isRevealing = false;
-            let slotsMeta = [];
-            let rowCap = 0;               // maximum width (px) both containers may use
+        const revealBtn = document.getElementById('reveal-btn');
+        const revealOverlay = document.getElementById('reveal-overlay');
+        const sourceContainer = document.getElementById('source-container');
+        const targetContainer = document.getElementById('target-container');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressValueEl = document.getElementById('progress-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const puzzleWorkspace = document.getElementById('puzzle-workspace');
+        const instructionBanner = document.getElementById('instruction-banner');
+        const summaryScreen = document.getElementById('summary-screen');
+        const summaryTbody = document.getElementById('summary-tbody');
+        const summaryTotals = document.getElementById('summary-totals');
+        const gameTitle = document.getElementById('game-title');
+        const gameStats = document.getElementById('game-stats');
+        const actionControls = document.getElementById('action-controls');
+        const progressTitle = document.getElementById('progress-title');
+        const progressContainer = document.querySelector('.progress-bar-container');
 
-            function startElapsedTimer() {
-                stopElapsedTimer();
-                elapsedSeconds = 0;
+        let originalWords = [];       // array of words for the current sentence
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let moveCount = 0;
+        let revealCount = 0;
+        let sentenceCompleted = false;
+        let isRevealing = false;
+        let slotsMeta = [];
+        let rowCap = 0;               // maximum width (px) both containers may use
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
                 updateTimerDisplay();
-                elapsedTimerInterval = setInterval(() => {
-                    elapsedSeconds++;
-                    updateTimerDisplay();
-                }, 1000);
+            }, 1000);
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
             }
+        }
 
-            function stopElapsedTimer() {
-                if (elapsedTimerInterval) {
-                    clearInterval(elapsedTimerInterval);
-                    elapsedTimerInterval = null;
-                }
+        function updateTimerDisplay() {
+            timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function updateMovesDisplay() {
+            movesValueEl.textContent = moveCount;
+        }
+
+        function updateRevealsDisplay() {
+            revealsValueEl.textContent = revealCount;
+        }
+
+        function updateProgressDisplay() {
+            const filledCorrectCount = slotsMeta.filter(m => {
+                const card = m.element.querySelector('.card');
+                return card && card.dataset.word === m.expected;
+            }).length;
+
+            const totalWords = originalWords.length;
+            progressValueEl.textContent = `${filledCorrectCount} / ${totalWords}`;
+            const progressRatio = totalWords > 0 ? (filledCorrectCount / totalWords) * 100 : 0;
+            progressBarFill.style.width = progressRatio + '%';
+        }
+
+        function registerMove() {
+            if (sentenceCompleted) return;
+            moveCount++;
+            updateMovesDisplay();
+            updateSlotHighlights();
+            updateProgressDisplay();
+            fitTargetContainer();          // slot widths changed: re-hug the placeholders
+            checkSentenceAutomatic();
+        }
+
+        function shuffleArray(array) {
+            let arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-
-            function updateTimerDisplay() {
-                timeValueEl.textContent = elapsedSeconds + 's';
-            }
-
-            function updateMovesDisplay() {
-                movesValueEl.textContent = moveCount;
-            }
-
-            function updateRevealsDisplay() {
-                revealsValueEl.textContent = revealCount;
-            }
-
-            function updateProgressDisplay() {
-                const filledCorrectCount = slotsMeta.filter(m => {
-                    const card = m.element.querySelector('.card');
-                    return card && card.dataset.word === m.expected;
-                }).length;
-
-                const totalWords = originalWords.length;
-                progressValueEl.textContent = `${filledCorrectCount} / ${totalWords}`;
-                const progressRatio = totalWords > 0 ? (filledCorrectCount / totalWords) * 100 : 0;
-                progressBarFill.style.width = progressRatio + '%';
-            }
-
-            function registerMove() {
-                if (sentenceCompleted) return;
-                moveCount++;
-                updateMovesDisplay();
-                updateSlotHighlights();
-                updateProgressDisplay();
-                fitTargetContainer();          // slot widths changed: re-hug the placeholders
-                checkSentenceAutomatic();
-            }
-
-            function shuffleArray(array) {
-                let arr = [...array];
-                for (let i = arr.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [arr[i], arr[j]] = [arr[j], arr[i]];
-                }
-                return arr;
-            }
-
-            function measureFullRowWidth(words) {
-                const temp = document.createElement('div');
-                temp.className = 'card-container';
-                temp.style.visibility = 'hidden';
-                temp.style.position = 'absolute';
-                temp.style.pointerEvents = 'none';
-
-                words.forEach(word => {
-                    const card = document.createElement('div');
-                    card.classList.add('card');
-                    card.textContent = word;
-                    temp.appendChild(card);
-                });
-
-                puzzleWorkspace.appendChild(temp);
-                const width = temp.getBoundingClientRect().width;
-                puzzleWorkspace.removeChild(temp);
-                return width;
-            }
-
-            function syncContainerWidths() {
-                if (!originalWords.length) return;
-
-                const fullWidth = measureFullRowWidth(originalWords);
-                const maxAllowedWidth = puzzleWorkspace.clientWidth - 40;
-                rowCap = Math.min(fullWidth, maxAllowedWidth);
-
-                sourceContainer.style.width = rowCap + 'px';
-                fitTargetContainer();
-            }
-
-            function fitTargetContainer() {
-                if (rowCap) {
-                    targetContainer.style.width = rowCap + 'px';
-                }
-            }
-
-            function loadRandomSentence() {
-                if (!PUZZLE_SENTENCES.length) return;
-
-                const randomIndex = Math.floor(Math.random() * PUZZLE_SENTENCES.length);
-                const sentenceText = PUZZLE_SENTENCES[randomIndex];
-
-                originalWords = sentenceText.split(' ');
-                sourceContainer.style.width = '';
-                targetContainer.style.width = '';
-                sourceContainer.innerHTML = '';
-                targetContainer.innerHTML = '';
-                sentenceCompleted = false;
-                moveCount = 0;
-                revealCount = 0;
-                slotsMeta = [];
-
-                if (summaryScreen) summaryScreen.style.display = 'none';
-                if (puzzleWorkspace) puzzleWorkspace.style.display = '';
-                if (instructionBanner) instructionBanner.style.display = '';
-                if (gameStats) gameStats.style.display = '';
-                if (gameTitle) gameTitle.style.display = '';
-                if (progressTitle) progressTitle.style.display = '';
-                if (progressContainer) progressContainer.style.display = '';
-                if (actionControls) actionControls.style.display = '';
-
-                updateMovesDisplay();
-                updateRevealsDisplay();
-                updateProgressDisplay();
-                startElapsedTimer();
-
-                revealBtn.classList.remove('smooth-hidden');
-                revealBtn.disabled = false;
-                revealBtn.classList.remove('wrong-btn');
-                revealBtn.innerHTML = "<span>💡 Help!</span>";
-
-                // 1. Build Target Slots (Drop Container)
-                for (let i = 0; i < originalWords.length; i++) {
-                    const slot = document.createElement('div');
-                    slot.classList.add('slot');
-
-                    slot.addEventListener('click', () => {
-                        if (sentenceCompleted) return;
-                        const slotCard = slot.querySelector('.card');
-                        if (slotCard) {
-                            if (slotCard.sourceCard) {
-                                slotCard.sourceCard.classList.remove('disabled');
-                            }
-
-                            slot.innerHTML = '';
-                            slot.classList.remove('filled');
-
-                            slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
-                            if (revealBtn.classList.contains('wrong-btn')) {
-                                revealBtn.classList.remove('wrong-btn');
-                                revealBtn.disabled = false;
-                                revealBtn.innerHTML = "<span>💡 Help!</span>";
-                            }
-
-                            registerMove();
-                        }
-                    });
-
-                    targetContainer.appendChild(slot);
-                    slotsMeta.push({ element: slot, expected: originalWords[i] });
-                }
-
-                updateSlotHighlights();
-                updateProgressDisplay();
-
-                // 2. Build Source Cards (Stay in source container and get disabled when clicked)
-                const shuffledWords = shuffleArray(originalWords);
-
-                shuffledWords.forEach(word => {
-                    const card = document.createElement('div');
-                    card.classList.add('card');
-                    card.dataset.word = word;
-                    card.textContent = word;
-
-                    card.addEventListener('click', async (e) => {
-                        e.stopPropagation();
-                        if (sentenceCompleted || card.classList.contains('disabled')) return;
-
-                        const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
-                        if (emptySlotMeta) {
-                            card.classList.add('disabled');
-
-                            const slotCard = document.createElement('div');
-                            slotCard.classList.add('card');
-                            slotCard.dataset.word = card.dataset.word;
-                            slotCard.textContent = word;
-                            slotCard.sourceCard = card;
-
-                            emptySlotMeta.element.appendChild(slotCard);
-                            emptySlotMeta.element.classList.add('filled');
-                            
-                            moveCount++;
-                            updateMovesDisplay();
-                            updateSlotHighlights();
-                            updateProgressDisplay();
-                            fitTargetContainer();
-
-                            const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
-
-                            checkSentenceAutomatic();
-
-                            if (isWordCorrect) {
-                                try {
-                                    await Checkmark.show({
-                                        element: emptySlotMeta.element,
-                                        size: 48,
-                                        rise: 70,
-                                        duration: 1600
-                                    });
-                                }
-                                catch (err) {
-                                    console.warn('Checkmark animation failed:', err);
-                                }
-                            }
-                        }
-                    });
-
-                    sourceContainer.appendChild(card);
-                });
-
-                requestAnimationFrame(() => {
-                    syncContainerWidths();
-                });
-            }
-
-            function updateSlotHighlights() {
-                slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
-
-                const firstEmptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
-                if (firstEmptyMeta) {
-                    firstEmptyMeta.element.classList.add('active-slot');
-                }
-            }
-
-            async function checkSentenceAutomatic() {
-                if (sentenceCompleted) return;
-
-                const currentWords = slotsMeta.map(m => {
-                    const card = m.element.querySelector('.card');
-                    return card ? card.dataset.word : '';
-                });
-
-                const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
-                const isCorrect = allSlotsFilled && currentWords.every((w, i) => w === originalWords[i]);
-
-                if (isCorrect) {
-                    sentenceCompleted = true;
-                    stopElapsedTimer();
-                    updateSlotHighlights();
-                    updateProgressDisplay();
-
-                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
-
-                    if (typeof Confetti !== 'undefined') {
-                        try {
-                            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
-                            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
-                            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
-                        } catch (err) {
-                            console.warn('Confetti animation failed:', err);
-                        }
-                    }
-
-                    revealBtn.classList.remove('wrong-btn');
-                    revealBtn.disabled = false;
-                    revealBtn.classList.remove('smooth-hidden');
-                    revealBtn.innerHTML = "<span>✓ Fatto</span>";
-
-                } else if (allSlotsFilled) {
-                    revealBtn.innerHTML = "<span>⚠️ Frase errata</span>";
-                    revealBtn.classList.add('wrong-btn');
-                    revealBtn.disabled = true;
-
-                    slotsMeta.forEach(m => m.element.classList.add('error-slot'));
-                } else {
-                    slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
-
-                    if (revealBtn.classList.contains('wrong-btn')) {
-                        revealBtn.classList.remove('wrong-btn');
-                        revealBtn.disabled = false;
-                        revealBtn.innerHTML = "<span>💡 Help!</span>";
-                    }
-                }
-            }
-
-            function showSummaryScreen() {
-                if (puzzleWorkspace) puzzleWorkspace.style.display = 'none';
-                if (instructionBanner) instructionBanner.style.display = 'none';
-                if (gameStats) gameStats.style.display = 'none';
-                if (gameTitle) gameTitle.style.display = 'none';
-                if (progressTitle) progressTitle.style.display = 'none';
-                if (progressContainer) progressContainer.style.display = 'none';
-                if (actionControls) actionControls.style.display = 'none';
-
-                if (summaryTbody) {
-                    summaryTbody.innerHTML = '';
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<td><strong>${originalWords.join(' ')}</strong></td><td>${elapsedSeconds}s</td><td>${moveCount}</td><td>${revealCount}</td><td><strong>100.00</strong></td>`;
-                    summaryTbody.appendChild(row);
-                }
-
-                if (summaryTotals) {
-                    summaryTotals.innerHTML = `
-                        <div>Tempo: <strong>${elapsedSeconds}s</strong></div>
-                        <div>Tentativi: <strong>${moveCount}</strong></div>
-                        <div>Aiuti: <strong>${revealCount}</strong></div>
-                    `;
-                }
-
-                if (summaryScreen) summaryScreen.style.display = 'block';
-            }
-
-            function handleActionButton() {
-                const buttonText = revealBtn.querySelector('span').textContent;
-                if (buttonText.includes('Fatto') || sentenceCompleted) {
-                    showSummaryScreen();
-                    return;
-                }
-                showReveal();
-            }
-
-            function showReveal() {
-                if (sentenceCompleted || isRevealing || revealBtn.disabled) return;
-                isRevealing = true;
-
-                revealCount++;
-                updateRevealsDisplay();
-
-                revealOverlay.innerHTML = '';
-                originalWords.forEach((word) => {
-                    const slot = document.createElement('div');
-                    slot.classList.add('slot', 'revealed');
-
-                    const card = document.createElement('div');
-                    card.classList.add('card', 'reveal-letter');
-                    card.textContent = word;
-
-                    slot.appendChild(card);
-                    revealOverlay.appendChild(slot);
-                });
-                revealOverlay.classList.add('visible');
-            }
-
-            function hideReveal() {
-                if (!isRevealing) return;
-                isRevealing = false;
-                revealOverlay.classList.remove('visible');
-            }
-
-            async function initGame() {
-                try {
-                    const response = await fetch('sentences-set-1.json');
-                    const data = await response.json();
-                    PUZZLE_SENTENCES = data.sentences;
-
-                    if (data.title) {
-                        document.title = data.title;
-                        const titleEl = document.getElementById('game-title');
-                        if (titleEl) titleEl.textContent = data.title;
-                    }
-
-                    loadRandomSentence();
-
-                } catch (err) {
-                    console.error('Could not load sentences.json:', err);
-                }
-            }
-
-            revealBtn.addEventListener('click', handleActionButton);
-            revealBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                handleActionButton();
-            }, { passive: false });
-
-            revealBtn.addEventListener('mouseup', hideReveal);
-            revealBtn.addEventListener('mouseleave', hideReveal);
-            revealBtn.addEventListener('touchend', hideReveal);
-            revealBtn.addEventListener('touchcancel', hideReveal);
-
-            let resizeDebounceTimer = null;
-            window.addEventListener('resize', () => {
-                clearTimeout(resizeDebounceTimer);
-                resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
+            return arr;
+        }
+
+        function measureFullRowWidth(words) {
+            const temp = document.createElement('div');
+            temp.className = 'card-container';
+            temp.style.visibility = 'hidden';
+            temp.style.position = 'absolute';
+            temp.style.pointerEvents = 'none';
+
+            words.forEach(word => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.textContent = word;
+                temp.appendChild(card);
             });
 
-            initGame();
-    }); 
-    </script>
+            puzzleWorkspace.appendChild(temp);
+            const width = temp.getBoundingClientRect().width;
+            puzzleWorkspace.removeChild(temp);
+            return width;
+        }
+
+        function syncContainerWidths() {
+            if (!originalWords.length) return;
+
+            const fullWidth = measureFullRowWidth(originalWords);
+            const maxAllowedWidth = puzzleWorkspace.clientWidth - 40;
+            rowCap = Math.min(fullWidth, maxAllowedWidth);
+
+            sourceContainer.style.width = rowCap + 'px';
+            fitTargetContainer();
+        }
+
+        function fitTargetContainer() {
+            if (rowCap) {
+                targetContainer.style.width = rowCap + 'px';
+            }
+        }
+
+        function loadRandomSentence() {
+            if (!PUZZLE_SENTENCES.length) return;
+
+            const randomIndex = Math.floor(Math.random() * PUZZLE_SENTENCES.length);
+            const sentenceText = PUZZLE_SENTENCES[randomIndex];
+
+            originalWords = sentenceText.split(' ');
+            sourceContainer.style.width = '';
+            targetContainer.style.width = '';
+            sourceContainer.innerHTML = '';
+            targetContainer.innerHTML = '';
+            sentenceCompleted = false;
+            moveCount = 0;
+            revealCount = 0;
+            slotsMeta = [];
+
+            if (summaryScreen) summaryScreen.style.display = 'none';
+            if (puzzleWorkspace) puzzleWorkspace.style.display = '';
+            if (instructionBanner) instructionBanner.style.display = '';
+            if (gameStats) gameStats.style.display = '';
+            if (gameTitle) gameTitle.style.display = '';
+            if (progressTitle) progressTitle.style.display = '';
+            if (progressContainer) progressContainer.style.display = '';
+            if (actionControls) actionControls.style.display = '';
+
+            updateMovesDisplay();
+            updateRevealsDisplay();
+            updateProgressDisplay();
+            startElapsedTimer();
+
+            revealBtn.classList.remove('smooth-hidden');
+            revealBtn.disabled = false;
+            revealBtn.classList.remove('wrong-btn');
+            revealBtn.innerHTML = "<span>💡 Help!</span>";
+
+            // 1. Build Target Slots (Drop Container)
+            for (let i = 0; i < originalWords.length; i++) {
+                const slot = document.createElement('div');
+                slot.classList.add('slot');
+
+                slot.addEventListener('click', () => {
+                    if (sentenceCompleted) return;
+                    const slotCard = slot.querySelector('.card');
+                    if (slotCard) {
+                        if (slotCard.sourceCard) {
+                            slotCard.sourceCard.classList.remove('disabled');
+                        }
+
+                        slot.innerHTML = '';
+                        slot.classList.remove('filled');
+
+                        slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+                        if (revealBtn.classList.contains('wrong-btn')) {
+                            revealBtn.classList.remove('wrong-btn');
+                            revealBtn.disabled = false;
+                            revealBtn.innerHTML = "<span>💡 Help!</span>";
+                        }
+
+                        registerMove();
+                    }
+                });
+
+                targetContainer.appendChild(slot);
+                slotsMeta.push({ element: slot, expected: originalWords[i] });
+            }
+
+            updateSlotHighlights();
+            updateProgressDisplay();
+
+            // 2. Build Source Cards (Stay in source container and get disabled when clicked)
+            const shuffledWords = shuffleArray(originalWords);
+
+            shuffledWords.forEach(word => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.word = word;
+                card.textContent = word;
+
+                card.addEventListener('click', async (e) => {
+                    e.stopPropagation();
+                    if (sentenceCompleted || card.classList.contains('disabled')) return;
+
+                    const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+                    if (emptySlotMeta) {
+                        card.classList.add('disabled');
+
+                        const slotCard = document.createElement('div');
+                        slotCard.classList.add('card');
+                        slotCard.dataset.word = card.dataset.word;
+                        slotCard.textContent = word;
+                        slotCard.sourceCard = card;
+
+                        emptySlotMeta.element.appendChild(slotCard);
+                        emptySlotMeta.element.classList.add('filled');
+                        
+                        moveCount++;
+                        updateMovesDisplay();
+                        updateSlotHighlights();
+                        updateProgressDisplay();
+                        fitTargetContainer();
+
+                        const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
+
+                        checkSentenceAutomatic();
+
+                        if (isWordCorrect && (typeof Checkmark !== 'undefined')) {
+                            try {
+                                await Checkmark.show({
+                                    element: emptySlotMeta.element,
+                                    size: 48,
+                                    rise: 70,
+                                    duration: 1600
+                                });
+                            }
+                            catch (err) {
+                                console.warn('Checkmark animation failed:', err);
+                            }
+                        }
+
+                    }
+                });
+
+                sourceContainer.appendChild(card);
+            });
+
+            requestAnimationFrame(() => {
+                syncContainerWidths();
+            });
+        }
+
+        function updateSlotHighlights() {
+            slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
+
+            const firstEmptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+            if (firstEmptyMeta) {
+                firstEmptyMeta.element.classList.add('active-slot');
+            }
+        }
+
+        async function checkSentenceAutomatic() {
+            if (sentenceCompleted) return;
+
+            const currentWords = slotsMeta.map(m => {
+                const card = m.element.querySelector('.card');
+                return card ? card.dataset.word : '';
+            });
+
+            const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+            const isCorrect = allSlotsFilled && currentWords.every((w, i) => w === originalWords[i]);
+
+            if (isCorrect) {
+                sentenceCompleted = true;
+                stopElapsedTimer();
+                updateSlotHighlights();
+                updateProgressDisplay();
+
+                slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+                if (typeof Confetti !== 'undefined') {
+                    try {
+                        await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                        await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                        await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                    } catch (err) {
+                        console.warn('Confetti animation failed:', err);
+                    }
+                }
+
+                revealBtn.classList.remove('wrong-btn');
+                revealBtn.disabled = false;
+                revealBtn.classList.remove('smooth-hidden');
+                revealBtn.innerHTML = "<span>✓ Fatto</span>";
+
+            } else if (allSlotsFilled) {
+                revealBtn.innerHTML = "<span>⚠️ Frase errata</span>";
+                revealBtn.classList.add('wrong-btn');
+                revealBtn.disabled = true;
+
+                slotsMeta.forEach(m => m.element.classList.add('error-slot'));
+            } else {
+                slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+                if (revealBtn.classList.contains('wrong-btn')) {
+                    revealBtn.classList.remove('wrong-btn');
+                    revealBtn.disabled = false;
+                    revealBtn.innerHTML = "<span>💡 Help!</span>";
+                }
+            }
+        }
+
+        function showSummaryScreen() {
+            if (puzzleWorkspace) puzzleWorkspace.style.display = 'none';
+            if (instructionBanner) instructionBanner.style.display = 'none';
+            if (gameStats) gameStats.style.display = 'none';
+            if (gameTitle) gameTitle.style.display = 'none';
+            if (progressTitle) progressTitle.style.display = 'none';
+            if (progressContainer) progressContainer.style.display = 'none';
+            if (actionControls) actionControls.style.display = 'none';
+
+            if (summaryTbody) {
+                summaryTbody.innerHTML = '';
+                const row = document.createElement('tr');
+                row.innerHTML = `<td><strong>${originalWords.join(' ')}</strong></td><td>${elapsedSeconds}s</td><td>${moveCount}</td><td>${revealCount}</td><td><strong>100.00</strong></td>`;
+                summaryTbody.appendChild(row);
+            }
+
+            if (summaryTotals) {
+                summaryTotals.innerHTML = `
+                    <div>Tempo: <strong>${elapsedSeconds}s</strong></div>
+                    <div>Tentativi: <strong>${moveCount}</strong></div>
+                    <div>Aiuti: <strong>${revealCount}</strong></div>
+                `;
+            }
+
+            if (summaryScreen) summaryScreen.style.display = 'block';
+        }
+
+        function showReveal() {
+            if (sentenceCompleted || isRevealing || revealBtn.disabled) return;
+            isRevealing = true;
+
+            revealCount++;
+            updateRevealsDisplay();
+
+            revealOverlay.innerHTML = '';
+            originalWords.forEach((word) => {
+                const slot = document.createElement('div');
+                slot.classList.add('slot', 'revealed');
+
+                const card = document.createElement('div');
+                card.classList.add('card', 'reveal-letter');
+                card.textContent = word;
+
+                slot.appendChild(card);
+                revealOverlay.appendChild(slot);
+            });
+            revealOverlay.classList.add('visible');
+        }
+
+        function hideReveal() {
+            if (!isRevealing) return;
+            isRevealing = false;
+            revealOverlay.classList.remove('visible');
+        }
+
+        async function initGame() {
+            try {
+                const response = await fetch('sentences-set-1.json');
+                const data = await response.json();
+                PUZZLE_SENTENCES = data.sentences;
+
+                if (data.title) {
+                    document.title = data.title;
+                    const titleEl = document.getElementById('game-title');
+                    if (titleEl) titleEl.textContent = data.title;
+                }
+
+                loadRandomSentence();
+
+            } catch (err) {
+                console.error('Could not load sentences.json:', err);
+            }
+        }
+
+        const startHelp = () => {
+            if (sentenceCompleted || revealBtn.disabled) return;
+            showReveal();
+        };
+
+        revealBtn.addEventListener('mousedown', startHelp);
+        revealBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            startHelp();
+        }, { passive: false });
+
+        revealBtn.addEventListener('mouseup', hideReveal);
+        revealBtn.addEventListener('mouseleave', hideReveal);
+        revealBtn.addEventListener('touchend', hideReveal);
+        revealBtn.addEventListener('touchcancel', hideReveal);
+
+        revealBtn.addEventListener('click', () => {
+            const buttonText = revealBtn.querySelector('span').textContent;
+            if (buttonText.includes('Fatto') || sentenceCompleted) {
+                showSummaryScreen();
+            }
+        });
+
+        let resizeDebounceTimer = null;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeDebounceTimer);
+            resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
+        });
+
+        initGame();
+}); 
+</script>
 
 </body>
 </html>

@@ -326,6 +326,7 @@
     <h1 id="game-title">Applica la regola</h1>
 
     <div id="game-stats">
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -378,12 +379,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let moveCount = 0;
     let revealCount = 0;
     let currentCategoryTitle = '';
+    let currentCategoryTarget = '';
 
     const gameArea = document.getElementById('game-area');
     const revealBtn = document.getElementById('reveal-btn');
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
+    const wordCountEl = document.getElementById('word-count');
     const instructionBanner = document.getElementById('instruction-banner');
     const timeValueEl = document.getElementById('time-value');
     const summaryScreen = document.getElementById('summary-screen');
@@ -418,6 +421,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <div>Aiuti Totali: <strong>${revealCount}</strong></div>
         `;
         summaryScreen.style.display = 'block';
+    }
+
+    function updateWordCountDisplay() {
+        if (wordCountEl) {
+            wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        }
     }
 
     function stopElapsedTimer() {
@@ -493,6 +502,8 @@ document.addEventListener('DOMContentLoaded', () => {
             button.disabled = true;
             foundCorrectCount++;
 
+            updateWordCountDisplay();
+
             if (typeof Checkmark !== 'undefined') {
                 try {
                     await Checkmark.show({
@@ -533,14 +544,15 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameLoading = true;
             if (revealBtn) revealBtn.innerHTML = "<span>💡 Help</span>";
 
-            const response = await fetch('categorie-il-bersaglio-che-ritorna.json');
+            const response = await fetch('il-bersaglio-che-ritorna.json');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
             const data = await response.json();
             if (!data.categories || data.categories.length === 0) return;
 
             const currentCategoryData = data.categories[Math.floor(Math.random() * data.categories.length)];
-            currentCategoryTitle = currentCategoryData.instruction;
+            currentCategoryTarget = currentCategoryData.target;
+            currentCategoryTitle = `Scorri la sequenza da sinistra a destra e segna solo la parola «${currentCategoryTarget}». Non tornare indietro a correggere prima di arrivare in fondo.`;
 
             const allButtons = currentCategoryData.buttons.map(b => ({ ...b, found: false }));
             rowsData = [];
@@ -567,6 +579,7 @@ document.addEventListener('DOMContentLoaded', () => {
             progressBarFill.style.width = '0%';
 
             renderRowsUI();
+            updateWordCountDisplay();
             startElapsedTimer();
 
         } catch (err) {

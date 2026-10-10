@@ -425,6 +425,7 @@
 
     <!-- COUNTERS -->
     <div id="game-stats">
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -518,6 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealBtn = document.getElementById('reveal-btn');
     const gridButtons = document.querySelectorAll('.grid-button');
     const movesValueEl = document.getElementById('moves-value');
+    const wordCountEl = document.getElementById('word-count');
     const revealsValueEl = document.getElementById('reveals-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
@@ -556,6 +558,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <div>Aiuti Totali: <strong>${revealCount}</strong></div>
         `;
         summaryScreen.style.display = 'block';
+    }
+
+    function updateWordCountDisplay() {
+        if (wordCountEl) {
+            wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        }
     }
 
     function stopElapsedTimer() {
@@ -618,7 +626,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-due-regole-insieme.json');
+            const response = await fetch('due-regole-insieme.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -642,6 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateMovesDisplay();
             updateRevealDisplay();
+            updateWordCountDisplay();
             updateProgressBar(0);
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
@@ -700,12 +709,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const isCorrect = buttons[index].value === true;
             moveCount++;
             updateMovesDisplay();
-
+            
             if (isCorrect) {
                 buttonFoundState[index] = true;
                 button.disabled = true;
                 button.classList.add('selected');
                 foundCorrectCount++;
+
+                updateWordCountDisplay();
 
                 if (typeof Checkmark !== 'undefined') {
                     try {

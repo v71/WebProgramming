@@ -1,14 +1,8 @@
 {
-    "title": "Filtro degli Alimenti",
-    "description": "Seleziona gli Elementi.",
 
     "categories": [
       {
-        "id": 1,
-        "title": "Categoria 1",
-        "text": "15 elementi 8 alimenti e 7 oggetti",
         "instruction": "Segna solo le parole che appartengono alla categoria «Alimenti»",
-
         "buttons": [
           { "label": "Mela", "value": true },
           { "label": "Sedia", "value": false },
@@ -29,11 +23,7 @@
       },
 
       {
-        "id": 2,
-        "title": "Categoria 2",
-        "text": "15 elementi 8 sportivi e 7 oggetti",
         "instruction": "Segna solo le parole che appartengono alla categoria Sportiva.",
-
         "buttons": [
           { "label": "Calcio", "value": true },
           { "label": "Cacciavite", "value": false },

@@ -1,14 +1,8 @@
 {
-    "title": "Applica la regola",
-    "description": "Seleziona gli Elementi.",
-
     "categories": [
       {
-        "id": 1,
-        "title": "Categoria 1",
-        "text": "4 elementi in 4 righe",
-        "instruction": "Scorri la sequenza da sinistra a destra e segna solo la parola «porta». Non tornare indietro a correggere prima di arrivare in fondo.",
-
+        "instruction": "",
+        "target" :"Porta",
         "buttons": [
           { "label": "Fotografia", "value": false },
           { "label": "Tavolo", "value": false },

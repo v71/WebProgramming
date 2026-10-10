@@ -493,6 +493,7 @@
 
     <!-- COUNTERS -->
     <div id="game-stats">
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -603,6 +604,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameSelects = document.querySelectorAll('.game-select');
     const helpButtons = document.querySelectorAll('.cool-btn-2');
     const movesValueEl = document.getElementById('moves-value');
+    const wordCountEl = document.getElementById('word-count');
     const revealsValueEl = document.getElementById('reveals-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
@@ -651,6 +653,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <div>Aiuti Totali: <strong>${revealCount}</strong></div>
         `;
         summaryScreen.style.display = 'block';
+    }
+
+    function updateWordCountDisplay() {
+        if (wordCountEl) {
+            wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        }
     }
 
     function stopElapsedTimer() {
@@ -747,7 +755,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('categorie-segui-il-percorso.json');
+            const response = await fetch('segui-il-percorso.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -773,6 +781,7 @@ document.addEventListener('DOMContentLoaded', () => {
             logDebug(currentExercise.text);
             updateMovesDisplay();
             updateRevealDisplay();
+            updateWordCountDisplay();
             updateProgressBar(0);
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
@@ -805,89 +814,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /*
     // Validation handling for input text boxes on change/blur/enter
-    gameSelects.forEach(input => {
-        const validateInput = async () => {
-            if (isGameCompleted || isGameLoading) return;
-
-            const inputIndex = Number(input.dataset.index);
-            const userText = input.value.trim();
-            if (!userText || selectFoundState[inputIndex]) return;
-
-            // Find the button object in buttons whose label matches userText and value corresponds to expected step
-            const expectedValue = foundCorrectCount + 1;
-            const matchedButton = buttons.find(b => b.value === expectedValue && b.label.trim().toLowerCase() === userText.toLowerCase());
-            
-            moveCount++;
-            updateMovesDisplay();
-
-            if (matchedButton) {
-                selectFoundState[inputIndex] = true;
-                input.disabled = true;
-                input.classList.add('selected');
-                input.style.backgroundColor = '#ff9800';
-                input.style.color = '#ffffff';
-                input.style.borderColor = '#ffffff';
-                foundCorrectCount++;
-
-                if (typeof Checkmark !== 'undefined') {
-                    try {
-                        await Checkmark.show({
-                            element: input,
-                            size: 48,
-                            rise: 70,
-                            duration: 1600
-                        });
-                    } catch (err) {
-                        console.warn('Checkmark animation failed:', err);
-                    }
-                }
-
-                updateProgressBar(foundCorrectCount / totalCorrectItems);
-
-                if ((foundCorrectCount === totalCorrectItems) && !isGameCompleted) {
-                    isGameCompleted = true;
-                    stopElapsedTimer();
-
-                    if (typeof Confetti !== 'undefined') {
-                        try {
-                            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
-                            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
-                            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
-                        } catch (err) {
-                            console.warn('Confetti animation failed:', err);
-                        }
-                    }
-
-                    if (revealBtn) {
-                        revealBtn.innerHTML = "<span>✓ Fatto</span>";
-                    }
-                }
-
-            } else {
-                input.classList.remove('error');
-                void input.offsetWidth;
-                input.classList.add('error');
-                setTimeout(() => {
-                    input.classList.remove('error');
-                }, 400);
-            }
-        };
-
-        input.addEventListener('change', validateInput);
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                input.blur();
-                validateInput();
-            }
-        });
-    });
-    */
-
-
-
-// Validation handling for input text boxes on change/blur/enter
     gameSelects.forEach(input => {
         const validateInput = async () => {
             if (isGameCompleted || isGameLoading) return;
@@ -917,7 +844,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 input.style.color = '#ffffff';
                 input.style.borderColor = '#ffffff';
                 foundCorrectCount++;
-
+    
+                updateWordCountDisplay();
+    
                 if (typeof Checkmark !== 'undefined') {
                     try {
                         await Checkmark.show({

@@ -1,14 +1,7 @@
 {
-    "title": "La riga fuori posto",
-    "description": "Leggi riga per riga e segna la sola riga che non c'entra con le altre.",
-
     "categories": [
       {
-        "id": 1,
-        "title": "Categoria 1",
-        "text": "15 elementi 8 alimenti e 7 oggetti",
         "instruction": "Leggi riga per riga e segna la sola riga che non c'entra con le altre.",
-
         "buttons": [
           { "label": "Fabio ha lasciato il libro vicino all'ingresso del teatro.", "value": false },
           { "label": "Carla ha trovato il portafoglio mentre aspettava in piazza.", "value": false },

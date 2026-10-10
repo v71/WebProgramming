@@ -425,6 +425,7 @@
 
     <!-- COUNTERS -->
     <div id="game-stats">
+        <span>Frasi Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -508,6 +509,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gridButtons = document.querySelectorAll('.grid-button');
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
     const timeValueEl = document.getElementById('time-value');
@@ -584,6 +586,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function updateWordCountDisplay() {
+        if (wordCountEl) {
+            wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        }
+    }
+
     function updateProgressBar(value) {
         if (progressBarFill) {
             progressBarFill.style.width = (Math.min(Math.max(value, 0), 1) * 100) + '%';
@@ -631,6 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             updateMovesDisplay();
             updateRevealDisplay();
+            updateWordCountDisplay();
             updateProgressBar(0);
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
@@ -695,6 +704,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.disabled = true;
                 button.classList.add('selected');
                 foundCorrectCount++;
+
+                updateWordCountDisplay();
 
                 if (typeof Checkmark !== 'undefined') {
                     try {

@@ -430,6 +430,7 @@
     </h1>
 
     <div id="game-stats">
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
         <span>Round: <strong id="round-value">1/2</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Tentativi: <strong id="moves-value">0</strong></span>
@@ -505,6 +506,7 @@
         const timeValueEl = document.getElementById('time-value');
         const movesValueEl = document.getElementById('moves-value');
         const revealsValueEl = document.getElementById('reveals-value');
+        const wordCountEl = document.getElementById('word-count');
         const progressBarFill = document.getElementById('progress-bar-fill');
         const revealBtn = document.getElementById('reveal-btn');
         const ddText = document.getElementById('dd-text');
@@ -602,6 +604,12 @@
            STATS
            ========================================================= */
 
+        function updateWordCountDisplay() {
+            if (wordCountEl) {
+                wordCountEl.textContent = `${ddPlaced} / ${ddTotal}`;
+            }
+        }
+
         function updateMovesDisplay() {
             movesValueEl.textContent = moveCount;
         }
@@ -650,7 +658,6 @@
             if ( isPeeking || revealBtn.disabled ) {
                 return;
             }
-
             isPeeking = true;
             revealCount++;
             updateRevealsDisplay();
@@ -672,11 +679,7 @@
         function ddShuffle(array) {
             for ( let i = array.length - 1; i > 0; i-- ) {
                 const j = Math.floor( Math.random() * (i + 1) );
-                [
-                    array[i], array[j]
-                ] = [
-                    array[j],array[i]
-                ];
+                [ array[i], array[j] ] = [ array[j],array[i] ];
             }
             return array;
         }
@@ -725,6 +728,7 @@
 
             ddTotal = answers.length;
             setProgress(0);
+            updateWordCountDisplay();
 
             const words = answers.concat(currentRound.distractors );
 
@@ -783,6 +787,7 @@
 
                 ddPlaced++;
                 setProgress((ddPlaced / ddTotal) * 100);
+                updateWordCountDisplay();
 
                 // CHECKMARK ANIMATION
                 if (typeof Checkmark !== 'undefined' && typeof Checkmark.show === 'function') {
@@ -959,7 +964,7 @@
         function initGame() {
             resetStats();
             setProgress(0);
-
+        
             revealBtn.disabled = false;
             revealBtn.querySelector( 'span').textContent ='💡 Help!';
             setInstruction('Tocca la parola giusta per lo spazio evidenziato');
@@ -980,6 +985,7 @@
 
             ddFitText();
             startElapsedTimer();
+            updateWordCountDisplay();
         }
 
         initGame();
