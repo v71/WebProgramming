@@ -496,6 +496,50 @@
 
 </style>
 
+<style>
+
+    /* Make the text larger and readable */
+#clickable-text-container {
+    font-size: 1.5rem; /* ~20px */
+    line-height: 2.2rem;
+    padding: 16px;
+}
+
+/* Style each word so it acts like an interactive button/chip */
+.word-span {
+    display: inline-block;
+    padding: 2px 2px;
+    margin: 2px 1px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover effect */
+.word-span:hover {
+    background-color: rgba(255, 255, 255, 1);
+     color: var(--accent);
+}
+
+/* Selected state when clicked by user */
+.word-span.selected {
+    background-color: #007bff;
+    color: #ffffff;
+}
+
+/* Help / Reveal state */
+.word-span.help-active {
+    background-color: #28a745;
+    color: #ffffff;
+}
+
+/* Correctly found state */
+.word-span.help-correct {
+    background-color: #ffc107;
+    color: #000000;
+}
+
+</style>
 </head>
 
 <body>
@@ -526,7 +570,7 @@
 
     <!-- GAME AREA WITH TEXT INPUT -->
     <div id="game-area">
-        <textarea id="text-area" rows="8" placeholder="Scrivi qui il testo includendo tutti gli elementi chiave..."></textarea>
+        <div id="clickable-text-container" class="clickable-text-container"></div>
     </div>
 
     <!-- PROGRESS -->
@@ -558,7 +602,8 @@
         </div>
     </div>
 
-    <script>
+
+<script>
     document.addEventListener('DOMContentLoaded', () => {
         let elapsedSeconds = 0;
         let elapsedTimerInterval = null;
@@ -568,15 +613,15 @@
         let revealCount = 0;
         let currentCategoryTitle = '';
         let currentExercise = null;
+        let connectors = [];
         let solutions = [];
-        let foundSolutionsState = [];
         let totalCorrectItems = 0;
         let foundCorrectCount = 0;
 
         const gameArea = document.getElementById('game-area');
         const actionControls = document.getElementById('action-controls');
         const revealBtn = document.getElementById('reveal-btn');
-        const textArea = document.getElementById('text-area');
+        const clickableTextContainer = document.getElementById('clickable-text-container');
         const movesValueEl = document.getElementById('moves-value');
         const revealsValueEl = document.getElementById('reveals-value');
         const wordCountEl = document.getElementById('word-count');
@@ -647,18 +692,83 @@
             }, 1000);
         }
 
-        function updateGridUI(title, textContent) {
+        function renderClickableText(text, instruction) {
             if (instructionBanner) {
-                instructionBanner.textContent = title;
+                instructionBanner.textContent = instruction;
             }
 
-            if (textArea) {
-                textArea.value = textContent || '';
-                textArea.classList.remove('selected', 'error', 'help-correct');
-                textArea.style.backgroundColor = '';
-                textArea.style.color = '';
-                textArea.style.borderColor = '';
-                textArea.disabled = false;
+            if (clickableTextContainer) {
+                clickableTextContainer.innerHTML = '';
+                
+                const tokens = text.split(/(\s+)/);
+
+                tokens.forEach(token => {
+                    if (!token) return;
+                    
+                    if (/^\s+$/.test(token)) {
+                        clickableTextContainer.appendChild(document.createTextNode(token));
+                        return;
+                    }
+
+                    const span = document.createElement('span');
+                    span.textContent = token;
+                    span.className = 'word-span';
+                    // Clean punctuation to map correctly against solutions/connectors
+                    span.dataset.word = token.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?«»]/g, "").trim().toLowerCase();
+
+                    span.addEventListener('click', () => {
+                        if (isGameCompleted || isGameLoading) return;
+
+                        span.classList.toggle('selected');
+                        moveCount++;
+                        updateMovesDisplay();
+
+                        evaluateSelections();
+                    });
+
+                    clickableTextContainer.appendChild(span);
+                });
+            }
+        }
+
+        function evaluateSelections() {
+            const selectedSpans = clickableTextContainer.querySelectorAll('.word-span.selected');
+            let correctFoundCount = 0;
+
+            selectedSpans.forEach(span => {
+                const cleanWord = span.dataset.word;
+                const isConnector = connectors.some(c => c.toLowerCase() === cleanWord);
+                const isSolution = solutions.some(s => s.toLowerCase() === cleanWord);
+
+                if (isConnector || isSolution) {
+                    correctFoundCount++;
+                    span.classList.add('help-correct');
+                } else {
+                    // Optional: mark wrong selections if desired, or let them just stay selected
+                }
+            });
+
+            foundCorrectCount = Math.min(correctFoundCount, totalCorrectItems);
+            updateProgressBar(foundCorrectCount / totalCorrectItems);
+            updateWordCountDisplay();
+
+            if (foundCorrectCount === totalCorrectItems && !isGameCompleted) {
+                isGameCompleted = true;
+                stopElapsedTimer();
+
+                if (typeof Confetti !== 'undefined') {
+                    try {
+                        Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                        Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                        Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                    } catch (err) {
+                        console.warn('Confetti animation failed:', err);
+                    }
+                }
+
+                if (revealBtn) {
+                    revealBtn.innerHTML = "<span>✓ Fatto</span>";
+                }
             }
         }
 
@@ -696,11 +806,20 @@
                 currentExercise = data.categories[randomIndex];
 
                 currentCategoryTitle = currentExercise.instruction;
+                connectors = currentExercise.connectors || [];
                 solutions = currentExercise.solutions || [];
-                totalCorrectItems = solutions.length;
-                foundSolutionsState = new Array(totalCorrectItems).fill(false);
-                foundCorrectCount = 0;
+                
+                // Total targets = all occurrences of connectors + all occurrences of solutions in text
+                // Alternatively, let's count total valid items based on array matching or unique counts.
+                // Let's count how many targets exist in the text tokens:
+                const textTokens = currentExercise.text.split(/(\s+)/).map(t => t.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?«»]/g, "").trim().toLowerCase());
+                
+                totalCorrectItems = textTokens.filter(token => 
+                    connectors.some(c => c.toLowerCase() === token) || 
+                    solutions.some(s => s.toLowerCase() === token)
+                ).length;
 
+                foundCorrectCount = 0;
                 isGameCompleted = false;
                 isGameLoading = false;
                 moveCount = 0;
@@ -710,7 +829,7 @@
                 updateRevealDisplay();
                 updateWordCountDisplay();
                 updateProgressBar(0);
-                updateGridUI(currentCategoryTitle, currentExercise.text);
+                renderClickableText(currentExercise.text, currentCategoryTitle);
                 startElapsedTimer();
 
             } catch (err) {
@@ -724,10 +843,28 @@
                 if (isGameCompleted || isGameLoading) return;
                 revealCount++;
                 updateRevealDisplay();
+                
+                const spans = clickableTextContainer.querySelectorAll('.word-span');
+                spans.forEach(span => {
+                    const cleanWord = span.dataset.word;
+                    if (connectors.some(c => c.toLowerCase() === cleanWord) || solutions.some(s => s.toLowerCase() === cleanWord)) {
+                        span.classList.add('help-active');
+                    }
+                });
+            };
+
+            const handleHideHelp = () => {
+                if (isGameCompleted || isGameLoading) return;
+                const spans = clickableTextContainer.querySelectorAll('.word-span');
+                spans.forEach(span => span.classList.remove('help-active'));
             };
 
             revealBtn.addEventListener('mousedown', handleShowHelp);
+            revealBtn.addEventListener('mouseup', handleHideHelp);
+            revealBtn.addEventListener('mouseleave', handleHideHelp);
             revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleShowHelp(); }, { passive: false });
+            revealBtn.addEventListener('touchend', handleHideHelp);
+            revealBtn.addEventListener('touchcancel', handleHideHelp);
 
             revealBtn.addEventListener('click', () => {
                 if (isGameCompleted) {
@@ -736,70 +873,10 @@
             });
         }
 
-        // Real-time incremental validation handling for #text-area
-        if (textArea) {
-            textArea.addEventListener('input', async () => {
-                if (isGameCompleted || isGameLoading) return;
-
-                const userText = textArea.value;
-                const lowerUserText = userText.toLowerCase();
-                let newlyFound = false;
-
-                solutions.forEach((sol, index) => {
-                    if (!foundSolutionsState[index] && lowerUserText.includes(sol.toLowerCase())) {
-                        foundSolutionsState[index] = true;
-                        foundCorrectCount++;
-                        newlyFound = true;
-                    }
-                });
-
-                if (newlyFound) {
-                    moveCount++;
-                    updateMovesDisplay();
-                    updateProgressBar(foundCorrectCount / totalCorrectItems);
-                    updateWordCountDisplay();
-
-                    if (typeof Checkmark !== 'undefined') {
-                        try {
-                            await Checkmark.show({
-                                element: textArea,
-                                size: 48,
-                                rise: 70,
-                                duration: 1600
-                            });
-                        } catch (err) {
-                            console.warn('Checkmark animation failed:', err);
-                        }
-                    }
-                }
-
-                if (foundCorrectCount === totalCorrectItems && !isGameCompleted) {
-                    isGameCompleted = true;
-                    stopElapsedTimer();
-                    textArea.disabled = true;
-                    textArea.style.color = '#ffffff';
-
-                    if (typeof Confetti !== 'undefined') {
-                        try {
-                            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
-                            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
-                            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
-                        } catch (err) {
-                            console.warn('Confetti animation failed:', err);
-                        }
-                    }
-
-                    if (revealBtn) {
-                        revealBtn.innerHTML = "<span>✓ Fatto</span>";
-                    }
-                }
-            });
-        }
-
         initGame();
     });
-    </script>
-    
+</script>
+
 </body>
 
 </html>

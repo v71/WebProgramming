@@ -1,9 +1,10 @@
 {
     "categories": [
       {
-        "text": "Domenica mattina Giorgio e sua sorella Marta sono andati al mercato con una borsa verde. Hanno comprato tre mele, un formaggio e due pani. Un gatto dormiva sul banco del fruttivendolo, accanto a una bilancia. All'ora di pranzo sono tornati a casa.",
-        "instruction":"Leggi il testo e scrivi solo le parole che indicano una persona o un ruolo di persona. Ignora tutte le altre informazioni.",
-        "solutions":["Giorgio","Marta","Fruttivendolo"],
+        "text": "Anna si era data appuntamento con Olivia al mercato, a mezzogiorno. Prima di uscire ha preparato il martello e gli occhiali. Lungo la strada ha dovuto passare dalla merceria a prendere le forbici, però era chiusa. Ha provato in ferramenta, però c'era una coda lunghissima. Alla fine è arrivata all'appuntamento con dieci minuti di ritardo.",
+        "instruction":"Leggi il testo e fai due cose: cerchia il connettivo «però» ogni volta che compare e sottolinea tutti i nomi di luogo.",
+        "connectors":["però"],
+        "solutions" :["mercato","merceria","ferramenta"],
         "buttons": []
       }
         
