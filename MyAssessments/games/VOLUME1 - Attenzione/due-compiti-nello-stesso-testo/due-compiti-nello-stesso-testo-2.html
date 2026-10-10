@@ -537,6 +537,12 @@
     color: #ffffff;
 }
 
+/* Help / Reveal state (forced with !important so it always overrides selected/correct states) */
+.word-span.help-active {
+    background-color: #28a745 !important;
+    border-color:  #ffffff !important;
+    color: #ffffff !important;
+}
 </style>
 
 <style>
@@ -732,29 +738,54 @@
                     // Clean punctuation to map correctly against solutions/connectors
                     span.dataset.word = token.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?«»]/g, "").trim().toLowerCase();
 
-                    span.addEventListener('click', () => {
-                        if (isGameCompleted || isGameLoading) return;
 
-                        const cleanWord = span.dataset.word;
-                        const isConnector = connectors.some(c => c.toLowerCase() === cleanWord);
-                        const isSolution = solutions.some(s => s.toLowerCase() === cleanWord);
+                   span.addEventListener('click', () => {
+                    if (isGameCompleted || isGameLoading) return;
 
-                        moveCount++;
-                        updateMovesDisplay();
+                    const cleanWord = span.dataset.word;
+                    const isConnector = connectors.some(c => c.toLowerCase() === cleanWord);
+                    const isSolution = solutions.some(s => s.toLowerCase() === cleanWord);
 
-                        if (isConnector || isSolution) {
-                            // Correct word: toggle selection normally
-                            span.classList.toggle('selected');
-                            evaluateSelections();
+                    moveCount++;
+                    updateMovesDisplay();
+
+                    if (isConnector || isSolution) {
+                        // Check if this specific word is being selected for the first time right now
+                        const isNewSelection = !span.classList.contains('selected');
+                        
+                        span.classList.remove('error-word');
+                        span.classList.toggle('selected');
+                        
+                        if (isNewSelection && span.classList.contains('selected')) {
+                            span.classList.add('help-correct');
+
+                            // Trigger checkmark ON THIS SPAN ONLY
+                            if (typeof Checkmark !== 'undefined') {
+                                try {
+                                    Checkmark.show({
+                                        element: span, // Target only the clicked span
+                                        size: 48,
+                                        rise: 70,
+                                        duration: 1600
+                                    });
+                                } catch (err) {
+                                    console.warn('Checkmark animation failed:', err);
+                                }
+                            }
                         } else {
-                            // Wrong word: ensure it is NOT selected and give a brief error flash
-                            span.classList.remove('selected');
-                            span.classList.add('error-word');
-                            setTimeout(() => {
-                                span.classList.remove('error-word');
-                            }, 400);
+                            span.classList.remove('help-correct');
                         }
-                    });
+
+                        evaluateSelections();
+                    } else {
+                        // Wrong word: shake and error style
+                        span.classList.remove('selected', 'help-correct');
+                        span.classList.remove('error-word');
+                        void span.offsetWidth; // Reflow to reset animation
+                        span.classList.add('error-word');
+                        evaluateSelections();
+                    }
+                });
 
                     
                     clickableTextContainer.appendChild(span);
@@ -774,8 +805,6 @@
                 if (isConnector || isSolution) {
                     correctFoundCount++;
                     span.classList.add('help-correct');
-
-                    
                 } else {
                     // Optional: mark wrong selections if desired, or let them just stay selected
                 }
