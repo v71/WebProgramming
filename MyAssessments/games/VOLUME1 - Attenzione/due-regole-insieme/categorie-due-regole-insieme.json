@@ -7,7 +7,7 @@
         "id": 1,
         "title": "Categoria 1",
         "text": "15 elementi 8 alimenti e 7 oggetti",
-        "instruction": "Sottolinea le voci della categoria «Oggetti» che iniziano con una vocale.",
+        "instruction": "Clicca le voci della categoria «Oggetti» che iniziano con una vocale.",
 
         "buttons": [
           { "label": "Anatra", "value": false },

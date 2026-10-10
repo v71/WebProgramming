@@ -9,7 +9,7 @@
         "text": "Vincenzo si è dato appuntamento con Elena in palestra, alle sette di sera. Prima di uscire ha preparato l'agenda e la spazzola. Lungo la strada si è accorto di aver dimenticato la cartina ed è tornato a casa a prenderla. Quando è arrivato, Elena lo aspettava già da dieci minuti.",
         "instruction": "Esegui solo le istruzioni che chiedono un segno sulla parola tra virgolette, salta quelle che dicono di non fare qualcosa. Anche «ignora la riga successiva» si salta.",
         "descriptions": [ {"label": "Clicca su «Cavallo»"},
-                          {"label": "Non cliccare su Topo"}, 
+                          {"label": "Non cliccare su «Topo»"}, 
                           {"label": "Non cliccare su «Gatto»"},
                           {"label": "Clicca su «Tucano»"},
                           {"label": "Non cliccare sulla preda preferita dal gatto"} ,

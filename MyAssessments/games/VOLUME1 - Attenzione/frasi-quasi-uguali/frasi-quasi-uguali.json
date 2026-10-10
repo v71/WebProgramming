@@ -13,9 +13,9 @@
           { "label": "Prima di uscire dal teatro, Denise ha controllato le scarpe.", "value": false },
           { "label": "Elisa ha messo via gli occhiali dopo essere arrivata in ospedale.", "value": false },
           { "label": "In libreria, Elena ha chiesto aiuto per trovare la tazza.", "value": true },
-          { "label": "In panetteria, Carolina ha chiesto aiuto per trovare lo zaino.", "value": true },
-          { "label": "In libreria, Elena ha chiesto aiuto per trovare la teiera.", "value": false },
-          { "label": "Carolina ha trovato la tazza mentre aspettava al museo.", "value": false }
+          { "label": "In libreria, Maria ha consultato un libro per la sua tesi.", "value": false },
+          { "label": "Carolina ha trovato la tazza mentre aspettava al museo.", "value": false },
+          { "label": "In panetteria, Carolina ha chiesto aiuto per trovare lo zaino.", "value": true }
         ]
       }
 

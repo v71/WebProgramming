@@ -1,0 +1,30 @@
+{
+    "title": "Proprio quella parola",
+    "description": "Seleziona gli Elementi.",
+
+    "categories": [
+      {
+        "id": 1,
+        "title": "Categoria 1",
+        "text": "15 elementi 8 alimenti e 7 oggetti",
+        "instruction": "Clicca solo le parole scritte esattamente come «Cammino». Le forme simili non valgono.",
+        "buttons": [
+          { "label": "Cammino", "value": true },
+          { "label": "Teatro", "value": false },
+          { "label": "Musica", "value": false },
+          { "label": "Vento", "value": false },
+          { "label": "Orologio", "value": false },
+          { "label": "Cammin", "value": false },
+          { "label": "Libro", "value": false },
+          { "label": "Cammino", "value": true },
+          { "label": "Cammini", "value": false },
+          { "label": "Camino", "value": false },
+          { "label": "Caminno", "value": false },
+          { "label": "Formaggio", "value": false },
+          { "label": "C_mmino", "value": false },
+          { "label": "Autobus", "value": false },
+          { "label": "Faro", "value": false }
+        ]
+      }
+  ]
+}

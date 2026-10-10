@@ -505,7 +505,7 @@
     <h1 id="game-title">Completa la Frase</h1>
 
     <div id="game-stats">
-        <span>Frase: <strong id="progress-value">1 / 4</strong></span>
+        <span>Parole Corrette: <strong id="progress-value">1 / 4</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -566,7 +566,6 @@
 
 
 <script>
-
         document.addEventListener('DOMContentLoaded', () => {
 
             // Each entry is a full sentence; it gets split into words, which are then
@@ -579,11 +578,7 @@
                 "LA PIOGGIA CADE DAL CIELO",
                 "IL NUOVO ANNO COMINCIA DA GENNAIO"
             ];
-            
-            let currentSentenceIndex = 0;
-            let roundResults = [];
 
-            const nextBtn = document.getElementById('next-btn');
             const revealBtn = document.getElementById('reveal-btn');
             const revealOverlay = document.getElementById('reveal-overlay');
             const sourceContainer = document.getElementById('source-container');
@@ -594,10 +589,6 @@
             const progressValueEl = document.getElementById('progress-value');
             const progressBarFill = document.getElementById('progress-bar-fill');
             const puzzleWorkspace = document.getElementById('puzzle-workspace');
-            const actionControls = document.getElementById('action-controls');
-            const summaryScreen = document.getElementById('summary-screen');
-            const summaryTbody = document.getElementById('summary-tbody');
-            const summaryTotals = document.getElementById('summary-totals');
             const instructionBanner = document.getElementById('instruction-banner');
 
             let originalWords = [];       // array of words for the current sentence
@@ -638,11 +629,35 @@
                 revealsValueEl.textContent = revealCount;
             }
 
+            function updateProgressDisplay() {
+                let userSlotsTotal = 0;
+                let userSlotsCorrect = 0;
+
+                slotsMeta.forEach(m => {
+                    const isGiven = m.element.classList.contains('given');
+                    if (!isGiven) {
+                        userSlotsTotal++;
+                        const card = m.element.querySelector('.card');
+                        if (card && card.dataset.word === m.expected) {
+                            userSlotsCorrect++;
+                        }
+                    }
+                });
+
+                const total = userSlotsTotal > 0 ? userSlotsTotal : slotsMeta.length;
+                const current = userSlotsTotal > 0 ? userSlotsCorrect : 0;
+
+                progressValueEl.textContent = `${current} / ${total}`;
+                const progressRatio = total > 0 ? (current / total) * 100 : 0;
+                progressBarFill.style.width = progressRatio + '%';
+            }
+
             function registerMove() {
                 if (sentenceCompleted) return;
                 moveCount++;
                 updateMovesDisplay();
                 updateSlotHighlights();
+                updateProgressDisplay();
                 checkSentenceAutomatic();
             }
 
@@ -686,17 +701,12 @@
                 targetContainer.style.maxWidth = targetWidth + 'px';
             }
 
-            function loadSentence(index) {
-                if (index >= PUZZLE_SENTENCES.length) {
-                    progressBarFill.style.width = '100%';
-                    showSummaryScreen();
-                    return;
-                }
+            function loadRandomSentence() {
+                if (!PUZZLE_SENTENCES.length) return;
 
-                const progressRatio = (index / PUZZLE_SENTENCES.length) * 100;
-                progressBarFill.style.width = progressRatio + '%';
+                const randomIndex = Math.floor(Math.random() * PUZZLE_SENTENCES.length);
+                originalWords = PUZZLE_SENTENCES[randomIndex].split(' ');
 
-                originalWords = PUZZLE_SENTENCES[index].split(' ');
                 sourceContainer.style.maxWidth = '';
                 targetContainer.style.maxWidth = '';
                 sourceContainer.innerHTML = '';
@@ -717,12 +727,10 @@
                 sourceContainer.style.maxWidth = fullWidth + 'px';
                 targetContainer.style.maxWidth = fullWidth + 'px';
 
-                progressValueEl.textContent = `${index + 1} / ${PUZZLE_SENTENCES.length}`;
                 updateMovesDisplay();
                 updateRevealsDisplay();
                 startElapsedTimer();
 
-                nextBtn.classList.add('smooth-hidden');
                 revealBtn.classList.remove('smooth-hidden');
                 revealBtn.disabled = false;
                 revealBtn.classList.remove('wrong-btn');
@@ -771,6 +779,7 @@
                 }
 
                 updateSlotHighlights();
+                updateProgressDisplay();
 
                 // 2. Build Source Cards
                 const missingWords = originalWords.filter((_, i) => !givenPositions.has(i));
@@ -804,11 +813,12 @@
                             moveCount++;
                             updateMovesDisplay();
                             updateSlotHighlights();
+                            updateProgressDisplay();
 
                             const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
 
                             if (isWordCorrect) {
-                                try{
+                                try {
                                     await Checkmark.show({
                                         element: emptySlotMeta.element,
                                         size: 48,
@@ -816,8 +826,7 @@
                                         duration: 1600
                                     });
                                 }
-                                catch(err)
-                                {
+                                catch(err) {
                                     console.warn('Checkmark animation failed:', err);
                                 }
                             }
@@ -854,10 +863,11 @@
                     sentenceCompleted = true;
                     stopElapsedTimer();
                     updateSlotHighlights();
+                    updateProgressDisplay();
 
                     slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
 
-                      if (typeof Confetti !== 'undefined') {
+                    if (typeof Confetti !== 'undefined') {
                         try {
                             await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
                             await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
@@ -867,30 +877,9 @@
                         }
                     }
 
-                    progressBarFill.style.width = (((currentSentenceIndex + 1) / PUZZLE_SENTENCES.length) * 100) + '%';
-
-                    const wrongAttempts = moveCount - 1; 
-                    const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
-
-                    roundResults.push({
-                        sentence: originalWords.join(' '),
-                        time: elapsedSeconds + 's',
-                        moves: moveCount,
-                        reveals: revealCount,
-                        metric: metricValue
-                    });
-
-                    if (currentSentenceIndex === PUZZLE_SENTENCES.length - 1) {
-                        nextBtn.textContent = "✓ Fatto";
-                    } else {
-                        nextBtn.textContent = "▶ Prossima frase";
-                    }
-
                     revealBtn.classList.remove('wrong-btn');
-                    revealBtn.disabled = false;
-
+                    revealBtn.disabled = true;
                     revealBtn.classList.add('smooth-hidden');
-                    nextBtn.classList.remove('smooth-hidden');
 
                 } else if (allSlotsFilled) {
                     revealBtn.innerHTML = "<span>⚠️ Frase errata</span>";
@@ -907,44 +896,6 @@
                         revealBtn.innerHTML = "<span>💡 Help!</span>";
                     }
                 }
-            }
-
-            nextBtn.addEventListener('click', () => {
-                if (currentSentenceIndex === PUZZLE_SENTENCES.length - 1) {
-                    progressBarFill.style.width = '100%';
-                    showSummaryScreen();
-                } else {
-                    currentSentenceIndex++;
-                    loadSentence(currentSentenceIndex);
-                }
-            });
-
-            function showSummaryScreen() {
-                puzzleWorkspace.style.display = 'none';
-                instructionBanner.style.display = 'none';
-                document.getElementById('game-stats').style.display = 'none';
-                document.querySelector('.progress-bar-container').style.display = 'none';
-                actionControls.style.display = 'none';
-
-                summaryTbody.innerHTML = '';
-                let totalMetric = 0;
-
-                roundResults.forEach(res => {
-                    totalMetric += res.metric;
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<td><strong>${res.sentence}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
-                    summaryTbody.appendChild(row);
-                });
-
-                const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-                const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
-
-                summaryTotals.innerHTML = `
-                    <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
-                    <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
-                `;
-
-                summaryScreen.style.display = 'block';
             }
 
             function showReveal() {
@@ -977,9 +928,9 @@
 
             async function initGame() {
                 try {
-                    loadSentence(currentSentenceIndex);
+                    loadRandomSentence();
                 } catch (err) {
-                    console.error('Could not load sentences.json:', err);
+                    console.error('Could not load game:', err);
                 }
             }
             
@@ -1000,11 +951,11 @@
                 resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
             });
 
-           initGame();
-        
+            initGame();
         });
-
     </script>
     
+
+
 </body>
 </html>

@@ -2,20 +2,16 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Puzzle di Lettere</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Puzzle di Frasi</title>
 
      <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
     <style>
-        :root {
-            /* One size for every letter card: the cards to move, the slots and the Help overlay.
-               Change these two values to resize all of them together. */
-            --card-w: 72px;
-            --card-h: 94px;
 
+        :root {
             --bg-0: #2a113d;
             --bg-1: #4a1d6e;
             --bg-2: #553d94;
@@ -57,12 +53,12 @@
             color: var(--accent);
             text-align: center;
             /* Contorno nero nitido attorno al testo */
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
+            text-shadow: 
+                -2px -2px 0 #000,  
+                 2px -2px 0 #000,  
+                -2px  2px 0 #000,  
                  2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
+                 0px 4px 8px rgba(0, 0, 0, 0.5); /* Aggiunge anche una leggera ombra tridimensionale */
         }
 
         .controls {
@@ -136,29 +132,26 @@
             margin: 0 auto;
         }
 
-        .card.disabled {
-            opacity: 0.35;
-            pointer-events: none;
-            cursor: default;
-            filter: grayscale(100%);
-        }
-
         #source-container {
             border-color: var(--border);
         }
 
-        #target-container {
+       #target-container {
             border: 2px solid #000000;
             background-color: #37275e;
-            padding: 19px;
+            padding: 20px;
+            width: fit-content;
+            max-width: 100%;
+            justify-content: center; /* Centra gli elementi slot se avanzano spazi */
         }
 
-        /* Slot styles for the drop zone: same size as a card */
+        /* Slot styles for Drop Zone */
         .slot {
             position: relative;
             flex-shrink: 0;
-            width: var(--card-w);
-            height: var(--card-h);
+            min-width: 90px;
+            height: 60px;
+            padding: 0;
             background-color: var(--bg-2);
             border: 2px solid var(--border);
             border-radius: 14px;
@@ -166,10 +159,14 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Only properties that do NOT change the slot's size are animated.
+               "transition: all" used to animate the border going from 2px to none,
+               so the slot kept changing width for 0.25s after a word was placed. */
+            transition: border-color 0.25s ease, background-color 0.25s ease,
+                        box-shadow 0.25s ease, transform 0.25s ease;
             cursor: pointer;
         }
-
+        
         /* Highlight for the current active slot */
         .slot.active-slot {
             border-color: #ffffff;
@@ -177,7 +174,8 @@
             background-color: #544b7a;
         }
 
-        /* Filled slot becomes an invisible wrapper */
+        /* Filled slot becomes an invisible wrapper: the card inside keeps its
+           normal, unmodified styling. */
         .slot.filled,
         .slot.revealed {
             border: none;
@@ -245,7 +243,7 @@
         #reveal-overlay.visible {
             opacity: 1;
         }
- 
+        
         /* Stile specifico per le lettere rivelate con il tasto Help */
         .card.reveal-letter {
             border-color: #ffffff !important;
@@ -256,25 +254,10 @@
             transform: none !important;
         }
 
-        /* Letter cards */
-        .card {
-            flex-shrink: 0;
-            width: var(--card-w);
-            height: var(--card-h);
-            padding: 0;
-            background: #7931b4;
-            color: var(--text);
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            font-weight: 700;
-            cursor: pointer;
-            user-select: none;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        /* 2. Reintegra lo stile per gli spazi vuoti nell'overlay */
+        .card.reveal-letter.space {
+            background-color: rgba(255, 255, 255, 0.15); /* Sfondo traslucido chiaro per lo spazio */
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .card.space::after {
@@ -288,6 +271,36 @@
             opacity: 0.85;
         }
 
+        /* Cards hold a whole word: flexible width, no fixed square */
+        .card {
+            flex-shrink: 0;
+            min-width: 90px;
+            height: 60px;
+            padding: 0 18px;
+            background: #7931b4;
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .card.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            cursor: default;
+            filter: grayscale(100%);
+        }
+        
+        /* Hover effect for source cards */
         #source-container .card:hover {
             border-color: var(--accent);
             transform: translateY(-4px);
@@ -295,13 +308,6 @@
             background: #ffffff;
             color: var(--accent);
             z-index: 5;
-        }
-
-        .slot .card {
-            transform: none !important;
-            background: #5d258a;
-            width: 100%;
-            height: 100%;
         }
 
         #game-stats, .stats-style {
@@ -402,7 +408,7 @@
             font-size: 1rem;
             font-weight: 600;
             color: #ffffff;
-            background-color: #4f46e5; /* Blu fisso a riposo */
+            background-color: #4f46e5;
             border: none;
             border-radius: 99px;
             cursor: pointer;
@@ -430,7 +436,7 @@
 
         .cool-btn:hover {
             transform: translateY(-2px);
-            background-color: #10b981; /* Blu leggermente più scuro all'hover */
+            background-color: #10b981;
         }
 
         .cool-btn:hover i {
@@ -446,7 +452,7 @@
         }
 
         #next-btn:hover {
-           background-color: #10b981;
+            background-color: #10b981;
         }
 
         .cool-btn.wrong-btn {
@@ -454,23 +460,23 @@
             cursor: default;
             pointer-events: none;
             box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
-            opacity: 1 !important; /* Mantiene il colore pieno senza trasparenza */
+            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
         }
 
     </style>
 </head>
 <body>
-
-    <h1 id="game-title">Puzzle di Lettere</h1>
+    
+    <h1 id="game-title">Puzzle di Frasi</h1>
 
     <div id="game-stats">
-        <span>Round: <strong id="progress-value">1 / 4</strong></span>
+        <span>Parole Corrette: <strong id="progress-value">1 / 4</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
+    <h3 id="instruction-banner" class="stats-style">Clicca sulle parole nella prima lista per ricomporre la frase nella seconda lista, nell'ordine giusto.</h3>
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
@@ -495,14 +501,11 @@
         </div>
     </div>
 
-    <h1 id="progress-title">
-        Progresso
-    </h1>
+    <h1>Progresso</h1>
 
     <div class="progress-bar-container">
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
     </div>
-
 
     <div id="summary-screen">
         <h2>Hai completato tutto! 🎉</h2>
@@ -510,7 +513,7 @@
         <table class="summary-table">
             <thead>
                 <tr>
-                    <th>Parola</th>
+                    <th>Frase</th>
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
@@ -524,15 +527,16 @@
         </div>
     </div>
 
-    <script>
-        
+
+<script>
+        ///////////////////////////////////////////////////////////////////////////////
+        // LE FRASI SONO LETTE NELLA FUNZIONE INITGAME DAL FILE SENTENCES.JSON
+        ///////////////////////////////////////////////////////////////////////////////
+
         document.addEventListener('DOMContentLoaded', () => {
+    
+            let PUZZLE_SENTENCES = [];
 
-            const PUZZLE_WORDS = ["HELLO WORLD", "CODE PUZZLE", "JAVASCRIPT", "UI DESIGN"];
-            let currentWordIndex = 0;
-            let roundResults = [];
-
-            const nextBtn = document.getElementById('next-btn');
             const revealBtn = document.getElementById('reveal-btn');
             const revealOverlay = document.getElementById('reveal-overlay');
             const sourceContainer = document.getElementById('source-container');
@@ -543,20 +547,25 @@
             const progressValueEl = document.getElementById('progress-value');
             const progressBarFill = document.getElementById('progress-bar-fill');
             const puzzleWorkspace = document.getElementById('puzzle-workspace');
-            const actionControls = document.getElementById('action-controls');
+            const instructionBanner = document.getElementById('instruction-banner');
             const summaryScreen = document.getElementById('summary-screen');
             const summaryTbody = document.getElementById('summary-tbody');
             const summaryTotals = document.getElementById('summary-totals');
-            const instructionBanner = document.getElementById('instruction-banner');
+            const gameTitle = document.getElementById('game-title');
+            const gameStats = document.getElementById('game-stats');
+            const actionControls = document.getElementById('action-controls');
+            const progressTitle = document.getElementById('progress-title');
+            const progressContainer = document.querySelector('.progress-bar-container');
 
-            let originalTextString = "";
+            let originalWords = [];       // array of words for the current sentence
             let elapsedSeconds = 0;
             let elapsedTimerInterval = null;
             let moveCount = 0;
             let revealCount = 0;
-            let wordCompleted = false;
+            let sentenceCompleted = false;
             let isRevealing = false;
             let slotsMeta = [];
+            let rowCap = 0;               // maximum width (px) both containers may use
 
             function startElapsedTimer() {
                 stopElapsedTimer();
@@ -587,12 +596,26 @@
                 revealsValueEl.textContent = revealCount;
             }
 
+            function updateProgressDisplay() {
+                const filledCorrectCount = slotsMeta.filter(m => {
+                    const card = m.element.querySelector('.card');
+                    return card && card.dataset.word === m.expected;
+                }).length;
+
+                const totalWords = originalWords.length;
+                progressValueEl.textContent = `${filledCorrectCount} / ${totalWords}`;
+                const progressRatio = totalWords > 0 ? (filledCorrectCount / totalWords) * 100 : 0;
+                progressBarFill.style.width = progressRatio + '%';
+            }
+
             function registerMove() {
-                if (wordCompleted) return;
+                if (sentenceCompleted) return;
                 moveCount++;
                 updateMovesDisplay();
                 updateSlotHighlights();
-                checkWordAutomatic();
+                updateProgressDisplay();
+                fitTargetContainer();          // slot widths changed: re-hug the placeholders
+                checkSentenceAutomatic();
             }
 
             function shuffleArray(array) {
@@ -604,47 +627,87 @@
                 return arr;
             }
 
-            function loadWord(index) {
-                if (index >= PUZZLE_WORDS.length) {
-                    progressBarFill.style.width = '100%';
-                    showSummaryScreen();
-                    return;
+            function measureFullRowWidth(words) {
+                const temp = document.createElement('div');
+                temp.className = 'card-container';
+                temp.style.visibility = 'hidden';
+                temp.style.position = 'absolute';
+                temp.style.pointerEvents = 'none';
+
+                words.forEach(word => {
+                    const card = document.createElement('div');
+                    card.classList.add('card');
+                    card.textContent = word;
+                    temp.appendChild(card);
+                });
+
+                puzzleWorkspace.appendChild(temp);
+                const width = temp.getBoundingClientRect().width;
+                puzzleWorkspace.removeChild(temp);
+                return width;
+            }
+
+            function syncContainerWidths() {
+                if (!originalWords.length) return;
+
+                const fullWidth = measureFullRowWidth(originalWords);
+                const maxAllowedWidth = puzzleWorkspace.clientWidth - 40;
+                rowCap = Math.min(fullWidth, maxAllowedWidth);
+
+                sourceContainer.style.width = rowCap + 'px';
+                fitTargetContainer();
+            }
+
+            function fitTargetContainer() {
+                if (rowCap) {
+                    targetContainer.style.width = rowCap + 'px';
                 }
+            }
 
-                const progressRatio = (index / PUZZLE_WORDS.length) * 100;
-                progressBarFill.style.width = progressRatio + '%';
+            function loadRandomSentence() {
+                if (!PUZZLE_SENTENCES.length) return;
 
-                originalTextString = PUZZLE_WORDS[index];
+                const randomIndex = Math.floor(Math.random() * PUZZLE_SENTENCES.length);
+                const sentenceText = PUZZLE_SENTENCES[randomIndex];
+
+                originalWords = sentenceText.split(' ');
                 sourceContainer.style.width = '';
-                sourceContainer.style.minHeight = '';
+                targetContainer.style.width = '';
                 sourceContainer.innerHTML = '';
                 targetContainer.innerHTML = '';
-                wordCompleted = false;
+                sentenceCompleted = false;
                 moveCount = 0;
                 revealCount = 0;
                 slotsMeta = [];
 
-                progressValueEl.textContent = `${index + 1} / ${PUZZLE_WORDS.length}`;
+                if (summaryScreen) summaryScreen.style.display = 'none';
+                if (puzzleWorkspace) puzzleWorkspace.style.display = '';
+                if (instructionBanner) instructionBanner.style.display = '';
+                if (gameStats) gameStats.style.display = '';
+                if (gameTitle) gameTitle.style.display = '';
+                if (progressTitle) progressTitle.style.display = '';
+                if (progressContainer) progressContainer.style.display = '';
+                if (actionControls) actionControls.style.display = '';
+
                 updateMovesDisplay();
                 updateRevealsDisplay();
+                updateProgressDisplay();
                 startElapsedTimer();
 
-                nextBtn.classList.add('smooth-hidden');
                 revealBtn.classList.remove('smooth-hidden');
                 revealBtn.disabled = false;
                 revealBtn.classList.remove('wrong-btn');
                 revealBtn.innerHTML = "<span>💡 Help!</span>";
 
                 // 1. Build Target Slots (Drop Container)
-                for (let i = 0; i < originalTextString.length; i++) {
+                for (let i = 0; i < originalWords.length; i++) {
                     const slot = document.createElement('div');
                     slot.classList.add('slot');
 
                     slot.addEventListener('click', () => {
-                        if (wordCompleted) return;
+                        if (sentenceCompleted) return;
                         const slotCard = slot.querySelector('.card');
                         if (slotCard) {
-                            // Re-enable the corresponding source card
                             if (slotCard.sourceCard) {
                                 slotCard.sourceCard.classList.remove('disabled');
                             }
@@ -664,58 +727,50 @@
                     });
 
                     targetContainer.appendChild(slot);
-                    slotsMeta.push({ element: slot, expected: originalTextString[i] });
+                    slotsMeta.push({ element: slot, expected: originalWords[i] });
                 }
 
                 updateSlotHighlights();
+                updateProgressDisplay();
 
                 // 2. Build Source Cards (Stay in source container and get disabled when clicked)
-                const charArray = Array.from(originalTextString);
-                const shuffledChars = shuffleArray(charArray);
+                const shuffledWords = shuffleArray(originalWords);
 
-                shuffledChars.forEach(char => {
+                shuffledWords.forEach(word => {
                     const card = document.createElement('div');
                     card.classList.add('card');
-                    card.dataset.char = char;
-
-                    if (char === ' ') {
-                        card.classList.add('space');
-                    } else {
-                        card.textContent = char;
-                    }
+                    card.dataset.word = word;
+                    card.textContent = word;
 
                     card.addEventListener('click', async (e) => {
                         e.stopPropagation();
-                        if (wordCompleted || card.classList.contains('disabled')) return;
+                        if (sentenceCompleted || card.classList.contains('disabled')) return;
 
                         const emptySlotMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
                         if (emptySlotMeta) {
-                            // Disable card in the source container (stays in place)
                             card.classList.add('disabled');
 
-                            // Create a corresponding card inside the drop slot
                             const slotCard = document.createElement('div');
                             slotCard.classList.add('card');
-                            slotCard.dataset.char = card.dataset.char;
-                            if (char === ' ') {
-                                slotCard.classList.add('space');
-                            } else {
-                                slotCard.textContent = char;
-                            }
-                            slotCard.sourceCard = card; // Link back to the original source card
+                            slotCard.dataset.word = card.dataset.word;
+                            slotCard.textContent = word;
+                            slotCard.sourceCard = card;
 
                             emptySlotMeta.element.appendChild(slotCard);
                             emptySlotMeta.element.classList.add('filled');
-
+                            
                             moveCount++;
                             updateMovesDisplay();
                             updateSlotHighlights();
+                            updateProgressDisplay();
+                            fitTargetContainer();
 
-                            const cardValue = card.textContent.trim();
-                            const isWordCorrect = (cardValue === emptySlotMeta.expected);
-                            
+                            const isWordCorrect = (card.dataset.word === emptySlotMeta.expected);
+
+                            checkSentenceAutomatic();
+
                             if (isWordCorrect) {
-                                try{
+                                try {
                                     await Checkmark.show({
                                         element: emptySlotMeta.element,
                                         size: 48,
@@ -723,12 +778,10 @@
                                         duration: 1600
                                     });
                                 }
-                                catch(err){
-                                     console.warn('Checkmark animation failed:', err);
+                                catch (err) {
+                                    console.warn('Checkmark animation failed:', err);
                                 }
                             }
-
-                            checkWordAutomatic();
                         }
                     });
 
@@ -736,9 +789,7 @@
                 });
 
                 requestAnimationFrame(() => {
-                    const box = sourceContainer.getBoundingClientRect();
-                    sourceContainer.style.width = box.width + 'px';
-                    sourceContainer.style.minHeight = box.height + 'px';
+                    syncContainerWidths();
                 });
             }
 
@@ -751,24 +802,25 @@
                 }
             }
 
-            async function checkWordAutomatic() {
-                if (wordCompleted) return;
+            async function checkSentenceAutomatic() {
+                if (sentenceCompleted) return;
 
-                const currentString = slotsMeta.map(m => {
+                const currentWords = slotsMeta.map(m => {
                     const card = m.element.querySelector('.card');
-                    return card ? card.dataset.char : '';
-                }).join('');
+                    return card ? card.dataset.word : '';
+                });
 
                 const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+                const isCorrect = allSlotsFilled && currentWords.every((w, i) => w === originalWords[i]);
 
-                if (currentString.length === originalTextString.length && currentString === originalTextString) {
-                    wordCompleted = true;
+                if (isCorrect) {
+                    sentenceCompleted = true;
                     stopElapsedTimer();
                     updateSlotHighlights();
-                    progressBarFill.style.width = ((currentWordIndex + 1) / PUZZLE_WORDS.length) * 100 + '%';
+                    updateProgressDisplay();
 
                     slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
-                    
+
                     if (typeof Confetti !== 'undefined') {
                         try {
                             await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
@@ -778,32 +830,14 @@
                             console.warn('Confetti animation failed:', err);
                         }
                     }
-                    
-                    const wrongAttempts = moveCount - 1;
-                    const metricValue = Math.max(0, 100 - (wrongAttempts * 20) - (revealCount * 20));
-
-                    roundResults.push({
-                        word: originalTextString,
-                        time: elapsedSeconds + 's',
-                        moves: moveCount,
-                        reveals: revealCount,
-                        metric: metricValue
-                    });
-
-                    if (currentWordIndex === PUZZLE_WORDS.length - 1) {
-                        nextBtn.textContent = "✓ Fatto";
-                    } else {
-                        nextBtn.textContent = "▶ Prossima parola";
-                    }
 
                     revealBtn.classList.remove('wrong-btn');
                     revealBtn.disabled = false;
-
-                    revealBtn.classList.add('smooth-hidden');
-                    nextBtn.classList.remove('smooth-hidden');
+                    revealBtn.classList.remove('smooth-hidden');
+                    revealBtn.innerHTML = "<span>✓ Fatto</span>";
 
                 } else if (allSlotsFilled) {
-                    revealBtn.innerHTML = "<span>⚠️ Parola errata</span>";
+                    revealBtn.innerHTML = "<span>⚠️ Frase errata</span>";
                     revealBtn.classList.add('wrong-btn');
                     revealBtn.disabled = true;
 
@@ -819,63 +853,60 @@
                 }
             }
 
-            nextBtn.addEventListener('click', () => {
-                if (currentWordIndex === PUZZLE_WORDS.length - 1) {
-                    progressBarFill.style.width = '100%';
-                    showSummaryScreen();
-                } else {
-                    currentWordIndex++;
-                    loadWord(currentWordIndex);
-                }
-            });
-
             function showSummaryScreen() {
-                puzzleWorkspace.style.display = 'none';
-                instructionBanner.style.display = 'none';
-                document.getElementById('game-stats').style.display = 'none';
-                document.getElementById('game-title').style.display = 'none';
-                document.getElementById('progress-title').style.display = 'none';
-                document.querySelector('.progress-bar-container').style.display = 'none';
-                actionControls.style.display = 'none';
+                if (puzzleWorkspace) puzzleWorkspace.style.display = 'none';
+                if (instructionBanner) instructionBanner.style.display = 'none';
+                if (gameStats) gameStats.style.display = 'none';
+                if (gameTitle) gameTitle.style.display = 'none';
+                if (progressTitle) progressTitle.style.display = 'none';
+                if (progressContainer) progressContainer.style.display = 'none';
+                if (actionControls) actionControls.style.display = 'none';
 
-                summaryTbody.innerHTML = '';
-                let totalMetric = 0;
-
-                roundResults.forEach(res => {
-                    totalMetric += res.metric;
+                if (summaryTbody) {
+                    summaryTbody.innerHTML = '';
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td><strong>${res.word}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
+                    row.innerHTML = `<td><strong>${originalWords.join(' ')}</strong></td><td>${elapsedSeconds}s</td><td>${moveCount}</td><td>${revealCount}</td><td><strong>100.00</strong></td>`;
                     summaryTbody.appendChild(row);
-                });
+                }
 
-                const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
-                const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
+                if (summaryTotals) {
+                    summaryTotals.innerHTML = `
+                        <div>Tempo: <strong>${elapsedSeconds}s</strong></div>
+                        <div>Tentativi: <strong>${moveCount}</strong></div>
+                        <div>Aiuti: <strong>${revealCount}</strong></div>
+                    `;
+                }
 
-                summaryTotals.innerHTML = `
-                    <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
-                    <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
-                `;
+                if (summaryScreen) summaryScreen.style.display = 'block';
+            }
 
-                summaryScreen.style.display = 'block';
+            function handleActionButton() {
+                const buttonText = revealBtn.querySelector('span').textContent;
+                if (buttonText.includes('Fatto') || sentenceCompleted) {
+                    showSummaryScreen();
+                    return;
+                }
+                showReveal();
             }
 
             function showReveal() {
-                if (wordCompleted || isRevealing || revealBtn.disabled) return;
+                if (sentenceCompleted || isRevealing || revealBtn.disabled) return;
                 isRevealing = true;
 
                 revealCount++;
                 updateRevealsDisplay();
 
                 revealOverlay.innerHTML = '';
-                Array.from(originalTextString).forEach((char) => {
+                originalWords.forEach((word) => {
+                    const slot = document.createElement('div');
+                    slot.classList.add('slot', 'revealed');
+
                     const card = document.createElement('div');
                     card.classList.add('card', 'reveal-letter');
-                    if (char === ' ') {
-                        card.classList.add('space');
-                    } else {
-                        card.textContent = char;
-                    }
-                    revealOverlay.appendChild(card);
+                    card.textContent = word;
+
+                    slot.appendChild(card);
+                    revealOverlay.appendChild(slot);
                 });
                 revealOverlay.classList.add('visible');
             }
@@ -886,28 +917,45 @@
                 revealOverlay.classList.remove('visible');
             }
 
-             async function initGame() {
+            async function initGame() {
                 try {
-                      loadWord(currentWordIndex);
+                    const response = await fetch('sentences-set-1.json');
+                    const data = await response.json();
+                    PUZZLE_SENTENCES = data.sentences;
+
+                    if (data.title) {
+                        document.title = data.title;
+                        const titleEl = document.getElementById('game-title');
+                        if (titleEl) titleEl.textContent = data.title;
+                    }
+
+                    loadRandomSentence();
+
                 } catch (err) {
-                    console.error('Could not init game:', err);
+                    console.error('Could not load sentences.json:', err);
                 }
             }
-           
-            revealBtn.addEventListener('mousedown', showReveal);
+
+            revealBtn.addEventListener('click', handleActionButton);
             revealBtn.addEventListener('touchstart', (e) => {
                 e.preventDefault();
-                showReveal();
+                handleActionButton();
             }, { passive: false });
 
             revealBtn.addEventListener('mouseup', hideReveal);
             revealBtn.addEventListener('mouseleave', hideReveal);
             revealBtn.addEventListener('touchend', hideReveal);
             revealBtn.addEventListener('touchcancel', hideReveal);
-            
-            initGame();
-        });
 
+            let resizeDebounceTimer = null;
+            window.addEventListener('resize', () => {
+                clearTimeout(resizeDebounceTimer);
+                resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
+            });
+
+            initGame();
+    }); 
     </script>
+
 </body>
 </html>

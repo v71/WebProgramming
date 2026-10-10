@@ -495,7 +495,7 @@
     </div>
 
 
-    <script>
+<script>
 
         /* =========================================================
            DOM REFERENCES
@@ -524,7 +524,6 @@
            GAME STATE
            ========================================================= */
 
-        let currentRoundIndex = 0;
         let elapsedSeconds = 0;
         let elapsedTimerInterval = null;
         let moveCount = 0;
@@ -534,8 +533,7 @@
         let ddTotal = 0;
         let ddMisses = 0;
         let ddCurrent = null;
-        let roundStartMoveCount = 0;
-        const roundResults = [];
+        let currentRound = null;
 
         /* =========================================================
            GAME DATA
@@ -612,10 +610,6 @@
             revealsValueEl.textContent = revealCount;
         }
 
-        function updateRoundDisplay() {
-            roundValueEl.textContent = (currentRoundIndex + 1) + '/' + GAME_ROUNDS.length;
-        }
-
         function addMove() {
             moveCount++;
             updateMovesDisplay();
@@ -687,16 +681,6 @@
             return array;
         }
 
-        function ddFlash( element, className, milliseconds ) {
-            element.classList.remove( className );
-            void element.offsetWidth;
-            element.classList.add( className );
-            clearTimeout( element[ 'timer_' + className ] );
-            element[ 'timer_' + className ] = setTimeout(() => {
-                element.classList.remove( className );
-            }, milliseconds || 400);
-        }
-
         /* =========================================================
            BUILD CURRENT ROUND
            ========================================================= */
@@ -708,12 +692,17 @@
             ddMisses = 0;
             ddCurrent = null;
 
-            const round = GAME_ROUNDS[ currentRoundIndex ];
-            gameTitle.textContent = round.title;
-            updateRoundDisplay();
+            if (!GAME_ROUNDS.length) return;
+            const randomIndex = Math.floor(Math.random() * GAME_ROUNDS.length);
+            currentRound = GAME_ROUNDS[randomIndex];
+
+            gameTitle.textContent = currentRound.title;
+            if (roundValueEl && roundValueEl.parentElement) {
+                roundValueEl.parentElement.style.display = 'none';
+            }
             const answers = [];
 
-            round.text
+            currentRound.text
                 .split(/(\{[^}]+\})/)
                 .forEach(part => {
                     const match = part.match(/^\{(.+)\}$/);
@@ -735,8 +724,9 @@
                 });
 
             ddTotal = answers.length;
+            setProgress(0);
 
-            const words = answers.concat(round.distractors );
+            const words = answers.concat(currentRound.distractors );
 
             ddShuffle(words)
                 .forEach(word => {
@@ -750,8 +740,6 @@
                 });
 
             ddNextBlank();
-
-            roundStartMoveCount = moveCount;
         }
 
         /* =========================================================
@@ -794,6 +782,7 @@
                 chip.disabled = true;
 
                 ddPlaced++;
+                setProgress((ddPlaced / ddTotal) * 100);
 
                 // CHECKMARK ANIMATION
                 if (typeof Checkmark !== 'undefined' && typeof Checkmark.show === 'function') {
@@ -855,20 +844,10 @@
             stopElapsedTimer();
             hidePeek();
 
-            roundResults[ currentRoundIndex ] = { moves: moveCount - roundStartMoveCount };
-
-            setProgress(( (currentRoundIndex + 1) / GAME_ROUNDS.length) * 100 );
-
-            if ( currentRoundIndex < GAME_ROUNDS.length - 1 ) {
-                setInstruction('Round completato! Clicca Prossimo Paragrafo per continuare.');
-                revealBtn.disabled = false;
-                revealBtn.querySelector('span').textContent ='▶ Prossimo Paragrafo';
-                return;
-            }
-
-            setInstruction('Hai completato tutti i paragrafi!');
+            setProgress(100);
+            setInstruction('Paragrafo completato! Clicca Fatto per continuare.');
             revealBtn.disabled = false;
-            revealBtn.querySelector('span').textContent ='✓ Fatto';
+            revealBtn.querySelector('span').textContent = '✓ Fatto';
         }
 
         /* =========================================================
@@ -878,17 +857,7 @@
         function handleActionButton() {
             const buttonText = revealBtn.querySelector('span').textContent;
 
-            if ( buttonText.includes('Prossimo Paragrafo')) {
-                currentRoundIndex++;
-                revealBtn.querySelector('span').textContent ='💡 Help!';
-                setInstruction('Tocca la parola giusta per lo spazio evidenziato');
-                ddBuild();
-                ddFitText();
-                startElapsedTimer();
-                return;
-            }
-
-            if ( buttonText.includes('Fatto')) {
+            if (buttonText.includes('Fatto')) {
                 showSummaryScreen();
                 return;
             }
@@ -928,15 +897,14 @@
             hidePeek();
 
             summaryTbody.innerHTML = '';
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `<td>${currentRound ? currentRound.title : 'Paragrafo'}</td> <td>${moveCount}</td>`;
+            summaryTbody.appendChild(row);
 
-            GAME_ROUNDS.forEach( (round, index) => {
-                const result = roundResults[index] || { moves: 0 };
-                const row = document.createElement('tr' );
-                row.innerHTML = `<td>${index + 1}. ${round.title}</td> <td>${result.moves}</td>`;
-                summaryTbody.appendChild(row);
-            });
-
-            summaryTotals.innerHTML = `Tentativi totali: <strong>${moveCount}</strong><br>` + `Aiuti utilizzati: <strong>${revealCount}</strong>`;
+            summaryTotals.innerHTML = `Tempo impiegato: <strong>${elapsedSeconds}s</strong><br>` +
+                                      `Tentativi totali: <strong>${moveCount}</strong><br>` + 
+                                      `Aiuti utilizzati: <strong>${revealCount}</strong>`;
 
             gameTitle.style.display = 'none';
             gameStats.style.display = 'none';
@@ -989,8 +957,6 @@
            ========================================================= */
 
         function initGame() {
-            currentRoundIndex = 0;
-            roundResults.length = 0;
             resetStats();
             setProgress(0);
 
@@ -1020,5 +986,6 @@
 
     </script>
     
+
 </body>
 </html>

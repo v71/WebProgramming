@@ -1,0 +1,25 @@
+{
+  "title": "Shape Matching Game",
+  "categories": [
+    {
+      "id": 1,
+      "instruction": "Trova tutte le forme uguali al triangolo",
+      "descriptions": [
+        { "shape": "images/square.png" },
+        { "shape": "images/circle.png" },
+        { "shape": "images/square.png" },
+        { "shape": "images/circle.png" },
+        { "shape": "images/square.png" },
+        { "shape": "images/circle.png" }
+      ],
+      "buttons": [
+        { "label": "images/square.png", "value": false },
+        { "label": "images/circle.png", "value": false },
+        { "label": "images/square.png", "value": false },
+        { "label": "images/triangle.png", "value": true },
+        { "label": "images/square.png", "value": false },
+        { "label": "images/square.png", "value": false }
+      ]
+    }
+  ]
+}

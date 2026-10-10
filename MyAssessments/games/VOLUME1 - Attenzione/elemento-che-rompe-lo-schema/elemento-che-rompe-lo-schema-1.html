@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leggi prima di agire</title>
+    <title>Elemento che rompe lo schema</title>
 
      <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
@@ -197,27 +197,50 @@
 
         .button-grid {
             width: 100%;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 12px;
+            display: flex;           /* Changes layout to flexible box */
+            justify-content: center; /* Centers the group of buttons */
+            gap: 32px;                /* Controls the exact space between buttons (make it smaller, e.g., 6px or 8px) */
         }
 
-        .grid-button {
-            min-height: 42px; /* Reduced from 70px */
-            border: 2px solid #000205;
-            border-radius: 12px;
+      .grid-button {
+                width: 140px;          
+                height: 140px;         
+                border: 2px solid #000205; 
+                border-radius: 12px;
+                background: #7931b4;
+                display: flex;        
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 20px;          /* Creates a nice border margin around the image */
+                box-sizing: border-box;
+                
+                transition:
+                    background 0.2s ease,
+                    border-color 0.2s ease,
+                    transform 0.15s ease;
+        }
+
+        /* Ensures the PNG scales proportionally and stays centered */
+        .grid-button img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                pointer-events: none; /* Prevents dragging/ghosting issues on click */
+        }
+                
+        /* Top button group (Reference shapes - non-clickable) */
+        .button-grid:first-of-type .grid-button {
+            pointer-events: none; 
+            cursor: default;     
+            background-color: #4f46e5; /* A distinct background color for the reference group */
+        }
+
+        /* Bottom button group (Interactive choices) */
+        .button-grid:last-of-type .grid-button {
             background: #7931b4;
-            color: #ffffff;
-            font-size: 0.9rem; /* Reduced from 1.15rem */
-            font-weight: 700;
-            cursor: pointer;
-            transition:
-                background 0.2s ease,
-                border-color 0.2s ease,
-                transform 0.15s ease;
         }
-
+        
         .grid-button:hover {
             border-color: var(--accent);
             transform: translateY(-3px);
@@ -245,21 +268,21 @@
 
     <style>
 
-    .grid-button.error { 
-        animation: buttonErrorShake 0.45s ease; 
-        border-color: var(--wrong);
-        background-color: rgba(239, 68, 68, 0.05);
-        color: var(--wrong);
-    } 
-    
-    @keyframes buttonErrorShake { 
-        0% { transform: translateX(0); }
-        20% { transform: translateX(-10px); } 
-        40% { transform: translateX(10px); } 
-        60% { transform: translateX(-8px); } 
-        80% { transform: translateX(8px); } 
-        100% { transform: translateX(0); } 
-    }
+        .grid-button.error { 
+            animation: buttonErrorShake 0.45s ease; 
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.05);
+            color: var(--wrong);
+        } 
+        
+        @keyframes buttonErrorShake { 
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); } 
+            40% { transform: translateX(10px); } 
+            60% { transform: translateX(-8px); } 
+            80% { transform: translateX(8px); } 
+            100% { transform: translateX(0); } 
+        }
 
     </style>
 
@@ -433,6 +456,11 @@
         background-color: #4f46e5; /* Blue for interactive buttons */
     }
 
+    .button-grid .grid-button.help-correct {
+        background: #4caf50 !important;
+        border-color: #ffffff !important;
+    }
+
 </style>
 
 </head>
@@ -442,7 +470,7 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        Leggi prima di agire
+        L'elemento che rompe lo schema
     </h1>
 
     <!-- COUNTERS -->
@@ -471,19 +499,20 @@
     <div id="game-area">
         <!-- Read-only debug text area placed above the buttons -->
         
-        <!-- NEW: Inserted buttons container -->
+        <!-- TOP BUTTON GROUP (Shapes) -->
         <div class="button-grid">
-            <button class="grid-button">Action 1</button>
-            <button class="grid-button">Action 2</button>
-            <button class="grid-button">Action 3</button>
-            <button class="grid-button">Action 4</button>
-            <button class="grid-button">Action 5</button>
-            <button class="grid-button">Action 6</button>
+            <button class="grid-button">■</button>
+            <button class="grid-button">●</button>
+            <button class="grid-button">▲</button>
+            <button class="grid-button">■</button>
+            <button class="grid-button">●</button>
+            <button class="grid-button">▲</button>
         </div>
         
         <!-- Divider between the two button groups -->
         <hr class="button-divider">
 
+        <!-- BOTTOM BUTTON GROUP (Interactive Grid) -->
         <div class="button-grid">
             <button class="grid-button" data-index="0"></button>
             <button class="grid-button" data-index="1"></button>
@@ -611,27 +640,57 @@ document.addEventListener('DOMContentLoaded', () => {
         if (instructionBanner) {
             instructionBanner.textContent = title;
         }
-
+        
         // Populate the TOP buttons (descriptions)
         topGridButtons.forEach((button, index) => {
             if (descriptions[index]) {
-                button.textContent = descriptions[index].label;
-                button.style.display = ''; // Ensure the button is visible
+                const imgPath = descriptions[index].shape;
+                button.innerHTML = `<img src="${imgPath}" alt="shape">`;
+                button.style.display = ''; 
             } else {
-                button.style.display = 'none'; // Hide if HTML has more buttons than JSON items
+                button.style.display = 'none'; 
             }
         });
 
+        // Populate the BOTTOM grid buttons (buttons array)
         gridButtons.forEach(button => {
             const index = Number(button.dataset.index);
             if (buttons[index]) {
-                button.textContent = buttons[index].label;
+                const imgPath = buttons[index].label;
+                button.innerHTML = `<img src="${imgPath}" alt="shape">`;
                 button.classList.remove('selected', 'error', 'help-correct');
                 button.disabled = false;
             }
         });
     }
 
+    /*
+    function updateGridUI(title) {
+        if (instructionBanner) {
+            instructionBanner.textContent = title;
+        }
+       
+        // Populate the TOP buttons (descriptions)
+        topGridButtons.forEach((button, index) => {
+            if (descriptions[index]) {
+                button.textContent = descriptions[index].shape; // <-- Change .label to .shape here
+                button.style.display = ''; // Ensure the button is visible
+            } else {
+                button.style.display = 'none'; // Hide if HTML has more buttons than JSON items
+            }
+        });
+        // Populate the BOTTOM grid buttons (buttons array) <-- Uncomment this block
+        gridButtons.forEach(button => {
+            const index = Number(button.dataset.index);
+            if (buttons[index]) {
+                button.textContent = buttons[index].label; // Pulls "▲", "●", "■" from buttons array
+                button.classList.remove('selected', 'error', 'help-correct');
+                button.disabled = false;
+            }
+        });
+    }
+    */
+    
     function updateProgressBar(value) {
         if (progressBarFill) {
             progressBarFill.style.width = (Math.min(Math.max(value, 0), 1) * 100) + '%';
@@ -654,7 +713,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 revealBtn.innerHTML = "<span>💡 Help</span>";
             }
 
-            const response = await fetch('leggi-prima-di-agire.json');
+            const response = await fetch('elemento-che-rompe-lo-schema-1.json');
             if (!response.ok) {
                 throw new Error(`HTTP Error! Status: ${response.status}`);
             }
@@ -685,7 +744,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (err) {
             isGameLoading = false;
-            console.error('Could not load categorie-il-dettaglio-da-non-perdere.json:', err);
+            console.error('Could not load elemento-che-rompe-lo-schema.json:', err);
         }
     }
 
@@ -698,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
             gridButtons.forEach(button => {
                 const index = Number(button.dataset.index);
                 if (buttons[index] && buttons[index].value === true) {
-                    button.classList.add('help-correct');
+                    button.classList.add('help-correct'); // Adds the green background class
                 }
             });
         };
@@ -706,7 +765,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const hideHelp = () => {
             if (isGameCompleted || isGameLoading) return;
             gridButtons.forEach(button => {
-                button.classList.remove('help-correct');
+                button.classList.remove('help-correct'); // Removes the green background class
             });
         };
 
@@ -723,7 +782,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-
+    
     gridButtons.forEach(button => {
         button.addEventListener('click', async () => {
             if (isGameCompleted || isGameLoading) return;
@@ -785,7 +844,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
     initGame();
 });
 
