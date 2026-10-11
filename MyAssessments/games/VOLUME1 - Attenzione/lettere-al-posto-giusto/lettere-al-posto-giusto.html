@@ -757,7 +757,6 @@
 
             function updateSlotHighlights() {
                 slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
-
                 const firstEmptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
                 if (firstEmptyMeta) {
                     firstEmptyMeta.element.classList.add('active-slot');

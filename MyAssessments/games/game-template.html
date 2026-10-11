@@ -6,9 +6,8 @@
     <title>Titolo del gioco</title>
 
     <!-- 1. Includi qui il file esterno condiviso -->
-    <script src="../js/checkmark.js"></script>
-    <script src="../js/celebrazion.js"></script>
-
+    <script src="js/checkmark.js"></script>
+    <script src="js/celebrazion.js"></script>
 
     <style>
         :root {
@@ -93,23 +92,22 @@
         /* =========================================
            INFORMATION BOX
         ========================================= */
-
-        #instruction-banner {
-            margin: 0 0 16px;
+        
+         #instruction-banner {
+            margin: 0 0 14px;
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 100%;
-            max-width: 1100px;
-            min-height: 52px;
-            padding: 10px 20px;
+            gap: 24px;
             font-size: 1.05rem;
-            font-weight: 600;
+            font-weight: 500;
             color: var(--text-dim);
             background: var(--bg-1);
+            padding: 10px 20px;
             border-radius: 99px;
-            border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
             text-align: center;
         }
 
@@ -130,6 +128,19 @@
             background: var(--bg-1);
             border: 2px solid var(--border);
             box-shadow: var(--shadow-md);
+        }
+
+        .controls {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 52px;
         }
 
         /* This is intentionally empty.
@@ -179,6 +190,75 @@
         }
 
         /* =========================================
+            COO_-BUTTONS
+           ========================================= */
+
+                   .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #4f46e5; /* Blu fisso a riposo */
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn.smooth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
+        }
+
+        .cool-btn i {
+            font-size: 1.1rem;
+            -webkit-text-stroke: 1px currentColor;
+            transition: transform 0.25s ease;
+        }
+
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #10b981; /* Blu leggermente più scuro all'hover */
+        }
+
+        .cool-btn:hover i {
+            transform: translateX(3px);
+        }
+
+        .cool-btn:active {
+            transform: translateY(1px);
+        }
+
+        #next-btn {
+            background-color: #4f46e5;
+        }
+
+        #next-btn:hover {
+           background-color: #10b981;
+        }
+
+        .cool-btn.wrong-btn {
+            background-color: var(--wrong);
+            cursor: default;
+            pointer-events: none;
+            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+            opacity: 1 !important; /* Mantiene il colore pieno senza trasparenza */
+        }
+
+
+        /* =========================================
            RESPONSIVE
         ========================================= */
 
@@ -195,28 +275,32 @@
 <body>
 
     <!-- TITLE -->
-
     <h1 id="game-title">
         Titolo del gioco
     </h1>
 
     <!-- COUNTERS -->
-
     <div id="game-stats">
-        <span>Round: <strong id="progress-value">1 / 1</strong></span>
+        <span>Round: <strong id="progress-value">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
     <!-- INFORMATION / INSTRUCTION BOX -->
+    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
 
-    <div id="instruction-banner">
-        Istruzioni del gioco
+    <!-- HELP BUTTON -->
+    <div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span>Caricamento...</span>
+        </button>
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Help!</span>
+        </button>
     </div>
 
     <!-- EMPTY GAME AREA -->
-
     <div id="game-area">
         
     </div>
@@ -240,6 +324,7 @@
     <!-- NO GAME LOGIC -->
 
     <script>
+                
         /*
          * TEMPLATE
          *
@@ -256,6 +341,76 @@
          *
          * come elementi di base.
          */
+    
+           document.addEventListener('DOMContentLoaded', () => {
+            
+            const progressValueEl = document.getElementById('progress-value');
+            const timeValueEl = document.getElementById('time-value');
+            const movesValueEl = document.getElementById('moves-value');
+            const revealsValueEl = document.getElementById('reveals-value');
+            const revealBtn = document.getElementById('reveal-btn');
+            const progressBarFill = document.getElementById('progress-bar-fill');
+            const instructionBanner = document.getElementById('instruction-banner');
+            const gameTitle = document.getElementById('game-title');
+            const gameStats = document.getElementById('game-stats');
+            const actionControls = document.getElementById('action-controls');
+            const progressTitle = document.getElementById('progress-title');
+            const progressContainer = document.querySelector('.progress-bar-container');
+
+            let elapsedSeconds = 0;
+            let moveCount = 0;
+            let revealCount = 0;
+            let elapsedTimerInterval = null;
+
+            function startElapsedTimer() {
+                stopElapsedTimer();
+                elapsedSeconds = 0;
+                updateTimerDisplay();
+                elapsedTimerInterval = setInterval(() => {
+                    elapsedSeconds++;
+                    updateTimerDisplay();
+                }, 1000);
+            }
+
+            function stopElapsedTimer() {
+                if (elapsedTimerInterval) {
+                    clearInterval(elapsedTimerInterval);
+                    elapsedTimerInterval = null;
+                }
+            }
+
+            function updateTimerDisplay() {
+                timeValueEl.textContent = elapsedSeconds + 's';
+            }
+
+            function updateMovesDisplay() {
+                movesValueEl.textContent = moveCount;
+            }
+
+            function updateRevealsDisplay() {
+                revealsValueEl.textContent = revealCount;
+            }
+
+            function loadRandomWord() {
+
+                moveCount = 0;
+                revealCount = 0;
+
+                startElapsedTimer();
+            }
+
+            async function initGame() {
+                try {
+                    loadRandomWord();
+                } catch (err) {
+                    console.error('Could not init game:', err);
+                }
+            }
+
+            initGame();
+
+        });
+     
     </script>
 
 </body>

@@ -553,83 +553,11 @@ button:disabled {
             return arr;
         }
 
-        /*
-        function loadRound(index) {
-            if (index >= ROUNDS.length) {
-                progressBarFill.style.width = '100%';
-                showSummaryScreen();
-                return;
-            }
-
-            const progressRatio = (index / ROUNDS.length) * 100;
-            progressBarFill.style.width = progressRatio + '%';
-
-            currentRound = ROUNDS[index];
-            roundCompleted = false;
-            moveCount = 0;
-            revealCount = 0;
-            optionElements = [];
-
-            progressValueEl.textContent = `${index + 1} / ${ROUNDS.length}`;
-            updateMovesDisplay();
-            updateRevealsDisplay();
-            startElapsedTimer();
-
-            nextBtn.classList.add('smooth-hidden');
-            revealBtn.classList.remove('smooth-hidden');
-            revealBtn.disabled = false;
-
-            const existingImg = imageContainer.querySelector('img');
-            
-            const updateImageSource = () => {
-                imageContainer.innerHTML = `<img src="${currentRound.img}" alt="${currentRound.label}">`;
-                const newImg = imageContainer.querySelector('img');
-                if (newImg) {
-                    newImg.getBoundingClientRect();
-                    newImg.style.opacity = '1';
-                }
-            };
-
-            if (existingImg) {
-                existingImg.style.opacity = '0';
-                setTimeout(updateImageSource, 350);
-            } else {
-                updateImageSource();
-            }
-
-            optionsContainer.innerHTML = '';
-
-            // --- SELEZIONE CORRETTA PER 3 OPZIONI DAL JSON ---
-            const correctIdx = currentRound.correctIndex;
-            let incorrectIndices = [];
-            for (let i = 0; i < currentRound.options.length; i++) {
-                if (i !== correctIdx) {
-                    incorrectIndices.push(i);
-                }
-            }
-            // Prende 2 opzioni errate casuali e le unisce alla corretta, poi mescola
-            const selectedIncorrect = shuffleArray(incorrectIndices).slice(0, 2);
-            const order = shuffleArray([correctIdx, ...selectedIncorrect]);
-
-            order.forEach((originalIdx) => {
-                const optionEl = document.createElement('div');
-                optionEl.classList.add('option-card');
-                optionEl.textContent = currentRound.options[originalIdx];
-                optionEl.dataset.isCorrect = (originalIdx === currentRound.correctIndex) ? 'true' : 'false';
-
-                optionEl.addEventListener('click', () => handleOptionClick(optionEl));
-
-                optionsContainer.appendChild(optionEl);
-                optionElements.push(optionEl);
-            });
-        }
-        */
-
-        function loadRound(index) {
-    if (index >= ROUNDS.length) {
-        progressBarFill.style.width = '100%';
-        showSummaryScreen();
-        return;
+    function loadRound(index) {
+        if (index >= ROUNDS.length) {
+            progressBarFill.style.width = '100%';
+            showSummaryScreen();
+            return;
     }
 
     const progressRatio = (index / ROUNDS.length) * 100;
