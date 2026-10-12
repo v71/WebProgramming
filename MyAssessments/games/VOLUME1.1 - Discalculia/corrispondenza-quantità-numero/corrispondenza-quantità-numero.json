@@ -1,0 +1,175 @@
+{
+    "rounds": [
+        {
+            "label": "Indovina il numero 1",
+            "img": "../anime-girl-numbers/1.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 0
+        },
+        {
+            "label": "Indovina il numero 2",
+            "img": "../anime-girl-numbers/2.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "label": "Indovina il numero 3",
+            "img": "../anime-girl-numbers/3.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "label": "Indovina il numero 4",
+            "img": "../anime-girl-numbers/4.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "label": "Indovina il numero 5",
+            "img": "../anime-girl-numbers/5.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 4
+        },
+        {
+            "label": "Indovina il numero 6",
+            "img": "../anime-girl-numbers/6.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 5
+        },
+        {
+            "label": "Indovina il numero 7",
+            "img": "../anime-girl-numbers/7.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 6
+        },
+        {
+            "label": "Indovina il numero 8",
+            "img": "../anime-girl-numbers/8.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 7
+        },
+        {
+            "label": "Indovina il numero 9",
+            "img": "../anime-girl-numbers/9.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 8
+        },
+        {
+            "label": "Indovina il numero 10",
+            "img": "../anime-girl-numbers/10.png",
+            "options": [
+                "../numbers/1.png",
+                "../numbers/2.png",
+                "../numbers/3.png",
+                "../numbers/4.png",
+                "../numbers/5.png",
+                "../numbers/6.png",
+                "../numbers/7.png",
+                "../numbers/8.png",
+                "../numbers/9.png",
+                "../numbers/10.png"
+            ],
+            "correctIndex": 9
+        }
+
+    ]
+}

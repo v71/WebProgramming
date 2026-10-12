@@ -1,23 +1,23 @@
 {
     "rounds": [
         {
-            "label": "boy taller",
+            "label": "Il ragazzo è più alto della ragazza",
             "sentenceTemplate": "Il ragazzo è più alto della ragazza",
-            "img": "anime-guys/boy_taller.png",
+            "img": "../anime-guys/boy_taller_2.png",
             "options": ["Il ragazzo è più alto", "La ragazza è più alta", "I ragazzi hanno la stessa altezza"],
             "correctIndex": 0
         },
         {
-            "label": "Girl taller",
+            "label": "La ragazza è più alta del ragazzo",
             "sentenceTemplate": "La ragazza è più alta del ragazzo",
-            "img": "anime-guys/girl_taller.png",
+            "img": "../anime-guys/girl_taller_2.png",
             "options": ["Il ragazzo è più alto", "La ragazza è più alta", "I ragazzi hanno la stessa altezza"],
             "correctIndex": 1
         },
         {
-            "label": "Same height",
+            "label": "I ragazzi sono alti uguali",
             "sentenceTemplate": "I ragazzi sono alti uguali",
-            "img": "anime-guys/same_height.png",
+            "img": "../anime-guys/same_height_2.png",
             "options": ["Il ragazzo è più alto", "La ragazza è più alta", "I ragazzi hanno la stessa altezza"],
             "correctIndex": 2
         }
