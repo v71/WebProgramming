@@ -10,6 +10,7 @@
     <script src="../js/celebrazion.js"></script>
 
     <style>
+
         :root {
             --bg-0: #2a113d;
             --bg-1: #4a1d6e;
@@ -124,6 +125,7 @@
             touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none;
             transition: filter .12s, opacity .12s;
         }
+        
         #help-btn:hover:not(:disabled) { filter: brightness(1.12); }
         #help-btn.held { background: var(--accent); box-shadow: 0 4px 12px rgba(255,152,0,.45); }
         #help-btn:disabled { opacity: .4; cursor: not-allowed; }
@@ -300,30 +302,62 @@
     const STUDY_SECONDS = 45;
     const COLORS = ['#38bdf8', '#f472b6', '#facc15', '#4ade80'];
 
+    let R = null;                       // round scelto a caso per questa sessione
+    let moves = 0;
+    let helps = 0;
+    let  seconds = 0;
+    let clock = null;
+    let studyTimer = null;
+    let place = {};
+    let sel = null;
+    let order = [];
+    let helpEnabled = false;
+
     const $ = id => document.getElementById(id);
     const area = $('game-area');
-    const norm = s => s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
-    const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-    const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-    let R = null;                       // round scelto a caso per questa sessione
-    let moves = 0, helps = 0, seconds = 0;
-    let clock = null, studyTimer = null;
-    let place = {}, sel = null, order = [];
-    let helpEnabled = false;
+    function norm(s) {
+        return s
+            .trim()
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/\s+/g, ' ');
+    }
+
+    function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
 
     function startClock() {
         if (clock) return;
         clock = setInterval(() => { seconds++; $('time-value').textContent = seconds + 's'; }, 1000);
     }
-    function stopClock() { clearInterval(clock); clock = null; }
+
+    function stopClock() 
+    {
+        clearInterval(clock); clock = null; }
+    
     function updateStats() {
         $('moves-value').textContent = moves;
         $('reveals-value').textContent = helps;
     }
-    function setProgress(pct) { $('progress-bar-fill').style.width = pct + '%'; }
-    function banner(txt) { $('instruction-banner').textContent = txt; }
-    function enableHelp(on) { helpEnabled = on; $('help-btn').disabled = !on; }
+
+    function setProgress(pct) { 
+        $('progress-bar-fill').style.width = pct + '%'; 
+    }
+
+    function banner(txt) { 
+        $('instruction-banner').textContent = txt; 
+    }
+
+    function enableHelp(on) { 
+        helpEnabled = on; $('help-btn').disabled = !on; 
+    }
 
     /* Scheletro unico: riga alta / zona A / zona B / riga bassa (oppure un solo blocco "main") */
     function frame({ top = '', a = '', b = '', main = null, bottom = '' }) {
@@ -337,8 +371,11 @@
     /* ---------- Caricamento JSON + scelta casuale ---------- */
     async function loadRound() {
         enableHelp(false);
+    
         frame({ main: '<p class="big-msg">Caricamento…</p>' });
+    
         try {
+    
             const res = await fetch(DATA_URL, { cache: 'no-store' });
             if (!res.ok) throw new Error('HTTP ' + res.status);
             const all = await res.json();
@@ -346,6 +383,7 @@
             R = all[Math.floor(Math.random() * all.length)];
             moves = 0; helps = 0; seconds = 0; $('time-value').textContent = '0s';
             setProgress(0); updateStats(); showIntro();
+    
         } catch (err) {
             frame({ main: `<p class="big-msg">Impossibile caricare gli esercizi.</p>
                 <p class="sub-msg">Controlla che il file <strong>${DATA_URL}</strong> sia nella stessa cartella e che la pagina sia aperta da un server (non da file://).</p>` });
@@ -357,8 +395,7 @@
         enableHelp(false);
         banner('Premi Inizia: vedrai le parole per 45 secondi. Prova a raggrupparle per categoria.');
         frame({
-            main: `<span class="tag">Esercizio ${R.id} · ${R.label}</span>
-                   <p class="big-msg">Vedrai ${R.words.length} parole per ${STUDY_SECONDS} secondi.<br>Cerca di ricordarle e di metterle in gruppi.</p>
+            main: `<p class="big-msg">Vedrai ${R.words.length} parole per ${STUDY_SECONDS} secondi.<br>Cerca di ricordarle e di metterle in gruppi.</p>
                    <p class="sub-msg">Il tempo parte quando premi il pulsante.</p>`,
             bottom: '<button id="btn-start" class="action">Inizia</button>'
         });
@@ -373,7 +410,7 @@
         frame({
             top: `<span class="timer" id="study-left">${left}s</span><div class="timer-bar"><div id="study-bar"></div></div>`,
             a: `<div class="zone pool slotA"><p class="zone-label">Memorizza queste parole</p>
-                    <div class="wgrid">${R.words.map(w => `<span class="wbtn static">${esc(w)}</span>`).join('')}</div></div>`,
+                    <div class="wgrid">${R.words.map(w => `<span class="wbtn static">${w}</span>`).join('')}</div></div>`,
             b: `<div class="zone panel slotB"><p class="big-msg">Cerca i punti in comune tra le parole:<br>tra poco dovrai dividerle in gruppi.</p></div>`,
             bottom: '<button id="btn-done" class="action secondary">Ho finito di studiare</button>'
         });
@@ -417,17 +454,18 @@
         enableHelp(true);
     }
 
-    const wordBtn = i => `<button class="wbtn ${sel === i ? 'sel' : ''}" data-i="${i}">${esc(R.words[i])}</button>`;
+    const wordBtn = i => `<button class="wbtn ${sel === i ? 'sel' : ''}" data-i="${i}">${R.words[i]}</button>`;
 
     function poolHtml() {
         const inPool = order.filter(i => place[i] === 'pool');
         const label = sel !== null && place[sel] !== 'pool'
-            ? `Tocca qui per rimettere «${esc(R.words[sel])}» tra le parole`
-            : sel !== null ? `Ora tocca un gruppo per «${esc(R.words[sel])}»`
+            ? `Tocca qui per rimettere «${R.words[sel]}» tra le parole`
+            : sel !== null ? `Ora tocca un gruppo per «${R.words[sel]}»`
             : `Parole da sistemare (${inPool.length})`;
         return `<div class="zone pool slotA ${sel !== null ? 'target' : ''}" data-z="pool">
                     <p class="zone-label">${label}</p><div class="wgrid">${inPool.map(wordBtn).join('')}</div></div>`;
     }
+    
     function boxesHtml() {
         const names = Object.keys(R.groups);
         return `<div class="boxes slotB" style="--n:${names.length}">` + names.map((nm, b) => {
@@ -474,8 +512,8 @@
             const { names, assign } = assignCategories();
             area.querySelector('.boxes').innerHTML = names.map((_, b) => {
                 const nm = names[assign[b]];
-                return `<div class="zone box peek" style="--c:${COLORS[b % COLORS.length]}"><p class="zone-label">${esc(nm)}</p>
-                    <div class="wgrid">${R.groups[nm].map(w => `<span class="wbtn hint">${esc(w)}</span>`).join('')}</div></div>`;
+                return `<div class="zone box peek" style="--c:${COLORS[b % COLORS.length]}"><p class="zone-label">${nm}</p>
+                    <div class="wgrid">${R.groups[nm].map(w => `<span class="wbtn hint">$w}</span>`).join('')}</div></div>`;
             }).join('');
         };
         const hide = () => {
@@ -503,9 +541,9 @@
             const btns = idxs.map(i => {
                 const ok = catOf[norm(R.words[i])] === assign[b];
                 if (ok) score++;
-                return `<span class="wbtn static ${ok ? 'ok' : 'ko'}">${esc(R.words[i])}${ok ? '' : `<small>→ ${esc(names[catOf[norm(R.words[i])]])}</small>`}</span>`;
+                return `<span class="wbtn static ${ok ? 'ok' : 'ko'}">${R.words[i]}${ok ? '' : `<small>→ ${names[catOf[norm(R.words[i])]]}</small>`}</span>`;
             }).join('');
-            return `<div class="group" style="border-color:${COLORS[b % COLORS.length]}"><h3>${esc(names[assign[b]])}</h3><div class="wgrid">${btns || '<span class="sub-msg">Vuoto</span>'}</div></div>`;
+            return `<div class="group" style="border-color:${COLORS[b % COLORS.length]}"><h3>${names[assign[b]]}</h3><div class="wgrid">${btns || '<span class="sub-msg">Vuoto</span>'}</div></div>`;
         }).join('');
 
         banner('Ecco il risultato: verde = nel gruppo giusto, rosso = nel gruppo sbagliato.');

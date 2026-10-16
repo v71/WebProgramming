@@ -3,7 +3,7 @@
         {
             "label": "Il ragazzo è più alto della ragazza",
             "sentenceTemplate": "Il ragazzo è più alto della ragazza",
-            "img": "../anime-guys/boy_taller_2.png",
+            "img": "../images/anime-guys/boy_taller_2.png",
             "options": [
                 "Il ragazzo è più alto",
                 "La ragazza è più alta",
@@ -17,7 +17,7 @@
         {
             "label": "La ragazza è più alta del ragazzo",
             "sentenceTemplate": "La ragazza è più alta del ragazzo",
-            "img": "../anime-guys/girl_taller_2.png",
+            "img": "../images//anime-guys/girl_taller_2.png",
             "options": [
                 "Il ragazzo è più alto",
                 "La ragazza è più alta",
@@ -31,7 +31,7 @@
         {
             "label": "I ragazzi sono alti uguali",
             "sentenceTemplate": "I ragazzi sono alti uguali",
-            "img": "../anime-guys/same_height_2.png",
+            "img": "../images//anime-guys/same_height_2.png",
             "options": [
                 "Il ragazzo è più alto",
                 "La ragazza è più alta",

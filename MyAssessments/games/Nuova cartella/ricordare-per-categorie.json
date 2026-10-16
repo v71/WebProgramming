@@ -1,6 +1,5 @@
 [
   {
-    "id": "001",
     "label": "Adolescente / Adulto · Base",
     "words": [
       "uva",
@@ -28,7 +27,6 @@
     }
   },
   {
-    "id": "017",
     "label": "Adulto · Intermedio",
     "words": [
       "calcio",
@@ -58,7 +56,6 @@
     }
   },
   {
-    "id": "033",
     "label": "Anziano · Avanzato",
     "words": [
       "formica",
@@ -90,7 +87,6 @@
     }
   },
   {
-    "id": "049",
     "label": "Adolescente · Base",
     "words": [
       "treno",
@@ -118,7 +114,6 @@
     }
   },
   {
-    "id": "065",
     "label": "Adulto / Anziano · Intermedio",
     "words": [
       "annaffiatoio",
@@ -148,7 +143,6 @@
     }
   },
   {
-    "id": "081",
     "label": "Adolescente / Adulto · Avanzato",
     "words": [
       "Cervino",
@@ -180,7 +174,6 @@
     }
   },
   {
-    "id": "097",
     "label": "Adulto · Base",
     "words": [
       "giacca",
@@ -208,7 +201,6 @@
     }
   },
   {
-    "id": "113",
     "label": "Anziano · Intermedio",
     "words": [
       "penne",
@@ -238,7 +230,6 @@
     }
   },
   {
-    "id": "129",
     "label": "Adolescente · Avanzato",
     "words": [
       "gioia",

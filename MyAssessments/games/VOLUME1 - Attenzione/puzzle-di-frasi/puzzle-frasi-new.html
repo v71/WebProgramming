@@ -45,6 +45,19 @@
             min-height: 100vh;
         }
 
+        /* =========================================
+           TEMPORARLY HIDES THE BODY TO AVOID ABRUPT CHANGES FOR THE RAW CONTENT
+         ========================================= */
+
+        body {
+            opacity: 0;
+            transition: opacity 0.2s ease-in;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+        
         h1 {
             margin: 0 0 10px;
             font-size: 2.3rem;
@@ -527,8 +540,8 @@
         </div>
     </div>
 
-
 <script>
+
     ///////////////////////////////////////////////////////////////////////////////
     // LE FRASI SONO LETTE NELLA FUNZIONE INITGAME DAL FILE SENTENCES.JSON
     ///////////////////////////////////////////////////////////////////////////////
@@ -922,6 +935,8 @@
                 }
 
                 loadRandomSentence();
+
+                document.body.classList.add('loaded');
 
             } catch (err) {
                 console.error('Could not load sentences.json:', err);

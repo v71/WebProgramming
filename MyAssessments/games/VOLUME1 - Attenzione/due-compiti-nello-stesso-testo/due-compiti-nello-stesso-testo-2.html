@@ -9,249 +9,17 @@
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
     
+    <!-- Main CSS File -->
+    <link href="../../css/stylesheet.css" rel="stylesheet">
+
     <style>
 
-        :root {
-            --bg-0: #2a113d;
-            --bg-1: #4a1d6e;
-            --bg-2: #553d94;
-            --accent: #ff9800;
-            --accent-2: #06b6d4;
-            --correct: #ffffff;
-            --wrong: #ef4444;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: #000205;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+         :root {
+            /* Added: needed by the game (disabled / wrongly placed cards) */
+            --disabled-btn : #622791;
+            --target-background : #37275e;
         }
 
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background:
-                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
-                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
-                var(--bg-0);
-            color: var(--text);
-            margin: 0;
-            padding: 20px 20px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* =========================================
-            GAME TITLE
-        ========================================= */
-
-        h1 {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* =========================================
-            COUNTERS
-        ========================================= */
-
-        #game-stats {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-            flex-wrap: wrap;
-        }
-
-        #game-stats strong {
-            color: var(--text);
-            font-weight: 700;
-        }
-
-        /* =========================================
-            INFORMATION BOX
-        ========================================= */
-        
-        #instruction-banner {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-        }
-
-        /* =========================================
-            EMPTY GAME AREA
-        ========================================= */
-
-        #game-area {
-            width: 100%;
-            max-width: 1100px;
-            min-height: 300px;
-            margin: 0 auto 24px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 16px;
-            border-radius: 20px;
-            background: var(--bg-1);
-            border: 2px solid var(--border);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* =========================================
-            PROGRESS TITLE
-        ========================================= */
-
-        #progress-title {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* =========================================
-            PROGRESS BAR
-        ========================================= */
-
-        .progress-bar-container {
-            width: 100%;
-            max-width: 1100px;
-            height: 12px;
-            margin-bottom: 16px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 99px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            border-radius: 99px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* =========================================
-            COMBO BOXES CONTAINER & 2X2 GRID
-        ========================================= */
-
-        .combo-container {
-            width: 100%;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-        }
-
-        .combo-item {
-            width: 100%;
-            padding: 8px;
-        }
-
-        /* WRAPPER RIGIDO PER EVITARE SLITTAMENTI DELLA FRECCIA */
-        .custom-select-wrapper {
-            position: relative;
-            width: 100%;
-            display: inline-block;
-        }
-
-        .game-select {
-            width: 100%;
-            height: 42px;
-            padding: 0 45px 0 14px !important;
-            font-size: 1.25rem;
-            font-family: inherit;
-            color: var(--text);
-            background-color: var(--bg-2);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            outline: none;
-            cursor: pointer;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .game-select option {
-            background-color: var(--bg-1);
-            color: var(--text);
-            padding: 10px;
-        }
-
-        .game-select:hover {
-            border-color: var(--accent);
-            background-color: #624b9e;
-        }
-
-        .game-select:focus {
-            border-color: var(--accent);
-        }
-
-       .game-select:disabled,
-       .game-select.selected {
-            color: #ffffff !important;
-            opacity: 1 !important; /* Evita lo sbiadimento grigio tipico dei select disabilitati su iOS/Firefox */
-        }
-
-        .game-select.error { 
-            animation: selectErrorShake 0.45s ease; 
-            border-color: var(--wrong);
-            background-color: rgba(239, 68, 68, 0.2);
-            color: var(--wrong);
-        }
-
-        .game-select.help-correct {
-            background-color: #4caf50 !important;
-            border-color: #ffffff;
-        }
-    
         @keyframes selectErrorShake { 
             0% { transform: translateX(0); }
             20% { transform: translateX(-10px); } 
@@ -261,304 +29,129 @@
             100% { transform: translateX(0); } 
         }
 
-        /* =========================================
-            CONTROLS
-        ========================================= */
-
-        .controls {
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 1100px;
-            flex-wrap: wrap;
-            position: relative;
-            min-height: 52px;
-        }
-        
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5;
-            border: none;
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        .cool-btn.smooth-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: scale(0.95);
-            position: absolute;
-        }
-
-        .cool-btn:hover {
-            transform: translateY(-2px);
-            background-color: #10b981;
-        }
-
-        .cool-btn:active {
-            transform: translateY(1px);
-        }
-
-        #next-btn {
-            background-color: #4f46e5;
-        }
-
-        #next-btn:hover {
-            background-color: #10b981;
-        }
-
-        /* =========================================
-            SUMMARY SCREEN
-        ========================================= */
-
-        #summary-screen {
-            display: none;
-            width: 100%;
-            max-width: 650px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 36px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-        }
-
-        #summary-screen h2 {
-            margin-top: 0;
-            color: var(--correct);
-            font-size: 2rem;
-        }
-
-        .summary-table {
-            width: 100%;
-            margin: 24px 0;
-            border-collapse: collapse;
-        }
-
-        .summary-table th, .summary-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-
-        .summary-table th {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .summary-totals {
-            margin-top: 20px;
-            padding: 18px;
-            background: var(--bg-2);
-            border-radius: 14px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .summary-totals strong {
-            color: var(--accent);
-        }
-
-        /* =========================================
-            DEBUG AREA
-        ========================================= */
-
-        #debug-container {
-            width: 100%;
-        }
-
-        #debug-text-area {
-            width: 100%;
-            background: var(--bg-2);
-            color: var(--text);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 14px;
-            font-family: 'Segoe UI';
-            font-size: 1.25rem;
-            resize: none;
-            min-height: 120px;
-            outline: none;
-        }
-
-        #text-area {
-            width: 100%;
-            background: var(--bg-2);
-            color: var(--text);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            padding: 14px;
-            font-family: 'Segoe UI';
-            font-size: 1.25rem;
-            resize: none;
-            min-height: 120px;
-            outline: none;
-        }
-
         @media (max-width: 700px) {
             body { padding: 16px 12px 30px; }
             h1, #progress-title { font-size: 1.9rem; }
             #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
             #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
             #game-area { min-height: 260px; padding: 16px; }
-            .combo-container { grid-template-columns: 1fr; }
         }
+        
     </style>
 
-<style>
+    <style>
 
-        .cool-btn-2 {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5;
-            border: 2px solid var(--border);
-            border-radius: 99px;
+        /* Make the text larger and readable */
+        #clickable-text-container {
+            font-family: sans-serif, system-ui, -apple-system, sans-serif;
+            font-size: 1.5rem; 
+            line-height: 1.5rem;
+            padding: 16px;
+        }
+
+        /* Text area locked after the round is completed */
+        #clickable-text-container.disabled {
+            pointer-events: none;
+            user-select: none;
+        }
+
+        #clickable-text-container.disabled .word-span {
+            cursor: default;
+        }
+
+        /* Keep the correct words highlighted, but remove the hover effect on the others */
+        #clickable-text-container.disabled .word-span:not(.help-correct):hover {
+            background-color: transparent;
+            border-color: transparent;
+        }
+
+        /* Style each word so it acts like an interactive button/chip */
+        .word-span {
+            display: inline-block;
+            padding: 2px 6px;
+            margin: 2px 1px;
+            border-radius: 6px;
+            border: 2px solid transparent; /* Increased thickness while keeping layout stable */
             cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
+            transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+            font-weight: 400; /* change to the value you want */
         }
 
-        .cool-btn-2.smooth-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: scale(0.95);
-            position: absolute;
-        }
-
-        .cool-btn-2:hover {
-            transform: translateY(-2px);
-            background-color: #10b981;
-        }
-
-        .cool-btn-2:active {
-            transform: translateY(1px);
-        }
-
-        .cool-btn-2 {
-            pointer-events: none;
-        }
-
-        .game-buttons-container {
-            display: flex;
-            justify-content: center; /* Centra i bottoni in orizzontale */
-            align-items: center;     /* Allinea i bottoni in verticale */
-            gap: 12px;               /* Spazio tra i pulsanti */
-            margin: 0px 0;          /* Distanza sopra e sotto il blocco dei bottoni */
-            width: 100%;
-            flex-wrap: wrap;         /* Fa andare a capo i bottoni se lo schermo è troppo piccolo */
-        }
-
-        ::placeholder {
-            color: #ffffff;
-            opacity: 1; /* Ensures full opacity across different browsers */
-        }
-
-        /* For older browsers */
-        :-ms-input-placeholder {
+        /* Hover effect with your requested style */
+        .word-span:hover {
+            background-color:var(--grid-btn-hovered);
+            border-color: #ffffff;
             color: #ffffff;
         }
-        ::-ms-input-placeholder {
+
+        /* Correctly found state */
+        .word-span.help-correct {
+            background-color:var(--grid-btn-selected);
+            border-color:#ffffff;
             color: #ffffff;
+        }
+
+        /* Help / Reveal state (forced with !important so it always overrides selected/correct states) */
+        .word-span.help-active {
+            background-color: var(--grid-btn-selected) !important;
+            border-color:  #ffffff !important;
+            color: #ffffff !important;
         }
 
 </style>
 
 <style>
 
-/* Make the text larger and readable */
-#clickable-text-container {
-    font-size: 1.5rem; /* ~20px */
-    line-height: 1.5rem;
-    padding: 16px;
-}
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        20%, 60% { transform: translateX(-4px); }
+        40%, 80% { transform: translateX(4px); }
+    }
 
-/* Style each word so it acts like an interactive button/chip */
-.word-span {
-    display: inline-block;
-    padding: 2px 6px;
-    margin: 2px 1px;
-    border-radius: 6px;
-    border: 2px solid transparent; /* Increased thickness while keeping layout stable */
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
-}
+    .word-span.error-word {
+        animation: shake 0.4s ease;
+        border-color: #dc3545 !important;
+        color: #dc3545 !important;
+        background-color: rgba(220, 53, 69, 0.1);
+    }
 
-/* Hover effect with your requested style */
-.word-span:hover {
-    background-color: rgba(255, 255, 255, 1);
-    border-color: var(--accent);
-    color: var(--accent);
-}
-
-/* Help / Reveal state */
-.word-span.help-active {
-    background-color: #28a745;
-    border-color: #ffffff;
-    color: #ffffff;
-}
-
-/* Correctly found state */
-.word-span.help-correct {
-    background-color: #7931b4;
-    border-color:#ffffff;
-    color: #ffffff;
-}
-
-/* Help / Reveal state (forced with !important so it always overrides selected/correct states) */
-.word-span.help-active {
-    background-color: #28a745 !important;
-    border-color:  #ffffff !important;
-    color: #ffffff !important;
-}
 </style>
 
 <style>
 
-  @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-4px); }
-    40%, 80% { transform: translateX(4px); }
-}
+    /* Smooth transitions when the area gets disabled */
+    #game-area {
+        transition: background-color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
 
-.word-span.error-word {
-    animation: shake 0.4s ease;
-    border-color: #dc3545 !important;
-    color: #dc3545 !important;
-    background-color: rgba(220, 53, 69, 0.1);
-}
+    .word-span {
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, opacity 0.4s ease;
+    }
+
+    /* Game area locked after the round is completed */
+    #game-area.disabled {
+        pointer-events: none;
+        user-select: none;
+        /* background dimmed by 50% (same color as --game-area-background, 50% alpha) */
+        background-color: rgba(74, 29, 110, 0.5);
+        border-color: rgba(0, 0, 0, 0.5);
+        box-shadow: none;
+    }
+
+    #game-area.disabled .word-span {
+        cursor: default;
+    }
+
+    /* Dim only the words that are NOT correct; green ones stay fully visible */
+    #game-area.disabled .word-span:not(.help-correct) {
+        opacity: 0.5;
+    }
+
+    /* No hover effect on the non-highlighted words */
+    #game-area.disabled .word-span:not(.help-correct):hover {
+        background-color: transparent;
+        border-color: transparent;
+    }
 
 </style>
 
@@ -778,15 +371,21 @@
 
                         evaluateSelections();
                     } else {
-                        // Wrong word: shake and error style
+                        // Wrong word: shake and red style, then go back to normal
                         span.classList.remove('selected', 'help-correct');
                         span.classList.remove('error-word');
                         void span.offsetWidth; // Reflow to reset animation
                         span.classList.add('error-word');
+
+                        // Remove the error state when the shake is over
+                        clearTimeout(span._errorTimeout);
+                        span._errorTimeout = setTimeout(() => {
+                            span.classList.remove('error-word');
+                        }, 400); // same duration as the shake animation (0.4s)
+
                         evaluateSelections();
                     }
                 });
-
                     
                     clickableTextContainer.appendChild(span);
                 });
@@ -818,6 +417,11 @@
                 isGameCompleted = true;
                 stopElapsedTimer();
 
+                // Lock the text area so no more clicks are possible
+                clickableTextContainer.classList.add('disabled');
+                // Lock and dim the whole game area
+                gameArea.classList.add('disabled');
+                        
                 if (typeof Confetti !== 'undefined') {
                     try {
                         Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
@@ -887,6 +491,9 @@
                 moveCount = 0;
                 revealCount = 0;
 
+                clickableTextContainer.classList.remove('disabled');
+                gameArea.classList.remove('disabled');
+
                 updateMovesDisplay();
                 updateRevealDisplay();
                 updateWordCountDisplay();
@@ -894,6 +501,8 @@
                 renderClickableText(currentExercise.text, currentCategoryTitle);
                 startElapsedTimer();
 
+                document.body.classList.add('loaded');
+      
             } catch (err) {
                 isGameLoading = false;
                 console.error('Could not load JSON:', err);

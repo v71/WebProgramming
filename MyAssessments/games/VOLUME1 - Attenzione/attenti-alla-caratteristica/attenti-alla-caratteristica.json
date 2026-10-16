@@ -3,21 +3,81 @@
       {
         "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «serve per tagliare».",
         "buttons": [
-          { "label": "Martello", "value": false },
-          { "label": "Borsa", "value": false },
-          { "label": "Telecomando", "value": false },
-          { "label": "Sedia", "value": false },
-          { "label": "Taglierino", "value": true },
-          { "label": "Quadro", "value": false },
-          { "label": "Tavolo", "value": false },
-          { "label": "Specchio", "value": false },
-          { "label": "Tappeto", "value": false },
-          { "label": "Scolapasta", "value": false },
-          { "label": "Forbici", "value": true },
-          { "label": "Orologio", "value": false },
-          { "label": "Coltello", "value": true },
-          { "label": "Barattolo", "value": false },
-          { "label": "Matita", "value": false }
+          { "label": "Martello"    , "value": false },
+          { "label": "Borsa"       , "value": false },
+          { "label": "Telecomando" , "value": false },
+          { "label": "Sedia"       , "value": false },
+          { "label": "Taglierino"  , "value": true },
+          { "label": "Quadro"      , "value": false },
+          { "label": "Tavolo"      , "value": false },
+          { "label": "Specchio"    , "value": false },
+          { "label": "Tappeto"     , "value": false },
+          { "label": "Scolapasta"  , "value": false },
+          { "label": "Forbici"     , "value": true },
+          { "label": "Orologio"    , "value": false },
+          { "label": "Coltello"    , "value": true },
+          { "label": "Barattolo"   , "value": false },
+          { "label": "Matita"      , "value": false }
+        ]
+      },
+      {
+        "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «è un alimento».",
+        "buttons": [
+          { "label": "Pizza"      , "value": true },
+          { "label": "Borsa"      , "value": false },
+          { "label": "Fagioli"    , "value": true },
+          { "label": "Sedia"      , "value": false },
+          { "label": "Taglierino" , "value": false },
+          { "label": "Pane"       , "value": true },
+          { "label": "Tavolo"     , "value": false },
+          { "label": "Ceci"       , "value": true },
+          { "label": "Acqua"      , "value": true },
+          { "label": "Scolapasta" , "value": false },
+          { "label": "Forbici"    , "value": false },
+          { "label": "Bistecca"   , "value": true },
+          { "label": "Coltello"   , "value": false },
+          { "label": "Piselli"    , "value": true },
+          { "label": "Matita"     , "value": false }
+        ]
+      },
+      {
+      "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «si usa per scrivere o disegnare».",
+        "buttons": [
+          { "label": "Matita"      , "value": true },
+          { "label": "Martello"    , "value": false },
+          { "label": "Pennarello"  , "value": true },
+          { "label": "Sedia"       , "value": false },
+          { "label": "Penna"       , "value": true },
+          { "label": "Tavolo"      , "value": false },
+          { "label": "Pennello"    , "value": true },
+          { "label": "Coltello"    , "value": false },
+          { "label": "Borsa"       , "value": false },
+          { "label": "Forbici"     , "value": false },
+          { "label": "Mattone"     , "value": false },
+          { "label": "Tavolo"      , "value": false },
+          { "label": "Matita"      , "value": true },
+          { "label": "Computer"    , "value": false },
+          { "label": "Stilografo"  , "value": true }
+        ]
+      },
+      {
+        "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «si indossa».",
+        "buttons": [
+          { "label": "Maglietta"   , "value": true },
+          { "label": "Tavolo"      , "value": false },
+          { "label": "Pantaloni"   , "value": true },
+          { "label": "Coltello"    , "value": false },
+          { "label": "Scarpe"      , "value": true },
+          { "label": "Barattolo"   , "value": false },
+          { "label": "Giacca"      , "value": true },
+          { "label": "Scolapasta"  , "value": false },
+          { "label": "Cappello"    , "value": true },
+          { "label": "Matita"      , "value": false },
+          { "label": "Sciarpa"     , "value": true },
+          { "label": "Telecomando" , "value": false },
+          { "label": "Orologio"    , "value": true },
+          { "label": "Specchio"    , "value": false },
+          { "label": "Quadro"      , "value": false }
         ]
       }
   ]

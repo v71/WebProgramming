@@ -1,0 +1,256 @@
+{
+    "rounds": [
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più piccolo del numero di destra",
+            "img1": "../images/numbers/0.png",
+            "img2": "../images/numbers/1.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più piccolo del numero di destra",
+            "img1": "../images/numbers/1.png",
+            "img2": "../images/numbers/2.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più piccolo del numero di destra",
+            "img1": "../images/numbers/2.png",
+            "img2": "../images/numbers/3.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più piccolo del numero di destra",
+            "img1": "../images/numbers/3.png",
+            "img2": "../images/numbers/4.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più grande del numero di destra",
+            "img1": "../images/numbers/4.png",
+            "img2": "../images/numbers/5.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più piccolo del numero di destra",
+            "img1": "../images/numbers/5.png",
+            "img2": "../images/numbers/6.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più grande del numero di destra",
+            "img1": "../images/numbers/6.png",
+            "img2": "../images/numbers/7.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più grande del numero di destra",
+            "img1": "../images/numbers/7.png",
+            "img2": "../images/numbers/8.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più grande del numero di destra",
+            "img1": "../images/numbers/8.png",
+            "img2": "../images/numbers/9.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+        {
+            "label": "Il numero a sinistra è più grande del numero di destra",
+            "sentenceTemplate": "Il numero a sinistra è più grande del numero di destra",
+            "img1": "../images/numbers/9.png",
+            "img2": "../images/numbers/10.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 1
+        },
+
+
+
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/1.png",
+            "img2": "../images/numbers/0.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/2.png",
+            "img2": "../images/numbers/1.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/3.png",
+            "img2": "../images/numbers/2.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/4.png",
+            "img2": "../images/numbers/3.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/5.png",
+            "img2": "../images/numbers/4.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/6.png",
+            "img2": "../images/numbers/5.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/7.png",
+            "img2": "../images/numbers/6.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/8.png",
+            "img2": "../images/numbers/7.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/9.png",
+            "img2": "../images/numbers/8.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+        {
+            "label": "Il numero a destra è più grande del numero di sinistra",
+            "sentenceTemplate": "Il numero a destra è più grande del numero di sinistra",
+            "img1": "../images/numbers/10.png",
+            "img2": "../images/numbers/9.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 0
+        },
+
+
+
+
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/1.png",
+            "img2": "../images/numbers/1.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/2.png",
+            "img2": "../images/numbers/2.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/3.png",
+            "img2": "../images/numbers/3.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/4.png",
+            "img2": "../images/numbers/4.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/5.png",
+            "img2": "../images/numbers/5.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/6.png",
+            "img2": "../images/numbers/6.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/7.png",
+            "img2": "../images/numbers/7.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/8.png",
+            "img2": "../images/numbers/8.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/9.png",
+            "img2": "../images/numbers/9.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        },
+        {
+            "label": "I numeri hanno la stessa altezza",
+            "sentenceTemplate": "I numeri hanno la stessa altezza",
+            "img1": "../images/numbers/10.png",
+            "img2": "../images/numbers/10.png",
+            "options": ["Il numero a destra è più grande", "Il numero a destra è più piccolo", "I numeri sono uguali"],
+            "correctIndex": 2
+        }
+
+
+
+
+
+    ]
+}

@@ -1,0 +1,248 @@
+{
+    "rounds": [
+        {
+            "label": "Indovina il numero 1",
+            "img": "../images/numbers-hover/1.png",
+            "options": [
+                "../images/numbers/1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+            "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 8
+        },
+        {
+            "label": "Indovina il numero 2",
+            "img": "../images/numbers-hover/2.png",
+            "options": [
+                "../images/numbers/1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+             "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 7
+        },
+        {
+            "label": "Indovina il numero 3",
+            "img": "../images/numbers-hover/3.png",
+            "options": [
+                "../images/numbers/1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+             "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 6
+        },
+        {
+            "label": "Indovina il numero 4",
+            "img": "../images/numbers-hover/4.png",
+            "options": [
+                "../images/numbers/1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+             "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 5
+        },
+        {
+            "label": "Indovina il numero 5",
+            "img": "../images/numbers-hover/5.png",
+            "options": [
+                "../images/numbers/1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+             "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 4
+        },
+        {
+            "label": "Indovina il numero 6",
+            "img": "../images/numbers-hover/6.png",
+            "options": [
+                "../images/numbers//1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+             "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 3
+        },
+        {
+            "label": "Indovina il numero 7",
+            "img": "../images/numbers-hover/7.png",
+            "options": [
+                "../images/numbers/1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+             "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 2
+        },
+        {
+            "label": "Indovina il numero 8",
+            "img": "../images/numbers-hover/8.png",
+            "options": [
+                "../images/numbers/1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+             "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 1
+        },
+        {
+            "label": "Indovina il numero 9",
+            "img": "../images/numbers-hover/9.png",
+            "options": [
+                "../images/numbers/1.png",
+                "../images/numbers/2.png",
+                "../images/numbers/3.png",
+                "../images/numbers/4.png",
+                "../images/numbers/5.png",
+                "../images/numbers/6.png",
+                "../images/numbers/7.png",
+                "../images/numbers/8.png",
+                "../images/numbers/9.png"
+            ],
+             "optionsHover": [
+                "../images/numbers-hover/1.png",
+                "../images/numbers-hover/2.png",
+                "../images/numbers-hover/3.png",
+                "../images/numbers-hover/4.png",
+                "../images/numbers-hover/5.png",
+                "../images/numbers-hover/6.png",
+                "../images/numbers-hover/7.png",
+                "../images/numbers-hover/8.png",
+                "../images/numbers-hover/9.png"
+            ],
+            "correctIndex": 0
+        }
+
+    ]
+}
