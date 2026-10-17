@@ -12,111 +12,6 @@
     <link href="../stylesheet.css" rel="stylesheet">
 
     <style>
-        :root {
-            --bg-0: #2a113d;
-            --bg-1: #4a1d6e;
-            --bg-2: #553d94;
-            --accent: #ff9800;
-            --accent-2: #06b6d4;
-            --correct: #ffffff;
-            --wrong: #ef4444;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: #000205;
-            
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
-        }
-
-
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background:
-                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
-                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
-                var(--bg-0);
-            color: var(--text);
-            margin: 0;
-            padding: 20px 20px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        
-        /* =========================================
-           TEMPORARLY HIDES THE BODY TO AVOID ABRUPT CHANGES FOR THE RAW CONTENT
-         ========================================= */
-
-        body {
-            opacity: 0;
-            transition: opacity 0.2s ease-in;
-        }
-
-        body.loaded {
-            opacity: 1;
-        }
-
-        /* TITLE */
-        h1 {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* COUNTERS */
-        #game-stats {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            text-align: center;
-        }
-
-        #game-stats strong {
-            color: var(--text);
-            font-weight: 700;
-        }
-
-        /* INSTRUCTION BANNER */
-       #instruction-banner {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-        }
 
         /* GAME AREA & ROW CONTAINERS */
         #game-area {
@@ -139,8 +34,8 @@
         /* Row Card Container - Hover transform removed */
         .row-card {
             width: 100%;            /* tutte le card uguali, larghe quanto #game-area */
-            background: var(--bg-1);
-            border: 2px solid var(--border);
+            background: var(--game-area-background);
+            border: 2px solid #000000;
             border-radius: 18px;
             padding: 18px 28px;
             display: flex;
@@ -150,16 +45,26 @@
         }
 
         .row-label {
+            margin: 0 0 10px;
+            text-align: center;
             min-width: 70px;        /* regola in base al tuo testo */
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--row-label-color);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--accent);
             letter-spacing: 0.8px;
             white-space: nowrap;
             user-select: none;
-            transform: translateY(-3px);
+            transform: translateY(3px);
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 4px rgba(0, 0, 0, 0.5);
         }
 
+        
         .row-words-container {
             flex: 1;
             display: flex;
@@ -174,7 +79,7 @@
         .word-bullet {
             color: var(--word-color);
             font-size: 1rem;
-            opacity: 0.6;
+            opacity: 0.7;
             user-select: none;
         }
 
@@ -183,10 +88,11 @@
             /* Fixed 2px border using transparent in base state to reserve layout space */
             border: 2px solid var(--border); 
             color: var(--word-color);
-            font-size: 1.1rem;
-            font-weight: 700;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: 1.3rem;
+            font-weight: 400;
             cursor: pointer;
-            padding: 4px 10px;
+            padding: 8px 16px;
             border-radius: 8px;
             /* Animate transform and box-shadow without triggering layout reflows */
             transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
@@ -196,152 +102,88 @@
         }
 
         .word-btn:hover {
+       
             /* Keep font-size and font-weight identical to base state */
+            /*
             border-color: var(--accent);
             transform: translateY(-4px);
             box-shadow: var(--shadow-md);
             background: #ffffff;
             color: var(--accent);
             z-index: 5;
+            */
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+
         }
 
         .word-btn.selected {
+            /*
             background: var(--word-selected);
             color: #ffffff;
             cursor: default;
+            */
+
+            background: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
+            transform: none !important;
+            box-shadow: var(--shadow-sm) !important;
+         
+         /* Ombra centrata e simmetrica (0 spostamento orizzontale, 0 verticale) */
+         /*   box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.1) !important;*/
+            
+            opacity: 1 !important;
+            cursor: default !important;
         }
 
         .word-btn.help-correct {
+            /*
             background: #22c55e;
             color: #ffffff;
+           */
+            background: var(--grid-btn-help);
+            border-color: var(--grid-btn-help-border-color);
+            color: var(--grid-btn-help-text );
         }
 
         .word-btn.error { 
+            /*
             animation: buttonErrorShake 0.45s ease; 
             background-color: rgba(239, 68, 68, 0.05);
             color: var(--word-error);
             border: 2px solid var(--word-error);
+            */
+
+            animation: buttonErrorShake 0.45s ease; 
+            border-color: var(--grid-btn-wrong-border-color);
+            background-color:var(--grid-btn-wrong);
+            color: var(--grid-btn-wrong-text );
         } 
         
         @keyframes buttonErrorShake { 
             0% { transform: translateX(0); }
-            20% { transform: translateX(-8px); } 
-            40% { transform: translateX(8px); } 
-            60% { transform: translateX(-6px); } 
-            80% { transform: translateX(6px); } 
+            20% { transform: translateX(-10px); } 
+            40% { transform: translateX(10px); } 
+            60% { transform: translateX(-8px); } 
+            80% { transform: translateX(8px); } 
             100% { transform: translateX(0); } 
         }
 
-        /* PROGRESS & CONTROLS */
-        #progress-title {
-            margin: 0 0 10px;
-            font-size: 2rem;
-            font-weight: 800;
-            color: var(--accent);
-            text-align: center;
-        }
-
-        .progress-bar-container {
-            width: 100%;
-            max-width: 900px;
-            height: 12px;
-            margin-bottom: 16px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 99px;
-            overflow: hidden;
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            border-radius: 99px;
-            transition: width 0.5s ease;
-        }
-
-        .controls {
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 900px;
-        }
-        
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5;
-            border: none;
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            transition: all 0.3s ease;
-        }
-
-        .cool-btn:hover {
-            transform: translateY(-2px);
-            background-color: #10b981;
-        }
-
-        /* SUMMARY SCREEN */
-        #summary-screen {
-            display: none;
-            width: 100%;
-            max-width: 650px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 36px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-        }
-
-        #summary-screen h2 {
-            margin-top: 0;
-            color: var(--correct);
-            font-size: 2rem;
-        }
-
-        .summary-table {
-            width: 100%;
-            margin: 24px 0;
-            border-collapse: collapse;
-        }
-
-        .summary-table th, .summary-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-
-        .summary-totals {
-            margin-top: 20px;
-            padding: 18px;
-            background: var(--bg-2);
-            border-radius: 14px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
         @media (max-width: 700px) {
-            body { padding: 16px 12px 30px; }
            .row-card { padding: 14px 16px; gap: 12px; flex-direction: column; align-items: flex-start; }
            .row-words-container { font-size: 1.05rem; }
            .word-btn { font-size: 1.05rem; padding: 2px 6px; }
            .row-words-container { width: 100%; }
            .row-label { min-width: 0; }
         }
+
     </style>
+
 </head>
 
 <body>
@@ -547,8 +389,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (typeof Confetti !== 'undefined') {
                     try {
                           await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
-                        await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
-                        await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                          await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                          await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
                     } catch (e) {}
                 }
 
@@ -565,7 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function initGame() {
         try {
             isGameLoading = true;
-            if (revealBtn) revealBtn.innerHTML = "<span>💡 Help</span>";
+            if (revealBtn) revealBtn.innerHTML = "<span>💡 Help!</span>";
 
             const response = await fetch('il-bersaglio-che-ritorna.json');
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -639,8 +481,13 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.addEventListener('mouseup', hideHelp);
         revealBtn.addEventListener('mouseleave', hideHelp);
         revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); showHelp(); }, { passive: false });
-        revealBtn.addEventListener('touchend', hideHelp);
+//        revealBtn.addEventListener('touchend', hideHelp);
         revealBtn.addEventListener('touchcancel', hideHelp);
+
+        revealBtn.addEventListener('touchend', () => {
+            hideHelp();
+            if (isGameCompleted) showSummaryScreen();
+        });
 
         revealBtn.addEventListener('click', () => {
             if (isGameCompleted) showSummaryScreen();
