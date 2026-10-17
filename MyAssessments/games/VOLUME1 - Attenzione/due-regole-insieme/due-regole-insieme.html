@@ -10,7 +10,7 @@
     <script src="../../js/celebrazion.js"></script>
 
      <!-- Main CSS File -->
-    <link href="../../css/stylesheet.css" rel="stylesheet">
+     <link href="../stylesheet.css" rel="stylesheet">
 
     <style>
 
@@ -124,6 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let revealCount = 0;
     let currentCategoryTitle = ''; // Stores the current instruction/phrase
 
+    const gameTitle = document.getElementById('game-title');
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
@@ -266,7 +267,8 @@ document.addEventListener('DOMContentLoaded', () => {
             startElapsedTimer();
 
             document.body.classList.add('loaded');
-      
+            gameTitle.textContent=data.title;
+            
         } catch (err) {
             isGameLoading = false;
             console.error('Could not load categories.json:', err);

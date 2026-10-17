@@ -9,6 +9,8 @@
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
+    <link href="../stylesheet.css" rel="stylesheet">
+
     <style>
         :root {
             --bg-0: #2a113d;
@@ -22,16 +24,11 @@
             --text-dim: #a0a0a0;
             --border: #000205;
             
-            /* Card Specific Theme */
-            --row-label-color: #8b5cf6;
-            --word-color: #ffffff;
-            --word-selected: #059669;
-            --word-error: #ef4444;
-
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
         }
+
 
         * { box-sizing: border-box; }
 
@@ -131,8 +128,17 @@
             gap: 16px;
         }
 
+        :root {
+            /* Card Specific Theme */
+            --row-label-color: #8b5cf6;
+            --word-color: #ffffff;
+            --word-selected: #059669;
+            --word-error: #ef4444;
+        }
+
         /* Row Card Container - Hover transform removed */
         .row-card {
+            width: 100%;            /* tutte le card uguali, larghe quanto #game-area */
             background: var(--bg-1);
             border: 2px solid var(--border);
             border-radius: 18px;
@@ -144,6 +150,7 @@
         }
 
         .row-label {
+            min-width: 70px;        /* regola in base al tuo testo */
             font-size: 1.2rem;
             font-weight: 800;
             color: var(--row-label-color);
@@ -154,6 +161,7 @@
         }
 
         .row-words-container {
+            flex: 1;
             display: flex;
             align-items: center;
             flex-wrap: wrap;
@@ -327,9 +335,11 @@
 
         @media (max-width: 700px) {
             body { padding: 16px 12px 30px; }
-            .row-card { padding: 14px 16px; gap: 12px; flex-direction: column; align-items: flex-start; }
-            .row-words-container { font-size: 1.05rem; }
-            .word-btn { font-size: 1.05rem; padding: 2px 6px; }
+           .row-card { padding: 14px 16px; gap: 12px; flex-direction: column; align-items: flex-start; }
+           .row-words-container { font-size: 1.05rem; }
+           .word-btn { font-size: 1.05rem; padding: 2px 6px; }
+           .row-words-container { width: 100%; }
+           .row-label { min-width: 0; }
         }
     </style>
 </head>

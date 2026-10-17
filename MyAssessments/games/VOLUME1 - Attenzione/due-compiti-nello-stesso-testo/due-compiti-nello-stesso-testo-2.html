@@ -10,7 +10,7 @@
     <script src="../../js/celebrazion.js"></script>
     
     <!-- Main CSS File -->
-    <link href="../../css/stylesheet.css" rel="stylesheet">
+    <link href="../stylesheet.css" rel="stylesheet">
 
     <style>
 
@@ -161,7 +161,7 @@
 
     <!-- TITLE -->
     <h1 id="game-title">
-        Due compiti nello stesso testo
+        Titolo gioco
     </h1>
 
     <!-- COUNTERS -->
@@ -233,6 +233,7 @@
         let totalCorrectItems = 0;
         let foundCorrectCount = 0;
 
+        const gameTitle = document.getElementById('game-title');
         const gameArea = document.getElementById('game-area');
         const actionControls = document.getElementById('action-controls');
         const revealBtn = document.getElementById('reveal-btn');
@@ -502,7 +503,8 @@
                 startElapsedTimer();
 
                 document.body.classList.add('loaded');
-      
+                gameTitle.textContent=data.title;
+                
             } catch (err) {
                 isGameLoading = false;
                 console.error('Could not load JSON:', err);

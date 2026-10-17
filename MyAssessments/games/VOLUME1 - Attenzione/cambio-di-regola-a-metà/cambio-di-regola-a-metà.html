@@ -10,7 +10,7 @@
     <script src="../../js/celebrazion.js"></script>
 
     <!-- Main CSS File -->
-    <link href="../../css/stylesheet.css" rel="stylesheet">
+    <link href="../stylesheet.css" rel="stylesheet">
 
     <style>
 
@@ -18,24 +18,32 @@
             width: 100%;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            row-gap: 10px;
+            row-gap: 4px;
             column-gap: 44px;
             position: relative;
         }
 
-        /* Vertical divider line between the two columns */
-        .button-grid::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 10px;
-            bottom: 10px;
-            width: 2px;
-            background: var(--border);
-            transform: translateX(-50%);
-            pointer-events: none;
+        @media (max-width: 700px) {
+            .button-grid { row-gap: 4px; column-gap: 10px; }
         }
 
+        .grid-button {
+            min-height: 34px;      /* was 40px */
+            margin: 0;             /* cancels any margin from the external stylesheet */
+            padding-top: 4px;
+            padding-bottom: 4px;
+            font-size: 1.1rem;
+        }
+
+        .column-header {
+            margin: 0 0 2px 0;     /* h2 has big default margins, this removes them */
+            padding: 2px 4px;
+            font-size: 1.1rem;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        /* Vertical divider line between the two columns */
         @media (max-width: 700px) { .button-grid { gap: 10px; }
             .grid-button {
                 min-height: 60px;
@@ -50,6 +58,13 @@
        .grid-button {
             min-height: 40px;
             font-size: 1.2rem;
+        }
+        .column-header {
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 8px 4px;
+            margin-bottom: 4px;
         }
 
     </style>
@@ -80,7 +95,6 @@
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
-
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
         </button>
@@ -123,6 +137,7 @@
     </div>
 
 <script>
+
 document.addEventListener('DOMContentLoaded', () => {
     let buttons = []; 
     let buttonFoundState = [];
@@ -136,6 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let revealCount = 0;
     let currentCategoryTitle = '';
 
+    const gameTitle = document.getElementById('game-title');
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
@@ -250,6 +266,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Generazione dinamica della griglia pulsanti per evitare problemi di indicizzazione
             buttonGridContainer.innerHTML = '';
+
+            // Column headers (first two cells of the grid)
+            const headers = currentCategoryData.headers || ['Prima Colonna', 'Seconda Colonna'];
+            headers.slice(0, 2).forEach(text => {
+                const h = document.createElement('h2');
+                h.className = 'column-header';
+                h.textContent = text;
+                buttonGridContainer.appendChild(h);
+            });
+
+
             buttons.forEach((item, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'grid-button';
@@ -342,6 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgressBar(0);
             startElapsedTimer();
 
+            gameTitle.textContent=data.title;
             document.body.classList.add('loaded');
 
         } catch (err) {

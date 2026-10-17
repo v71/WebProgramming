@@ -10,9 +10,53 @@
     <script src="../../js/celebrazion.js"></script>
     
     <!-- Main CSS File -->
-    <link href="../../css/stylesheet.css" rel="stylesheet">
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <style>
+
+        #game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+        }
+
+    </style>
+
+    <style>
+        
+      .grid-button {
+                width: 140px;          
+                height: 140px;         
+                border: 2px solid #000000; 
+                border-radius: 12px;
+                background-color: var(--game-area-background);
+                display: flex;        
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 20px;          
+                box-sizing: border-box;
+                transition:
+                    background 0.2s ease,
+                    border-color 0.2s ease,
+                    transform 0.15s ease;
+        }
+        
+        /* Ensures the PNG scales proportionally and stays centered */
+        
+        .grid-button img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                pointer-events: none; 
+        }
+        
+
+    </style>
     
     <style>
+
 
         .button-grid {
             width: 100%;
@@ -21,67 +65,42 @@
             gap: 32px;                /* Controls the exact space between buttons (make it smaller, e.g., 6px or 8px) */
         }
 
-      .grid-button {
-                width: 140px;          
-                height: 140px;         
-                border: 2px solid #000205; 
-                border-radius: 12px;
-                background: #7931b4;
-                display: flex;        
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                padding: 20px;          /* Creates a nice border margin around the image */
-                box-sizing: border-box;
-                
-                transition:
-                    background 0.2s ease,
-                    border-color 0.2s ease,
-                    transform 0.15s ease;
+        .button-grid:last-of-type .grid-button:hover:not(:disabled) {
+            border-color: var(--grid-btn-hovered-border-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            background: var(--grid-btn-hovered);   /* viola più chiaro, adatta al tuo gusto */
+            z-index: 5;
         }
 
-        /* Ensures the PNG scales proportionally and stays centered */
-        .grid-button img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                pointer-events: none; /* Prevents dragging/ghosting issues on click */
+        .button-grid:last-of-type .grid-button.selected {
+            background: #ff9800;
+            border-color: #000205;
         }
-                
-        /* Top button group (Reference shapes - non-clickable) */
-        .button-grid:first-of-type .grid-button {
-            pointer-events: none; 
-            cursor: default;     
-            background-color: #4f46e5; /* A distinct background color for the reference group */
+
+        .button-grid:last-of-type .grid-button.error {
+            animation: buttonErrorShake 0.45s ease;
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.15);
         }
 
         /* Bottom button group (Interactive choices) */
+        
         .button-grid:last-of-type .grid-button {
             background: #7931b4;
         }
         
-        .grid-button:hover {
-            border-color: var(--accent);
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
-            background: #ffffff;
-            color: var(--accent);
-            z-index: 5;
+        .button-grid:first-of-type .grid-button {
+            pointer-events: none; 
+            cursor: default;     
+            background-color: #7931b4; 
         }
-
-        .grid-button.selected {
-            background: #ff9800;
-            border-color: #000205;
-            color: #ffffff;
+        
+        .button-grid .grid-button.help-correct {
+            background: #4caf50 !important;
+            border-color: #ffffff !important;
         }
-    
-        .grid-button.error { 
-            animation: buttonErrorShake 0.45s ease; 
-            border-color: var(--wrong);
-            background-color: rgba(239, 68, 68, 0.05);
-            color: var(--wrong);
-        } 
-    
+        
         @media (max-width: 700px) { 
             .button-grid { gap: 8px; }
             .grid-button {
@@ -98,46 +117,33 @@
             80% { transform: translateX(8px); } 
             100% { transform: translateX(0); } 
         }
-
+        
     </style>
 
-<style>
+    <style>
 
-    #game-area {
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 16px;
-    }
+        #game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+        }
 
-    .button-divider {
-        border: none;
-        border-top: 2px solid var(--border); /* Adjust color to fit your theme */
-        margin: 5px 0;                      /* Adjust spacing above and below */
-    }
+        .button-divider {
+            border: none;
+            border-top: 2px solid var(--border); /* Adjust color to fit your theme */
+            margin: 5px 0;                      /* Adjust spacing above and below */
+        }
 
-    /* Target only the buttons inside the first button-grid */
-    .button-grid:first-of-type .grid-button {
-        pointer-events: none; /* Completely disables clicks, hovers, and touches */
-        cursor: default;     /* Changes the cursor to a standard arrow */
-        background-color: #4f46e5; /* Blue for interactive buttons */
-    }
-
-    .button-grid .grid-button.help-correct {
-        background: #4caf50 !important;
-        border-color: #ffffff !important;
-    }
-
-</style>
+    </style>
 
 </head>
 
 <body>
 
     <!-- TITLE -->
-
     <h1 id="game-title">
-        L'elemento che rompe lo schema
+        titolo gioco
     </h1>
 
     <!-- COUNTERS -->
@@ -166,7 +172,9 @@
     <!-- EMPTY GAME AREA -->
     <div id="game-area">
         <!-- Read-only debug text area placed above the buttons -->
-        
+
+       <h2>Prima serie</h2>
+
         <!-- TOP BUTTON GROUP (Shapes) -->
         <div class="button-grid">
             <button class="grid-button">■</button>
@@ -176,10 +184,9 @@
             <button class="grid-button">●</button>
             <button class="grid-button">▲</button>
         </div>
-        
-        <!-- Divider between the two button groups -->
-        <hr class="button-divider">
-
+       
+        <h2>Seconda serie</h2>
+       
         <!-- BOTTOM BUTTON GROUP (Interactive Grid) -->
         <div class="button-grid">
             <button class="grid-button" data-index="0"></button>
@@ -236,6 +243,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let revealCount = 0;
     let currentCategoryTitle = '';
 
+    const gameTitle = document.getElementById('game-title');
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
@@ -392,7 +400,8 @@ document.addEventListener('DOMContentLoaded', () => {
             startElapsedTimer();
 
             document.body.classList.add('loaded');
-
+            gameTitle.textContent=data.title;
+            
         } catch (err) {
             isGameLoading = false;
             console.error('Could not load elemento-che-rompe-lo-schema.json:', err);

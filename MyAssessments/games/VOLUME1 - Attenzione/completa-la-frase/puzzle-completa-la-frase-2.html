@@ -10,7 +10,7 @@
     <script src="../../js/celebrazion.js"></script>
 
     <!-- Main CSS File -->
-    <link href="../../css/stylesheet.css" rel="stylesheet">
+    <link href="../stylesheet.css" rel="stylesheet">
 
     <style>
 
@@ -625,9 +625,7 @@
                 slotsMeta = [];
 
                 const wordCount = originalWords.length;
-                const givenCount = wordCount <= 2
-                    ? 1
-                    : Math.min(wordCount - 1, Math.max(1, Math.round(wordCount / 2)));
+                const givenCount = wordCount <= 2 ? 1 : Math.min(wordCount - 1, Math.max(1, Math.round(wordCount / 2)));
                 const allPositions = shuffleArray(originalWords.map((_, i) => i));
                 const givenPositions = new Set(allPositions.slice(0, givenCount));
 

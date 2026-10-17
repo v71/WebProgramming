@@ -54,7 +54,7 @@
         * { box-sizing: border-box; }
 
         body {
-            font-family: sans-serif, system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background:
                 radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
                 radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
@@ -90,6 +90,21 @@
             margin: 0 0 10px;
             font-size: 2.3rem;
             font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 1.3rem;
+            font-weight: 400;
             letter-spacing: -0.5px;
             color: var(--accent);
             text-align: center;
@@ -152,25 +167,6 @@
         }
 
         /* =========================================
-           EMPTY GAME AREA
-        ========================================= */
-
-        #game-area {
-            width: 100%;
-            max-width: 1100px;
-            min-height: 300px;
-            margin: 0 auto 24px;
-            padding: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 20px;
-            background: var(--game-area-background);
-            border: 2px solid var(--border);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* =========================================
            PROGRESS TITLE
         ========================================= */
 
@@ -218,7 +214,7 @@
         ========================================= */
 
         .controls {
-            margin-bottom: 16px;
+            margin-bottom: 0px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -228,95 +224,6 @@
             flex-wrap: wrap;
             position: relative;
             min-height: 52px;
-        }
-
-        /* =========================================
-           GRID BUTTOINS
-        ========================================= */
-
-        .grid-button {
-            min-height: 70px;
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            background: var(--default-btn);
-            color: var(--text);
-            font-family: Arial, sans-serif;
-            font-size: 1.4rem;
-            font-weight: 400;
-            cursor: pointer;
-            /* Aggiungi opacity e background alla transizione generale */
-            transition:
-                background 0.3s ease,
-                border-color 0.3s ease,
-                transform 0.3s ease,
-                opacity 0.4s ease; 
-        }
-
-        .grid-button:hover {
-            border-color: var(--grid-btn-hovered-border-color);
-            background: var(--grid-btn-hovered);
-            color: var(--grid-btn-hovered-text);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-            z-index: 5;
-        }
-
-        /* 2. Stato per gli altri bottoni disabilitati (con dissolvenza fluida) */
-        .grid-button:disabled:not(.selected) {
-            background: var(--default-btn) !important;
-            color: var(--text) !important;
-            border-color: var(--border) !important;
-            opacity: 0.5 !important; /* Passerà da 1 a 0.5 con un bel fade */
-            transform: none !important;
-            box-shadow: none !important;
-            cursor: default !important;
-        }
-
-        /* 1. Stato per i bottoni selezionati/corretti */
-        .grid-button.selected {
-            background: var(--grid-btn-selected) !important;
-            color: var(--grid-btn-selected-color) !important;
-            border-color: var(--grid-btn-selected-border-color) !important;
-            transform: none !important;
-            box-shadow: var(--shadow-sm) !important;
-         
-         /* Ombra centrata e simmetrica (0 spostamento orizzontale, 0 verticale) */
-         /*   box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.1) !important;*/
-            
-            opacity: 1 !important;
-            cursor: default !important;
-        }
-
-        .grid-button.selected:hover {
-            background: var(--grid-btn-selected-hovered) !important;
-            color: var(--grid-btn-selected-hovered-text) !important;
-            border-color: var(--grid-btn-selected-hovered-border-color) !important;
-            transform: none !important;
-            box-shadow: var(--shadow-sm) !important;
-            opacity: 1 !important;
-            cursor: default !important;
-        }
-
-        .grid-button.error { 
-            animation: buttonErrorShake 0.45s ease; 
-            border-color: var(--grid-btn-wrong-border-color);
-            background-color:var(--grid-btn-wrong);
-            color: var(--grid-btn-wrong-text );
-        } 
-
-        .grid-button.help-correct {
-            background: var(--grid-btn-help);
-            border-color: var(--grid-btn-help-border-color);
-            color: var(--grid-btn-help-text );
-        }
-
-        @keyframes buttonErrorShake { 
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-10px); } 
-            40% { transform: translateX(10px); } 
-            60% { transform: translateX(-8px); } 
-            80% { transform: translateX(8px); } 
-            100% { transform: translateX(0); } 
         }
 
         /* =========================================
@@ -399,6 +306,7 @@
            SUMMARY SCREEN
         ========================================= */
 
+        /* Results Summary Screen */
         #summary-screen {
             display: none;
             width: 100%;
@@ -440,7 +348,7 @@
         .summary-totals {
             margin-top: 20px;
             padding: 18px;
-            background: var(--summary-background);
+            background: var( --summary-background);
             border-radius: 14px;
             display: flex;
             justify-content: space-around;
@@ -452,7 +360,6 @@
             color: var(--accent);
         }
 
-        
         /* =========================================
            RESPONSIVE
         ========================================= */
@@ -464,4 +371,5 @@
             #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
             #game-area { min-height: 260px; padding: 16px; }
         }
+
 

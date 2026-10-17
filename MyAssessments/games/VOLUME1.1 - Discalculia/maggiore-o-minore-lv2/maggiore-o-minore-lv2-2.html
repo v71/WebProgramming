@@ -11,16 +11,49 @@
 
     <style>
         :root {
-            --bg-0: #2a113d;
-            --bg-1: #4a1d6e;
-            --bg-2: #553d94;
+            --body-background: #2a113d;
+            --game-area-background: #4a1d6e;
+            --summary-background: #553d94;
+
             --accent: #ff9800;
+            --accent-3: #10b981;
+
+            --correct: #ffffff;
+            --wrong: #ef4444;
             --text: #ffffff;
             --text-dim: #a0a0a0;
-            --border: #000205;
+
+            --border: #000000;
+
+            --progress-bar-fill-start : #6366f1;
+            --progress-bar-fill-end : #a855f7;
+
+            --grid-btn-selected : #10b981;
+            --grid-btn-selected-color: #ffffff;
+            --grid-btn-selected-border-color: #ffffff;
+            
+            --grid-btn-selected-hovered : #10b981;
+            --grid-btn-selected-hovered-text : #ffffff;
+            --grid-btn-selected-hovered-border-color: #ffffff;
+
+            --grid-btn-hovered : #6366f1;
+            --grid-btn-hovered-text : #ffffff;
+            --grid-btn-hovered-border-color: #ffffff;
+
+            --grid-btn-wrong : #ef44440d;
+            --grid-btn-wrong-text : #ef4444;
+            --grid-btn-wrong-border-color: #ef4444;
+
+            --grid-btn-help :#10b981;
+            --grid-btn-help-text : #ffffff;
+            --grid-btn-help-border-color: #ffffff;
+
+            --default-btn : #7931b4;
+
             --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
             --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
             --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+
         }
 
         * { box-sizing: border-box; }
@@ -30,7 +63,7 @@
             background:
                 radial-gradient(circle at center,rgba(99, 102, 241, 0.06),transparent 40%),
                 radial-gradient(circle at center,rgba(6, 182, 212, 0.06),transparent 40%),
-                var(--bg-0);
+                var( --body-background);
             color: var(--text);
             margin: 0;
             padding: 20px 20px 40px;
@@ -42,10 +75,22 @@
         }
 
         /* =========================================
+           TEMPORARLY HIDES THE BODY TO AVOID ABRUPT CHANGES FOR THE RAW CONTENT
+         ========================================= */
+
+        body {
+            opacity: 0;
+            transition: opacity 0.2s ease-in;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+
+        /* =========================================
             GAME TITLE
         ========================================= */
-
-        h1 {
+      h1 {
             margin: 0 0 10px;
             font-size: 2.3rem;
             font-weight: 800;
@@ -61,7 +106,7 @@
         }
 
         /* =========================================
-            COUNTERS
+           COUNTERS
         ========================================= */
 
         #game-stats {
@@ -73,11 +118,11 @@
             font-size: 1.05rem;
             font-weight: 500;
             color: var(--text-dim);
-            background: var(--bg-1);
+            background: var(--game-area-background);
             padding: 10px 20px;
             border-radius: 99px;
             box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             font-variant-numeric: tabular-nums;
             text-align: center;
             flex-wrap: wrap;
@@ -88,10 +133,10 @@
             font-weight: 700;
         }
 
-        /* =========================================
-            INFORMATION BOX
+         /* =========================================
+           INFORMATION BOX
         ========================================= */
-
+        
         #instruction-banner {
             margin: 0 0 14px;
             display: flex;
@@ -101,11 +146,11 @@
             font-size: 1.05rem;
             font-weight: 500;
             color: var(--text-dim);
-            background: var(--bg-1);
+            background: var(--game-area-background);
             padding: 10px 20px;
             border-radius: 99px;
             box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
+            border: 2px solid var(--border);
             font-variant-numeric: tabular-nums;
             text-align: center;
         }
@@ -125,26 +170,13 @@
             margin-bottom: 15px;
             padding: 24px;
             border-radius: 20px;
-            background: var(--bg-1);
+            background: var( --game-area-background);
             border: 2px solid var(--border);
             box-shadow: var(--shadow-md);
         }
 
-        .controls {
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 1100px;
-            flex-wrap: wrap;
-            position: relative;
-            min-height: 52px;
-        }
-
         /* =========================================
-            PROGRESS TITLE
+           PROGRESS TITLE
         ========================================= */
 
         #progress-title {
@@ -162,8 +194,8 @@
                  0px 4px 8px rgba(0, 0, 0, 0.5);
         }
 
-        /* =========================================
-            PROGRESS BAR
+       /* =========================================
+           PROGRESS BAR
         ========================================= */
 
         .progress-bar-container {
@@ -171,8 +203,8 @@
             max-width: 1100px;
             height: 12px;
             margin-bottom: 16px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
+            background: var(--game-area-background);
+            border: 2px solid var(--border);
             border-radius: 99px;
             overflow: hidden;
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
@@ -181,11 +213,28 @@
         .progress-bar-fill {
             height: 100%;
             width: 0%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            background: linear-gradient( 135deg,var(--progress-bar-fill-start) 0%,var(--progress-bar-fill-end) 100%);
             border-radius: 99px;
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        /* =========================================
+           CONTROLS
+        ========================================= */
+
+        .controls {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 52px;
+        }
+        
         /* =========================================
             BUTTONS
         ========================================= */
@@ -198,9 +247,9 @@
             padding: 12px 28px;
             font-size: 1rem;
             font-weight: 600;
-            color: #ffffff;
+            color: var(--text);
             background-color: #4f46e5;
-            border: none;
+            border: 2px solid var(--border);
             border-radius: 99px;
             cursor: pointer;
             box-shadow: var(--shadow-lg);
@@ -227,7 +276,7 @@
 
         .cool-btn:hover {
             transform: translateY(-2px);
-            background-color: #10b981;
+            background-color: var(--accent-3);
         }
 
         .cool-btn:hover i {
@@ -237,15 +286,32 @@
         .cool-btn:active {
             transform: translateY(1px);
         }
+  
+        .cool-btn:disabled {
+            pointer-events: none;
+        }
 
         #next-btn {
             background-color: #4f46e5;
         }
 
         #next-btn:hover {
-           background-color: #10b981;
+            background-color: var(--accent-3);
         }
 
+        .cool-btn.wrong-btn {
+            background-color: var(--wrong);
+            cursor: default;
+            pointer-events: none;
+            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
+            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
+        }
+
+        #reveal-btn * {
+            pointer-events: none;
+        }
+
+       
         /* =========================================
             RESPONSIVE
         ========================================= */
@@ -258,9 +324,11 @@
             #game-area { min-height: 260px; padding: 16px; }
             #options-container { width: 100% !important; }
         }
+
     </style>
 
     <style>
+        
         button:hover {
             filter: brightness(1.05);
         }
@@ -392,7 +460,7 @@
             display: none;
             width: 100%;
             max-width: 650px;
-            background: var(--bg-1);
+            background: var( --game-area-background);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 36px;
@@ -429,7 +497,7 @@
         .summary-totals {
             margin-top: 20px;
             padding: 18px;
-            background: var(--bg-2);
+            background: var(--summary-background);
             border-radius: 14px;
             display: flex;
             justify-content: space-around;
@@ -840,6 +908,9 @@
                     console.error('Could not load JSON file:', err);
                 }
                 loadRound(currentRoundIndex);
+
+                document.body.classList.add('loaded');
+
             }
 
             revealBtn.addEventListener('mousedown', showPeek);

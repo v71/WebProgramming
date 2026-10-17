@@ -10,7 +10,7 @@
     <script src="../../js/celebrazion.js"></script>
 
     <!-- Main CSS File -->
-    <link href="../../css/stylesheet.css" rel="stylesheet">
+    <link href="../stylesheet.css" rel="stylesheet">
 
     <style>
 
@@ -36,9 +36,8 @@
 <body>
 
     <!-- TITLE -->
-
     <h1 id="game-title">
-       Attenti alla Caratteristica
+       Titolo Gioco
     </h1>
 
     <!-- COUNTERS -->
@@ -50,9 +49,8 @@
     </div>
 
     <!-- INFORMATION / INSTRUCTION BOX -->
-
     <div id="instruction-banner">
-       Instruzion banner.
+       Instruzion banner
     </div>
 
     <div class="controls" id="action-controls">
@@ -130,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let revealCount = 0;
     let currentCategoryTitle = ''; // Stores the current instruction/phrase
     
+    const gameTitle = document.getElementById('game-title');
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
@@ -271,6 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
 
+            gameTitle.textContent=data.title;
             document.body.classList.add('loaded');
 
         } catch (err) {

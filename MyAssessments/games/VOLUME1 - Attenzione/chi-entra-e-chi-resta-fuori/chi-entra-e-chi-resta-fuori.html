@@ -10,7 +10,7 @@
     <script src="../../js/celebrazion.js"></script>
 
     <!-- Main CSS File -->
-    <link href="../../css/stylesheet.css" rel="stylesheet">
+    <link href="../stylesheet.css" rel="stylesheet">
 
     <style>
 
@@ -57,7 +57,7 @@
     <!-- TITLE -->
 
     <h1 id="game-title">
-        Chi entra e chi resta
+        titolo gioco
     </h1>
 
     <!-- COUNTERS -->
@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let revealCount = 0;
     let currentCategoryTitle = ''; // Stores the current instruction/phrase
 
+    const gameTitle = document.getElementById('game-title');
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
@@ -287,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
 
+            gameTitle.textContent=data.title;
             document.body.classList.add('loaded');
 
         } catch (err) {

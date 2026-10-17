@@ -9,107 +9,9 @@
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
+    <link href="../stylesheet.css" rel="stylesheet">
+
     <style>
-        :root {
-            --bg-0: #2a113d;
-            --bg-1: #4a1d6e;
-            --bg-2: #553d94;
-            --accent: #ff9800;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: #000205;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-
-            background:
-                radial-gradient(circle at center,rgba(99, 102, 241, 0.06),transparent 40%),
-                radial-gradient(circle at center,rgba(6, 182, 212, 0.06),transparent 40%),
-                var(--bg-0);
-            color: var(--text);
-            margin: 0;
-            padding: 20px 20px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* =========================================
-           GAME TITLE
-        ========================================= */
-
-        h1 {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* =========================================
-           COUNTERS
-        ========================================= */
-
-        #game-stats {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-            flex-wrap: wrap;
-        }
-
-        #game-stats strong {
-            color: var(--text);
-            font-weight: 700;
-        }
-
-        /* =========================================
-           INFORMATION BOX
-        ========================================= */
-
-         #instruction-banner {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-        }
 
         /* =========================================
            EMPTY GAME AREA
@@ -125,147 +27,10 @@
             margin-top: 15px;
             margin-bottom: 15px;
             padding: 24px;
-
             border-radius: 20px;
-            background: var(--bg-1);
+            background: var(--game-area-background);
             border: 2px solid var(--border);
             box-shadow: var(--shadow-md);
-        }
-
-        .controls {
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 1100px;
-            flex-wrap: wrap;
-            position: relative;
-            min-height: 52px;
-        }
-
-        /* =========================================
-           PROGRESS TITLE
-        ========================================= */
-
-        #progress-title {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* =========================================
-           PROGRESS BAR
-        ========================================= */
-
-        .progress-bar-container {
-            width: 100%;
-            max-width: 1100px;
-            height: 12px;
-            margin-bottom: 16px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 99px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient( 135deg,#6366f1 0%,#a855f7 100%);
-            border-radius: 99px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* =========================================
-            COO_-BUTTONS
-           ========================================= */
-
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5; /* Blu fisso a riposo */
-            border: none;
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        .cool-btn.smooth-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: scale(0.95);
-            position: absolute;
-        }
-
-        .cool-btn i {
-            font-size: 1.1rem;
-            -webkit-text-stroke: 1px currentColor;
-            transition: transform 0.25s ease;
-        }
-
-        .cool-btn:hover {
-            transform: translateY(-2px);
-            background-color: #10b981; /* Blu leggermente più scuro all'hover */
-        }
-
-        .cool-btn:hover i {
-            transform: translateX(3px);
-        }
-
-        .cool-btn:active {
-            transform: translateY(1px);
-        }
-
-        #next-btn {
-            background-color: #4f46e5;
-        }
-
-        #next-btn:hover {
-           background-color: #10b981;
-        }
-
-        .cool-btn.wrong-btn {
-            background-color: var(--wrong);
-            cursor: default;
-            pointer-events: none;
-            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
-            opacity: 1 !important; /* Mantiene il colore pieno senza trasparenza */
-        }
-
-        /* =========================================
-           RESPONSIVE
-        ========================================= */
-
-        @media (max-width: 700px) {
-            body { padding: 16px 12px 30px; }
-            h1, #progress-title { font-size: 1.9rem; }
-            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
-            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
-            #game-area { min-height: 260px; padding: 16px; }
         }
 
     </style>
@@ -323,60 +88,32 @@
             justify-content: stretch;
             align-items: stretch;
             width: 400px;
-            padding: 14px;
             gap: 12px;
             flex: 1; /* Matches the height of the image container */
+
+            display: flex;
+            padding: 0;            /* was 14px: buttons now touch the top/bottom edges */
+            border: none;          /* cancels anything coming from .card-container */
+            background: none;
+            box-shadow: none;
         }
 
         .option-card {
-            flex: 1; /* Distributes the height equally among the 3 buttons */
+            flex: 1;               /* the 3 buttons share the full height equally */
+            min-height: 0;         /* was 100px: lets them shrink to match the image */
             width: 100%;
-            min-height: 0; /* Overrides previous min-height so flex: 1 works correctly */
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            color: var(--bg-0); /* Dark text for readability */
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 18px 22px;
-            font-size: 1.35rem;
-            font-weight: 700;
-            line-height: 1.3;
-            white-space: normal;
-            cursor: pointer;
-            user-select: none;
-            box-shadow: var(--shadow-sm);
-            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
-        }
-
-        #options-container {
-            border-color: var(--border);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: stretch;
-            width: 400px;
-            padding: 0px;
-            gap: 16px; /* Increased gap to ensure clear separation */
-        }
-
-       .option-card {
-            flex-shrink: 0;
-            width: 100%;
-            min-height: 100px;
             background: #7931b4;
-            color: #ffffff; /* Fixed: dark text on a light background */
+            color: #ffffff;
             border: 2px solid var(--border);
             border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 18px 22px;
-            font-size: 1.35rem;
-            font-weight: 700;
+            padding: 10px 22px;    /* was 18px 22px: smaller so it never forces extra height */
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 400;
             line-height: 1.3;
             white-space: normal;
             cursor: pointer;
@@ -386,20 +123,26 @@
         }
 
         .option-card:hover {
-            border-color: var(--accent);
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
             transform: translateY(-4px);
             box-shadow: var(--shadow-md);
-            color: var(--accent);
-             background: #ffffff;
+            z-index: 5;
         }
 
         .option-card.correct-option {
-            border-color: #000000;
-            background: var(--accent);
-            color: var(--correct);
-            cursor: default;
+            background: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
             transform: none !important;
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-sm) !important;
+         
+         /* Ombra centrata e simmetrica (0 spostamento orizzontale, 0 verticale) */
+         /*   box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.1) !important;*/
+            
+            opacity: 1 !important;
+            cursor: default !important;
         }
 
         .option-card.wrong-option {
@@ -434,59 +177,6 @@
 
 <style>
 
-        /* Results Summary Screen */
-        #summary-screen {
-            display: none;
-            width: 100%;
-            max-width: 650px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 36px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-        }
-
-        #summary-screen h2 {
-            margin-top: 0;
-            color: var(--correct);
-            font-size: 2rem;
-        }
-
-        .summary-table {
-            width: 100%;
-            margin: 24px 0;
-            border-collapse: collapse;
-        }
-
-        .summary-table th, .summary-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-
-        .summary-table th {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .summary-totals {
-            margin-top: 20px;
-            padding: 18px;
-            background: var(--bg-2);
-            border-radius: 14px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .summary-totals strong {
-            color: var(--accent);
-        }
     
 </style>
 
@@ -866,6 +556,7 @@
                     console.error('Could not load JSON file:', err);
                 }
                 loadRound(currentRoundIndex);
+                document.body.classList.add('loaded');
             }
 
             revealBtn.addEventListener('mousedown', showPeek);
