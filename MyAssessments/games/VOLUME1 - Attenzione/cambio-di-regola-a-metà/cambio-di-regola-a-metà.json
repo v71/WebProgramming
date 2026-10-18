@@ -2,7 +2,7 @@
     "title":"Cambio di regola a metà",
     "categories": [
       {
-        "instruction": "Prima colonna: clicca solo su «alimenti». Dopo la linea divisoria la regola cambia: seconda colonna, clicca solo su «animali».",
+        "instruction": "Prima colonna: clicca solo su «alimenti», per la seconda colonna la regola cambia: clicca solo su «animali»",
         "buttons": [
           { "label": "Cartina" , "value": 0 },
           { "label": "Zaino"   , "value": 0 },

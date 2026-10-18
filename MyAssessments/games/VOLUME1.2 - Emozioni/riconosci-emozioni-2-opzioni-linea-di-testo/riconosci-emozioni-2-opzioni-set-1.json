@@ -1,0 +1,54 @@
+{
+    "title": "Riconosci l'emozione",
+    "label": "Osserva l'immagine e scegli, tra le 2 opzioni, l'emozione che la descrive meglio",
+    "rounds": [
+        {
+            "sentence": "Quando vedo qualcosa di incredibile, provo {blank}",
+            "img": "../images/emozioni-set-1/amazement.png",
+            "options": ["Stupore", "Rabbia"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Una giornata tranquilla mi fa provare {blank}",
+            "img": "../images/emozioni-set-1/calm.png",
+            "options": ["Calma", "Tristezza"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Quando vinco una gara, mi sento pieno di {blank}",
+            "img": "../images/emozioni-set-1/euforia.png",
+            "options": ["Disgusto","Euforia"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Quando gioco con i miei amici, provo {blank}",
+            "img": "../images/emozioni-set-1/joy.png",
+            "options": ["Paura", "Gioia"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Quando penso alla mia famiglia, provo {blank}",
+            "img": "../images/emozioni-set-1/love.png",
+            "options": ["Disgusto", "Amore"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Quando finisco un compito difficile, provo {blank}",
+            "img": "../images/emozioni-set-1/satisfaction.png",
+            "options": ["Soddisfazione", "Rabbia"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Quando succede qualcosa di inaspettato, provo {blank}",
+            "img": "../images/emozioni-set-1/surprise.png",
+            "options": ["Gioia", "Sorpresa"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Quando mi fido di qualcuno, provo {blank}",
+            "img": "../images/emozioni-set-1/trust.png",
+            "options": ["Fiducia", "Rabbia"],
+            "correctIndex": 0
+        }
+    ]
+}

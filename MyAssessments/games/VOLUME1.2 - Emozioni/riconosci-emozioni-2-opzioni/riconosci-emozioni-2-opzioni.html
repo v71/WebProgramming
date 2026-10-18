@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maggiore Minore o Uguale</title>
+    <title>Indovina l'emozione</title>
 
     <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
@@ -60,6 +60,10 @@
             height: auto;
             overflow: hidden;
             border-radius: 14px; /* Allinea leggermente l'arrotondamento */
+
+            /* MODIFICA: allineamento verticale esplicito con il contenitore delle opzioni */
+            align-self: stretch;
+            box-sizing: border-box;
         }
 
         #image-container img {
@@ -96,10 +100,15 @@
             border: none;          /* cancels anything coming from .card-container */
             background: none;
             box-shadow: none;
+
+            /* MODIFICA: stessa altezza (top e bottom) dell'immagine */
+            align-self: stretch;
+            margin: 0;
+            box-sizing: border-box;
         }
 
         .option-card {
-            flex: 1;               /* the 3 buttons share the full height equally */
+            flex: 1;               /* the buttons share the full height equally */
             min-height: 0;         /* was 100px: lets them shrink to match the image */
             width: 100%;
             background: #7931b4;
@@ -116,7 +125,7 @@
             padding: 10px 22px;    /* was 18px 22px: smaller so it never forces extra height */
             font-size: 1.5rem;
 
-            font-weight: 400;
+            font-weight: 600;
             line-height: 1.3;
             white-space: normal;
             cursor: pointer;
@@ -125,8 +134,13 @@
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
 
             padding: 6px 16px;     /* era 10px 22px */
-            font-size: 1.3rem;     /* era 1.5rem, opzionale se i testi sono lunghi */
+            font-size: 2.0rem;     /* era 1.5rem, opzionale se i testi sono lunghi */
 
+            text-shadow:
+            -1px -1px 0 #000,
+             1px -1px 0 #000,
+            -1px  1px 0 #000,
+             1px  1px 0 #000;      
         }
 
         .option-card:hover {
@@ -189,7 +203,7 @@
 
     <!-- TITLE -->
     <h1 id="game-title">
-        Maggiore, Minore o Uguale ?
+        Riconosci le emozioni
     </h1>
 
     <!-- COUNTERS -->
@@ -201,7 +215,7 @@
     </div>
 
     <!-- INFORMATION / INSTRUCTION BOX -->
-    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 4 opzioni, quella giusta.</h3>
+    <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 2 opzioni, quella giusta.</h3>
 
     <!-- HELP BUTTON -->
     <div class="controls" id="action-controls">
@@ -338,7 +352,6 @@
                 progressBarFill.style.width = progressRatio + '%';
                 
                 currentRound = ROUNDS[index];
-                instructionBanner.textContent = currentRound.label;   // testo del banner = label del round
                 
                 roundCompleted = false;
                 moveCount = 0;
@@ -400,7 +413,8 @@
                     }
                 }
 
-                const selectedIncorrect = shuffleArray(incorrectIndices).slice(0, 3);
+                // MODIFICA: 1 opzione sbagliata + 1 corretta = 2 pulsanti (era slice(0, 3))
+                const selectedIncorrect = shuffleArray(incorrectIndices).slice(0, 1);
                 const order = shuffleArray([correctIdx, ...selectedIncorrect]);
 
                 order.forEach((originalIdx) => {
@@ -542,13 +556,18 @@
 
             async function initGame() {
                 try {
-                    const response = await fetch('emozioni-1.json');
+                    // MODIFICA: il file JSON può essere passato nell'URL con ?json=nomefile.json
+                    const params = new URLSearchParams(window.location.search);
+                    const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
+                    const response = await fetch(jsonFile);
                     if (!response.ok) {
                         throw new Error(`HTTP error: ${response.status}`);
                     }
                     const data = await response.json();
                     gameTitle.textContent=data.title;                    
+                    instructionBanner.textContent = data.label;   // testo del banner = label del round
                     ROUNDS = shuffleArray(data.rounds);
+                
                 } catch (err) {
                     console.error('Could not load JSON file:', err);
                 }

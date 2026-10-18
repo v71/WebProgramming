@@ -1,27 +1,27 @@
 {
-    "title": "Indovina l'emozione",
+    "title": "Riconosci l'emozione",
     "rounds": [
         {
-            "label": " Oh no! alla bimba è caduto il gelato e non potrà mangiarlo, conme si può sentire ?",
-            "img": "../images/gelato.png",
+            "label": "Oh no! alla bimba è caduto il gelato e non potrà mangiarlo, conme si può sentire ?",
+            "img": "../images/bambina/gelato.png",
             "options": ["Felice", "Arrabbiata", "Triste", "Spaventata"],
             "correctIndex": 2
         },
         {
             "label": "Le bambine stanno litignado, come si sentono ?",
-            "img": "../images/rissa.png",
+            "img": "../images/bambina/rissa.png",
             "options": ["Felici", "Arrabbiate", "Tristi", "Spaventate"],
             "correctIndex": 1
         },
         {
             "label": "I bambini giocano nel parco, si come si sentono ?",
-            "img": "../images/parco.png",
+            "img": "../images/bambina/parco.png",
             "options": ["Felici", "Arrabbiati", "Tristi", "Spaventati"],
             "correctIndex": 0
         },
         {
             "label": "La bambina sta facendo un brutto sogno, come si sente ?",
-            "img": "../images/incubo.png",
+            "img": "../images/bambina/incubo.png",
             "options": ["Felice", "Arrabbiata", "Triste", "Spaventata"],
             "correctIndex": 3
         }

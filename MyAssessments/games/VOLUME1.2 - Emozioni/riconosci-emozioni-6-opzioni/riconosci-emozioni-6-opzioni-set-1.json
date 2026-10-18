@@ -1,0 +1,46 @@
+{
+    "title": "Riconosci l'emozione",
+    "label": "Osserva l'immagine e scegli, tra le 6 opzioni, l'emozione che la descrive meglio",
+    "rounds": [
+        {
+            "img": "../images/emozioni-set-1/amazement.png",
+            "options": ["Stupore", "Rabbia","Paura","Amore","Ansia","Disgusto"],
+            "correctIndex": 0
+        },
+        {
+            "img": "../images/emozioni-set-1/calm.png",
+            "options": ["Calma", "Tristezza","Paura","Ansia","Confusione","Insoddisfazione"],
+            "correctIndex": 0
+        },
+        {
+            "img": "../images/emozioni-set-1/euforia.png",
+            "options": ["Disgusto","Euforia","Insoddisfazione","Invidia","Rabbia","Ansia"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-1/joy.png",
+            "options": ["Paura", "Gioia","Ansia","Confusione","Disgusto","Invidia"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-1/love.png",
+            "options": ["Disgusto", "Amore","Confusione","Ansia","Invidia","Rabbia"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-1/satisfaction.png",
+            "options": ["Soddisfazione", "Rabbia","Paura","Ansia","Confusione","Invidia"],
+            "correctIndex": 0
+        },
+        {
+             "img": "../images/emozioni-set-1/surprise.png",
+            "options": ["Gioia", "Stupore","Invidia","Ansia","Disgusto","Confusione"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-1/trust.png",
+            "options": ["Fiducia", "Rabbia","Disgusto","Ansia","Insoddisfazione","Invidia"],
+            "correctIndex": 0
+        }
+    ]
+}

@@ -1,0 +1,46 @@
+{
+    "title": "Riconosci l'emozione",
+    "label": "Osserva l'immagine e scegli, tra le 2 opzioni, l'emozione che la descrive meglio",
+    "rounds": [
+        {
+            "img": "../images/emozioni-set-1/amazement.png",
+            "options": ["Stupore", "Rabbia"],
+            "correctIndex": 0
+        },
+        {
+            "img": "../images/emozioni-set-1/calm.png",
+            "options": ["Calma", "Tristezza"],
+            "correctIndex": 0
+        },
+        {
+            "img": "../images/emozioni-set-1/euforia.png",
+            "options": ["Disgusto","Euforia"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-1/joy.png",
+            "options": ["Paura", "Gioia"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-1/love.png",
+            "options": ["Disgusto", "Amore"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-1/satisfaction.png",
+            "options": ["Soddisfazione", "Rabbia"],
+            "correctIndex": 0
+        },
+        {
+             "img": "../images/emozioni-set-1/surprise.png",
+            "options": ["Gioia", "Stupore"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-1/trust.png",
+            "options": ["Fiducia", "Rabbia"],
+            "correctIndex": 0
+        }
+    ]
+}

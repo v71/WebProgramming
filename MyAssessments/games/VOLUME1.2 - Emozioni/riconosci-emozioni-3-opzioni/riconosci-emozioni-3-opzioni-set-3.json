@@ -1,0 +1,46 @@
+{
+    "title": "Riconosci l'emozione",
+    "label": "Osserva l'immagine e scegli, tra le 3 opzioni, l'emozione che la descrive meglio",
+    "rounds": [
+        {
+            "img": "../images/emozioni-set-3/anxiety.png",
+            "options": ["Ansia", "Fiducia","Invidia"],
+            "correctIndex": 0
+        },
+        {
+            "img": "../images/emozioni-set-3/confusion.png",
+            "options": ["Rabbia", "Confusione","Euforia"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-3/disappointment.png",
+            "options": ["Delusione","Euforia","Fiducia"],
+            "correctIndex": 0
+        },
+        {
+            "img": "../images/emozioni-set-3/disgust.png",
+            "options": ["Soddisfazione", "Disgusto","Invidia"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-3/envy.png",
+            "options": ["Amore", "Invidia","Soddisfazione"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-3/guilt.png",
+            "options": ["Senso di colpa", "Soddisfazione","Amore"],
+            "correctIndex": 0
+        },
+        {
+             "img": "../images/emozioni-set-3/jelousy.png",
+            "options": ["Gioia", "Gelosia","Disgusto"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-3/shame.png",
+            "options": ["Vergogna", "Fiducia","Gioia"],
+            "correctIndex": 0
+        }
+    ]
+}

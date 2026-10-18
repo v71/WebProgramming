@@ -1,0 +1,46 @@
+{
+    "title": "Riconosci l'emozione",
+    "label": "Osserva l'immagine e scegli, tra le 2 opzioni, l'emozione che la descrive meglio",
+    "rounds": [
+        {
+            "img": "../images/emozioni-set-2/anger.png",
+            "options": ["Rabbia", "Amore"],
+            "correctIndex": 0
+        },
+        {
+            "img": "../images/emozioni-set-2/curiosity.png",
+            "options": ["Gioia", "Curiosità"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-2/fear.png",
+            "options": ["Amore","Paura"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-2/gratitude.png",
+            "options": ["Paura", "Gratitudine"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-2/hurt.png",
+            "options": ["Disgusto", "Ferita emotiva"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-2/inspiration.png",
+            "options": ["Ispirazione", "Rabbia"],
+            "correctIndex": 0
+        },
+        {
+             "img": "../images/emozioni-set-2/pride.png",
+            "options": ["Paura", "Orgoglio"],
+            "correctIndex": 1
+        },
+        {
+            "img": "../images/emozioni-set-2/sadness.png",
+            "options": ["Tristezza", "Gioia"],
+            "correctIndex": 0
+        }
+    ]
+}
