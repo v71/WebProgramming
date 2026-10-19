@@ -1,6 +1,6 @@
 {
     "title": "Riconosci l'emozione",
-    "label": "Osserva l'immagine e scegli, tra le 2 opzioni, l'emozione che la descrive meglio",
+    "label": "Osserva l'immagine e scegli, tra le 3 opzioni, l'emozione che la descrive meglio",
     "rounds": [
         {
             "sentence": "Quando la {blank} arriva, fai un bel respiro e la fai volare via!",

@@ -1,0 +1,54 @@
+{
+    "title": "Preposizioni",
+     "label": "Osserva l'immagine e scegli, tra le 3 opzioni, l'emozione che la descrive meglio",
+    "rounds": [
+        {
+            "sentence": "Siamo andati a dormire {blank} mezzanotte",
+            "img": "../images/preposizioni/mezzanotte.png",
+            "options": ["in", "a","all'"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "La mamma porta i bambini {blank} parco",
+            "img": "../images/preposizioni/parco.png",
+            "options": ["al", "a","all'"],
+            "correctIndex": 0
+        },
+         {
+            "sentence": "Abito {blank} Roma",
+            "img": "../images/preposizioni/roma.png",
+            "options": ["al", "a","all'"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "La lezione di italiano inizia {blank} ore 9.00",
+            "img": "../images/preposizioni/lezione.png",
+            "options": ["al", "alle","all'"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Domani vieni {blank} piscina con me ?",
+            "img": "../images/preposizioni/piscina.png",
+            "options": ["a", "da","in"],
+            "correctIndex": 2
+        },
+        {
+            "sentence": "Sono Kaori, vengo {blank} Cina",
+            "img": "../images/preposizioni/cina.png",
+            "options": ["dalla", "da","a"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Adesso mi trovo {blank} centro città",
+            "img": "../images/preposizioni/passeggiata.png",
+            "options": ["in", "nel","al"],
+            "correctIndex": 0
+        },
+         {
+            "sentence": "Non posso usare facbook {blank} ufficio",
+            "img": "../images/preposizioni/facebook.png",
+            "options": ["nel", "in","al"],
+            "correctIndex": 1
+        }
+    ]
+}
