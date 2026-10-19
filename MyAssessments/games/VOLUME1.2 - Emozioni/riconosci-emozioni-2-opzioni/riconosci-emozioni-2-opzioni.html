@@ -218,12 +218,24 @@
     <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le 2 opzioni, quella giusta.</h3>
 
     <!-- HELP BUTTON -->
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <!-- Next Button (Text only) -->
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span class="btn-text">Caricamento...</span>
+        </button>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">Help!</span>
         </button>
     </div>
 
@@ -474,7 +486,8 @@
                     });
 
                     if (currentRoundIndex === ROUNDS.length - 1) {
-                        nextBtn.textContent = "✓ Fatto";
+                        //nextBtn.textContent = "✓ Fatto";
+                        nextBtn.querySelector('.btn-text').textContent = "✓ Fatto";
 
                         if (typeof Confetti !== 'undefined') {
                             try {
@@ -487,7 +500,8 @@
                         }
 
                     } else {
-                        nextBtn.textContent = "▶ Prossima immagine";
+                   //     nextBtn.textContent = "▶ Prossima immagine";
+                        nextBtn.querySelector('.btn-text').textContent = "▶ Prossima immagine";
                     }
 
                     revealBtn.classList.add('smooth-hidden');

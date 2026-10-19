@@ -1,0 +1,54 @@
+{
+    "title": "Riconosci l'emozione",
+    "label": "Osserva l'immagine e scegli, tra le 2 opzioni, l'emozione che la descrive meglio",
+    "rounds": [
+        {
+            "sentence": "Quando la {blank} arriva, fai un bel respiro e la fai volare via!",
+            "img": "../images/emozioni-set-2/anger.png",
+            "options": ["Rabbia", "Amore","Curiosità"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Chi cerca con {blank} trova sempre una grande sorpresa!",
+            "img": "../images/emozioni-set-2/curiosity.png",
+            "options": ["Gioia", "Curiosità","Disgusto"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "La {blank} si rimpicciolisce quando ci si aiuta a vicenda!",
+            "img": "../images/emozioni-set-2/fear.png",
+            "options": ["Amore","Paura","Gratitudine"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "La {blank} trasforma ogni piccolo momento in una festa!",
+            "img": "../images/emozioni-set-2/gratitude.png",
+            "options": ["Paura", "Gratitudine","Rabbia"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Le parole dolci sono come un cerotto magico per ogni {blank}!",
+            "img": "../images/emozioni-set-2/hurt.png",
+            "options": ["Disgusto", "Ferita emotiva","Amore"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Con l'{blank}, una semplice idea si trasforma in una grande avventura!",
+            "img": "../images/emozioni-set-2/inspiration.png",
+            "options": ["Ispirazione", "Rabbia","Paura"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "l'{blank} è quando sai che di avere fatto del tuo meglio!",
+             "img": "../images/emozioni-set-2/pride.png",
+            "options": ["Paura", "Orgoglio","Disgusto"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "La {blank} vola via con un abbraccio!",
+            "img": "../images/emozioni-set-2/sadness.png",
+            "options": ["Tristezza", "Gioia","Euforia"],
+            "correctIndex": 0
+        }
+    ]
+}

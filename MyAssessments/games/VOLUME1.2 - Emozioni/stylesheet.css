@@ -251,6 +251,16 @@
             text-decoration: none;
         }
 
+        /* Apply your border or text effect only to the text span */
+        .cool-btn .btn-text {
+            text-shadow:
+                -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
         .cool-btn.smooth-hidden {
             opacity: 0;
             visibility: hidden;

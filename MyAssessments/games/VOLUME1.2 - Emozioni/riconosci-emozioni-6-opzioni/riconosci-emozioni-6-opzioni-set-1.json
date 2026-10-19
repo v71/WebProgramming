@@ -4,7 +4,7 @@
     "rounds": [
         {
             "img": "../images/emozioni-set-1/amazement.png",
-            "options": ["Stupore", "Rabbia","Paura","Amore","Ansia","Disgusto"],
+            "options": ["Stupore", "Rabbia","Paura","Tristezza","Euforia","Disgusto"],
             "correctIndex": 0
         },
         {
@@ -34,7 +34,7 @@
         },
         {
              "img": "../images/emozioni-set-1/surprise.png",
-            "options": ["Gioia", "Stupore","Invidia","Ansia","Disgusto","Confusione"],
+            "options": ["Gioia", "Sorpresa","Invidia","Ansia","Disgusto","Rabbia"],
             "correctIndex": 1
         },
         {

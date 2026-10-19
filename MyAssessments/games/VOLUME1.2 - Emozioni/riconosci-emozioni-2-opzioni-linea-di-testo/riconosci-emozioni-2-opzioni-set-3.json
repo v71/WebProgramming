@@ -3,49 +3,49 @@
      "label": "Osserva l'immagine e scegli, tra le 2 opzioni, l'emozione che la descrive meglio",
     "rounds": [
         {
-            "sentence": "{blank}",
+            "sentence": "Quando senti l'{blank}, fermati e fai un respiro profondo!",
             "img": "../images/emozioni-set-3/anxiety.png",
             "options": ["Ansia", "Fiducia"],
             "correctIndex": 0
         },
         {
-            "sentence": "{blank}",
+            "sentence": "La {blank} è come un puzzle da riordinare!",
             "img": "../images/emozioni-set-3/confusion.png",
             "options": ["Rabbia", "Confusione"],
             "correctIndex": 1
         },
         {
-            "sentence": "{blank}",
+            "sentence": "La {blank} fa un po' male, ma ti insegna a rialzarti più forte di prima!",
             "img": "../images/emozioni-set-3/disappointment.png",
             "options": ["Delusione","Euforia"],
             "correctIndex": 0
         },
         {
-            "sentence": "{blank}",
+            "sentence": "Il {blank} ci protegge da quello che non fà per noi!",
             "img": "../images/emozioni-set-3/disgust.png",
             "options": ["Soddisfazione", "Disgusto"],
             "correctIndex": 1
         },
         {
-            "sentence": "{blank}",
+            "sentence": "L'{blank} non ti fa vedere le fantastiche qualità che hai dentro di te!",
             "img": "../images/emozioni-set-3/envy.png",
             "options": ["Amore", "Invidia"],
             "correctIndex": 1
         },
         {
-            "sentence": "{blank}",
+            "sentence": "Il {blank} si cancella con una parola dolce o un abbraccio!",
             "img": "../images/emozioni-set-3/guilt.png",
             "options": ["Senso di colpa", "Soddisfazione"],
             "correctIndex": 0
         },
         {
-            "sentence": "{blank}",
+            "sentence": "Quando senti la {blank}, ricorda che c'è sempre tanto affetto per tutti!",
             "img": "../images/emozioni-set-3/jelousy.png",
             "options": ["Gioia", "Gelosia"],
             "correctIndex": 1
         },
         {
-            "sentence": "{blank}",
+            "sentence": "Quando senti un po' di {blank}, ricorda che va benissimo sbagliare!",
             "img": "../images/emozioni-set-3/shame.png",
             "options": ["Vergogna", "Fiducia"],
             "correctIndex": 0
