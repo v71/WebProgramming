@@ -141,14 +141,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryScreen = document.getElementById('summary-screen');
     const summaryTbody = document.getElementById('summary-tbody');
     const summaryTotals = document.getElementById('summary-totals');
+    const gameStats= document.getElementById('game-stats');
+    const progressBar=document.querySelector('.progress-bar-container');
+    const progressBarTitle=document.getElementById('progress-title');
 
     function showSummaryScreen() {
         gameArea.style.display = 'none';
+        gameStats.style.display = 'none';
         instructionBanner.style.display = 'none';
-        document.getElementById('game-stats').style.display = 'none';
-        document.querySelector('.progress-bar-container').style.display = 'none';
-        document.getElementById('progress-title').style.display = 'none';
-        document.getElementById('game-title').style.display = 'none';
+        progressBar.style.display = 'none';
+        progressBarTitle.style.display = 'none';
+        gameTitle.style.display = 'none';
         actionControls.style.display = 'none';
         
         summaryTbody.innerHTML = '';

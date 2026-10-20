@@ -380,6 +380,10 @@
             let revealCount = 0;
             let elapsedTimerInterval = null;
 
+            let totalMoveCount = 0;
+            let totalRevealCount = 0;
+            let totalElapsedSeconds = 0;  
+
             const nextBtn = document.getElementById('next-btn');
             const imageContainer = document.getElementById('image-container');
             const optionsContainer = document.getElementById('options-container');
@@ -402,6 +406,7 @@
                 updateTimerDisplay();
                 elapsedTimerInterval = setInterval(() => {
                     elapsedSeconds++;
+                    totalElapsedSeconds++;
                     updateTimerDisplay();
                 }, 1000);
             }
@@ -414,15 +419,15 @@
             }
 
             function updateTimerDisplay() {
-                timeValueEl.textContent = elapsedSeconds + 's';
+                timeValueEl.textContent = totalElapsedSeconds + 's';
             }
 
             function updateMovesDisplay() {
-                movesValueEl.textContent = moveCount;
+                movesValueEl.textContent = totalMoveCount;
             }
 
             function updateRevealsDisplay() {
-                revealsValueEl.textContent = revealCount;
+                revealsValueEl.textContent = totalRevealCount;
             }
 
             function shuffleArray(array) {
@@ -546,6 +551,7 @@
                     stopElapsedTimer();
 
                     moveCount++;
+                    totalMoveCount++;
                     updateMovesDisplay();
 
                     // Applica SUBITO lo stile corretto prima dell'animazione
@@ -608,6 +614,7 @@
 
                 } else {
                     moveCount++;
+                    totalMoveCount++;
                     updateMovesDisplay();
                     optionEl.classList.add('wrong-option');
                     optionEl.addEventListener('animationend', () => {
@@ -626,6 +633,7 @@
                 }
             });
 
+            /*
             function showSummaryScreen() {
                 gameArea.style.display = 'none';
                 instructionBanner.style.display = 'none';
@@ -651,11 +659,56 @@
                 `;
                 summaryScreen.style.display = 'block';
             }
+            */
+
+            function showSummaryScreen() {
+                gameArea.style.display = 'none';
+                gameTitle.style.display = 'none';
+                gameStats.style.display = 'none';
+                instructionBanner.style.display = 'none';
+                actionControls.style.display = 'none';
+                progressTitle.style.display = 'none';
+                progressContainer.style.display = 'none';
+                sentenceContainer.style.display= 'none';
+                
+                summaryTbody.innerHTML = '';
+                let totalMetric = 0;
+                let sumMoves = 0;
+                let sumReveals = 0;
+                let sumSeconds = 0;
+
+                roundResults.forEach(res => {
+                   totalMetric += res.metric;
+                   sumMoves += res.moves;
+                   sumReveals += res.reveals;
+                   sumSeconds += parseInt(res.time, 10);
+
+                   const row = document.createElement('tr');
+                   row.innerHTML = `<td><strong>${res.label}</strong></td><td>${res.time}</td><td>${res.moves}</td><td>${res.reveals}</td><td><strong>${res.metric.toFixed(2)}</strong></td>`;
+                   summaryTbody.appendChild(row);
+                });
+
+                // Totals row
+                const totalRow = document.createElement('tr');
+                totalRow.innerHTML = `<td><strong>Totale</strong></td><td><strong>${sumSeconds}s</strong></td><td><strong>${sumMoves}</strong></td><td><strong>${sumReveals}</strong></td><td></td>`;
+                summaryTbody.appendChild(totalRow);
+
+                const averageMetric = roundResults.length > 0 ? totalMetric / roundResults.length : 0;
+                const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
+
+                summaryTotals.innerHTML = `
+                    <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+                    <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
+                `;
+                summaryScreen.style.display = 'block';
+                
+            }
 
             function showPeek() {
                 if (roundCompleted || isPeeking || revealBtn.disabled) return;
                 isPeeking = true;
                 revealCount++;
+                totalRevealCount++;
                 updateRevealsDisplay();
                 const correctEl = optionElements.find(el => el.dataset.isCorrect === 'true');
                 if (correctEl) correctEl.classList.add('peek');

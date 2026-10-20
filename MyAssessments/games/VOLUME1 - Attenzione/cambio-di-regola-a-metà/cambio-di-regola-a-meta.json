@@ -3,6 +3,7 @@
     "categories": [
       {
         "instruction": "Prima colonna: clicca solo su «alimenti», per la seconda colonna la regola cambia: clicca solo su «animali»",
+        "headers" :[ "Alimenti","Animali"],
         "buttons": [
           { "label": "Cartina" , "value": 0 },
           { "label": "Zaino"   , "value": 0 },

@@ -3,41 +3,49 @@
     "label": "Osserva l'immagine e scegli, tra le 2 opzioni, l'emozione che la descrive meglio",
     "rounds": [
         {
+            "label":"Ansia",
             "img": "../images/emozioni-set-3/anxiety.png",
             "options": ["Ansia", "Fiducia"],
             "correctIndex": 0
         },
         {
+            "label":"Confusione",
             "img": "../images/emozioni-set-3/confusion.png",
             "options": ["Rabbia", "Confusione"],
             "correctIndex": 1
         },
         {
+            "label":"Delusione",
             "img": "../images/emozioni-set-3/disappointment.png",
             "options": ["Delusione","Euforia"],
             "correctIndex": 0
         },
         {
+            "label":"Disgusto",
             "img": "../images/emozioni-set-3/disgust.png",
             "options": ["Soddisfazione", "Disgusto"],
             "correctIndex": 1
         },
         {
+            "label":"Invidia",
             "img": "../images/emozioni-set-3/envy.png",
             "options": ["Amore", "Invidia"],
             "correctIndex": 1
         },
         {
+            "label":"Senso di colpa",
             "img": "../images/emozioni-set-3/guilt.png",
             "options": ["Senso di colpa", "Soddisfazione"],
             "correctIndex": 0
         },
         {
-             "img": "../images/emozioni-set-3/jelousy.png",
+            "label":"Gelosia",
+            "img": "../images/emozioni-set-3/jelousy.png",
             "options": ["Gioia", "Gelosia"],
             "correctIndex": 1
         },
         {
+            "label":"Vergogna",
             "img": "../images/emozioni-set-3/shame.png",
             "options": ["Vergogna", "Fiducia"],
             "correctIndex": 0

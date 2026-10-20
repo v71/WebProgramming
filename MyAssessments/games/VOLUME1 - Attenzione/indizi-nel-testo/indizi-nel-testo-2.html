@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indizi nel testo</title>
+
+     <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <style>
+
+        /* =========================================
+            EMPTY GAME AREA
+        ========================================= */
+
+        #game-area {
+            width: 100%;
+            max-width: 1100px;
+            min-height: 300px;
+            margin: 0 auto 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+            border-radius: 20px;
+            background: var(--game-area-background);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* =========================================
+            COMBO BOXES CONTAINER & 2X2 GRID
+        ========================================= */
+
+        .combo-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .combo-item {
+            width: 100%;
+            padding: 8px;
+        }
+
+        /* WRAPPER RIGIDO PER EVITARE SLITTAMENTI DELLA FRECCIA */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+            display: inline-block;
+        }
+
+        .game-select {
+            width: 100%;
+            height: 42px;
+            padding: 0 45px 0 14px !important;
+            font-size: 1.25rem;
+            font-family: inherit;
+            color: var(--text);
+            background-color: var(--summary-background);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .game-select option {
+            background-color: var(--game-area-background);
+            color: var(--text);
+            padding: 10px;
+        }
+
+        .game-select:hover {
+            border-color: var(--accent);
+            background-color: #624b9e;
+        }
+
+        .game-select:focus {
+            border-color: var(--accent);
+        }
+
+       .game-select:disabled,
+       .game-select.selected {
+            color: #ffffff !important;
+            opacity: 1 !important; /* Evita lo sbiadimento grigio tipico dei select disabilitati su iOS/Firefox */
+        }
+
+        .game-select.error { 
+            animation: selectErrorShake 0.45s ease; 
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--wrong);
+        }
+
+        .game-select.help-correct {
+            background-color: #4caf50 !important;
+            border-color: #ffffff;
+        }
+    
+        @keyframes selectErrorShake { 
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); } 
+            40% { transform: translateX(10px); } 
+            60% { transform: translateX(-8px); } 
+            80% { transform: translateX(8px); } 
+            100% { transform: translateX(0); } 
+        }
+
+        /* =========================================
+            DEBUG AREA
+        ========================================= */
+
+        #debug-container {
+            width: 100%;
+        }
+
+        #debug-text-area {
+            width: 100%;
+            background: var(--summary-background);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: 'Segoe UI';
+            font-size: 1.25rem;
+            resize: none;
+            min-height: 120px;
+            outline: none;
+        }
+
+        #text-area {
+            width: 100%;
+            background: var(--summary-background);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: 'Segoe UI';
+            font-size: 1.25rem;
+            resize: none;
+            min-height: 120px;
+            outline: none;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 30px; }
+            h1, #progress-title { font-size: 1.9rem; }
+            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
+            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
+            #game-area { min-height: 260px; padding: 16px; }
+            .combo-container { grid-template-columns: 1fr; }
+        }
+    </style>
+
+    <style>
+
+        .cool-btn-2 {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn-2.smooth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
+        }
+
+        .cool-btn-2:hover {
+            transform: translateY(-2px);
+            background-color: #10b981;
+        }
+
+        .cool-btn-2:active {
+            transform: translateY(1px);
+        }
+
+        .cool-btn-2 {
+            pointer-events: none;
+        }
+
+        .game-buttons-container {
+            display: flex;
+            justify-content: center; /* Centra i bottoni in orizzontale */
+            align-items: center;     /* Allinea i bottoni in verticale */
+            gap: 12px;               /* Spazio tra i pulsanti */
+            margin: 0px 0;          /* Distanza sopra e sotto il blocco dei bottoni */
+            width: 100%;
+            flex-wrap: wrap;         /* Fa andare a capo i bottoni se lo schermo è troppo piccolo */
+        }
+
+        ::placeholder {
+            color: #ffffff;
+            opacity: 1; /* Ensures full opacity across different browsers */
+        }
+
+        /* For older browsers */
+        :-ms-input-placeholder {
+            color: #ffffff;
+        }
+        ::-ms-input-placeholder {
+            color: #ffffff;
+        }
+
+</style>
+
+</head>
+
+<body>
+
+    <!-- TITLE -->
+    <h1 id="game-title">
+        Indizi nel testo
+    </h1>
+
+    <!-- COUNTERS -->
+    <div id="game-stats">
+        <span>Parole Trovate: <strong id="word-count">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <!-- INFORMATION / INSTRUCTION BOX -->
+    <div id="instruction-banner">
+        Instruzion banner.
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span>Caricamento...</span>
+        </button>
+
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Help!</span>
+        </button>
+    </div>
+
+    <!-- GAME AREA WITH 4 TEXT INPUT BOXES IN A 2x2 GRID -->
+    <div id="game-area">
+        <div id="debug-container">
+            <textarea id="debug-text-area" readonly rows="5"></textarea>
+        </div>
+
+        <!-- 4 Action Buttons -->
+        <div class="game-buttons-container">
+            <button type="button" class="cool-btn-2" data-index="0">Primo Indizio</button>
+            <button type="button" class="cool-btn-2" data-index="1">Secondo Indizio</button>
+            <button type="button" class="cool-btn-2" data-index="2">Terzo Indizio</button>
+        </div>
+
+        <div id="debug-container">
+            <textarea id="text-area" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" rows="5"></textarea>
+        </div>
+
+    </div>
+
+    <!-- PROGRESS -->
+    <h1 id="progress-title">
+        Progresso
+    </h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"> </div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const DATA_URL = 'indizi-nel-testo.json';
+    const BLOCK_PASTE = false;        // true: impedisce di incollare testo nella textarea
+    const STRICT_MODE = true;         // true: il testo deve contenere SOLO le parole richieste
+    const ALLOWED_FILLER_WORDS = [];  // parole ignorate in modalità strict, es. ['e', 'di']
+
+    // Una "parola" è una sequenza di lettere/numeri; tutto il resto (spazi, punteggiatura) è separatore
+    const TOKEN_RE = /[\p{L}\p{N}]+/gu;
+
+    // --- Stato ---
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let isGameCompleted = false;
+    let isGameReady = false;   // true solo dopo il caricamento dei dati
+    let moveCount = 0;         // elementi comparsi nel testo + tentativi errati
+    let mistakeCount = 0;      // tentativi errati (solo modalità strict)
+    let wasSettledWrong = false;
+    let revealCount = 0;
+    let currentCategoryTitle = '';
+    let currentExercise = null;
+    let originalButtonTexts = [];
+    let solutions = [];
+    let solutionTokens = [];   // ogni soluzione come lista di parole normalizzate
+    let expectedWords = [];    // tutte le parole attese (somma delle soluzioni)
+    let expectedSet = new Set();
+    let presentSolutions = new Set(); // soluzioni presenti ORA nel testo
+    let totalCorrectItems = 0;
+    let foundCorrectCount = 0;
+
+    // --- Elementi (letti una sola volta) ---
+    const gameTitle = document.getElementById('game-title');
+    const gameArea = document.getElementById('game-area');
+    const actionControls = document.getElementById('action-controls');
+    const revealBtn = document.getElementById('reveal-btn');
+    const textArea = document.getElementById('text-area');
+    const helpButtons = document.querySelectorAll('.cool-btn-2');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const timeValueEl = document.getElementById('time-value');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameStats = document.getElementById('game-stats');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = document.getElementById('progress-title');
+
+    // Testo dell'esercizio (nell'HTML l'id è "debug-text-area"): è contenuto di gioco, non debug
+    const passageArea = document.getElementById('debug-text-area');
+    if (passageArea) passageArea.readOnly = true;
+
+    const hiddenOnSummary = [
+        gameArea, gameStats, instructionBanner, progressBar,
+        progressBarTitle, gameTitle, actionControls
+    ];
+
+    originalButtonTexts = Array.from(helpButtons).map(btn => btn.textContent);
+
+    function showPassage(text) {
+        if (passageArea) passageArea.value = typeof text === 'string' ? text : '';
+    }
+
+    // --- Analisi del testo ---
+    // Ignora maiuscole, accenti, punteggiatura e spazi multipli; confronta parola per parola.
+    function foldToken(token) {
+        return token.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
+    }
+
+    function tokenize(s) {
+        return (String(s).normalize('NFC').match(TOKEN_RE) || []).map(foldToken);
+    }
+
+    const fillerSet = new Set(ALLOWED_FILLER_WORDS.map(w => foldToken(String(w))));
+
+    function isValidExercise(exercise) {
+        return exercise
+            && Array.isArray(exercise.solutions)
+            && exercise.solutions.length > 0
+            && exercise.solutions.every(s => typeof s === 'string' && tokenize(s).length > 0);
+    }
+
+    function analyzeText(raw) {
+        const text = String(raw).normalize('NFC');
+        const all = (text.match(TOKEN_RE) || []).map(foldToken);
+        // L'ultima parola è "in corso" se il testo non finisce con un separatore
+        const hasPendingTail = all.length > 0 && /[\p{L}\p{N}]$/u.test(text);
+
+        const words = all
+            .map((w, i) => ({ w, pending: hasPendingTail && i === all.length - 1 }))
+            .filter(t => expectedSet.has(t.w) || !fillerSet.has(t.w)); // le parole tollerate non contano
+
+        const wordList = words.map(t => t.w);
+
+        // 1. CONTROLLO DEL NUMERO DI PAROLE: il testo non può avere più parole di quelle che servono
+        //    (es. 3). Se ne ha di più (ad esempio un testo lungo incollato) non si controlla nessuna
+        //    parola e il progresso resta a zero. Con 3 parole o meno si controlla subito.
+        const withinWordLimit = wordList.length <= expectedWords.length;
+
+        // 2. CONTROLLO DI OGNI PAROLA: appena una parola coincide, il progresso sale.
+        //    Ogni parola scritta può "consumare" una parola attesa
+        //    (una parola scritta una volta sola non vale per due soluzioni).
+        const present = new Set();
+        if (withinWordLimit) {
+            const counts = new Map();
+            wordList.forEach(w => counts.set(w, (counts.get(w) || 0) + 1));
+
+            solutionTokens.forEach((st, idx) => {
+                const needed = new Map();
+                st.forEach(t => needed.set(t, (needed.get(t) || 0) + 1));
+                const available = [...needed].every(([t, n]) => (counts.get(t) || 0) >= n);
+                if (available) {
+                    needed.forEach((n, t) => counts.set(t, counts.get(t) - n));
+                    present.add(idx);
+                }
+            });
+        }
+
+        return {
+            present,
+            // Tutte le soluzioni trovate, senza parole in più = risposta esatta
+            isExact: withinWordLimit && present.size === solutionTokens.length,
+            // Parole già "chiuse" da un separatore (l'ultima ancora in corso non conta)
+            completeCount: words.filter(t => !t.pending).length
+        };
+    }
+
+    // --- Punteggio e riepilogo ---
+    function computeScore() {
+        const raw = 100 - mistakeCount * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+
+        summaryTbody.innerHTML = '';
+        const row = document.createElement('tr');
+        addCell(row, currentCategoryTitle, true);
+        addCell(row, `${elapsedSeconds}s`);
+        addCell(row, String(moveCount));
+        addCell(row, String(revealCount));
+        addCell(row, String(computeScore()), true);
+        summaryTbody.appendChild(row);
+
+        summaryTotals.innerHTML = `
+            <div>Tempo Totale: <strong>${elapsedSeconds}s</strong></div>
+            <div>Mosse Totali: <strong>${moveCount}</strong></div>
+            <div>Aiuti Totali: <strong>${revealCount}</strong></div>
+            ${STRICT_MODE ? `<div>Tentativi errati: <strong>${mistakeCount}</strong></div>` : ''}
+        `;
+        summaryScreen.style.display = 'block';
+    }
+
+    // --- Timer ---
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    // --- UI ---
+    function updateWordCountDisplay() {
+        if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+    }
+
+    function updateProgressBar(value) {
+        if (progressBarFill) {
+            progressBarFill.style.width = (Math.min(Math.max(value, 0), 1) * 100) + '%';
+        }
+    }
+
+    function updateMovesDisplay() {
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealDisplay() {
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+    }
+
+    function resetTextArea(title) {
+        if (instructionBanner) instructionBanner.textContent = title;
+
+        if (textArea) {
+            textArea.value = '';
+            textArea.placeholder = 'Scrivi qui il testo includendo tutti gli elementi chiave...';
+            textArea.setAttribute('aria-label', 'Testo da scrivere');
+            textArea.classList.remove('selected', 'error', 'help-correct');
+            textArea.style.backgroundColor = '';
+            textArea.style.color = '';
+            textArea.style.borderColor = '';
+            textArea.disabled = false;
+        }
+    }
+
+    function showLoadError(message) {
+        isGameReady = false; // il gioco resta disabilitato
+        stopElapsedTimer();
+        if (instructionBanner) instructionBanner.textContent = message;
+        if (textArea) textArea.disabled = true;
+    }
+
+    function shakeTextArea() {
+        textArea.classList.remove('error');
+        void textArea.offsetWidth; // riavvia l'animazione
+        textArea.classList.add('error');
+        setTimeout(() => textArea.classList.remove('error'), 450);
+    }
+
+    // --- Help (mostra le soluzioni sui pulsanti) ---
+    function showHelp() {
+        if (isGameCompleted || !isGameReady) return;
+        revealCount++;
+        updateRevealDisplay();
+
+        helpButtons.forEach((btn, index) => {
+            if (solutions[index] !== undefined) {
+                btn.textContent = solutions[index];
+                btn.style.backgroundColor = '#4caf50';
+                btn.style.color = '#ffffff';
+                btn.classList.add('help-active');
+            }
+        });
+    }
+
+    function hideHelp() {
+        helpButtons.forEach((btn, index) => {
+            if (originalButtonTexts[index] !== undefined) {
+                btn.textContent = originalButtonTexts[index];
+            }
+            btn.style.backgroundColor = '';
+            btn.style.color = '';
+            btn.classList.remove('help-active');
+        });
+    }
+
+    // --- Animazioni (non bloccano mai lo stato di gioco) ---
+    async function playAnimations(showCheckmark, isFinal) {
+        if (showCheckmark && typeof Checkmark !== 'undefined') {
+            try {
+                await Checkmark.show({ element: textArea, size: 48, rise: 70, duration: 1600 });
+            } catch (err) {
+                console.warn('Checkmark animation failed:', err);
+            }
+        }
+
+        if (isFinal && typeof Confetti !== 'undefined') {
+            try {
+                await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+            } catch (err) {
+                console.warn('Confetti animation failed:', err);
+            }
+        }
+    }
+
+    // --- Inizializzazione ---
+    async function initGame() {
+        try {
+            isGameReady = false;
+            stopElapsedTimer();
+            if (revealBtn) revealBtn.innerHTML = '<span>💡 Help!</span>';
+
+            const response = await fetch(DATA_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
+            const data = await response.json();
+            if (!Array.isArray(data.categories) || data.categories.length === 0) {
+                showLoadError('Nessuna categoria disponibile.');
+                return;
+            }
+
+            const valid = data.categories.filter(isValidExercise);
+            if (valid.length < data.categories.length) {
+                console.warn(`${data.categories.length - valid.length} esercizi scartati perché non validi.`);
+            }
+            if (valid.length === 0) {
+                showLoadError('Nessun esercizio valido.');
+                return;
+            }
+
+            // Tutto valido: ora si può aggiornare lo stato
+            currentExercise = valid[Math.floor(Math.random() * valid.length)];
+            currentCategoryTitle = currentExercise.instruction;
+            solutions = [...currentExercise.solutions];
+            solutionTokens = solutions.map(tokenize);
+            expectedWords = solutionTokens.flat();
+            expectedSet = new Set(expectedWords);
+            totalCorrectItems = solutions.length;
+            presentSolutions = new Set();
+            foundCorrectCount = 0;
+
+            if (helpButtons.length < solutions.length) {
+                console.warn(`Ci sono ${helpButtons.length} pulsanti di aiuto per ${solutions.length} soluzioni: alcuni indizi non saranno visibili.`);
+            }
+
+            isGameCompleted = false;
+            moveCount = 0;
+            mistakeCount = 0;
+            wasSettledWrong = false;
+            revealCount = 0;
+
+            showPassage(currentExercise.text);
+            updateMovesDisplay();
+            updateRevealDisplay();
+            updateWordCountDisplay();
+            updateProgressBar(0);
+            resetTextArea(currentCategoryTitle);
+            startElapsedTimer();
+
+            document.body.classList.add('loaded');
+            isGameReady = true;
+        } catch (err) {
+            console.error(`Could not load ${DATA_URL}:`, err);
+            showLoadError('Errore nel caricamento del gioco.');
+        }
+    }
+
+    // --- Pulsante Help (tieni premuto) ---
+    if (revealBtn) {
+        let helpActive = false;
+        const startHelp = () => {
+            if (helpActive) return;
+            helpActive = true;
+            showHelp();
+        };
+        const endHelp = () => {
+            helpActive = false;
+            hideHelp();
+        };
+
+        // Premere Help non deve togliere il focus alla textarea (su mobile chiuderebbe la tastiera).
+        // Solo a gioco in corso: a gioco finito il click deve passare per aprire il riepilogo.
+        revealBtn.addEventListener('mousedown', (e) => { if (!isGameCompleted) e.preventDefault(); });
+        revealBtn.addEventListener('touchstart', (e) => { if (!isGameCompleted) e.preventDefault(); }, { passive: false });
+
+        revealBtn.addEventListener('pointerdown', startHelp);
+        revealBtn.addEventListener('pointerup', endHelp);
+        revealBtn.addEventListener('pointerleave', endHelp);
+        revealBtn.addEventListener('pointercancel', endHelp);
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+
+        // Tastiera (Spazio / Invio)
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp();
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') endHelp();
+        });
+        revealBtn.addEventListener('blur', endHelp);
+
+        // A gioco finito il tasto diventa "Fatto" e apre il riepilogo
+        revealBtn.addEventListener('click', () => {
+            if (isGameCompleted) showSummaryScreen();
+        });
+    }
+
+    // --- Validazione in tempo reale ---
+    if (textArea) {
+        if (BLOCK_PASTE) {
+            textArea.addEventListener('paste', e => e.preventDefault());
+        }
+
+        textArea.addEventListener('input', () => {
+            if (isGameCompleted || !isGameReady) return;
+
+            const analysis = analyzeText(textArea.value);
+
+            // 1. Elementi chiave trovati ORA nel testo (subito, parola per parola, finché il testo non supera il numero di parole attese)
+            let newlyFound = 0;
+            analysis.present.forEach(idx => {
+                if (!presentSolutions.has(idx)) newlyFound++;
+            });
+            presentSolutions = analysis.present;
+            foundCorrectCount = presentSolutions.size;
+
+            // 2. Tentativo errato (strict): il testo ha già tutte le parole "chiuse" che dovrebbe avere
+            //    (o più) ma non coincide con la risposta. Si conta una volta sola finché resta in questo stato.
+            let newMistake = false;
+            if (STRICT_MODE) {
+                const settledWrong = !analysis.isExact && analysis.completeCount >= expectedWords.length;
+                if (settledWrong && !wasSettledWrong) {
+                    mistakeCount++;
+                    newMistake = true;
+                }
+                wasSettledWrong = settledWrong;
+            }
+
+            if (newlyFound > 0) moveCount++;
+            if (newMistake) moveCount++;
+
+            // Aggiorna TUTTO lo stato in modo sincrono, prima delle animazioni
+            updateMovesDisplay();
+            updateWordCountDisplay();
+            updateProgressBar(foundCorrectCount / totalCorrectItems);
+
+            // Strict: numero di parole giusto e stesse parole. Non strict: bastano tutte le soluzioni.
+            const allPresent = totalCorrectItems > 0 && foundCorrectCount === totalCorrectItems;
+            const justCompleted = STRICT_MODE ? analysis.isExact : allPresent;
+            if (justCompleted) {
+                isGameCompleted = true;
+                stopElapsedTimer(); // il tempo si ferma all'ultimo controllo valido, non dopo le animazioni
+                textArea.disabled = true;
+                if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
+            }
+
+            if (newMistake) shakeTextArea();
+            if (newlyFound > 0 || justCompleted) playAnimations(newlyFound > 0, justCompleted);
+        });
+    }
+
+    initGame();
+});
+
+
+    </script>
+    
+</body>
+
+</html>

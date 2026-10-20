@@ -3,41 +3,49 @@
     "label": "Osserva l'immagine e scegli, tra le 6 opzioni, l'emozione che la descrive meglio",
     "rounds": [
         {
+            "label":"Stupore",
             "img": "../images/emozioni-set-1/amazement.png",
             "options": ["Stupore", "Rabbia","Paura","Tristezza","Euforia","Disgusto"],
             "correctIndex": 0
         },
         {
+            "label":"Calma",
             "img": "../images/emozioni-set-1/calm.png",
             "options": ["Calma", "Tristezza","Paura","Ansia","Confusione","Insoddisfazione"],
             "correctIndex": 0
         },
         {
+            "label":"Euforia",
             "img": "../images/emozioni-set-1/euforia.png",
             "options": ["Disgusto","Euforia","Insoddisfazione","Invidia","Rabbia","Ansia"],
             "correctIndex": 1
         },
         {
+            "label":"Gioia",
             "img": "../images/emozioni-set-1/joy.png",
             "options": ["Paura", "Gioia","Ansia","Confusione","Disgusto","Invidia"],
             "correctIndex": 1
         },
         {
+            "label":"Amore",
             "img": "../images/emozioni-set-1/love.png",
             "options": ["Disgusto", "Amore","Confusione","Ansia","Invidia","Rabbia"],
             "correctIndex": 1
         },
         {
+            "label":"Soddisfazione",
             "img": "../images/emozioni-set-1/satisfaction.png",
             "options": ["Soddisfazione", "Rabbia","Paura","Ansia","Confusione","Invidia"],
             "correctIndex": 0
         },
         {
-             "img": "../images/emozioni-set-1/surprise.png",
+            "label":"Sorpresa",
+            "img": "../images/emozioni-set-1/surprise.png",
             "options": ["Gioia", "Sorpresa","Invidia","Ansia","Disgusto","Rabbia"],
             "correctIndex": 1
         },
         {
+            "label":"Fiducia",
             "img": "../images/emozioni-set-1/trust.png",
             "options": ["Fiducia", "Rabbia","Disgusto","Ansia","Insoddisfazione","Invidia"],
             "correctIndex": 0

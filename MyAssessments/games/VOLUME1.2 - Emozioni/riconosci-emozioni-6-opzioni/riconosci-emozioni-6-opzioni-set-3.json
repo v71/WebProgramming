@@ -3,41 +3,49 @@
     "label": "Osserva l'immagine e scegli, tra le 6 opzioni, l'emozione che la descrive meglio",
     "rounds": [
         {
+            "label":"Ansia",
             "img": "../images/emozioni-set-3/anxiety.png",
-            "options": ["Ansia", "Fiducia","Invidia","Felicità","Amore","Invidia"],
+            "options": ["Ansia", "Fiducia","Invidia","Felicità","Amore","Rabbia"],
             "correctIndex": 0
         },
         {
+            "label":"Confusione",
             "img": "../images/emozioni-set-3/confusion.png",
             "options": ["Rabbia", "Confusione","Euforia","Gioia","Disgusto","Fiducia"],
             "correctIndex": 1
         },
         {
+            "label":"Delusione",
             "img": "../images/emozioni-set-3/disappointment.png",
             "options": ["Delusione","Euforia","Fiducia","Gioia","Disgusto","Senso di colpa"],
             "correctIndex": 0
         },
         {
+            "label":"Disgusto",
             "img": "../images/emozioni-set-3/disgust.png",
             "options": ["Soddisfazione", "Disgusto","Invidia","Amore","Gioia","Fiducia"],
             "correctIndex": 1
         },
         {
+            "label":"Invidia",
             "img": "../images/emozioni-set-3/envy.png",
             "options": ["Amore", "Invidia","Soddisfazione","Disgusto","Euforia","Gioia"],
             "correctIndex": 1
         },
         {
+            "label":"Senso di colpa",
             "img": "../images/emozioni-set-3/guilt.png",
             "options": ["Senso di colpa", "Soddisfazione","Amore","Ansia","Disgusto","Gioia"],
             "correctIndex": 0
         },
         {
-             "img": "../images/emozioni-set-3/jelousy.png",
+            "label":"Gelosia",
+            "img": "../images/emozioni-set-3/jelousy.png",
             "options": ["Gioia", "Gelosia","Disgusto","Amore","Fiducia","Rabbia"],
             "correctIndex": 1
         },
         {
+            "label":"Vergogna",
             "img": "../images/emozioni-set-3/shame.png",
             "options": ["Vergogna", "Fiducia","Gioia","Amore","Ansia","Soddisfazione"],
             "correctIndex": 0

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elemento che rompe lo schema</title>
+
+     <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    
+    <!-- Main CSS File -->
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <style>
+
+        #game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+        }
+
+    </style>
+
+    <style>
+        
+      .grid-button {
+                width: 140px;          
+                height: 140px;         
+                border: 2px solid #000000; 
+                border-radius: 12px;
+                background-color: var(--game-area-background);
+                display: flex;        
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 20px;          
+                box-sizing: border-box;
+                transition:
+                    background 0.2s ease,
+                    border-color 0.2s ease,
+                    transform 0.15s ease;
+        }
+        
+        /* Ensures the PNG scales proportionally and stays centered */
+        
+        .grid-button img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                pointer-events: none; 
+        }
+        
+
+    </style>
+    
+    <style>
+
+
+        .button-grid {
+            width: 100%;
+            display: flex;           /* Changes layout to flexible box */
+            justify-content: center; /* Centers the group of buttons */
+            gap: 32px;                /* Controls the exact space between buttons (make it smaller, e.g., 6px or 8px) */
+        }
+
+        .button-grid:last-of-type .grid-button:hover:not(:disabled) {
+            border-color: var(--grid-btn-hovered-border-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            background: var(--grid-btn-hovered);   /* viola più chiaro, adatta al tuo gusto */
+            z-index: 5;
+        }
+
+        .button-grid:last-of-type .grid-button.selected {
+            background: #ff9800;
+            border-color: #000205;
+        }
+
+        .button-grid:last-of-type .grid-button.error {
+            animation: buttonErrorShake 0.45s ease;
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.15);
+        }
+
+        /* Bottom button group (Interactive choices) */
+        
+        .button-grid:last-of-type .grid-button {
+            background: #7931b4;
+        }
+        
+        .button-grid:first-of-type .grid-button {
+            pointer-events: none; 
+            cursor: default;     
+            background-color: #7931b4; 
+        }
+        
+        .button-grid .grid-button.help-correct {
+            background: #4caf50 !important;
+            border-color: #ffffff !important;
+        }
+        
+        @media (max-width: 700px) { 
+            .button-grid { gap: 8px; }
+            .grid-button {
+                min-height: 46px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @keyframes buttonErrorShake { 
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); } 
+            40% { transform: translateX(10px); } 
+            60% { transform: translateX(-8px); } 
+            80% { transform: translateX(8px); } 
+            100% { transform: translateX(0); } 
+        }
+        
+    </style>
+
+    <style>
+
+        #game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+        }
+
+        .button-divider {
+            border: none;
+            border-top: 2px solid var(--border); /* Adjust color to fit your theme */
+            margin: 5px 0;                      /* Adjust spacing above and below */
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- TITLE -->
+    <h1 id="game-title">
+        titolo gioco
+    </h1>
+
+    <!-- COUNTERS -->
+    <div id="game-stats">
+        <span>Forme Corrette: <strong id="word-count">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <!-- INFORMATION / INSTRUCTION BOX -->
+
+    <div id="instruction-banner">
+        Instruzion banner.
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span>Caricamento...</span>
+        </button>
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Help!</span>
+        </button>
+    </div>
+
+    <!-- EMPTY GAME AREA -->
+    <div id="game-area">
+        <!-- Read-only debug text area placed above the buttons -->
+
+       <h2>Prima serie</h2>
+
+        <!-- TOP BUTTON GROUP (Shapes) -->
+        <div class="button-grid">
+            <button class="grid-button">■</button>
+            <button class="grid-button">●</button>
+            <button class="grid-button">▲</button>
+            <button class="grid-button">■</button>
+            <button class="grid-button">●</button>
+            <button class="grid-button">▲</button>
+        </div>
+       
+        <h2>Seconda serie</h2>
+       
+        <!-- BOTTOM BUTTON GROUP (Interactive Grid) -->
+        <div class="button-grid">
+            <button class="grid-button" data-index="0"></button>
+            <button class="grid-button" data-index="1"></button>
+            <button class="grid-button" data-index="2"></button>
+            <button class="grid-button" data-index="3"></button>
+            <button class="grid-button" data-index="4"></button>
+            <button class="grid-button" data-index="5"></button>
+        </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <h1 id="progress-title">
+        Progresso
+    </h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"> </div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const DATA_URL = 'elemento-che-rompe-lo-schema.json';
+    const IMAGE_LOAD_TIMEOUT_MS = 8000;
+
+    // --- Stato ---
+    let buttons = [];
+    let descriptions = [];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let totalCorrectItems = 0;
+    let foundCorrectCount = 0;
+    let isGameCompleted = false;
+    let isGameReady = false; // true solo dopo caricamento dati E immagini
+    let moveCount = 0;
+    let revealCount = 0;
+    let currentCategoryTitle = '';
+
+    // --- Elementi (letti una sola volta) ---
+    const gameTitle = document.getElementById('game-title');
+    const gameArea = document.getElementById('game-area');
+    const actionControls = document.getElementById('action-controls');
+    const revealBtn = document.getElementById('reveal-btn');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const timeValueEl = document.getElementById('time-value');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameStats = document.getElementById('game-stats');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = document.getElementById('progress-title');
+
+    // Griglie: meglio con id (#top-grid / #bottom-grid). Se non esistono si usano i selettori
+    // originali come ripiego.
+    const topGrid = document.getElementById('top-grid')
+        || document.querySelector('.button-grid:first-of-type');
+    const bottomGrid = document.getElementById('bottom-grid')
+        || document.querySelector('.button-grid:last-of-type');
+    const topGridButtons = (topGrid && topGrid !== bottomGrid)
+        ? topGrid.querySelectorAll('.grid-button') : [];
+    const gridButtons = bottomGrid ? bottomGrid.querySelectorAll('.grid-button') : [];
+
+    const hiddenOnSummary = [
+        gameArea, gameStats, instructionBanner, progressBar,
+        progressBarTitle, gameTitle, actionControls
+    ];
+
+    // I pulsanti in alto sono solo "esempi": non devono essere raggiungibili da tastiera
+    topGridButtons.forEach(button => {
+        button.tabIndex = -1;
+        button.setAttribute('aria-disabled', 'true');
+    });
+
+    // --- Effetto "dim" a fine partita ---
+    // Stili di default (modificabili: basta ridefinire .dimmed / .keep-bright nel tuo CSS)
+    (function injectDimStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            button.grid-button.dimmed {
+                opacity: 0.3;
+                filter: grayscale(0.7);
+                transition: opacity 0.4s ease, filter 0.4s ease;
+            }
+            button.grid-button.keep-bright,
+            button.grid-button.keep-bright:disabled {
+                opacity: 1;
+                filter: none;
+            }
+        `;
+        document.head.prepend(style);
+    })();
+
+    // Attenua tutti i pulsanti tranne quelli corretti
+    function dimAllExceptCorrect() {
+        // Pulsanti in alto (esempi): sempre attenuati
+        topGridButtons.forEach(button => button.classList.add('dimmed'));
+
+        // Pulsanti in basso: attenuati tranne quelli corretti
+        gridButtons.forEach(button => {
+            const item = buttons[Number(button.dataset.index)];
+            if (item && item.value === true) {
+                button.classList.add('keep-bright');
+            } else {
+                button.classList.add('dimmed');
+            }
+        });
+    }
+
+    // --- Riepilogo ---
+    function computeScore() {
+        const mistakes = Math.max(0, moveCount - totalCorrectItems);
+        const raw = 100 - mistakes * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+
+        summaryTbody.innerHTML = '';
+        const row = document.createElement('tr');
+        addCell(row, currentCategoryTitle, true);
+        addCell(row, `${elapsedSeconds}s`);
+        addCell(row, String(moveCount));
+        addCell(row, String(revealCount));
+        addCell(row, String(computeScore()), true);
+        summaryTbody.appendChild(row);
+
+        summaryTotals.innerHTML = `
+            <div>Tempo Totale: <strong>${elapsedSeconds}s</strong></div>
+            <div>Mosse Totali: <strong>${moveCount}</strong></div>
+            <div>Aiuti Totali: <strong>${revealCount}</strong></div>
+        `;
+        summaryScreen.style.display = 'block';
+    }
+
+    // --- Timer ---
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    // --- UI ---
+    function updateWordCountDisplay() {
+        if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+    }
+
+    function updateProgressBar(value) {
+        if (progressBarFill) {
+            progressBarFill.style.width = (Math.min(Math.max(value, 0), 1) * 100) + '%';
+        }
+    }
+
+    function updateMovesDisplay() {
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealDisplay() {
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+    }
+
+    function showLoadError(message) {
+        isGameReady = false; // il gioco resta disabilitato
+        stopElapsedTimer();
+        if (instructionBanner) instructionBanner.textContent = message;
+    }
+
+    // --- Immagini ---
+    function setButtonImage(button, src, alt) {
+        button.textContent = '';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = alt;
+        img.draggable = false;
+        button.appendChild(img);
+    }
+
+    // Precarica le immagini; non blocca mai il gioco: errori e timeout vengono solo segnalati.
+    function preloadImages(urls) {
+        const unique = [...new Set(urls.filter(Boolean))];
+        return Promise.all(unique.map(src => new Promise(resolve => {
+            const img = new Image();
+            let timer;
+            const done = (ok) => {
+                clearTimeout(timer);
+                resolve({ src, ok });
+            };
+            timer = setTimeout(() => done(false), IMAGE_LOAD_TIMEOUT_MS);
+            img.onload = () => done(true);
+            img.onerror = () => done(false);
+            img.src = src;
+        })));
+    }
+
+    function updateGridUI(title) {
+        if (instructionBanner) instructionBanner.textContent = title;
+
+        // Pulsanti in alto (descrizioni)
+        topGridButtons.forEach((button, index) => {
+            const item = descriptions[index];
+            button.classList.remove('dimmed');
+            if (item && item.shape) {
+                setButtonImage(button, item.shape, item.alt || `Esempio ${index + 1}`);
+                button.style.display = '';
+            } else {
+                button.style.display = 'none';
+            }
+        });
+
+        // Pulsanti in basso (da cliccare): le celle in eccesso vengono nascoste
+        gridButtons.forEach(button => {
+            const index = Number(button.dataset.index);
+            const item = buttons[index];
+            button.classList.remove('selected', 'error', 'help-correct', 'dimmed', 'keep-bright');
+            if (item) {
+                setButtonImage(button, item.label, item.alt || `Immagine ${index + 1}`);
+                button.style.display = '';
+                button.disabled = false;
+            } else {
+                button.style.display = 'none';
+                button.disabled = true;
+            }
+        });
+    }
+
+    // --- Inizializzazione ---
+    async function initGame() {
+        try {
+            isGameReady = false;
+            stopElapsedTimer();
+
+            if (revealBtn) revealBtn.innerHTML = '<span>💡 Help</span>';
+
+            const response = await fetch(DATA_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
+            const data = await response.json();
+            if (!Array.isArray(data.categories) || data.categories.length === 0) {
+                showLoadError('Nessuna categoria disponibile.');
+                return;
+            }
+
+            const category = data.categories[Math.floor(Math.random() * data.categories.length)];
+            const newButtons = Array.isArray(category.buttons) ? [...category.buttons] : [];
+            const newDescriptions = Array.isArray(category.descriptions) ? [...category.descriptions] : [];
+            const newTotal = newButtons.filter(b => b.value === true).length;
+
+            if (newButtons.length === 0 || newTotal === 0) {
+                showLoadError('Categoria non valida: nessuna risposta corretta.');
+                return;
+            }
+
+            // Tutto valido: ora si può aggiornare lo stato
+            buttons = newButtons;
+            descriptions = newDescriptions;
+            currentCategoryTitle = category.instruction;
+            totalCorrectItems = newTotal;
+
+            isGameCompleted = false;
+            moveCount = 0;
+            revealCount = 0;
+            foundCorrectCount = 0;
+
+            updateMovesDisplay();
+            updateRevealDisplay();
+            updateWordCountDisplay();
+            updateProgressBar(0);
+            updateGridUI(currentCategoryTitle);
+
+            if (gameTitle && data.title) gameTitle.textContent = data.title;
+            document.body.classList.add('loaded');
+
+            // Il timer parte solo quando tutte le immagini sono pronte
+            const results = await preloadImages([
+                ...descriptions.map(d => d.shape),
+                ...buttons.map(b => b.label)
+            ]);
+            const failed = results.filter(r => !r.ok).map(r => r.src);
+            if (failed.length) console.warn('Immagini non caricate:', failed);
+
+            startElapsedTimer();
+            isGameReady = true;
+        } catch (err) {
+            console.error(`Could not load ${DATA_URL}:`, err);
+            showLoadError('Errore nel caricamento del gioco.');
+        }
+    }
+
+    // --- Pulsante Help (tieni premuto) ---
+    if (revealBtn) {
+        const showHelp = () => {
+            if (isGameCompleted || !isGameReady) return;
+            revealCount++;
+            updateRevealDisplay();
+            gridButtons.forEach(button => {
+                const index = Number(button.dataset.index);
+                if (buttons[index] && buttons[index].value === true) {
+                    button.classList.add('help-correct');
+                }
+            });
+        };
+
+        const hideHelp = () => {
+            gridButtons.forEach(button => button.classList.remove('help-correct'));
+        };
+
+        // Pointer events: mouse, touch e penna, senza doppi conteggi
+        let helpActive = false;
+        const startHelp = () => {
+            if (helpActive) return;
+            helpActive = true;
+            showHelp();
+        };
+        const endHelp = () => {
+            helpActive = false;
+            hideHelp();
+        };
+
+        revealBtn.addEventListener('pointerdown', startHelp);
+        revealBtn.addEventListener('pointerup', endHelp);
+        revealBtn.addEventListener('pointerleave', endHelp);
+        revealBtn.addEventListener('pointercancel', endHelp);
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+
+        // Tastiera (Spazio / Invio)
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp();
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') endHelp();
+        });
+        revealBtn.addEventListener('blur', endHelp);
+
+        // A gioco finito il tasto diventa "Fatto" e apre il riepilogo
+        revealBtn.addEventListener('click', () => {
+            if (isGameCompleted) showSummaryScreen();
+        });
+    }
+
+    // --- Click sulla griglia ---
+    gridButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            if (isGameCompleted || !isGameReady || button.disabled) return;
+
+            const index = Number(button.dataset.index);
+            if (!buttons[index]) return;
+
+            moveCount++;
+            updateMovesDisplay();
+
+            if (buttons[index].value !== true) {
+                button.classList.remove('error');
+                void button.offsetWidth; // riavvia l'animazione di shake
+                button.classList.add('error');
+                setTimeout(() => button.classList.remove('error'), 400);
+                return;
+            }
+
+            // Risposta corretta: aggiorna TUTTO lo stato in modo sincrono, prima delle animazioni
+            button.disabled = true;
+            button.classList.add('selected');
+            foundCorrectCount++;
+            updateWordCountDisplay();
+            updateProgressBar(foundCorrectCount / totalCorrectItems);
+
+            const justCompleted = foundCorrectCount === totalCorrectItems;
+            if (justCompleted) {
+                isGameCompleted = true;
+                stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
+                gridButtons.forEach(btn => { btn.disabled = true; });
+                dimAllExceptCorrect();
+                if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
+            }
+
+            // Solo dopo: animazioni
+            if (typeof Checkmark !== 'undefined') {
+                try {
+                    await Checkmark.show({ element: button, size: 48, rise: 70, duration: 1600 });
+                } catch (err) {
+                    console.warn('Checkmark animation failed:', err);
+                }
+            }
+
+            if (justCompleted && typeof Confetti !== 'undefined') {
+                try {
+                    await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                    await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                    await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                } catch (err) {
+                    console.warn('Confetti animation failed:', err);
+                }
+            }
+        });
+    });
+
+    initGame();
+});
+
+
+</script>
+
+</body>
+</html>

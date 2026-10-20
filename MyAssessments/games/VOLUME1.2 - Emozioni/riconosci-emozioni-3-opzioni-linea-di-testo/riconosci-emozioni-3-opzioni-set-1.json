@@ -3,48 +3,56 @@
     "label": "Osserva l'immagine e scegli, tra le 3 opzioni, l'emozione che la descrive meglio",
     "rounds": [
         {
+            "label":"Stupore",
             "sentence": "Quando vedo qualcosa di incredibile, provo {blank}!",
             "img": "../images/emozioni-set-1/amazement.png",
             "options": ["Stupore", "Rabbia","Disgusto"],
             "correctIndex": 0
         },
         {
+            "label":"Calma",
             "sentence": "Una giornata tranquilla mi fa provare {blank}!",
             "img": "../images/emozioni-set-1/calm.png",
             "options": ["Calma", "Tristezza","Euforia"],
             "correctIndex": 0
         },
         {
+            "label":"Euforia",
             "sentence": "Quando vinco una gara, mi sento pieno di {blank}!",
             "img": "../images/emozioni-set-1/euforia.png",
             "options": ["Disgusto","Euforia","Ansia"],
             "correctIndex": 1
         },
         {
+            "label":"Gioia",
             "sentence": "Quando gioco con i miei amici, provo {blank}!",
             "img": "../images/emozioni-set-1/joy.png",
             "options": ["Paura", "Gioia","Tristezza"],
             "correctIndex": 1
         },
         {
+            "label":"Amore",
             "sentence": "Quando penso alla mia famiglia, provo {blank}!",
             "img": "../images/emozioni-set-1/love.png",
             "options": ["Disgusto", "Amore","Paura"],
             "correctIndex": 1
         },
         {
+            "label":"Soddisfazione",
             "sentence": "Quando finisco un compito difficile, provo {blank}!",
             "img": "../images/emozioni-set-1/satisfaction.png",
             "options": ["Soddisfazione", "Rabbia","Paura"],
             "correctIndex": 0
         },
         {
+            "label":"Sorpresa",
             "sentence": "Quando succede qualcosa di inaspettato, provo {blank}!",
             "img": "../images/emozioni-set-1/surprise.png",
             "options": ["Gioia", "Sorpresa","Fiducia"],
             "correctIndex": 1
         },
         {
+            "label":"Fiducia",
             "sentence": "Quando mi fido di qualcuno, provo {blank}!",
             "img": "../images/emozioni-set-1/trust.png",
             "options": ["Fiducia", "Rabbia","Ansia"],

@@ -338,8 +338,7 @@
                     // Clean punctuation to map correctly against solutions/connectors
                     span.dataset.word = token.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?«»]/g, "").trim().toLowerCase();
 
-
-                   span.addEventListener('click', () => {
+                    span.addEventListener('click', () => {
                     if (isGameCompleted || isGameLoading) return;
 
                     const cleanWord = span.dataset.word;

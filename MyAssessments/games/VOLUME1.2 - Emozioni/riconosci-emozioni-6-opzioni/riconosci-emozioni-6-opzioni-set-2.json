@@ -3,41 +3,49 @@
     "label": "Osserva l'immagine e scegli, tra le 6 opzioni, l'emozione che la descrive meglio",
     "rounds": [
         {
+            "label":"Rabbia",
             "img": "../images/emozioni-set-2/anger.png",
             "options": ["Rabbia", "Amore","Disgusto","Gioia","Fiducia","Gelosia"],
             "correctIndex": 0
         },
         {
+            "label":"Curiosità",
             "img": "../images/emozioni-set-2/curiosity.png",
             "options": ["Gioia", "Curiosità","Rabbia","Insoddisfazione","Disgusto","invidia"],
             "correctIndex": 1
         },
         {
+            "label":"Paura",
             "img": "../images/emozioni-set-2/fear.png",
             "options": ["Amore","Paura","Felicità","Curiosità","Disgusto","Gratitudine"],
             "correctIndex": 1
         },
         {
+            "label":"Gratitudine",
             "img": "../images/emozioni-set-2/gratitude.png",
             "options": ["Paura", "Gratitudine","Curiosità","Disgusto","Disprezzo","Insoddisfazione"],
             "correctIndex": 1
         },
         {
+            "label":"Ferita emotiva",
             "img": "../images/emozioni-set-2/hurt.png",
             "options": ["Disgusto", "Ferita emotiva","Gioia","Amore","Gioia","Gratitudine"],
             "correctIndex": 1
         },
         {
+            "label":"Ispirazione",
             "img": "../images/emozioni-set-2/inspiration.png",
             "options": ["Ispirazione", "Rabbia","Paura","Disgusto","Disprezzo","Ansia"],
             "correctIndex": 0
         },
         {
-             "img": "../images/emozioni-set-2/pride.png",
+            "label":"Orgoglio",
+            "img": "../images/emozioni-set-2/pride.png",
             "options": ["Paura", "Orgoglio","Tristezza","Ansia","Disprezzo","Disgusto"],
             "correctIndex": 1
         },
         {
+            "label":"Tristezza",
             "img": "../images/emozioni-set-2/sadness.png",
             "options": ["Tristezza", "Gioia","Disgusto","Amore","Gioia","Gratitudine"],
             "correctIndex": 0

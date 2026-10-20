@@ -3,41 +3,49 @@
     "label": "Osserva l'immagine e scegli, tra le 3 opzioni, l'emozione che la descrive meglio",
     "rounds": [
         {
+            "label":"Stupore",
             "img": "../images/emozioni-set-1/amazement.png",
             "options": ["Stupore", "Rabbia","Paura"],
             "correctIndex": 0
         },
         {
+            "label":"Calma",
             "img": "../images/emozioni-set-1/calm.png",
             "options": ["Calma", "Tristezza","Paura"],
             "correctIndex": 0
         },
         {
+            "label":"Euforia",
             "img": "../images/emozioni-set-1/euforia.png",
             "options": ["Disgusto","Euforia","Insoddisfazione"],
             "correctIndex": 1
         },
         {
+            "label":"Gioia",
             "img": "../images/emozioni-set-1/joy.png",
             "options": ["Paura", "Gioia","Ansia"],
             "correctIndex": 1
         },
         {
+            "label":"Amore",
             "img": "../images/emozioni-set-1/love.png",
             "options": ["Disgusto", "Amore","Confusione"],
             "correctIndex": 1
         },
         {
+            "label":"Soddisfazione",
             "img": "../images/emozioni-set-1/satisfaction.png",
             "options": ["Soddisfazione", "Rabbia","Paura"],
             "correctIndex": 0
         },
         {
-             "img": "../images/emozioni-set-1/surprise.png",
+            "label":"Stupore",
+            "img": "../images/emozioni-set-1/surprise.png",
             "options": ["Gioia", "Stupore","Invidia"],
             "correctIndex": 1
         },
         {
+            "label":"Fiducia",
             "img": "../images/emozioni-set-1/trust.png",
             "options": ["Fiducia", "Rabbia","Disgusto"],
             "correctIndex": 0
