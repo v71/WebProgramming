@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <title>Riempi i vuoti</title>
+
+     <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <style>
+        :root {
+            --card-w: 72px;
+            --card-h: 94px;
+
+            --body-background: #2a113d;
+            --game-area-background: #4a1d6e;
+            --summary-background: #553d94;
+
+            --accent: #ff9800;
+            --accent-2: #06b6d4;
+            --correct: #ffffff;
+            --wrong: #ef4444;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #000205;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+                background:
+                    radial-gradient( circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40% ),
+                    radial-gradient( circle at 90% 90%, rgba(6, 182, 212, 0.06),  transparent 40% ),
+                    var(--body-background);
+                color: var(--text);
+                margin: 0;
+                padding: 20px 20px 40px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                height: 100dvh;
+                min-height: 100vh;
+                overflow: hidden;
+        }
+
+        /* =========================================
+           TEMPORARLY HIDES THE BODY TO AVOID ABRUPT CHANGES FOR THE RAW CONTENT
+         ========================================= */
+
+        body {
+            opacity: 0;
+            transition: opacity 0.2s ease-in;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .controls {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 52px;
+        }
+
+        #game-stats,
+        .stats-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--game-area-background);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        #game-area {
+            width: 100%;
+            max-width: 1050px;
+            flex: 0 1 auto;
+            min-height: 0;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .dd-wrap {
+            width: 100%;
+            max-width: 1050px;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .dd-tray {
+            background: var(--game-area-background);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            min-height: 64px;
+            margin-bottom: 12px;
+            flex: 0 0 auto;
+        }
+
+        .dd-empty {
+            color: var(--text-dim);
+            padding: 0 6px;
+        }
+
+        .dd-chip {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1;
+            background: #7931b4;
+            color: #fff;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 11px 18px;
+            margin: 0;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        .dd-chip:hover:not(:disabled) {
+            background: #ffffff;
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-4px);
+        }
+
+        .dd-chip.dd-used,
+        .dd-chip.dd-used:hover {
+            opacity: 0.4;
+            cursor: default;
+            filter: none;
+            transform: none;
+            background: #7931b4;
+            color: #fff;
+        }
+
+        .dd-chip.dd-wrong {
+            border-color: #ef4444;
+            background: #40285c;
+            color: #ef4444;
+        }
+
+        .dd-chip:focus-visible {
+            outline: 3px solid var(--accent-2);
+            outline-offset: 2px;
+        }
+
+        .dd-text {
+            background: #37275e;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: clamp(14px, 2.5vw, 28px);
+            padding-bottom: 20px;
+            font-size: 20px;
+            line-height: 2.3;
+            flex: 0 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            transition:
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease,
+                color 0.25s ease;
+        }
+
+        .dd-text.dd-peek-container {
+            border-color: #ffffff !important;
+            transition: none !important;
+        }
+
+        .dd-blank {
+            display: inline-block;
+            position: relative;
+            height: 1.7em;
+            margin: 0 2px;
+            padding: 0 14px;
+            white-space: nowrap;
+            text-align: center;
+            font-family: inherit;
+            font-size: 0.88em;
+            font-weight: 600;
+            line-height: calc(1.7em - 4px);
+            color: var(--text);
+            background: #553d94;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            vertical-align: middle;
+            cursor: default;
+            transition:
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease,
+                color 0.25s ease;
+        }
+
+        .dd-blank.dd-current {
+            border-style: solid;
+            border-color: #ffffff;
+            background: #544b7a;
+            border-radius: 6px;
+        }
+
+        .dd-blank.dd-error {
+            border-color: #ef4444;
+            background: #5c2635;
+            color: #ff6b6b;
+        }
+
+        .dd-text.dd-peeking .dd-blank.dd-current {
+            border-color: #ffffff !important;
+            background: #10b981 !important;
+            transition: none !important;
+        }
+
+        .dd-sizer {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .dd-blank.dd-filled {
+            border-style: solid;
+            border-color: var(--border);
+            background: #5d258a;
+            border-radius: 6px;
+            color: #ffffff;
+        }
+
+        .dd-blank.dd-filled .dd-sizer {
+            visibility: visible;
+        }
+
+        .dd-text.dd-peeking {
+            border-color: #ffffff !important;
+            transition: none !important;
+        }
+
+        .dd-text.dd-peeking .dd-blank:not(.dd-filled) {
+            border-style: solid !important;
+            border-color: #ffffff !important;
+            background: #10b981 !important;
+            color: #ffffff !important;
+            transition: none !important;
+        }
+
+        .dd-text.dd-peeking .dd-blank:not(.dd-filled) .dd-sizer {
+            visibility: visible !important;
+        }
+
+        .dd-shake {
+            animation: dd-shake 0.12s;
+        }
+
+        .dd.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            cursor: default;
+            filter: grayscale(100%);
+        }
+
+        @keyframes dd-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .dd-shake { animation: none; }
+        }
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--game-area-background);
+            border: 1px solid var(--border);
+            height: 12px;
+            border-radius: 99px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient( 135deg,#6366f1 0%,#a855f7 100% );
+            width: 0%;
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #4f46e5;
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #10b981;
+        }
+
+        .cool-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* =========================================================
+           FINAL REPORT
+           ========================================================= */
+
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 1050px;
+            background: var(--game-area-background);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 28px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #summary-screen h2 {
+            margin: 0 0 22px;
+            color: var(--accent);
+            font-size: 2rem;
+        }
+
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0 auto 20px;
+            background: #37275e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .summary-table th,
+        .summary-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .summary-table th {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .summary-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        #summary-totals {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.8;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="game-title">
+        Il ciclo dell'acqua
+    </h1>
+
+    <div id="game-stats">
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
+        <span>Round: <strong id="round-value">1/2</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong> </span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">
+        Clicca la parola giusta per lo spazio evidenziato
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn" type="button">
+            <span>💡 Help!</span>
+        </button>
+    </div>
+
+    <div id="game-area">
+        <div class="dd-wrap">
+            <div
+                class="dd-tray"
+                id="dd-tray"
+                aria-label="Parole da inserire">
+            </div>
+            <div
+                class="dd-text"
+                id="dd-text">
+            </div>
+        </div>
+    </div>
+
+    <!-- =========================================================
+         FINAL REPORT WINDOW
+         ========================================================= -->
+
+    <div id="summary-screen">
+        <h2>
+            Hai completato tutto! 🎉
+        </h2>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Round</th>
+                    <th>Tentativi</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div
+            class="summary-totals"
+            id="summary-totals">
+        </div>
+    </div>
+
+    <h1 id="progress-title">
+        Progresso
+    </h1>
+
+    <div class="progress-bar-container">
+        <div
+            id="progress-bar-fill"
+            class="progress-bar-fill">
+        </div>
+    </div>
+
+
+<script>
+
+       document.addEventListener('DOMContentLoaded', () => {
+
+    const DD_FONT_SCALE = 0.85;
+    const SHAKE_MS = 200;
+
+    /* =========================================================
+       DOM REFERENCES
+       ========================================================= */
+
+    const roundValueEl = document.getElementById('round-value');
+    const timeValueEl = document.getElementById('time-value');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const revealBtn = document.getElementById('reveal-btn');
+    const ddText = document.getElementById('dd-text');
+    const ddTray = document.getElementById('dd-tray');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const gameTitle = document.getElementById('game-title');
+    const gameStats = document.getElementById('game-stats');
+    const actionControls = document.getElementById('action-controls');
+    const gameArea = document.getElementById('game-area');
+    const progressTitle = document.getElementById('progress-title');
+    const progressContainer = document.querySelector('.progress-bar-container');
+
+    const hiddenOnSummary = [
+        gameTitle, gameStats, instructionBanner, actionControls,
+        gameArea, progressTitle, progressContainer
+    ];
+
+    /* =========================================================
+       GAME STATE
+       ========================================================= */
+
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let moveCount = 0;
+    let revealCount = 0;
+    let isPeeking = false;
+    let ddPlaced = 0;
+    let ddTotal = 0;
+    let ddMisses = 0;
+    let ddCurrent = null;
+    let currentRound = null;
+    let roundCompleted = false;
+    let finalScore = 0;
+    let buttonMode = 'help'; // 'help' | 'done'
+
+    /* =========================================================
+       GAME DATA
+       Le parole da inserire sono tra parentesi graffe nel testo.
+       ========================================================= */
+
+    const GAME_ROUNDS = [
+        {
+            title: "Il ciclo dell'acqua",
+            text:
+                "L'acqua si muove di continuo intorno al nostro pianeta in un percorso chiamato {ciclo dell'acqua}. " +
+                "Il calore del {sole} scalda oceani e laghi e trasforma l'acqua liquida in vapore invisibile: questo processo si chiama {evaporazione}. " +
+                "Salendo, il vapore incontra aria più fredda e si trasforma di nuovo in minuscole goccioline che si riuniscono a formare le {nuvole}. " +
+                "Questo passaggio si chiama {condensazione}. " +
+                "Quando le goccioline diventano troppo pesanti, cadono al suolo come {precipitazioni}, ad esempio pioggia, neve o grandine. " +
+                "Una parte dell'acqua scorre sul terreno come {ruscellamento} e confluisce nei fiumi, che la riportano al {mare}, dove il ciclo ricomincia.",
+
+            distractors: [
+                "erosione",
+                "ghiacciaio"
+            ]
+        },
+
+        {
+            title: "La fotosintesi clorofilliana",
+            text:
+                "Le piante producono il proprio nutrimento attraverso un processo chiamato {fotosintesi}. " +
+                "Le foglie catturano la luce del {sole} grazie alla clorofilla. " +
+                "Dalle radici assorbono l'acqua, mentre dall'aria prendono l'anidride {carbonica}. " +
+                "Come risultato, rilasciano nell'atmosfera l'ossigeno che tutti noi {respiriamo}.",
+
+            distractors: [
+                "azoto",
+                "radice"
+            ]
+        }
+    ];
+
+    // Trasforma un round in { title, parts, answers, distractors }; null se non è giocabile
+    function parseRound(round) {
+        if (!round || typeof round.text !== 'string') return null;
+
+        const parts = round.text.split(/(\{[^}]+\})/).map(part => {
+            const match = part.match(/^\{(.+)\}$/);
+            return match ? { blank: match[1].trim() } : { text: part };
+        });
+
+        const answers = parts.filter(p => p.blank !== undefined).map(p => p.blank);
+        if (answers.length === 0 || answers.some(a => a === '')) return null;
+
+        const distractors = Array.isArray(round.distractors)
+            ? round.distractors.filter(d => typeof d === 'string' && d.trim() !== '').map(d => d.trim())
+            : [];
+
+        return { title: round.title || '', parts, answers, distractors };
+    }
+
+    /* =========================================================
+       TIMER
+       ========================================================= */
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    /* =========================================================
+       STATS
+       ========================================================= */
+
+    function updateWordCountDisplay() {
+        if (wordCountEl) wordCountEl.textContent = `${ddPlaced} / ${ddTotal}`;
+    }
+
+    function updateMovesDisplay() {
+        movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealsDisplay() {
+        revealsValueEl.textContent = revealCount;
+    }
+
+    function addMove() {
+        moveCount++;
+        updateMovesDisplay();
+    }
+
+    function resetStats() {
+        moveCount = 0;
+        revealCount = 0;
+        updateMovesDisplay();
+        updateRevealsDisplay();
+    }
+
+    function computeScore() {
+        const raw = 100 - ddMisses * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    /* =========================================================
+       UI HELPERS
+       ========================================================= */
+
+    function setInstruction(text) {
+        instructionBanner.textContent = text;
+    }
+
+    function setProgress(percent) {
+        progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
+    }
+
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        revealBtn.querySelector('span').textContent = (mode === 'done') ? '✓ Fatto' : '💡 Help!';
+    }
+
+    /* =========================================================
+       HELP / PEEK (tieni premuto)
+       ========================================================= */
+
+    function showPeek() {
+        if (buttonMode !== 'help' || isPeeking || roundCompleted || revealBtn.disabled) return;
+        isPeeking = true;
+        revealCount++;
+        updateRevealsDisplay();
+        ddText.classList.add('dd-peeking');
+    }
+
+    function hidePeek() {
+        if (!isPeeking) return;
+        isPeeking = false;
+        ddText.classList.remove('dd-peeking');
+    }
+
+    /* =========================================================
+       DATA HELPERS
+       ========================================================= */
+
+    function ddShuffle(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    /* =========================================================
+       BUILD CURRENT ROUND
+       ========================================================= */
+
+    function ddBuild(round) {
+        ddTray.innerHTML = '';
+        ddText.innerHTML = '';
+        ddPlaced = 0;
+        ddMisses = 0;
+        ddCurrent = null;
+        roundCompleted = false;
+        currentRound = round;
+
+        gameTitle.textContent = round.title;
+        if (roundValueEl && roundValueEl.parentElement) {
+            roundValueEl.parentElement.style.display = 'none';
+        }
+
+        round.parts.forEach(part => {
+            if (part.blank === undefined) {
+                ddText.appendChild(document.createTextNode(part.text));
+                return;
+            }
+
+            const blank = document.createElement('span');
+            blank.className = 'dd-blank';
+            blank.dataset.answer = part.blank;
+            const sizer = document.createElement('span');
+            sizer.className = 'dd-sizer';
+            sizer.textContent = part.blank;
+            blank.appendChild(sizer);
+            ddText.appendChild(blank);
+        });
+
+        ddTotal = round.answers.length;
+        setProgress(0);
+        updateWordCountDisplay();
+
+        ddShuffle(round.answers.concat(round.distractors)).forEach(word => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'dd-chip';
+            chip.textContent = word;
+            chip.dataset.word = word;
+            chip.addEventListener('click', () => ddChoose(chip));
+            ddTray.appendChild(chip);
+        });
+
+        ddNextBlank(false); // al primo caricamento la pagina non deve scorrere
+    }
+
+    /* =========================================================
+       FIND NEXT EMPTY PLACEHOLDER
+       ========================================================= */
+
+    function ddNextBlank(scroll = true) {
+        if (ddCurrent) ddCurrent.classList.remove('dd-current');
+
+        ddCurrent = ddText.querySelector('.dd-blank:not(.dd-filled)');
+
+        if (ddCurrent) {
+            ddCurrent.classList.add('dd-current');
+            if (scroll) ddCurrent.scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    /* =========================================================
+       ANIMATIONS (non bloccano mai lo stato di gioco)
+       ========================================================= */
+
+    function playCheckmark(element) {
+        if (typeof Checkmark === 'undefined' || typeof Checkmark.show !== 'function') return;
+        try {
+            Promise.resolve(Checkmark.show({ element, size: 48, rise: 70, duration: 1600 }))
+                .catch(err => console.warn('Checkmark animation failed:', err));
+        } catch (err) {
+            console.warn('Checkmark animation failed:', err);
+        }
+    }
+
+    async function playConfetti() {
+        if (typeof Confetti === 'undefined') return;
+        try {
+            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+        } catch (err) {
+            console.warn('Confetti animation failed:', err);
+        }
+    }
+
+    /* =========================================================
+       WORD SELECTION
+       ========================================================= */
+
+    function ddChoose(chip) {
+        if (roundCompleted || !ddCurrent || isPeeking || chip.disabled) return;
+
+        const targetBlank = ddCurrent;
+        const isCorrect = chip.dataset.word === targetBlank.dataset.answer;
+
+        addMove();
+
+        // WRONG ANSWER
+        if (!isCorrect) {
+            ddMisses++;
+            targetBlank.classList.remove('dd-shake', 'dd-error');
+            targetBlank.classList.add('dd-error');
+            void targetBlank.offsetWidth; // riavvia l'animazione
+            targetBlank.classList.add('dd-shake');
+            setTimeout(() => targetBlank.classList.remove('dd-shake', 'dd-error'), SHAKE_MS);
+            return;
+        }
+
+        // CORRECT ANSWER: tutto lo stato si aggiorna subito, le animazioni vengono dopo
+        targetBlank.classList.add('dd-filled');
+
+        // La parola resta al suo posto ma non è più selezionabile
+        chip.classList.add('dd-disabled');
+        chip.disabled = true;
+
+        ddPlaced++;
+        setProgress((ddPlaced / ddTotal) * 100);
+        updateWordCountDisplay();
+
+        const completed = ddPlaced === ddTotal;
+        if (completed) {
+            if (ddCurrent) ddCurrent.classList.remove('dd-current');
+            ddCurrent = null;
+            ddFinish();
+        } else {
+            ddNextBlank(); // lo spazio successivo si evidenzia subito
+        }
+
+        playCheckmark(targetBlank);
+        if (completed) playConfetti();
+    }
+
+    /* =========================================================
+       ROUND FINISH
+       ========================================================= */
+
+    function ddFinish() {
+        roundCompleted = true;
+        stopElapsedTimer();
+        hidePeek();
+
+        // Le parole non usate (distrattori) non devono sembrare ancora cliccabili
+        ddTray.querySelectorAll('.dd-chip').forEach(chip => { chip.disabled = true; });
+
+        finalScore = computeScore();
+        setProgress(100);
+        setInstruction('Paragrafo completato! Clicca Fatto per continuare.');
+        revealBtn.disabled = false;
+        setButtonMode('done');
+    }
+
+    /* =========================================================
+       BUTTON EVENTS
+       ========================================================= */
+
+    revealBtn.addEventListener('pointerdown', showPeek);
+    revealBtn.addEventListener('pointerup', hidePeek);
+    revealBtn.addEventListener('pointerleave', hidePeek);
+    revealBtn.addEventListener('pointercancel', hidePeek);
+    revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+
+    revealBtn.addEventListener('keydown', (e) => {
+        if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showPeek();
+    });
+    revealBtn.addEventListener('keyup', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') hidePeek();
+    });
+    revealBtn.addEventListener('blur', hidePeek);
+
+    // "Fatto" apre il riepilogo con un normale click (funziona anche da tastiera e su touch)
+    revealBtn.addEventListener('click', () => {
+        if (buttonMode === 'done') showSummaryScreen();
+    });
+
+    /* =========================================================
+       FINAL REPORT
+       ========================================================= */
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        hidePeek();
+
+        summaryTbody.innerHTML = '';
+
+        const row = document.createElement('tr');
+        const titleCell = document.createElement('td');
+        titleCell.textContent = currentRound && currentRound.title ? currentRound.title : 'Paragrafo';
+        const movesCell = document.createElement('td');
+        movesCell.textContent = String(moveCount);
+        row.append(titleCell, movesCell);
+        summaryTbody.appendChild(row);
+
+        summaryTotals.innerHTML =
+            `Tempo impiegato: <strong>${elapsedSeconds}s</strong><br>` +
+            `Tentativi totali: <strong>${moveCount}</strong><br>` +
+            `Errori: <strong>${ddMisses}</strong><br>` +
+            `Aiuti utilizzati: <strong>${revealCount}</strong><br>` +
+            `Punteggio: <strong>${finalScore}</strong>`;
+
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+        summaryScreen.style.display = 'block';
+    }
+
+    /* =========================================================
+       TEXT FITTING
+       ========================================================= */
+
+    function ddFitText() {
+        if (!ddText.clientHeight) return; // area nascosta: niente da misurare
+
+        let lo = 12;
+        let hi = 44;
+
+        while (hi - lo > 0.5) {
+            const mid = (lo + hi) / 2;
+            ddText.style.fontSize = mid + 'px';
+            if (ddText.scrollHeight <= ddText.clientHeight + 1) {
+                lo = mid;
+            } else {
+                hi = mid;
+            }
+        }
+
+        ddText.style.fontSize = Math.max(12, lo * DD_FONT_SCALE) + 'px';
+    }
+
+    let ddResizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(ddResizeTimer);
+        ddResizeTimer = setTimeout(ddFitText, 100);
+    });
+
+    /* =========================================================
+       INITIALIZATION
+       ========================================================= */
+
+    function initGame() {
+        resetStats();
+        setProgress(0);
+
+        revealBtn.disabled = false;
+        setButtonMode('help');
+        setInstruction('Tocca la parola giusta per lo spazio evidenziato');
+
+        summaryScreen.style.display = 'none';
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = ''; });
+
+        const playable = GAME_ROUNDS.map(parseRound).filter(Boolean);
+        if (playable.length < GAME_ROUNDS.length) {
+            console.warn(`${GAME_ROUNDS.length - playable.length} round scartati: servono un testo e almeno una parola tra {graffe}.`);
+        }
+        if (playable.length === 0) {
+            setInstruction('Nessun paragrafo disponibile.');
+            revealBtn.disabled = true;
+            return;
+        }
+
+        ddBuild(playable[Math.floor(Math.random() * playable.length)]);
+
+        document.body.classList.add('loaded');
+
+        // Ora l'area di gioco è visibile (e i font caricati): adatta la dimensione del testo
+        ddFitText();
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(ddFitText);
+        }
+
+        startElapsedTimer();
+    }
+
+    initGame();
+});
+
+
+</script>
+    
+
+</body>
+</html>

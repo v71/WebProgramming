@@ -9,86 +9,14 @@
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
+    <link href="../stylesheet.css" rel="stylesheet">
+    
     <style>
         :root {
             /* One size for every letter card: the cards to move, the slots and the Help overlay.
                Change these two values to resize all of them together. */
             --card-w: 72px;
             --card-h: 94px;
-
-            --bg-0: #2a113d;
-            --bg-1: #4a1d6e;
-            --bg-2: #553d94;
-            --accent: #ff9800;
-            --accent-2: #06b6d4;
-            --correct: #ffffff;
-            --wrong: #ef4444;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: #000205;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background:
-                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
-                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
-                var(--bg-0);
-            color: var(--text);
-            margin: 0;
-            padding: 20px 20px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* =========================================
-           TEMPORARLY HIDES THE BODY TO AVOID ABRUPT CHANGES FOR THE RAW CONTENT
-         ========================================= */
-
-        body {
-            opacity: 0;
-            transition: opacity 0.2s ease-in;
-        }
-
-        body.loaded {
-            opacity: 1;
-        }
-        
-        h1 {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            /* Contorno nero nitido attorno al testo */
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        .controls {
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 1100px;
-            flex-wrap: wrap;
-            position: relative;
-            min-height: 52px;
         }
 
         .section-wrapper {
@@ -110,27 +38,6 @@
             width: 100%;
         }
 
-        /* Progress Bar Styles */
-        .progress-bar-container {
-            width: 100%;
-            max-width: 1100px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            height: 12px;
-            border-radius: 99px;
-            margin-bottom: 16px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            width: 0%;
-            border-radius: 99px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         /* Container sizes dynamically and stays centered */
         .card-container {
             display: flex;
@@ -143,7 +50,7 @@
             border-radius: 20px;
             align-items: center;
             box-sizing: border-box;
-            background-color: var(--bg-1);
+            background-color: var(--game-area-background);
             box-shadow: var(--shadow-md);
             border: 2px solid rgba(255, 255, 255, 0.8);
             margin: 0 auto;
@@ -172,7 +79,7 @@
             flex-shrink: 0;
             width: var(--card-w);
             height: var(--card-h);
-            background-color: var(--bg-2);
+            background-color: var(--summary-background);
             border: 2px solid var(--border);
             border-radius: 14px;
             display: flex;
@@ -326,7 +233,7 @@
             font-size: 1.05rem;
             font-weight: 500;
             color: var(--text-dim);
-            background: var(--bg-1);
+            background: var(--game-area-background);
             padding: 10px 20px;
             border-radius: 99px;
             box-shadow: var(--shadow-sm);
@@ -345,7 +252,7 @@
             display: none;
             width: 100%;
             max-width: 650px;
-            background: var(--bg-1);
+            background: var(--game-area-background);
             border: 1px solid var(--border);
             border-radius: 20px;
             padding: 36px;
@@ -382,7 +289,7 @@
         .summary-totals {
             margin-top: 20px;
             padding: 18px;
-            background: var(--bg-2);
+            background: var(--summary-background);
             border-radius: 14px;
             display: flex;
             justify-content: space-around;
@@ -404,70 +311,6 @@
             filter: none;
             box-shadow: none !important;
             transform: none !important;
-        }
-
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5; /* Blu fisso a riposo */
-            border: none;
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        .cool-btn.smooth-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: scale(0.95);
-            position: absolute;
-        }
-
-        .cool-btn i {
-            font-size: 1.1rem;
-            -webkit-text-stroke: 1px currentColor;
-            transition: transform 0.25s ease;
-        }
-
-        .cool-btn:hover {
-            transform: translateY(-2px);
-            background-color: #10b981; /* Blu leggermente più scuro all'hover */
-        }
-
-        .cool-btn:hover i {
-            transform: translateX(3px);
-        }
-
-        .cool-btn:active {
-            transform: translateY(1px);
-        }
-
-        #next-btn {
-            background-color: #4f46e5;
-        }
-
-        #next-btn:hover {
-           background-color: #10b981;
-        }
-
-        .cool-btn.wrong-btn {
-            background-color: var(--wrong);
-            cursor: default;
-            pointer-events: none;
-            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
-            opacity: 1 !important; /* Mantiene il colore pieno senza trasparenza */
         }
 
     </style>
