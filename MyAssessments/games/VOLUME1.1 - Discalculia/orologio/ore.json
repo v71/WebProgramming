@@ -1,0 +1,25 @@
+{
+    "rounds": [
+        {
+            "label": "Il ragazzo è più alto della ragazza",
+            "sentenceTemplate": "Il ragazzo è più alto della ragazza",
+            "img": "../images/watch/7-00.png",
+            "options": ["Sono le 10.15", "Sono le 7.25", "Sono le 7.00"],
+            "correctIndex": 2
+        },
+        {
+            "label": "La ragazza è più alta del ragazzo",
+            "sentenceTemplate": "La ragazza è più alta del ragazzo",
+            "img": "../images/watch/9-25.png",
+            "options": ["Sono le 20.30", "Sono le 9.25", "Sono le 12.15"],
+            "correctIndex": 1
+        },
+        {
+            "label": "I ragazzi sono alti uguali",
+            "sentenceTemplate": "I ragazzi sono alti uguali",
+            "img": "../images/watch/11-30.png",
+            "options": ["Sono le 8.00", "Sono le 13.14", "Sono le 11.30"],
+            "correctIndex": 2
+        }
+    ]
+}

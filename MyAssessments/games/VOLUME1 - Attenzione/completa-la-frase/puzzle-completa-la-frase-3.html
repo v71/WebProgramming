@@ -361,13 +361,24 @@
 
     <h3 id="instruction-banner" class="stats-style">Alcune parole sono già al posto giusto. Clicca sulle parole mancanti nella prima lista per completare la frase nelle caselle vuote.</h3>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
-
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <!-- Next Button (Text only) -->
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span class="btn-text">Caricamento...</span>
+        </button>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">Help!</span>
         </button>
     </div>
 
@@ -676,12 +687,13 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.disabled = (mode === 'wrong');
 
         const labels = {
-            help: '💡 Help!',
+            help: 'Help!',
             wrong: '⚠️ Frase errata',
             next: 'Avanti ➜',
             done: '✓ Fatto'
         };
-        revealBtn.innerHTML = `<span>${labels[mode]}</span>`;
+        //revealBtn.innerHTML = `<span>${labels[mode]}</span>`;
+        revealBtn.querySelector('.btn-text').textContent = labels[mode];
     }
 
     // ---------- Accessibilità ----------

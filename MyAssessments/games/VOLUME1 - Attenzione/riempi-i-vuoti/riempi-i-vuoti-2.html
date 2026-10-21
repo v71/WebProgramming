@@ -513,7 +513,7 @@
 
 <script>
 
-       document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
 
     const DD_FONT_SCALE = 0.85;
     const SHAKE_MS = 200;
@@ -546,6 +546,26 @@
         gameTitle, gameStats, instructionBanner, actionControls,
         gameArea, progressTitle, progressContainer
     ];
+
+    // Stato "selezionato" della parola corretta: verde, anche se il pulsante è disabilitato.
+    // (!important perché il pulsante disabilitato di solito viene sbiadito dal CSS della pagina;
+    // per cambiare colore basta modificare questi valori)
+    (function injectChipStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            button.dd-chip.dd-selected,
+            button.dd-chip.dd-selected:disabled,
+            button.dd-chip.dd-selected:hover {
+                background: #10b981 !important;
+                border-color: #ffffff !important;
+                color: #ffffff !important;
+                opacity: 1 !important;
+                filter: none !important;
+                cursor: default;
+            }
+        `;
+        document.head.prepend(style);
+    })();
 
     /* =========================================================
        GAME STATE
@@ -844,8 +864,8 @@
         // CORRECT ANSWER: tutto lo stato si aggiorna subito, le animazioni vengono dopo
         targetBlank.classList.add('dd-filled');
 
-        // La parola resta al suo posto ma non è più selezionabile
-        chip.classList.add('dd-disabled');
+        // La parola resta al suo posto in stato "selezionato" (verde) e non è più cliccabile
+        chip.classList.add('dd-selected');
         chip.disabled = true;
 
         ddPlaced++;
@@ -874,8 +894,12 @@
         stopElapsedTimer();
         hidePeek();
 
-        // Le parole non usate (distrattori) non devono sembrare ancora cliccabili
-        ddTray.querySelectorAll('.dd-chip').forEach(chip => { chip.disabled = true; });
+        // Le parole non usate (distrattori) non devono sembrare ancora cliccabili;
+        // quelle corrette restano verdi (dd-selected)
+        ddTray.querySelectorAll('.dd-chip:not(.dd-selected)').forEach(chip => {
+            chip.disabled = true;
+            chip.classList.add('dd-disabled');
+        });
 
         finalScore = computeScore();
         setProgress(100);
@@ -911,26 +935,57 @@
        FINAL REPORT
        ========================================================= */
 
+    // Quale valore va sotto una colonna, in base al testo dell'intestazione
+    function summaryKeyFor(headerText) {
+        const t = headerText.trim().toLowerCase();
+        if (/temp/.test(t)) return 'time';
+        if (/error/.test(t)) return 'errors';
+        if (/mosse|tentativ/.test(t)) return 'moves';
+        if (/aiut/.test(t)) return 'hints';
+        if (/metric|punteggio|score/.test(t)) return 'score';
+        return '';
+    }
+
     function showSummaryScreen() {
         stopElapsedTimer();
         hidePeek();
 
-        summaryTbody.innerHTML = '';
+        const values = {
+            title: currentRound && currentRound.title ? currentRound.title : 'Paragrafo',
+            time: `${elapsedSeconds}s`,
+            moves: String(moveCount),
+            errors: String(ddMisses),
+            hints: String(revealCount),
+            score: String(finalScore)
+        };
 
+        // La riga segue le colonne dell'intestazione della tabella (nell'HTML): così non si sfasa
+        const table = summaryTbody.closest('table');
+        const headers = table ? Array.from(table.querySelectorAll('thead th')) : [];
+        const keys = headers.length
+            ? headers.map((th, i) => (i === 0 ? 'title' : summaryKeyFor(th.textContent)))
+            : ['title', 'time', 'moves', 'hints', 'score'];
+
+        summaryTbody.innerHTML = '';
         const row = document.createElement('tr');
-        const titleCell = document.createElement('td');
-        titleCell.textContent = currentRound && currentRound.title ? currentRound.title : 'Paragrafo';
-        const movesCell = document.createElement('td');
-        movesCell.textContent = String(moveCount);
-        row.append(titleCell, movesCell);
+        keys.forEach((key, i) => {
+            const td = document.createElement('td');
+            td.textContent = values[key] !== undefined ? values[key] : '';
+            if (i === 0 || key === 'score') td.style.fontWeight = '700';
+            row.appendChild(td);
+        });
         summaryTbody.appendChild(row);
 
-        summaryTotals.innerHTML =
-            `Tempo impiegato: <strong>${elapsedSeconds}s</strong><br>` +
-            `Tentativi totali: <strong>${moveCount}</strong><br>` +
-            `Errori: <strong>${ddMisses}</strong><br>` +
-            `Aiuti utilizzati: <strong>${revealCount}</strong><br>` +
-            `Punteggio: <strong>${finalScore}</strong>`;
+        // Un blocco per ogni dato (come negli altri giochi), non righe separate da <br>
+        summaryTotals.innerHTML = `
+            <div>Tempo: <strong>${elapsedSeconds}s</strong></div>
+            <div>Tentativi: <strong>${moveCount}</strong></div>
+            <div>Errori: <strong>${ddMisses}</strong></div>
+            <div>Aiuti: <strong>${revealCount}</strong></div>
+            <div>Punteggio: <strong>${finalScore}</strong></div>
+        `;
+        summaryTotals.style.flexWrap = 'wrap';
+        summaryTotals.style.gap = '8px 24px';
 
         hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
         summaryScreen.style.display = 'block';
