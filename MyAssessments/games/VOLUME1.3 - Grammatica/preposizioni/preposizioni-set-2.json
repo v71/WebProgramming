@@ -1,0 +1,54 @@
+{
+    "title": "Preposizioni",
+     "label": "Osserva l'immagine e scegli, tra le 3 opzioni, l'opzione che la descrive meglio",
+    "rounds": [
+        {
+            "sentence": "Il film inizia {blank} 20.00",
+            "img": "../images/preposizioni/film.png",
+            "options": ["in", "alle","le'"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Mi chiamo Stacy abito {blank} Londra",
+            "img": "../images/preposizioni/londra.png",
+            "options": ["a", "in","alla"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Ci vediamo davanti {blank} ufficio postale",
+            "img": "../images/preposizioni/poste.png",
+            "options": ["all'", "l'","il"],
+            "correctIndex": 0
+        },
+         {
+            "sentence": "Questa estate sono andata in vacanze {blank} Stati Uniti",
+            "img": "../images/preposizioni/america.png",
+            "options": ["negli", "in","a"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Sono nata {blank} 1992",
+            "img": "../images/preposizioni/data.png",
+            "options": ["negli", "al","nel"],
+            "correctIndex": 2
+        },
+         {
+            "sentence": "Sono arrivata {blank} casa",
+            "img": "../images/preposizioni/stazione.png",
+            "options": ["nella", "alla","a"],
+            "correctIndex": 2
+        },
+         {
+            "sentence": "Sono {blank} supermarket",
+            "img": "../images/preposizioni/ipercoop.png",
+            "options": ["nel", "al","in"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Sono {blank} pausa pranzo",
+            "img": "../images/preposizioni/pausa.png",
+            "options": ["a", "nella","in"],
+            "correctIndex": 2
+        }
+    ]
+}

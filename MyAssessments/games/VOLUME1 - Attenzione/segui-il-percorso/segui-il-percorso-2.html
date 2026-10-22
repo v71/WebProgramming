@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Segui il percorso</title>
+
+     <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    
+    <style>
+
+        :root {
+            --body-background: #2a113d;
+            --game-area-background: #4a1d6e;
+            --summary-background: #553d94;
+
+            --accent: #ff9800;
+            --accent-2: #06b6d4;
+            --correct: #ffffff;
+            --wrong: #ef4444;
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
+            --border: #000205;
+            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--body-background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px 20px 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        /* =========================================
+           TEMPORARLY HIDES THE BODY TO AVOID ABRUPT CHANGES FOR THE RAW CONTENT
+         ========================================= */
+
+        body {
+            opacity: 0;
+            transition: opacity 0.2s ease-in;
+        }
+
+        body.loaded {
+            opacity: 1;
+        }
+
+        /* =========================================
+            GAME TITLE
+        ========================================= */
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* =========================================
+            COUNTERS
+        ========================================= */
+
+        #game-stats {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--game-area-background);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* =========================================
+            INFORMATION BOX
+        ========================================= */
+        
+        #instruction-banner {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--game-area-background);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        /* =========================================
+            EMPTY GAME AREA
+        ========================================= */
+
+        #game-area {
+            width: 100%;
+            max-width: 1100px;
+            min-height: 300px;
+            margin: 0 auto 24px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
+            border-radius: 20px;
+            background: var(--game-area-background);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* =========================================
+            PROGRESS TITLE
+        ========================================= */
+
+        #progress-title {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* =========================================
+            PROGRESS BAR
+        ========================================= */
+
+        .progress-bar-container {
+            width: 100%;
+            max-width: 1100px;
+            height: 12px;
+            margin-bottom: 16px;
+            background: var(--game-area-background);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border-radius: 99px;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* =========================================
+            COMBO BOXES CONTAINER & 2X2 GRID
+        ========================================= */
+
+        .combo-container {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .combo-item {
+            width: 100%;
+            padding: 8px;
+        }
+
+        /* WRAPPER RIGIDO PER EVITARE SLITTAMENTI DELLA FRECCIA */
+        .custom-select-wrapper {
+            position: relative;
+            width: 100%;
+            display: inline-block;
+        }
+
+        .game-select {
+            width: 100%;
+            height: 42px;
+            padding: 0 45px 0 14px !important;
+            font-size: 1.25rem;
+            font-family: inherit;
+            color: var(--text);
+            background-color: var(--summary-background);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .game-select option {
+            background-color: var(--game-area-background);
+            color: var(--text);
+            padding: 10px;
+        }
+
+        .game-select:hover {
+            border-color: var(--accent);
+            background-color: #624b9e;
+        }
+
+        .game-select:focus {
+            border-color: var(--accent);
+        }
+
+       .game-select:disabled,
+       .game-select.selected {
+            color: #ffffff !important;
+            opacity: 1 !important; /* Evita lo sbiadimento grigio tipico dei select disabilitati su iOS/Firefox */
+        }
+
+        .game-select.error { 
+            animation: selectErrorShake 0.45s ease; 
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.2);
+            color: var(--wrong);
+        }
+
+        .game-select.help-correct {
+            background-color: #4caf50 !important;
+            border-color: #ffffff;
+        }
+    
+        @keyframes selectErrorShake { 
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); } 
+            40% { transform: translateX(10px); } 
+            60% { transform: translateX(-8px); } 
+            80% { transform: translateX(8px); } 
+            100% { transform: translateX(0); } 
+        }
+
+        /* =========================================
+            CONTROLS
+        ========================================= */
+
+        .controls {
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 1100px;
+            flex-wrap: wrap;
+            position: relative;
+            min-height: 52px;
+        }
+        
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #4f46e5;
+            border: none;
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn.smooth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
+        }
+
+        .cool-btn:hover {
+            transform: translateY(-2px);
+            background-color: #10b981;
+        }
+
+        .cool-btn:active {
+            transform: translateY(1px);
+        }
+
+        #next-btn {
+            background-color: #4f46e5;
+        }
+
+        #next-btn:hover {
+            background-color: #10b981;
+        }
+
+        /* =========================================
+            SUMMARY SCREEN
+        ========================================= */
+
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            background: var(--game-area-background);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--correct);
+            font-size: 2rem;
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 24px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-totals {
+            margin-top: 20px;
+            padding: 18px;
+            background: var(--summary-background);
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .summary-totals strong {
+            color: var(--accent);
+        }
+
+        /* =========================================
+            DEBUG AREA
+        ========================================= */
+
+        #debug-container {
+            width: 100%;
+        }
+
+        #debug-text-area {
+            width: 100%;
+            background: var(--summary-background);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            font-family: 'Segoe UI';
+            font-size: 1.25rem;
+            resize: none;
+            min-height: 120px;
+            outline: none;
+        }
+
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 30px; }
+            h1, #progress-title { font-size: 1.9rem; }
+            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
+            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
+            #game-area { min-height: 260px; padding: 16px; }
+            .combo-container { grid-template-columns: 1fr; }
+        }
+    </style>
+
+<style>
+
+        .cool-btn-2 {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        .cool-btn-2.smooth-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.95);
+            position: absolute;
+        }
+
+        .cool-btn-2:hover {
+            transform: translateY(-2px);
+            background-color: #10b981;
+        }
+
+        .cool-btn-2:active {
+            transform: translateY(1px);
+        }
+
+        .cool-btn-2 {
+            pointer-events: none;
+        }
+
+        .game-buttons-container {
+            display: flex;
+            justify-content: center; /* Centra i bottoni in orizzontale */
+            align-items: center;     /* Allinea i bottoni in verticale */
+            gap: 12px;               /* Spazio tra i pulsanti */
+            margin: 0px 0;          /* Distanza sopra e sotto il blocco dei bottoni */
+            width: 100%;
+            flex-wrap: wrap;         /* Fa andare a capo i bottoni se lo schermo è troppo piccolo */
+        }
+
+        ::placeholder {
+            color: #ffffff;
+            opacity: 1; /* Ensures full opacity across different browsers */
+        }
+
+        /* For older browsers */
+        :-ms-input-placeholder {
+            color: #ffffff;
+        }
+        ::-ms-input-placeholder {
+            color: #ffffff;
+        }
+
+</style>
+
+</head>
+
+<body>
+
+    <!-- TITLE -->
+    <h1 id="game-title">
+        Segui il percorso
+    </h1>
+
+    <!-- COUNTERS -->
+    <div id="game-stats">
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <!-- INFORMATION / INSTRUCTION BOX -->
+    <div id="instruction-banner">
+        Instruzion banner.
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span>Caricamento...</span>
+        </button>
+
+        <button id="reveal-btn" class="cool-btn">
+            <span>💡 Help!</span>
+        </button>
+    </div>
+
+    <!-- GAME AREA WITH 4 TEXT INPUT BOXES IN A 2x2 GRID -->
+    <div id="game-area">
+        <div id="debug-container">
+            <textarea id="debug-text-area" readonly rows="5"></textarea>
+        </div>
+
+        <!-- 4 Action Buttons -->
+        <div class="game-buttons-container">
+            <button type="button" class="cool-btn-2" data-index="0">Prima Tappa</button>
+            <button type="button" class="cool-btn-2" data-index="1">Seconda Tappa</button>
+            <button type="button" class="cool-btn-2" data-index="2">Terza Tappa</button>
+            <button type="button" class="cool-btn-2" data-index="3">Quarta Tappa</button>
+        </div>
+
+        <div class="combo-container">
+            <div class="combo-item">
+                <div class="custom-select-wrapper">
+                    <input type="text" id="select-0" class="game-select" data-index="0" placeholder="Prima tappa..." autocomplete="off">
+                </div>
+            </div>
+            <div class="combo-item">
+                <div class="custom-select-wrapper">
+                    <input type="text" id="select-1" class="game-select" data-index="1" placeholder="Terza tappa..." autocomplete="off">
+                </div>
+            </div>
+            <div class="combo-item">
+                <div class="custom-select-wrapper">
+                    <input type="text" id="select-2" class="game-select" data-index="2" placeholder="Seconda tappa..." autocomplete="off">
+                </div>
+            </div>
+            <div class="combo-item">
+                <div class="custom-select-wrapper">
+                    <input type="text" id="select-3" class="game-select" data-index="3" placeholder="Quarta tappa..." autocomplete="off">
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- PROGRESS -->
+    <h1 id="progress-title">
+        Progresso
+    </h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"> </div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const DATA_URL = 'segui-il-percorso.json';
+    const PLACEHOLDERS = ['Prima tappa...', 'Seconda tappa...', 'Terza tappa...', 'Quarta tappa...'];
+
+    // --- Stato ---
+    let buttons = [];
+    let expectedLabels = [];     // risposta attesa per ogni casella (per posizione), null se non usata
+    let checkedKeys = [];        // ultimo testo controllato per ogni casella (evita doppi conteggi)
+    let selectFoundState = [];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let totalCorrectItems = 0;
+    let foundCorrectCount = 0;
+    let isGameCompleted = false;
+    let isGameReady = false;     // true solo dopo il caricamento dei dati
+    let moveCount = 0;
+    let revealCount = 0;
+    let currentCategoryTitle = '';
+    let originalButtonTexts = [];
+
+    // --- Elementi (letti una sola volta) ---
+    const gameTitle = document.getElementById('game-title');
+    const gameArea = document.getElementById('game-area');
+    const actionControls = document.getElementById('action-controls');
+    const revealBtn = document.getElementById('reveal-btn');
+    const gameSelects = document.querySelectorAll('.game-select');
+    const helpButtons = document.querySelectorAll('.cool-btn-2');
+    const movesValueEl = document.getElementById('moves-value');
+    const wordCountEl = document.getElementById('word-count');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const timeValueEl = document.getElementById('time-value');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameStats = document.getElementById('game-stats');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = document.getElementById('progress-title');
+
+    // Testo dell'esercizio (nell'HTML l'id è "debug-text-area"): è contenuto di gioco, non debug
+    const passageArea = document.getElementById('debug-text-area');
+    if (passageArea) passageArea.readOnly = true;
+
+    const hiddenOnSummary = [
+        gameArea, gameStats, instructionBanner, progressBar,
+        progressBarTitle, gameTitle, actionControls
+    ];
+
+    originalButtonTexts = Array.from(helpButtons).map(btn => btn.textContent);
+
+    function showPassage(text) {
+        if (passageArea) passageArea.value = typeof text === 'string' ? text : '';
+    }
+
+    // --- Confronto delle risposte ---
+    // Ignora maiuscole, accenti, apostrofi tipografici e spazi multipli
+    function normalizeAnswer(s) {
+        return String(s)
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/\p{M}/gu, '')
+            .replace(/[’‘`´]/g, "'")
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    // Una casella N si aspetta il pulsante con value = N (la prima casella aspetta value 1, ecc.)
+    function buildExpectedLabels(exerciseButtons) {
+        return Array.from(gameSelects, (_, i) => {
+            const match = exerciseButtons.find(b => b && b.value === i + 1 && typeof b.label === 'string' && b.label.trim() !== '');
+            return match ? match.label.trim() : null;
+        });
+    }
+
+    function isValidExercise(exercise) {
+        return exercise
+            && Array.isArray(exercise.buttons)
+            && buildExpectedLabels(exercise.buttons).some(label => label !== null);
+    }
+
+    // --- Pulsante Help: icona 💡 + "Help!"; a fine gioco l'icona sparisce e resta "✓ Fatto!" ---
+    function setRevealButton(done) {
+        if (!revealBtn) return;
+        const iconEl = revealBtn.querySelector('.btn-icon');
+        let textEl = revealBtn.querySelector('.btn-text');
+        if (!textEl) { // markup con un <span> semplice
+            revealBtn.textContent = '';
+            textEl = document.createElement('span');
+            textEl.className = 'btn-text';
+            revealBtn.appendChild(textEl);
+        }
+        if (iconEl) iconEl.style.display = done ? 'none' : '';
+        textEl.textContent = done ? '✓ Fatto!' : (iconEl ? 'Help!' : '💡 Help!');
+    }
+
+    // --- Punteggio e riepilogo ---
+    function computeScore() {
+        const mistakes = Math.max(0, moveCount - totalCorrectItems);
+        const raw = 100 - mistakes * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+
+        summaryTbody.innerHTML = '';
+        const row = document.createElement('tr');
+        addCell(row, currentCategoryTitle, true);
+        addCell(row, `${elapsedSeconds}s`);
+        addCell(row, String(moveCount));
+        addCell(row, String(revealCount));
+        addCell(row, String(computeScore()), true);
+        summaryTbody.appendChild(row);
+
+        summaryTotals.innerHTML = `
+            <div>Tempo Totale: <strong>${elapsedSeconds}s</strong></div>
+            <div>Mosse Totali: <strong>${moveCount}</strong></div>
+            <div>Aiuti Totali: <strong>${revealCount}</strong></div>
+        `;
+        summaryScreen.style.display = 'block';
+    }
+
+    // --- Timer ---
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    // --- UI ---
+    function updateWordCountDisplay() {
+        if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+    }
+
+    function updateProgressBar(value) {
+        if (progressBarFill) {
+            progressBarFill.style.width = (Math.min(Math.max(value, 0), 1) * 100) + '%';
+        }
+    }
+
+    function updateMovesDisplay() {
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealDisplay() {
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+    }
+
+    function updateGridUI(title) {
+        if (instructionBanner) instructionBanner.textContent = title;
+
+        gameSelects.forEach((input, position) => {
+            const used = expectedLabels[position] !== null;
+            input.value = '';
+            input.placeholder = PLACEHOLDERS[position] || '';
+            input.setAttribute('aria-label', `Tappa ${position + 1}`);
+            input.classList.remove('selected', 'error', 'help-correct');
+            input.style.backgroundColor = '';
+            input.style.color = '';
+            input.style.borderColor = '';
+            // Le caselle senza risposta in questo esercizio vengono nascoste e disabilitate
+            input.style.display = used ? '' : 'none';
+            input.disabled = !used;
+        });
+    }
+
+    function showLoadError(message) {
+        isGameReady = false; // il gioco resta disabilitato
+        stopElapsedTimer();
+        if (instructionBanner) instructionBanner.textContent = message;
+        gameSelects.forEach(input => { input.disabled = true; });
+    }
+
+    // --- Help (mostra le soluzioni sui pulsanti) ---
+    let isPeeking = false;
+
+    function showHelp() {
+        if (isGameCompleted || !isGameReady || isPeeking) return;
+        isPeeking = true;
+        revealCount++;
+        updateRevealDisplay();
+
+        helpButtons.forEach((btn, index) => {
+            if (expectedLabels[index]) {
+                btn.textContent = expectedLabels[index];
+                btn.style.backgroundColor = '#4caf50';
+                btn.style.color = '#ffffff';
+                btn.classList.add('help-active');
+            }
+        });
+    }
+
+    function hideHelp() {
+        isPeeking = false;
+        helpButtons.forEach((btn, index) => {
+            if (originalButtonTexts[index] !== undefined) {
+                btn.textContent = originalButtonTexts[index];
+            }
+            btn.style.backgroundColor = '';
+            btn.style.color = '';
+            btn.classList.remove('help-active');
+        });
+    }
+
+    // --- Animazioni (non bloccano mai lo stato di gioco) ---
+    async function playAnimations(element, isFinal) {
+        if (typeof Checkmark !== 'undefined') {
+            try {
+                await Checkmark.show({ element, size: 48, rise: 70, duration: 1600 });
+            } catch (err) {
+                console.warn('Checkmark animation failed:', err);
+            }
+        }
+
+        if (isFinal && typeof Confetti !== 'undefined') {
+            try {
+                await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+            } catch (err) {
+                console.warn('Confetti animation failed:', err);
+            }
+        }
+    }
+
+    // --- Inizializzazione ---
+    async function initGame() {
+        try {
+            isGameReady = false;
+            stopElapsedTimer();
+            setRevealButton(false);
+
+            const response = await fetch(DATA_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
+            const data = await response.json();
+            if (!Array.isArray(data.categories) || data.categories.length === 0) {
+                showLoadError('Nessuna categoria disponibile.');
+                return;
+            }
+
+            const valid = data.categories.filter(isValidExercise);
+            if (valid.length < data.categories.length) {
+                console.warn(`${data.categories.length - valid.length} esercizi scartati: servono pulsanti con "label" e "value" numerico (1, 2, 3, 4).`);
+            }
+            if (valid.length === 0) {
+                showLoadError('Nessun esercizio valido.');
+                return;
+            }
+
+            // Tutto valido: ora si può aggiornare lo stato
+            const exercise = valid[Math.floor(Math.random() * valid.length)];
+            buttons = [...exercise.buttons];
+            expectedLabels = buildExpectedLabels(buttons);
+            currentCategoryTitle = exercise.instruction;
+            totalCorrectItems = expectedLabels.filter(label => label !== null).length;
+            selectFoundState = new Array(gameSelects.length).fill(false);
+            checkedKeys = new Array(gameSelects.length).fill('');
+
+            isGameCompleted = false;
+            moveCount = 0;
+            revealCount = 0;
+            foundCorrectCount = 0;
+
+            showPassage(exercise.text);
+            updateMovesDisplay();
+            updateRevealDisplay();
+            updateWordCountDisplay();
+            updateProgressBar(0);
+            updateGridUI(currentCategoryTitle);
+            startElapsedTimer();
+
+            document.body.classList.add('loaded');
+            isGameReady = true;
+        } catch (err) {
+            console.error(`Could not load ${DATA_URL}:`, err);
+            showLoadError('Errore nel caricamento del gioco.');
+        }
+    }
+
+    // --- Pulsante Help (tieni premuto) ---
+    if (revealBtn) {
+        // Premere Help non deve togliere il focus alla casella (altrimenti il testo a metà verrebbe
+        // controllato come risposta sbagliata e su mobile si chiuderebbe la tastiera).
+        // Solo a gioco in corso: a gioco finito il click deve passare per aprire il riepilogo.
+        revealBtn.addEventListener('mousedown', (e) => { if (!isGameCompleted) e.preventDefault(); });
+        revealBtn.addEventListener('touchstart', (e) => { if (!isGameCompleted) e.preventDefault(); }, { passive: false });
+
+        revealBtn.addEventListener('pointerdown', showHelp);
+        revealBtn.addEventListener('pointerup', hideHelp);
+        revealBtn.addEventListener('pointerleave', hideHelp);
+        revealBtn.addEventListener('pointercancel', hideHelp);
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+
+        // Tastiera (Spazio / Invio)
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showHelp();
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hideHelp();
+        });
+        revealBtn.addEventListener('blur', hideHelp);
+
+        // A gioco finito il tasto diventa "Fatto" e apre il riepilogo
+        revealBtn.addEventListener('click', () => {
+            if (isGameCompleted) showSummaryScreen();
+        });
+    }
+
+    // --- Validazione delle caselle (Invio o uscita dalla casella) ---
+    function validateInput(input, inputIndex) {
+        if (isGameCompleted || !isGameReady || selectFoundState[inputIndex]) return;
+
+        const userText = input.value.trim();
+        if (!userText) return;
+
+        // Stesso testo già controllato (es. Invio seguito dall'uscita dalla casella): non si ricontrolla
+        const key = normalizeAnswer(userText);
+        if (key === checkedKeys[inputIndex]) return;
+        checkedKeys[inputIndex] = key;
+
+        const expected = expectedLabels[inputIndex];
+        const isCorrect = expected !== null && expected !== undefined && key === normalizeAnswer(expected);
+
+        moveCount++;
+        updateMovesDisplay();
+
+        if (!isCorrect) {
+            input.classList.remove('error');
+            void input.offsetWidth; // riavvia l'animazione di shake
+            input.classList.add('error');
+            setTimeout(() => input.classList.remove('error'), 400);
+            return;
+        }
+
+        // Risposta corretta: aggiorna TUTTO lo stato in modo sincrono, prima delle animazioni
+        selectFoundState[inputIndex] = true;
+        input.disabled = true;
+        input.classList.add('selected');
+        input.style.backgroundColor = '#ff9800';
+        input.style.color = '#ffffff';
+        input.style.borderColor = '#ffffff';
+        foundCorrectCount++;
+        updateWordCountDisplay();
+        updateProgressBar(foundCorrectCount / totalCorrectItems);
+
+        const justCompleted = foundCorrectCount === totalCorrectItems;
+        if (justCompleted) {
+            isGameCompleted = true;
+            stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
+            hideHelp();
+            gameSelects.forEach(el => { el.disabled = true; });
+            setRevealButton(true);
+        }
+
+        playAnimations(input, justCompleted);
+    }
+
+    gameSelects.forEach((input, position) => {
+        const inputIndex = input.dataset.index !== undefined ? Number(input.dataset.index) : position;
+
+        input.addEventListener('blur', () => validateInput(input, inputIndex));
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                validateInput(input, inputIndex);
+                input.blur(); // chiude la tastiera su mobile; il blur non ricontrolla lo stesso testo
+            }
+        });
+    });
+
+    initGame();
+});
+
+
+</script>
+
+</body>
+</html>

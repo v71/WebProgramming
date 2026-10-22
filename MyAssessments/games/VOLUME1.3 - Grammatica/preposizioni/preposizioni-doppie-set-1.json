@@ -1,0 +1,13 @@
+{
+    "title": "Preposizioni doppie",
+     "label": "Osserva l'immagine e scegli, tra le 3 opzioni, l'opzione che la descrive meglio",
+    "rounds": [
+        {
+            "sentence": "La banca apre {blank} 8.30 {blank} 12.30",
+            "img": "../images/preposizioni/banca.png",
+            "options": ["da , a", "dalle , alle","a , da"],
+            "blanks": ["dalle", "alle"],
+            "correctIndex": 1
+        }
+    ]
+}
