@@ -127,6 +127,12 @@
             border-color: var(--grid-btn-selected-border-color) !important;
         }
         
+        .slot .card:not(.correct):not(.given):not(.reveal-letter) {
+            background: var(--disabled-btn);
+            box-shadow: none;
+            border-color: #ffffff; /* your wrong-border color */
+        }
+
         /* disabled */
         
         .card.disabled {
@@ -229,6 +235,9 @@
         
         .slot.error-slot {
             animation: shake 0.4s ease;
+            background-color: var(--wrong);
+            cursor: default;
+            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
         }
         
         .slot.given {
@@ -343,7 +352,8 @@
             #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
             #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
         }
-        
+
+       
     </style>
     
 </head>
@@ -353,22 +363,14 @@
     <h1 id="game-title">Completa la Frase</h1>
 
     <div id="game-stats">
-        <span>Parole Corrette: <strong id="progress-value">1 / 4</strong></span>
+        <span>Round: <strong id="round-value">1 / 5</strong></span>
+        <span>Parole Corrette: <strong id="progress-value">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
     <h3 id="instruction-banner" class="stats-style">Alcune parole sono già al posto giusto. Clicca sulle parole mancanti nella prima lista per completare la frase nelle caselle vuote.</h3>
-
-    <!--<div class="controls" id="action-controls">
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span>Caricamento...</span>
-        </button>
-        <button id="reveal-btn" class="cool-btn">
-            <span>💡 Help!</span>
-        </button>
-    </div>-->
 
     <div class="controls" id="action-controls">
         <!-- Next Button (Text only) -->
@@ -386,7 +388,6 @@
         <div class="section-wrapper">
             <div id="source-container" class="card-container"></div>
         </div>
-
         <div class="section-wrapper" style="margin-bottom:0;">
             <div class="target-wrapper">
                 <div id="target-container" class="card-container"></div>
@@ -504,6 +505,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ---------- Elementi ----------
     const revealBtn = document.getElementById('reveal-btn');
+
+    // Aggiorna il pulsante Help come nel primo gioco:
+    // l'icona resta nel suo <span class="btn-icon"> separato e cambia insieme al testo,
+    // il testo cambia dentro .btn-text.
+    function setRevealLabel(label, icon, outline) {
+        if (!revealBtn) return;
+
+        const textEl = revealBtn.querySelector('.btn-text');
+        const iconEl = revealBtn.querySelector('.btn-icon');
+
+        if (iconEl) {
+            iconEl.textContent = icon;
+            iconEl.style.display = '';
+            if (outline) {
+                // Contorno nero sottile inline (con !important) per le icone che non lo ricevono dal CSS.
+                // Lo spessore (in px) arriva da setButtonMode.
+                const o = outline + 'px';
+                iconEl.style.setProperty('-webkit-text-stroke', '0', 'important');
+                iconEl.style.setProperty(
+                    'text-shadow',
+                    `-${o} -${o} 0 #000, ${o} -${o} 0 #000, -${o} ${o} 0 #000, ${o} ${o} 0 #000`,
+                    'important'
+                );
+            } else {
+                // Nessun outline inline: l'icona torna a usare lo stile del CSS, come nel primo gioco
+                iconEl.style.removeProperty('-webkit-text-stroke');
+                iconEl.style.removeProperty('text-shadow');
+            }
+        }
+        if (textEl) textEl.textContent = label;
+    }
+
     const revealOverlay = document.getElementById('reveal-overlay');
     const sourceContainer = document.getElementById('source-container');
     const targetContainer = document.getElementById('target-container');
@@ -523,23 +556,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressTitle = document.getElementById('progress-title');
     const progressContainer = document.querySelector('.progress-bar-container');
 
-    // Indicatore del round: usa #round-value se esiste nell'HTML, altrimenti lo crea
-    // sopra il banner delle istruzioni.
-    let roundValueEl = document.getElementById('round-value');
-    let roundIndicatorEl = null;
-    if (!roundValueEl && instructionBanner && instructionBanner.parentNode) {
-        roundIndicatorEl = document.createElement('div');
-        roundIndicatorEl.id = 'round-indicator';
-        roundIndicatorEl.style.cssText = 'text-align:center;font-weight:600;margin-bottom:8px;';
-        roundValueEl = document.createElement('span');
-        roundValueEl.id = 'round-value';
-        roundIndicatorEl.append('Frase ', roundValueEl);
-        instructionBanner.parentNode.insertBefore(roundIndicatorEl, instructionBanner);
+    // Contatore delle frasi: è il <span id="round-value"> dentro #game-stats (nell'HTML)
+    const roundValueEl = document.getElementById('round-value');
+    if (!roundValueEl) {
+        console.warn('Manca <span id="round-value"> dentro #game-stats: il contatore delle frasi non verrà mostrato.');
     }
 
     const hiddenOnSummary = [
         puzzleWorkspace, instructionBanner, gameStats, gameTitle,
-        progressTitle, progressContainer, actionControls, roundIndicatorEl
+        progressTitle, progressContainer, actionControls
     ];
 
     // ---------- Stato ----------
@@ -686,14 +711,16 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
         revealBtn.disabled = (mode === 'wrong');
 
+        // outline = spessore del contorno nero in px; 0 = nessun outline inline (usa il CSS, come la lampadina)
         const labels = {
-            help: 'Help!',
-            wrong: '⚠️ Frase errata',
-            next: 'Avanti ➜',
-            done: '✓ Fatto'
+            help:  { icon: '💡', text: 'Help!',          outline: 0 },
+            wrong: { icon: '⚠️', text: 'Frase errata',   outline: 1 },
+            next:  { icon: '▶',  text: 'Prossima frase', outline: 1 },
+            done:  { icon: '✓',  text: 'Fatto',          outline: 1 }
         };
-        //revealBtn.innerHTML = `<span>${labels[mode]}</span>`;
-        revealBtn.querySelector('.btn-text').textContent = labels[mode];
+
+        // Icona, testo e contorno cambiano insieme a ogni modalità
+        setRevealLabel(labels[mode].text, labels[mode].icon, labels[mode].outline);
     }
 
     // ---------- Accessibilità ----------
@@ -848,7 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const isLastRound = currentRound === roundSentences.length - 1;
         setButtonMode(isLastRound ? 'done' : 'next');
-        playConfetti(isLastRound);
+        if (isLastRound) playConfetti(true);
     }
 
     // ---------- Round ----------
@@ -875,7 +902,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateRoundDisplay();
         updateMovesDisplay();
         updateRevealsDisplay();
-        setButtonMode('help');
+        setButtonMode('help'); // ripristina anche l'icona 💡
 
         // 1. Slot di destinazione
         originalWords.forEach((word, i) => {
@@ -1046,7 +1073,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     </script>
-
 
 </body>
 </html>

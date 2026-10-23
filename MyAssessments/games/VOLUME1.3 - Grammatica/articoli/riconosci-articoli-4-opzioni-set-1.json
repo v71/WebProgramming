@@ -1,0 +1,54 @@
+{
+    "title": "L'articolo giusto",
+    "label": "Osserva l'immagine e scegli, tra le 4 opzioni, l'articolo associato",
+    "rounds": [
+        {
+            "label":"Zaino",
+            "img": "../images/articoli/backpack.png",
+            "options": ["le", "lo" ,"il", "i"],
+            "correctIndex": 1
+        },
+        {
+            "label":"Libro",
+            "img": "../images/articoli/book.png",
+            "options": ["la", "lo" ,"il", "i"],
+            "correctIndex": 2
+        },
+        {
+            "label":"Automobile",
+            "img": "../images/articoli/car.png",
+            "options": ["la", "le" ,"il", "a"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Gatto",
+            "img": "../images/articoli/cat.png",
+            "options": ["il", "u" ,"lo", "le"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Pastello",
+            "img": "../images/articoli/crayon.png",
+            "options": ["il", "u" ,"lo", "la"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Iena",
+            "img": "../images/articoli/hyiena.png",
+            "options": ["il", "u" ,"lo", "la"],
+            "correctIndex": 3
+        },
+        {
+            "label":"Lampada",
+            "img": "../images/articoli/lamp.png",
+            "options": ["la", "a" ,"il", "la"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Smartphone",
+            "img": "../images/articoli/mobile.png",
+            "options": ["lo", "a" ,"il", "la"],
+            "correctIndex": 0
+        }
+    ]
+}

@@ -364,7 +364,7 @@
             text-decoration: none;
         }
 
-         /* Apply your border or text effect only to the text span */
+        /* Apply your border or text effect only to the text span */
         .cool-btn .btn-text {
             text-shadow:
                 -1px -1px 0 #000,

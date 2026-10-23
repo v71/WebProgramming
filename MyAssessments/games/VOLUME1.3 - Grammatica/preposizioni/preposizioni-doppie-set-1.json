@@ -8,6 +8,55 @@
             "options": ["da , a", "dalle , alle","a , da"],
             "blanks": ["dalle", "alle"],
             "correctIndex": 1
+        },
+        {
+            "sentence": "Abito {blank} Berlino, {blank} Germania",
+            "img": "../images/preposizioni/berlino.png",
+            "options": ["a , nella", "da , alla","a , in"],
+            "blanks": ["a", "in"],
+            "correctIndex": 2
+        },
+        {
+            "sentence": "{blank} fine settimana andiamo {blank} lago",
+            "img": "../images/preposizioni/lago.png",
+            "options": ["A , nell", "In , all","Nel , al"],
+            "blanks": ["Nel", "al"],
+            "correctIndex": 2
+        },
+        {
+            "sentence": "Vado {blank} centro {blank} piedi",
+            "img": "../images/preposizioni/centro.png",
+            "options": ["in , a", "nel , all","in , nel"],
+            "blanks": ["in", "a"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Ci vediamo {blank} Maria {blank} un'ora",
+            "img": "../images/preposizioni/da-maria.png",
+            "options": ["da , tra", "da , in","da , all'"],
+            "blanks": ["da", "tra"],
+            "correctIndex": 0
+        },
+        {
+            "sentence": "Oggi siamo andante {blank} centro con l'auto {blank} Mamma",
+            "img": "../images/preposizioni/macchina.png",
+            "options": ["in , di", "in , della","nel , di"],
+            "blanks": ["in", "della"],
+            "correctIndex": 1
+        },
+        {
+            "sentence": "Oggi ho piantato una piantina {blank} la Mamma {blank} giardino",
+            "img": "../images/preposizioni/pianta.png",
+            "options": ["con , nel", "di , in","nel , di"],
+            "blanks": ["con", "nel"],
+            "correctIndex": 0
+        },
+          {
+            "sentence": "Oggi ho letto il libro {blank} favole {blank} la Mamma",
+            "img": "../images/preposizioni/lettura.png",
+            "options": ["delle , con", "di , con","di , alla"],
+            "blanks": ["delle", "con"],
+            "correctIndex": 0
         }
     ]
 }

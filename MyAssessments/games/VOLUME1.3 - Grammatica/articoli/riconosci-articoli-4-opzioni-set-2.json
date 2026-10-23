@@ -1,0 +1,54 @@
+{
+    "title": "L'articolo giusto",
+    "label": "Osserva l'immagine e scegli, tra le 4 opzioni, l'articolo associato",
+    "rounds": [
+        {
+            "label":"Cane",
+            "img": "../images/articoli/dog.png",
+            "options": ["le", "lo" ,"il", "la"],
+            "correctIndex": 2
+        },
+        {
+            "label":"Icecream",
+            "img": "../images/articoli/icecream.png",
+            "options": ["la", "lo" ,"il", "le"],
+            "correctIndex": 2
+        },
+        {
+            "label":"Tyre",
+            "img": "../images/articoli/tyre.png",
+            "options": ["lo", "le" ,"il", "la"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Elephant",
+            "img": "../images/articoli/elephant.png",
+            "options": ["l'", "le" ,"il", "la"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Mug",
+            "img": "../images/articoli/mug.png",
+            "options": ["il", "le" ,"il", "la"],
+            "correctIndex": 3
+        },
+        {
+            "label":"Sugar",
+            "img": "../images/articoli/sugar.png",
+            "options": ["lo", "le" ,"il", "la"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Smartphone",
+            "img": "../images/articoli/mobile.png",
+            "options": ["lo", "le" ,"li", "la"],
+            "correctIndex": 0
+        },
+        {
+            "label":"picture",
+            "img": "../images/articoli/picture.png",
+            "options": ["lo", "le" ,"li", "la"],
+            "correctIndex": 3
+        }
+    ]
+}
