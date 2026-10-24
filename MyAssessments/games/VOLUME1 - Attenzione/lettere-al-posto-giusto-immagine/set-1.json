@@ -1,0 +1,18 @@
+{
+    "title": "Lettere al posto giusto",
+    "label": "Clicca su un carattere per ricomporre la parola.",
+    "words": [
+        [ 
+           { "text": "ZAINO",    "image": "images/backpack.png" },
+           { "text": "BORSA",    "image": "images/bag.png" },
+           { "text": "CINTURA",  "image": "images/belt.png" },
+           { "text": "SCARPONI", "image": "images/boots.png" }
+        ],
+        [ 
+          { "text": "CAPPOTTO", "image": "images/coat.png" },
+          { "text": "SCARPE",   "image": "images/shoes.png" },
+          { "text": "MAGLIONE", "image": "images/sweater.png" },
+          { "text": "CAPPELLO", "image": "images/hat.png" }
+        ]
+    ]
+}
