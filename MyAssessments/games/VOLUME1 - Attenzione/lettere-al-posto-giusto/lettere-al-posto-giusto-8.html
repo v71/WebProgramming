@@ -336,9 +336,7 @@
     <h1 id="game-title">Puzzle di Lettere</h1>
 
     <div id="game-stats">
-        <span>Round: <strong id="round-value">1 / 1</strong></span>
-        <span>Parola: <strong id="word-value">1 / 1</strong></span>
-        <span>Lettere Corrette: <strong id="progress-value">0 / 0</strong></span>
+        <span>Lettere Corrette: <strong id="progress-value">1 / 4</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -383,7 +381,7 @@
         <table class="summary-table">
             <thead>
                 <tr>
-                    <th>Round</th>
+                    <th>Parola</th>
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
@@ -401,9 +399,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // Ogni round è una lista di parole. Finiti tutti i round il gioco termina.
-    // L'ordine dei round e quello delle parole dentro ogni round è casuale a ogni partita.
-    
+    // File JSON con titolo, testo e parole (percorso relativo alla pagina HTML).
+    // Ogni parola dell'array "words" è un round: vengono giocate tutte, una dopo l'altra, in ordine casuale.
     const PUZZLE_URL = 'set-1.json';
 
     // --- Elementi ---
@@ -415,8 +412,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const progressValueEl = document.getElementById('progress-value');
-    const roundValueEl = document.getElementById('round-value');
-    const wordValueEl = document.getElementById('word-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const puzzleWorkspace = document.getElementById('puzzle-workspace');
     const instructionBanner = document.getElementById('instruction-banner');
@@ -428,6 +423,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const actionControls = document.getElementById('action-controls');
     const progressTitle = document.getElementById('progress-title');
     const progressContainer = document.querySelector('.progress-bar-container');
+
+    // Contatore dei round: se non esiste nell'HTML viene aggiunto in testa alle statistiche
+    let roundValueEl = document.getElementById('round-value');
+    if (!roundValueEl && gameStats) {
+        const roundStat = document.createElement('span');
+        roundStat.innerHTML = 'Round: <strong id="round-value">1 / 1</strong>';
+        gameStats.insertBefore(roundStat, gameStats.firstChild);
+        roundValueEl = roundStat.querySelector('strong');
+    }
 
     const hiddenOnSummary = [
         puzzleWorkspace, instructionBanner, gameStats, gameTitle,
@@ -444,11 +448,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let wordCompleted = false;
     let isRevealing = false;
     let slotsMeta = [];
-    let buttonMode = 'help'; // 'help' | 'wrong' | 'next' | 'nextRound' | 'done'
-    let rounds = [];         // [ [parola, parola, ...], ... ]
+    let buttonMode = 'help'; // 'help' | 'wrong' | 'next' | 'done'
+    let words = [];          // PUZZLE_WORDS pulito e mescolato: un round per parola
     let roundIndex = 0;      // round corrente
-    let wordIndex = 0;       // parola corrente dentro il round
-    let results = [];        // risultato di ogni parola completata
+    let results = [];        // risultato di ogni round completato
 
     // --- Timer ---
     function stopElapsedTimer() {
@@ -479,6 +482,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateRevealsDisplay() {
         revealsValueEl.textContent = revealCount;
+    }
+
+    function updateRoundDisplay() {
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${words.length}`;
     }
 
     function updateProgressDisplay() {
@@ -514,7 +521,6 @@ document.addEventListener('DOMContentLoaded', () => {
             help: '💡 Help!',
             wrong: '⚠️ Parola errata',
             next: 'Avanti ➜',
-            nextRound: 'Prossimo round ➜',
             done: '✓ Fatto'
         };
         revealBtn.innerHTML = `<span>${labels[mode]}</span>`;
@@ -570,20 +576,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.warn('Checkmark animation failed:', err);
         }
-    }
-
-    // Aspetta che la barra di progresso finisca di riempirsi (con un limite di sicurezza)
-    function waitForProgressBar() {
-        return new Promise(resolve => {
-            const finish = () => {
-                clearTimeout(fallback);
-                progressBarFill.removeEventListener('transitionend', onEnd);
-                resolve();
-            };
-            const onEnd = (e) => { if (e.propertyName === 'width') finish(); };
-            const fallback = setTimeout(finish, 700); // se la transizione non parte, non resta bloccato
-            progressBarFill.addEventListener('transitionend', onEnd);
-        });
     }
 
     async function playConfetti() {
@@ -670,23 +662,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         finalScore = computeScore();
         results.push({
-            round: roundIndex,
             text: originalTextString,
             seconds: elapsedSeconds,
             moves: moveCount,
             reveals: revealCount,
             score: finalScore
         });
-        const isLastWord = wordIndex >= rounds[roundIndex].length - 1;
-        const isLastRound = roundIndex >= rounds.length - 1;
-        // subito, senza aspettare i coriandoli
-        setButtonMode(!isLastWord ? 'next' : (isLastRound ? 'done' : 'nextRound'));
-        if(isLastWord) {
-            //playConfetti();
-            waitForProgressBar().then(() => {
-                playConfetti(); // se nel frattempo si è premuto "Avanti", niente coriandoli sulla nuova immagine
-            });
-        }
+        const isLastRound = roundIndex >= words.length - 1;
+        setButtonMode(isLastRound ? 'done' : 'next'); // subito, senza aspettare i coriandoli
+        if (isLastRound) playConfetti(); // coriandoli solo alla fine di tutti i round
     }
 
     function checkWordAutomatic() {
@@ -709,23 +693,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function buildRounds(set) {
-        return (Array.isArray(set) ? set : [])
-            .map(round => (Array.isArray(round) ? round : [])
-                .map(w => String(w).trim())
-                .filter(Boolean))
-            .filter(round => round.length);
-    }
-
-    function updateRoundDisplay() {
-        roundValueEl.textContent = `${roundIndex + 1} / ${rounds.length}`;
-        wordValueEl.textContent = `${wordIndex + 1} / ${rounds[roundIndex].length}`;
-    }
-
-    function loadWord(rIndex, wIndex) {
-        roundIndex = rIndex;
-        wordIndex = wIndex;
-        originalTextString = rounds[roundIndex][wordIndex];
+    function loadRound(index) {
+        roundIndex = index;
+        originalTextString = words[roundIndex];
 
         hideReveal();
         sourceContainer.innerHTML = '';
@@ -796,10 +766,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     revealBtn.addEventListener('blur', hideReveal);
 
-    // A parola completata il tasto diventa "Avanti", "Prossimo round" o "Fatto" (riepilogo finale)
+    // A parola completata il tasto diventa "Avanti" (round successivo) o "Fatto" (riepilogo finale)
     revealBtn.addEventListener('click', () => {
-        if (buttonMode === 'next') loadWord(roundIndex, wordIndex + 1);
-        else if (buttonMode === 'nextRound') loadWord(roundIndex + 1, 0);
+        if (buttonMode === 'next') loadRound(roundIndex + 1);
         else if (buttonMode === 'done') showSummaryScreen();
     });
 
@@ -823,16 +792,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (summaryTbody) {
             summaryTbody.innerHTML = '';
-            rounds.forEach((_, i) => {
-                const rs = results.filter(r => r.round === i);
-                if (!rs.length) return;
-                const sum = key => rs.reduce((t, r) => t + r[key], 0);
+            results.forEach(r => {
                 const row = document.createElement('tr');
-                addCell(row, `Round ${i + 1} (${rs.length} parole)`, true);
-                addCell(row, `${sum('seconds')}s`);
-                addCell(row, String(sum('moves')));
-                addCell(row, String(sum('reveals')));
-                addCell(row, String(sum('score')), true);
+                addCell(row, r.text, true);
+                addCell(row, `${r.seconds}s`);
+                addCell(row, String(r.moves));
+                addCell(row, String(r.reveals));
+                addCell(row, String(r.score), true);
                 summaryTbody.appendChild(row);
             });
         }
@@ -849,35 +815,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (summaryScreen) summaryScreen.style.display = 'block';
     }
-
     /*
     // --- Avvio ---
-    function initGame() {
-        try {
-            rounds = buildRounds(PUZZLE_SET);
-            if (!rounds.length) {
-                instructionBanner.textContent = 'Nessun round disponibile.';
-                document.body.classList.add('loaded');
-                return;
-            }
-            // ordine casuale: sia dei round, sia delle parole dentro ogni round
-            rounds = shuffleArray(rounds).map(r => shuffleArray(r));
-            results = [];
-            loadWord(0, 0);
-            document.body.classList.add('loaded');
-        } catch (err) {
-            console.error('Could not init game:', err);
-        }
-    }
-    */
-
     async function initGame() {
         try {
-            const response = await fetch(PUZZLE_URL);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
+            // MODIFICA: il file JSON può essere passato nell'URL con ?json=nomefile.json
+            const params = new URLSearchParams(window.location.search);
+            const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
+            const response = await fetch(jsonFile);
+
+       //     const response = await fetch(PUZZLE_URL);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
-            rounds = buildRounds(data.words);
+
+            // Una voce per parola (eventuali array annidati vengono appiattiti)
+            words = (Array.isArray(data.words) ? data.words.flat(Infinity) : [])
+                .map(w => String(w).trim())
+                .filter(Boolean);
+            if (!words.length) throw new Error('Nessuna parola valida nel file');
 
             // Testi facoltativi: se mancano nel JSON restano quelli dell'HTML
             if (data.title) {
@@ -885,14 +841,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.title = data.title;
             }
             if (data.label) instructionBanner.textContent = data.label;
-            if (!rounds.length) throw new Error('Nessun round valido nel file');
-            // ordine casuale: sia dei round, sia delle parole dentro ogni round
-            rounds = shuffleArray(rounds).map(r => shuffleArray(r));
+
+            words = shuffleArray(words); // ordine casuale a ogni partita
             results = [];
-            loadWord(0, 0);
+            loadRound(0);
         } catch (err) {
-            console.error('Could not load rounds:', err);
-            instructionBanner.textContent = 'Impossibile caricare i round.';
+            console.error('Could not load words:', err);
+            if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le parole.';
+        }
+        document.body.classList.add('loaded');
+    }
+    */
+
+    async function initGame() {
+        try {
+            // Il file JSON può essere passato nell'URL con ?json=nomefile.json
+            const param = new URLSearchParams(window.location.search).get('json');
+            const isSafe = param
+                && /^[\w\-./]+\.json$/i.test(param)
+                && !param.includes('..')
+                && !param.includes('//')
+                && !param.startsWith('/');
+            const jsonFile = isSafe ? param : 'set-1.json';
+
+            const response = await fetch(jsonFile);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+
+            // Una voce per parola (eventuali array annidati vengono appiattiti)
+            words = (Array.isArray(data.words) ? data.words.flat(Infinity) : [])
+                .map(w => String(w).trim())
+                .filter(Boolean);
+            if (!words.length) throw new Error('Nessuna parola valida nel file');
+
+            // Testi facoltativi: se mancano nel JSON restano quelli dell'HTML
+            if (data.title) {
+                gameTitle.textContent = data.title;
+                document.title = data.title;
+            }
+            if (data.label) instructionBanner.textContent = data.label;
+
+            words = shuffleArray(words); // ordine casuale a ogni partita
+            results = [];
+            loadRound(0);
+        } catch (err) {
+            console.error('Could not load words:', err);
+            if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le parole.';
         }
         document.body.classList.add('loaded');
     }

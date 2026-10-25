@@ -1,10 +1,6 @@
 {
   "title":"Lettere al posto giusto",
   "label": "Metti le lettere al posto giusto.",
-  "words": [
-      
-         [ "HELLO WORLD", "CODE PUZZLE", "JAVASCRIPT", "UI DESIGN"],
-         ["BUONGIORNO", "BUONA SERA", "GRAZIE MILLE"]
-      
-  ]
+  "words": 
+         [ "HELLO WORLD", "CODE PUZZLE", "JAVASCRIPT", "UI DESIGN"]
 }

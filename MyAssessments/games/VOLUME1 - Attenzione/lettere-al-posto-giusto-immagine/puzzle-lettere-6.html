@@ -13,17 +13,90 @@
     
     <style>
 
+        /* Tutte le modifiche di questa pagina stanno qui: stylesheet.css (condiviso) non viene toccato.
+           Questo blocco viene dopo il <link>, quindi a parità di specificità vince. */
+
         :root {
-            /* One size for every letter card: the cards to move, the slots and the Help overlay.
-               Change these two values to resize all of them together. */
-            --card-w: 72px;
-            --card-h: 94px;
+            /* Dimensione di tutte le card (sorgente, slot e overlay Help).
+               Il valore reale viene calcolato da fitCards() in base a lunghezza della frase e larghezza dello schermo;
+               questo è solo il valore di partenza. */
+            --card-w: 44px;
+            --card-h: calc(var(--card-w) * 1.3);
+            --card-gap: 6px;   /* tenere allineato con CARD_GAP nello script */
+            --box-pad: 10px;
         }
+
+        /* =========================================
+           LAYOUT A ALTEZZA SCHERMO (niente scroll)
+           Il body occupa esattamente lo schermo; l'immagine prende
+           tutto lo spazio che resta e si rimpicciolisce da sola.
+        ========================================= */
+
+        body {
+            height: 100vh;
+            height: 100dvh;
+            min-height: 0;
+            padding: 8px 12px 10px;
+            justify-content: flex-start;
+        }
+
+        body > * {
+            flex-shrink: 0;
+        }
+
+        .controls {
+            margin-bottom: 16px;
+            min-height: 0;
+        }
+
+        .cool-btn {
+            padding: 8px 22px;
+        }
+
+        /* Il riepilogo finale resta centrato senza essere tagliato se è più alto dello schermo */
+        #summary-screen {
+            margin: auto 0;
+        }
+
+        /* =========================================
+           IMMAGINE
+        ========================================= */
+
+        #puzzle-image-wrapper {
+            flex: 0 1 30vh;       /* never taller than 30% of the screen, shrinks if needed */
+            min-height: 56px;
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            align-items: flex-start;   /* era center */
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        #puzzle-image-wrapper[hidden] {
+            display: none;
+        }
+
+        #puzzle-image {
+            height: 100%;
+            width: auto;
+            max-width: 100%;
+            object-fit: contain;
+            border-radius: 14px;
+            box-shadow: var(--shadow-md);
+            /* ...resto invariato... */
+            border: 2px solid #000000;   /* spessore e colore a piacere */
+
+        }
+
+        /* =========================================
+           AREA DI GIOCO
+        ========================================= */
 
         .section-wrapper {
             width: 100%;
             max-width: 1100px;
-            margin-bottom: 16px;
+            margin-bottom: 6px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -43,13 +116,14 @@
         .card-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 14px;
+            gap: var(--card-gap);
             width: fit-content;
             max-width: 100%;
-            min-height: clamp(90px, 14vh, 130px);
-            padding: 20px;
-            border-radius: 20px;
+            min-height: 0;
+            padding: var(--box-pad);
+            border-radius: 14px;
             align-items: center;
+            justify-content: center;
             box-sizing: border-box;
             background-color: var(--game-area-background);
             box-shadow: var(--shadow-md);
@@ -72,7 +146,7 @@
             border-color: var(--grid-btn-hovered-border-color);
             background: var(--grid-btn-hovered);
             color: var(--grid-btn-hovered-text);
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             box-shadow: var(--shadow-md);
             z-index: 5;
         }
@@ -80,7 +154,7 @@
         #target-container {
             border: 2px solid #000000;
             background-color: #37275e;
-            padding: 19px;
+            padding: var(--box-pad);
         }
 
         /* Slot styles for the drop zone: same size as a card */
@@ -91,7 +165,7 @@
             height: var(--card-h);
             background-color: var(--summary-background);
             border: 2px solid var(--border);
-            border-radius: 14px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -157,6 +231,7 @@
         .target-wrapper {
             position: relative;
             width: fit-content;
+            max-width: 100%;
             margin: 0 auto;
         }
 
@@ -174,9 +249,9 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 14px;
-            padding: 19px;
-            border-radius: 20px;
+            gap: var(--card-gap);
+            padding: var(--box-pad);
+            border-radius: 14px;
             background-color: #37275e;
             border: 2px solid var(--correct);
             opacity: 0;
@@ -201,7 +276,7 @@
             transform: none !important;
         }
 
-        /* Letter cards */
+        /* Letter cards: il font segue la dimensione della card */
         .card {
             flex-shrink: 0;
             width: var(--card-w);
@@ -210,11 +285,11 @@
             background: #7931b4;
             color: var(--text);
             border: 2px solid var(--border);
-            border-radius: 14px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
+            font-size: calc(var(--card-w) * 0.5);
             font-weight: 700;
             cursor: pointer;
             user-select: none;
@@ -222,14 +297,15 @@
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
         }
 
+        /* Simbolo dello spazio, in proporzione alla card */
         .card.space::after {
             content: '';
-            width: 30px;
-            height: 14px;
-            margin-top: 14px;
-            border: 4px solid currentColor;
+            width: calc(var(--card-w) * 0.4);
+            height: calc(var(--card-w) * 0.2);
+            margin-top: calc(var(--card-w) * 0.2);
+            border: 3px solid currentColor;
             border-top: none;
-            border-radius: 0 0 6px 6px;
+            border-radius: 0 0 5px 5px;
             opacity: 0.85;
         }
         
@@ -238,24 +314,6 @@
             background: #5d258a;
             width: 100%;
             height: 100%;
-        }
-
-        #game-stats, .stats-style {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--game-area-background);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
         }
 
         #game-stats strong {
@@ -330,13 +388,15 @@
         }
 
     </style>
+
 </head>
 <body>
 
     <h1 id="game-title">Puzzle di Lettere</h1>
 
     <div id="game-stats">
-        <span>Lettere Corrette: <strong id="progress-value">1 / 4</strong></span>
+        <span>Parola: <strong id="word-value">1 / 1</strong></span>
+        <span>Lettere Corrette: <strong id="progress-value">0 / 0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -352,6 +412,11 @@
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
         </button>
+    </div>
+
+    <!-- Immagine: occupa lo spazio rimasto, senza mai far scorrere la pagina -->
+    <div id="puzzle-image-wrapper" hidden>
+        <img id="puzzle-image" alt="Immagine indizio">
     </div>
 
     <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
@@ -381,7 +446,7 @@
         <table class="summary-table">
             <thead>
                 <tr>
-                    <th>Parola</th>
+                    <th>Round</th>
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
@@ -395,11 +460,23 @@
         </div>
     </div>
 
-<script>
+
+    <script>
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const PUZZLE_WORDS = ["HELLO WORLD", "CODE PUZZLE", "JAVASCRIPT", "UI DESIGN"];
+    // File JSON con titolo, testo e voci (percorso relativo alla pagina HTML).
+    // Formato: { "title": "...", "label": "...", "words": [ { "text": "ZAINO", "image": "images/backpack.png" }, ... ] }
+    // Le voci vengono mostrate una alla volta, in ordine casuale.
+    const PUZZLE_URL = 'set-1.json';
+
+    // Dimensioni card: devono restare coerenti con il CSS (--card-gap, --box-pad, bordo 2px dei container)
+    const CARD_MIN = 24;
+    const CARD_MAX = 52;
+    const CARD_GAP = 6;
+    const BOX_EXTRA = 2 * 10 + 2 * 2; // padding + bordo di un container
+    const PAGE_SIDE_PADDING = 24;     // padding laterale del body
+    const MAX_CONTENT_WIDTH = 1100;
 
     // --- Elementi ---
     const revealBtn = document.getElementById('reveal-btn');
@@ -410,6 +487,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const progressValueEl = document.getElementById('progress-value');
+    const wordValueEl = document.getElementById('word-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const puzzleWorkspace = document.getElementById('puzzle-workspace');
     const instructionBanner = document.getElementById('instruction-banner');
@@ -421,10 +499,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const actionControls = document.getElementById('action-controls');
     const progressTitle = document.getElementById('progress-title');
     const progressContainer = document.querySelector('.progress-bar-container');
+    const imageWrapper = document.getElementById('puzzle-image-wrapper');
+    const puzzleImage = document.getElementById('puzzle-image');
 
     const hiddenOnSummary = [
         puzzleWorkspace, instructionBanner, gameStats, gameTitle,
-        progressTitle, progressContainer, actionControls
+        progressTitle, progressContainer, actionControls, imageWrapper
     ];
 
     // --- Stato ---
@@ -437,7 +517,40 @@ document.addEventListener('DOMContentLoaded', () => {
     let wordCompleted = false;
     let isRevealing = false;
     let slotsMeta = [];
-    let buttonMode = 'help'; // 'help' | 'wrong' | 'done'
+    let buttonMode = 'help'; // 'help' | 'wrong' | 'next' | 'done'
+    let items = [];          // [ { text, image }, ... ]
+    let itemIndex = 0;       // voce corrente
+    let results = [];        // risultato di ogni voce completata
+
+    // --- Dimensione card ---
+    // Cerca di tenere l'intera frase su una sola riga (meno altezza);
+    // se non basta, scende fino a CARD_MIN e poi va a capo.
+    function fitCards() {
+        const len = originalTextString.length;
+        if (!len) return;
+        const avail = Math.min(MAX_CONTENT_WIDTH, document.documentElement.clientWidth - PAGE_SIDE_PADDING);
+        const w = Math.floor((avail - BOX_EXTRA - (len - 1) * CARD_GAP) / len);
+        const size = Math.max(CARD_MIN, Math.min(CARD_MAX, w));
+        document.documentElement.style.setProperty('--card-w', size + 'px');
+    }
+
+    window.addEventListener('resize', fitCards);
+
+    // --- Immagine ---
+    function setPuzzleImage(src) {
+        if (!src) {
+            imageWrapper.hidden = true;
+            puzzleImage.removeAttribute('src');
+            return;
+        }
+        imageWrapper.hidden = false;
+        puzzleImage.src = src;
+    }
+
+    // Se il file non esiste, l'area sparisce e lo spazio torna al gioco
+    puzzleImage.addEventListener('error', () => {
+        imageWrapper.hidden = true;
+    });
 
     // --- Timer ---
     function stopElapsedTimer() {
@@ -468,6 +581,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateRevealsDisplay() {
         revealsValueEl.textContent = revealCount;
+    }
+
+    function updateItemDisplay() {
+        wordValueEl.textContent = `${itemIndex + 1} / ${items.length}`;
     }
 
     function updateProgressDisplay() {
@@ -502,6 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const labels = {
             help: '💡 Help!',
             wrong: '⚠️ Parola errata',
+            next: 'Avanti ➜',
             done: '✓ Fatto'
         };
         revealBtn.innerHTML = `<span>${labels[mode]}</span>`;
@@ -557,6 +675,20 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.warn('Checkmark animation failed:', err);
         }
+    }
+
+    // Aspetta che la barra di progresso finisca di riempirsi (con un limite di sicurezza)
+    function waitForProgressBar() {
+        return new Promise(resolve => {
+            const finish = () => {
+                clearTimeout(fallback);
+                progressBarFill.removeEventListener('transitionend', onEnd);
+                resolve();
+            };
+            const onEnd = (e) => { if (e.propertyName === 'width') finish(); };
+            const fallback = setTimeout(finish, 700); // se la transizione non parte, non resta bloccato
+            progressBarFill.addEventListener('transitionend', onEnd);
+        });
     }
 
     async function playConfetti() {
@@ -642,8 +774,19 @@ document.addEventListener('DOMContentLoaded', () => {
         targetContainer.querySelectorAll('.slot').forEach(slot => slot.classList.add('locked'));
 
         finalScore = computeScore();
-        setButtonMode('done'); // subito, senza aspettare i coriandoli
-        playConfetti();
+        results.push({
+            text: originalTextString,
+            seconds: elapsedSeconds,
+            moves: moveCount,
+            reveals: revealCount,
+            score: finalScore
+        });
+        const isLast = itemIndex >= items.length - 1;
+        setButtonMode(isLast ? 'done' : 'next'); // subito, senza aspettare i coriandoli
+        if (isLast) {
+            // i coriandoli partono solo a barra completamente riempita
+            waitForProgressBar().then(() => playConfetti());
+        }
     }
 
     function checkWordAutomatic() {
@@ -666,14 +809,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function loadRandomWord() {
-        const words = PUZZLE_WORDS.map(w => String(w).trim()).filter(Boolean);
-        if (!words.length) {
-            if (instructionBanner) instructionBanner.textContent = 'Nessuna parola disponibile.';
-            return false;
-        }
+    function normalizeEntries(list) {
+        return (Array.isArray(list) ? list : [])
+            .map(w => (typeof w === 'string')
+                ? { text: w.trim(), image: '' }
+                : { text: String((w && w.text) || '').trim(), image: (w && w.image) || '' })
+            .filter(e => e.text);
+    }
 
-        originalTextString = words[Math.floor(Math.random() * words.length)];
+    // Una sola lista di voci (eventuali array annidati vengono appiattiti)
+    function buildItems(list) {
+        return normalizeEntries(Array.isArray(list) ? list.flat(Infinity) : []);
+    }
+
+    function loadPuzzle(index) {
+        itemIndex = index;
+        const entry = items[itemIndex];
+        originalTextString = entry.text;
 
         hideReveal();
         sourceContainer.innerHTML = '';
@@ -686,6 +838,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMovesDisplay();
         updateRevealsDisplay();
         setButtonMode('help');
+        setPuzzleImage(entry.image);
+        updateItemDisplay();
+        fitCards();
 
         // 1. Slot di destinazione
         Array.from(originalTextString).forEach(char => {
@@ -705,7 +860,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         refreshBoard();
         startElapsedTimer();
-        return true;
     }
 
     // --- Help (tieni premuto) ---
@@ -744,9 +898,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     revealBtn.addEventListener('blur', hideReveal);
 
-    // A parola completata il tasto diventa "Fatto" e apre il riepilogo
+    // A parola completata il tasto diventa "Avanti" (voce successiva) o "Fatto" (riepilogo finale)
     revealBtn.addEventListener('click', () => {
-        if (buttonMode === 'done') showSummaryScreen();
+        if (buttonMode === 'next') loadPuzzle(itemIndex + 1);
+        else if (buttonMode === 'done') showSummaryScreen();
     });
 
     // --- Riepilogo ---
@@ -769,36 +924,101 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (summaryTbody) {
             summaryTbody.innerHTML = '';
-            const row = document.createElement('tr');
-            addCell(row, originalTextString, true);
-            addCell(row, `${elapsedSeconds}s`);
-            addCell(row, String(moveCount));
-            addCell(row, String(revealCount));
-            addCell(row, String(finalScore), true);
-            summaryTbody.appendChild(row);
+            results.forEach(r => {
+                const row = document.createElement('tr');
+                addCell(row, r.text, true);
+                addCell(row, `${r.seconds}s`);
+                addCell(row, String(r.moves));
+                addCell(row, String(r.reveals));
+                addCell(row, String(r.score), true);
+                summaryTbody.appendChild(row);
+            });
         }
 
         if (summaryTotals) {
+            const sum = key => results.reduce((t, r) => t + r[key], 0);
             summaryTotals.innerHTML = `
-                <div>Tempo: <strong>${elapsedSeconds}s</strong></div>
-                <div>Tentativi: <strong>${moveCount}</strong></div>
-                <div>Aiuti: <strong>${revealCount}</strong></div>
+                <div>Tempo: <strong>${sum('seconds')}s</strong></div>
+                <div>Tentativi: <strong>${sum('moves')}</strong></div>
+                <div>Aiuti: <strong>${sum('reveals')}</strong></div>
+                <div>Punti: <strong>${sum('score')}</strong></div>
             `;
         }
 
         if (summaryScreen) summaryScreen.style.display = 'block';
     }
-
+    /*
     // --- Avvio ---
-    function initGame() {
+    async function initGame() {
         try {
-            if (loadRandomWord()) document.body.classList.add('loaded');
+            const response = await fetch(PUZZLE_URL);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+
+            // Accetta sia una lista di voci, sia un oggetto { title, label, words: [...] }
+            items = buildItems(Array.isArray(data) ? data : data.words);
+            if (!items.length) throw new Error('Nessuna voce valida nel file');
+
+            // Testi facoltativi: se mancano restano quelli dell'HTML
+            if (!Array.isArray(data)) {
+                if (data.title) {
+                    gameTitle.textContent = data.title;
+                    document.title = data.title;
+                }
+                if (data.label) instructionBanner.textContent = data.label;
+            }
+
+            items = shuffleArray(items); // ordine casuale a ogni partita
+            results = [];
+            loadPuzzle(0);
         } catch (err) {
-            console.error('Could not init game:', err);
+            console.error('Could not load items:', err);
+            if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le voci.';
         }
+        document.body.classList.add('loaded');
+    }
+    */
+
+        async function initGame() {
+        try {
+            // Il file JSON può essere passato nell'URL con ?json=nomefile.json
+            const param = new URLSearchParams(window.location.search).get('json');
+            const isSafe = param
+                && /^[\w\-./]+\.json$/i.test(param)
+                && !param.includes('..')
+                && !param.includes('//')
+                && !param.startsWith('/');
+            const jsonFile = isSafe ? param : 'set-1.json';
+
+            const response = await fetch(jsonFile);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+
+            // Una voce { text, image } per parola (eventuali array annidati vengono appiattiti)
+            items = buildItems(Array.isArray(data) ? data : data.words);
+            if (!items.length) throw new Error('Nessuna voce valida nel file');
+
+            // Testi facoltativi: se mancano nel JSON restano quelli dell'HTML
+            if (!Array.isArray(data)) {
+                if (data.title) {
+                    gameTitle.textContent = data.title;
+                    document.title = data.title;
+                }
+                if (data.label) instructionBanner.textContent = data.label;
+            }
+
+            items = shuffleArray(items); // ordine casuale a ogni partita
+            results = [];
+            loadPuzzle(0);
+        } catch (err) {
+            console.error('Could not load items:', err);
+            if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le voci.';
+        }
+        document.body.classList.add('loaded');
     }
 
     initGame();
+
 });
 
 </script>

@@ -1,0 +1,16 @@
+{
+    "title": "Lettere al posto giusto, parole doppie",
+    "label": "Clicca su un carattere per ricomporre la parola.",
+    "words": [
+
+           { "text": "AGNELLO",   "image": "images/animali/lamb.png" },
+           { "text": "GATTO",     "image": "images/animali/cat.png" },
+           { "text": "GALLO",     "image": "images/animali/rooster.png" },
+           { "text": "GALLINA",   "image": "images/animali/hen.png" },
+           { "text": "CAVALLO",   "image": "images/animali/horse.png" },
+           { "text": "CAPRETTO",  "image": "images/animali/goat.png" },
+           { "text": "MUCCA",     "image": "images/animali/cow.png" },
+           { "text": "SCOIATTOLO","image": "images/animali/squirrel.png" }
+
+    ]
+}
