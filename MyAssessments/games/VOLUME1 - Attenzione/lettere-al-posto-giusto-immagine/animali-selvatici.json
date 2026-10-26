@@ -1,0 +1,14 @@
+{
+    "title": "Lettere al posto giusto",
+    "label": "Clicca su un carattere per ricomporre la parola.",
+    "words": [
+           { "text": "CERVO",      "image": "images/animali/bosco/deer.png" },
+           { "text": "CERBIATTO",  "image": "images/animali/bosco/fawn.png" },
+           { "text": "TACCHINO",   "image": "images/animali/bosco/turkey.png" },
+           { "text": "LUPO",       "image": "images/animali/bosco/wolf.png" },
+           { "text": "TASSO",      "image": "images/animali/bosco/badger.png" },
+           { "text": "CINGHIALE",  "image": "images/animali/bosco/boar.png" },
+           { "text": "VOLPE",      "image": "images/animali/bosco/fox.png" },
+           { "text": "SCOIATTOLO", "image": "images/animali/bosco/squirrel.png" }
+    ]
+}

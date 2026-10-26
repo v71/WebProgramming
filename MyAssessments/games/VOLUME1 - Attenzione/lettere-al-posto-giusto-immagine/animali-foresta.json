@@ -1,0 +1,10 @@
+{
+    "title": "Lettere al posto giusto",
+    "label": "Clicca su un carattere per ricomporre la parola.",
+    "words": [
+           { "text": "GIAGUARO",     "image": "images/animali/foresta/jaguar.png" },
+           { "text": "PAPPAGALLO",     "image": "images/animali/foresta/parrot.png" },
+           { "text": "PITONE",     "image": "images/animali/foresta/python.png" }
+           
+    ]
+}

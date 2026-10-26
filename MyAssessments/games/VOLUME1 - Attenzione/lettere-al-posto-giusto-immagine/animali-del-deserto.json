@@ -1,0 +1,16 @@
+{
+    "title": "Lettere al posto giusto",
+    "label": "Clicca su un carattere per ricomporre la parola.",
+    "words": [
+           { "text": "CAMMELLO",    "image": "images/animali/deserto/camel.png" },
+           { "text": "FENNEC",      "image": "images/animali/deserto/fennec.png" },
+           { "text": "SURICATO",    "image": "images/animali/deserto/merkat.png" },
+           { "text": "SERPENTE A SONAGLI",    "image": "images/animali/deserto/rattlesnake.png" },
+           { "text": "DIAVOLO SPINOSO",    "image": "images/animali/deserto/lizard.png" },
+           { "text": "MOSTRO DI GILA",    "image": "images/animali/deserto/lizard2.png" }
+           
+           
+           
+          
+    ]
+}

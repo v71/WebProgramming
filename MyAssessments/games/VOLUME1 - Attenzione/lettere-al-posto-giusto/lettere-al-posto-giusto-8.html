@@ -342,17 +342,18 @@
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
+    <h3 id="instruction-banner" class="stats-style">Caricamento...</h3>
 
     <div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
-
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
         </button>
     </div>
+
+    <h2 id="hint-style" >Si usa per creare una pagina web</h2>
 
     <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
         <div class="section-wrapper">
@@ -395,13 +396,13 @@
         </div>
     </div>
 
-<script>
+    <script>
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // File JSON con titolo, testo e parole (percorso relativo alla pagina HTML).
     // Ogni parola dell'array "words" è un round: vengono giocate tutte, una dopo l'altra, in ordine casuale.
-    const PUZZLE_URL = 'set-1.json';
+    // Il file può essere scelto dall'URL con ?json=nomefile.json (vedi initGame).
 
     // --- Elementi ---
     const revealBtn = document.getElementById('reveal-btn');
@@ -449,7 +450,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRevealing = false;
     let slotsMeta = [];
     let buttonMode = 'help'; // 'help' | 'wrong' | 'next' | 'done'
-    let words = [];          // PUZZLE_WORDS pulito e mescolato: un round per parola
+    let words = [];          // parole del file JSON, pulite e mescolate: un round per parola
     let roundIndex = 0;      // round corrente
     let results = [];        // risultato di ogni round completato
 
@@ -488,15 +489,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${words.length}`;
     }
 
+    // Contatore delle lettere corrette della parola in corso (la barra NON dipende da questo)
     function updateProgressDisplay() {
         const correct = slotsMeta.filter(m => {
             const card = m.element.querySelector('.card');
             return card && card.dataset.char === m.expected;
         }).length;
 
-        const total = originalTextString.length;
-        progressValueEl.textContent = `${correct} / ${total}`;
-        progressBarFill.style.width = (total > 0 ? (correct / total) * 100 : 0) + '%';
+        progressValueEl.textContent = `${correct} / ${originalTextString.length}`;
+    }
+
+    // Barra di progresso generale: round completati / round totali
+    function setOverallProgress(done) {
+        const total = words.length;
+        progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
     }
 
     function updateSlotHighlights() {
@@ -576,6 +582,20 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (err) {
             console.warn('Checkmark animation failed:', err);
         }
+    }
+
+    // Aspetta che la barra di progresso finisca di riempirsi (con un limite di sicurezza)
+    function waitForProgressBar() {
+        return new Promise(resolve => {
+            const finish = () => {
+                clearTimeout(fallback);
+                progressBarFill.removeEventListener('transitionend', onEnd);
+                resolve();
+            };
+            const onEnd = (e) => { if (e.propertyName === 'width') finish(); };
+            const fallback = setTimeout(finish, 700); // se la transizione non parte, non resta bloccato
+            progressBarFill.addEventListener('transitionend', onEnd);
+        });
     }
 
     async function playConfetti() {
@@ -670,7 +690,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const isLastRound = roundIndex >= words.length - 1;
         setButtonMode(isLastRound ? 'done' : 'next'); // subito, senza aspettare i coriandoli
-        if (isLastRound) playConfetti(); // coriandoli solo alla fine di tutti i round
+        if (isLastRound) {
+            setOverallProgress(words.length); // l'ultimo round porta la barra al 100%
+            // coriandoli solo alla fine di tutti i round, a barra completamente riempita
+            waitForProgressBar().then(() => playConfetti());
+        }
     }
 
     function checkWordAutomatic() {
@@ -726,6 +750,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         updateRoundDisplay();
+        setOverallProgress(roundIndex); // a ogni nuovo round la barra avanza
         refreshBoard();
         startElapsedTimer();
     }
@@ -815,44 +840,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (summaryScreen) summaryScreen.style.display = 'block';
     }
-    /*
+
     // --- Avvio ---
-    async function initGame() {
-        try {
-
-            // MODIFICA: il file JSON può essere passato nell'URL con ?json=nomefile.json
-            const params = new URLSearchParams(window.location.search);
-            const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
-            const response = await fetch(jsonFile);
-
-       //     const response = await fetch(PUZZLE_URL);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-
-            // Una voce per parola (eventuali array annidati vengono appiattiti)
-            words = (Array.isArray(data.words) ? data.words.flat(Infinity) : [])
-                .map(w => String(w).trim())
-                .filter(Boolean);
-            if (!words.length) throw new Error('Nessuna parola valida nel file');
-
-            // Testi facoltativi: se mancano nel JSON restano quelli dell'HTML
-            if (data.title) {
-                gameTitle.textContent = data.title;
-                document.title = data.title;
-            }
-            if (data.label) instructionBanner.textContent = data.label;
-
-            words = shuffleArray(words); // ordine casuale a ogni partita
-            results = [];
-            loadRound(0);
-        } catch (err) {
-            console.error('Could not load words:', err);
-            if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le parole.';
-        }
-        document.body.classList.add('loaded');
-    }
-    */
-
     async function initGame() {
         try {
             // Il file JSON può essere passato nell'URL con ?json=nomefile.json

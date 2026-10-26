@@ -1,0 +1,14 @@
+{
+    "title": "Lettere al posto giusto",
+    "label": "Clicca su un carattere per ricomporre la parola.",
+    "words": [
+           { "text": "BUSSOLA",   "image": "images/avventura/compass.png" },
+           { "text": "CAPPELLO DA SAFARI",   "image": "images/avventura/hat-and-scarf.png" },
+           { "text": "MAPPA DEL TESORO",   "image": "images/avventura/map.png" },
+           { "text": "REFURTIVA",   "image": "images/avventura/money.png" },
+           { "text": "VECCHI MANOSCRITTI",   "image": "images/avventura/old-books.png" },
+           { "text": "LAMPADA AD OLIO",   "image": "images/avventura/old-lamp.png" },
+           { "text": "FORZIERE DEL TESORO",   "image": "images/avventura/throve.png" },
+           { "text": "VASELLAME",   "image": "images/avventura/vases.png" }
+    ]
+}

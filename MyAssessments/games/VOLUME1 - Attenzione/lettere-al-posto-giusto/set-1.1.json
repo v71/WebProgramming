@@ -1,0 +1,10 @@
+{
+  "title": "Lettere al posto giusto",
+  "label": "Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.",
+  "words": [
+    { "word": "HELLO WORLD", "hint": "Il primo programma che si scrive quando si impara a programmare" },
+    { "word": "CODE PUZZLE", "hint": "Un gioco in cui si risolvono enigmi di programmazione" },
+    { "word": "JAVASCRIPT",  "hint": "Il linguaggio che rende interattive le pagine web" },
+    { "word": "UI DESIGN",   "hint": "Progettazione dell'aspetto di un'interfaccia utente" }
+  ]
+}

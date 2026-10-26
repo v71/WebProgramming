@@ -116,6 +116,27 @@
                  0px 4px 8px rgba(0, 0, 0, 0.5);
         }
 
+        #hint-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text);
+            background: var(--game-area-background);
+            padding: 10px 40px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+
+        #hint-style[hidden] { display: none !important; }
+        
         /* =========================================
            COUNTERS
         ========================================= */

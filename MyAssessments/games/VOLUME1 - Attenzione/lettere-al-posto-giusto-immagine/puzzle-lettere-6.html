@@ -587,6 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
         wordValueEl.textContent = `${itemIndex + 1} / ${items.length}`;
     }
 
+    /*
     function updateProgressDisplay() {
         const correct = slotsMeta.filter(m => {
             const card = m.element.querySelector('.card');
@@ -596,6 +597,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const total = originalTextString.length;
         progressValueEl.textContent = `${correct} / ${total}`;
         progressBarFill.style.width = (total > 0 ? (correct / total) * 100 : 0) + '%';
+    }
+    */
+
+    function updateProgressDisplay() {
+        const correct = slotsMeta.filter(m => {
+            const card = m.element.querySelector('.card');
+            return card && card.dataset.char === m.expected;
+        }).length;
+        progressValueEl.textContent = `${correct} / ${originalTextString.length}`;
+    }
+
+    // Barra di progresso generale: parole completate / parole totali
+    function setOverallProgress(done) {
+        const total = items.length;
+        progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
     }
 
     function updateSlotHighlights() {
@@ -735,9 +751,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         slot.appendChild(slotCard);
         slot.classList.add('filled');
-
         const isCorrect = char === emptyMeta.expected;
-
         // Prima lo stato (completamento, timer, pulsante), poi l'animazione
         registerMove();
         if (isCorrect) playCheckmark(slot);
@@ -747,11 +761,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (wordCompleted) return;
         const slotCard = slot.querySelector('.card');
         if (!slotCard) return;
-
         if (slotCard.sourceCard) setCardDisabled(slotCard.sourceCard, false);
         slot.innerHTML = '';
         slot.classList.remove('filled');
-
         registerMove(); // checkWordAutomatic ripristina errori e pulsante
     }
 
@@ -784,6 +796,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isLast = itemIndex >= items.length - 1;
         setButtonMode(isLast ? 'done' : 'next'); // subito, senza aspettare i coriandoli
         if (isLast) {
+              setOverallProgress(items.length);
             // i coriandoli partono solo a barra completamente riempita
             waitForProgressBar().then(() => playConfetti());
         }
@@ -858,6 +871,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sourceContainer.appendChild(card);
         });
 
+        setOverallProgress(itemIndex); // a ogni nuova parola la barra avanza
         refreshBoard();
         startElapsedTimer();
     }
@@ -947,38 +961,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (summaryScreen) summaryScreen.style.display = 'block';
     }
-    /*
-    // --- Avvio ---
-    async function initGame() {
-        try {
-            const response = await fetch(PUZZLE_URL);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-
-            // Accetta sia una lista di voci, sia un oggetto { title, label, words: [...] }
-            items = buildItems(Array.isArray(data) ? data : data.words);
-            if (!items.length) throw new Error('Nessuna voce valida nel file');
-
-            // Testi facoltativi: se mancano restano quelli dell'HTML
-            if (!Array.isArray(data)) {
-                if (data.title) {
-                    gameTitle.textContent = data.title;
-                    document.title = data.title;
-                }
-                if (data.label) instructionBanner.textContent = data.label;
-            }
-
-            items = shuffleArray(items); // ordine casuale a ogni partita
-            results = [];
-            loadPuzzle(0);
-        } catch (err) {
-            console.error('Could not load items:', err);
-            if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le voci.';
-        }
-        document.body.classList.add('loaded');
-    }
-    */
-
+   
         async function initGame() {
         try {
             // Il file JSON può essere passato nell'URL con ?json=nomefile.json

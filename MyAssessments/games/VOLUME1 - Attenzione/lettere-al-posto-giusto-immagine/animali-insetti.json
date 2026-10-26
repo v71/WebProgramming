@@ -1,0 +1,14 @@
+{
+    "title": "Lettere al posto giusto",
+    "label": "Clicca su un carattere per ricomporre la parola.",
+    "words": [
+           { "text": "COLEOTTERO",   "image": "images/animali/insetti/beetle.png" },
+           { "text": "FARFALLA",   "image": "images/animali/insetti/butterfly.png" },
+           { "text": "PROCESSIONARIA",   "image": "images/animali/insetti/caterpillar.png" },
+           { "text": "LIBELLULA",   "image": "images/animali/insetti/dragonfly.png" },
+           { "text": "MOSCA",   "image": "images/animali/insetti/fly.png" },
+           { "text": "LOCUSTA",   "image": "images/animali/insetti/grasshopper.png" },
+           { "text": "COCCINELLA",   "image": "images/animali/insetti/ladybug.png" },
+           { "text": "SCARAFAGGIO",   "image": "images/animali/insetti/roach.png" }
+    ]
+}
