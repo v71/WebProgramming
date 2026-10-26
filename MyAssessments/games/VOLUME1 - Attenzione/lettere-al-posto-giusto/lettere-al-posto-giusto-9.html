@@ -864,12 +864,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
 
-            // Una voce per parola (eventuali array annidati vengono appiattiti)
-        //    words = (Array.isArray(data.words) ? data.words.flat(Infinity) : [])
-        //        .map(w => String(w).trim())
-        //        .filter(Boolean);
-        //    if (!words.length) throw new Error('Nessuna parola valida nel file');
-
             // Ogni voce può essere una stringa oppure { word, hint }
             words = (Array.isArray(data.words) ? data.words.flat(Infinity) : [])
                 .map(w => (w && typeof w === 'object')

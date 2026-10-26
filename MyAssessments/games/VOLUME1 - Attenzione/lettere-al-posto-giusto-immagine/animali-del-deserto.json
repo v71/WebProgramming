@@ -7,10 +7,8 @@
            { "text": "SURICATO",    "image": "images/animali/deserto/merkat.png" },
            { "text": "SERPENTE A SONAGLI",    "image": "images/animali/deserto/rattlesnake.png" },
            { "text": "DIAVOLO SPINOSO",    "image": "images/animali/deserto/lizard.png" },
-           { "text": "MOSTRO DI GILA",    "image": "images/animali/deserto/lizard2.png" }
-           
-           
-           
-          
+           { "text": "MOSTRO DI GILA",    "image": "images/animali/deserto/lizard2.png" },
+           { "text": "ADDACE",    "image": "images/animali/deserto/addax.png" },
+           { "text": "SCORPIONE",    "image": "images/animali/deserto/scorpion.png" }
     ]
 }

@@ -389,6 +389,31 @@
 
     </style>
 
+    <style>
+
+        #hint-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text);
+            background: var(--game-area-background);
+            padding: 10px 40px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+
+        #hint-style[hidden] { display: none !important; }
+
+    </style>
+
 </head>
 <body>
 
@@ -408,11 +433,12 @@
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
-
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
         </button>
     </div>
+
+    <h2 id="hint-style"></h2>
 
     <!-- Immagine: occupa lo spazio rimasto, senza mai far scorrere la pagina -->
     <div id="puzzle-image-wrapper" hidden>
@@ -501,10 +527,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressContainer = document.querySelector('.progress-bar-container');
     const imageWrapper = document.getElementById('puzzle-image-wrapper');
     const puzzleImage = document.getElementById('puzzle-image');
+    const hintEl = document.getElementById('hint-style');   // NEW
 
     const hiddenOnSummary = [
         puzzleWorkspace, instructionBanner, gameStats, gameTitle,
-        progressTitle, progressContainer, actionControls, imageWrapper
+        progressTitle, progressContainer, actionControls, imageWrapper,hintEl   // hintEl added
     ];
 
     // --- Stato ---
@@ -586,19 +613,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateItemDisplay() {
         wordValueEl.textContent = `${itemIndex + 1} / ${items.length}`;
     }
-
-    /*
-    function updateProgressDisplay() {
-        const correct = slotsMeta.filter(m => {
-            const card = m.element.querySelector('.card');
-            return card && card.dataset.char === m.expected;
-        }).length;
-
-        const total = originalTextString.length;
-        progressValueEl.textContent = `${correct} / ${total}`;
-        progressBarFill.style.width = (total > 0 ? (correct / total) * 100 : 0) + '%';
-    }
-    */
 
     function updateProgressDisplay() {
         const correct = slotsMeta.filter(m => {
@@ -821,12 +835,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (buttonMode === 'wrong') setButtonMode('help');
         }
     }
-
+    /*
     function normalizeEntries(list) {
         return (Array.isArray(list) ? list : [])
             .map(w => (typeof w === 'string')
                 ? { text: w.trim(), image: '' }
                 : { text: String((w && w.text) || '').trim(), image: (w && w.image) || '' })
+            .filter(e => e.text);
+    }
+    */
+
+    function normalizeEntries(list) {
+        return (Array.isArray(list) ? list : [])
+            .map(w => (typeof w === 'string')
+                ? { text: w.trim(), image: '', hint: '' }
+                : {
+                    text: String((w && w.text) || '').trim(),
+                    image: (w && w.image) || '',
+                    hint: (w && w.hint) || ''
+                })
             .filter(e => e.text);
     }
 
@@ -835,10 +862,17 @@ document.addEventListener('DOMContentLoaded', () => {
         return normalizeEntries(Array.isArray(list) ? list.flat(Infinity) : []);
     }
 
+    function updateHint(hint) {
+        hintEl.textContent = hint || '';
+        hintEl.style.display = hint ? '' : 'none';   // no hint -> hide the line
+    }
+
     function loadPuzzle(index) {
         itemIndex = index;
         const entry = items[itemIndex];
         originalTextString = entry.text;
+        hintTextString=entry.hint;
+        updateHint(hintTextString);
 
         hideReveal();
         sourceContainer.innerHTML = '';
