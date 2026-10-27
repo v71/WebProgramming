@@ -1,0 +1,8 @@
+{
+  "title": "Dividi in sillabe",
+  "label": "Dividi la parola in sillabe",
+  "words": [
+    { "text": "AGNELLO", "syllables": ["A", "GNEL", "LO"], "image": "images/animali/da-cortile/lamb.png" },
+    { "text": "GATTO",   "syllables": ["GAT", "TO"], "image": "images/animali/da-cortile/cat.png" }
+  ]
+}

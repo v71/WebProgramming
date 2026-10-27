@@ -429,15 +429,6 @@
 
     <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
 
-    <!--<div class="controls" id="action-controls">
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span>Caricamento...</span>
-        </button>
-        <button id="reveal-btn" class="cool-btn">
-            <span>💡 Help!</span>
-        </button>
-    </div>-->
-
     <div class="controls" id="action-controls">
         <!-- Next Button (Text only) -->
         <button id="next-btn" class="cool-btn smooth-hidden">
@@ -498,8 +489,7 @@
         </div>
     </div>
 
-
-    <script>
+<script>
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -650,25 +640,6 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSlotHighlights();
         updateProgressDisplay();
     }
-
-    /*
-    // --- Stato del pulsante ---
-    function setButtonMode(mode) {
-        buttonMode = mode;
-        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
-        revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
-        revealBtn.disabled = (mode === 'wrong');
-
-        const labels = {
-            help: '💡 Help!',
-            wrong: '⚠️ Parola errata',
-            next: 'Avanti ➜',
-            done: '✓ Fatto'
-        };
-        revealBtn.innerHTML = `<span>${labels[mode]}</span>`;
-    
-    }
-    */
 
     // --- Stato del pulsante ---
     function setButtonMode(mode) {
