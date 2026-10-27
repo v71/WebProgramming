@@ -182,9 +182,21 @@
 
     <div id="instruction-banner">Caricamento istruzioni...</div>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <!-- Next Button (Text only) -->
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span class="btn-text">Caricamento...</span>
+        </button>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">Help!</span>
         </button>
     </div>
 
@@ -401,7 +413,17 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameCompleted = true;
             stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
             gameArea.querySelectorAll('.word-btn').forEach(btn => { btn.disabled = true; });
-            if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
+            //if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
+            
+                if (revealBtn) {
+                    // Hide the icon element
+                    const iconEl = revealBtn.querySelector('.btn-icon');
+                    if (iconEl) iconEl.style.display = 'none';
+                    // Update the text
+                    const textEl = revealBtn.querySelector('.btn-text');
+                    if (textEl) textEl.textContent = "✓ Fatto!";
+                }
+
         }
 
         // Solo dopo: animazioni
@@ -455,7 +477,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             isGameReady = false;
             stopElapsedTimer();
-            if (revealBtn) revealBtn.innerHTML = '<span>💡 Help</span>';
+            //if (revealBtn) revealBtn.innerHTML = '<span>💡 Help</span>';
+            if (revealBtn) revealBtn.querySelector('.btn-text').textContent = "Help!";
 
             const response = await fetch(DATA_URL);
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
@@ -487,8 +510,6 @@ document.addEventListener('DOMContentLoaded', () => {
             currentCategoryTarget = target;
             currentCategoryTitle = `Scorri la sequenza da sinistra a destra e segna solo la parola «${target}». Non tornare indietro a correggere prima di arrivare in fondo.`;
 
-            if (gameTitle && data.title) gameTitle.textContent = data.title;
-
             isGameCompleted = false;
             moveCount = 0;
             revealCount = 0;
@@ -502,7 +523,13 @@ document.addEventListener('DOMContentLoaded', () => {
             updateWordCountDisplay();
             startElapsedTimer();
 
+            if (gameTitle && data.title) gameTitle.textContent = data.title;
+            
+            revealBtn.classList.remove('smooth-hidden');
+            revealBtn.disabled = false;
+
             document.body.classList.add('loaded');
+
             isGameReady = true;
         } catch (err) {
             console.error(`Could not load ${DATA_URL}:`, err);

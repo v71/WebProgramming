@@ -254,13 +254,24 @@
         Instruzion banner.
     </div>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
-
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <!-- Next Button (Text only) -->
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span class="btn-text">Caricamento...</span>
+        </button>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">Help!</span>
         </button>
     </div>
 
@@ -604,7 +615,8 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             isGameReady = false;
             stopElapsedTimer();
-            if (revealBtn) revealBtn.innerHTML = '<span>💡 Help!</span>';
+            //if (revealBtn) revealBtn.innerHTML = '<span>💡 Help!</span>';
+            if (revealBtn) revealBtn.querySelector('.btn-text').textContent = "Help!";
 
             const response = await fetch(DATA_URL);
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
@@ -652,6 +664,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgressBar(0);
             resetTextArea(currentCategoryTitle);
             startElapsedTimer();
+
+            revealBtn.classList.remove('smooth-hidden');
+            revealBtn.disabled = false;
 
             document.body.classList.add('loaded');
             isGameReady = true;
@@ -746,7 +761,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 isGameCompleted = true;
                 stopElapsedTimer(); // il tempo si ferma all'ultimo controllo valido, non dopo le animazioni
                 textArea.disabled = true;
-                if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
+                //if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
+
+                if (revealBtn) {
+                    // Hide the icon element
+                    const iconEl = revealBtn.querySelector('.btn-icon');
+                    if (iconEl) iconEl.style.display = 'none';
+                    // Update the text
+                    const textEl = revealBtn.querySelector('.btn-text');
+                    if (textEl) textEl.textContent = "✓ Fatto!";
+                }
             }
 
             if (newMistake) shakeTextArea();

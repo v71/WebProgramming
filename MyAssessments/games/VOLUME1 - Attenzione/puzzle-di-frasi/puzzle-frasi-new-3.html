@@ -220,11 +220,20 @@
         
         /* Hover effect for source cards */
         #source-container .card:hover {
+            /*
             border-color: var(--accent);
             transform: translateY(-4px);
             box-shadow: var(--shadow-md);
             background: #ffffff;
             color: var(--accent);
+            z-index: 5;
+            */
+
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
             z-index: 5;
         }
 
@@ -280,13 +289,24 @@
 
     <h3 id="instruction-banner" class="stats-style">Clicca sulle parole nella prima lista per ricomporre la frase nella seconda lista, nell'ordine giusto.</h3>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
-
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <!-- Next Button (Text only) -->
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span class="btn-text">Caricamento...</span>
+        </button>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">Help!</span>
         </button>
     </div>
 

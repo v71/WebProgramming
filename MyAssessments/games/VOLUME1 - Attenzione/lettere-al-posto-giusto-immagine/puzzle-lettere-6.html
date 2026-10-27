@@ -429,12 +429,24 @@
 
     <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <!-- Next Button (Text only) -->
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span class="btn-text">Caricamento...</span>
+        </button>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">Help!</span>
         </button>
     </div>
 
@@ -639,6 +651,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgressDisplay();
     }
 
+    /*
     // --- Stato del pulsante ---
     function setButtonMode(mode) {
         buttonMode = mode;
@@ -653,8 +666,36 @@ document.addEventListener('DOMContentLoaded', () => {
             done: '✓ Fatto'
         };
         revealBtn.innerHTML = `<span>${labels[mode]}</span>`;
+    
     }
+    */
 
+    // --- Stato del pulsante ---
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
+        revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
+        revealBtn.disabled = (mode === 'wrong');
+
+       const labels = {
+            help: 'Help!',
+            wrong: '⚠️ Parola errata',
+            next: '➜ Prossima Parola',
+            done: '✓ Fatto'
+        };
+
+        if ( labels[mode]!=='Help!'){
+                revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+                const iconEl = revealBtn.querySelector('.btn-icon');
+                iconEl.hidden = true;  
+            }
+        else{
+            revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+            const iconEl = revealBtn.querySelector('.btn-icon');
+            iconEl.hidden = false;   // hide
+        }
+    }
+    
     // --- Utilità ---
     function shuffleArray(array) {
         const arr = [...array];
@@ -835,15 +876,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (buttonMode === 'wrong') setButtonMode('help');
         }
     }
-    /*
-    function normalizeEntries(list) {
-        return (Array.isArray(list) ? list : [])
-            .map(w => (typeof w === 'string')
-                ? { text: w.trim(), image: '' }
-                : { text: String((w && w.text) || '').trim(), image: (w && w.image) || '' })
-            .filter(e => e.text);
-    }
-    */
 
     function normalizeEntries(list) {
         return (Array.isArray(list) ? list : [])

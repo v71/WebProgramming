@@ -329,6 +329,10 @@
             transform: none !important;
         }
 
+        .btn-icon {
+            filter: drop-shadow(0 0 0.25px #000);
+        }
+
     </style>
 </head>
 <body>
@@ -344,12 +348,24 @@
 
     <h3 id="instruction-banner" class="stats-style">Caricamento...</h3>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="next-btn" class="cool-btn smooth-hidden">
             <span>Caricamento...</span>
         </button>
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <!-- Next Button (Text only) -->
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span class="btn-text">Caricamento...</span>
+        </button>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">Help!</span>
         </button>
     </div>
 
@@ -524,13 +540,23 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
         revealBtn.disabled = (mode === 'wrong');
 
-        const labels = {
-            help: '💡 Help!',
+       const labels = {
+            help: 'Help!',
             wrong: '⚠️ Parola errata',
-            next: 'Avanti ➜',
+            next: '➜ Prossima Parola',
             done: '✓ Fatto'
         };
-        revealBtn.innerHTML = `<span>${labels[mode]}</span>`;
+
+        if ( labels[mode]!=='Help!'){
+                revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+                const iconEl = revealBtn.querySelector('.btn-icon');
+                iconEl.hidden = true;  
+            }
+        else{
+            revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+            const iconEl = revealBtn.querySelector('.btn-icon');
+            iconEl.hidden = false;   // hide
+        }
     }
 
     // --- Utilità ---
@@ -851,6 +877,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Avvio ---
     async function initGame() {
         try {
+
             // Il file JSON può essere passato nell'URL con ?json=nomefile.json
             const param = new URLSearchParams(window.location.search).get('json');
             const isSafe = param
@@ -871,7 +898,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     : { text: String(w).trim(), hint: '' })
                 .filter(w => w.text);
             if (!words.length) throw new Error('Nessuna parola valida nel file');
-
 
             // Testi facoltativi: se mancano nel JSON restano quelli dell'HTML
             if (data.title) {
