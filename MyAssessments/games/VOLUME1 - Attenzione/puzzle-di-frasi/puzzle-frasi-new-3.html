@@ -63,6 +63,26 @@
             justify-content: center; /* Centra gli elementi slot se avanzano spazi */
         }
 
+        /* Card inserite nel container di destinazione: stesso verde delle card rivelate */
+        #target-container .slot.filled .card {
+            border-color: #ffffff;
+            background-color: #10b981;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Frase completa ma errata: card rosse opache */
+        #target-container .slot.error-slot .card {
+             border-color: var(--grid-btn-wrong-border-color);
+            background-color:var(--grid-btn-wrong);
+            color: var(--grid-btn-wrong-text );
+        }
+
+        /* Lo slot ha un background !important: va sovrascritto con !important */
+        #target-container .slot.filled.error-slot {
+            background: var(--grid-btn-wrong) !important;
+        }
+
         /* Slot styles for Drop Zone */
         .slot {
             position: relative;
@@ -96,9 +116,12 @@
            normal, unmodified styling. */
         .slot.filled,
         .slot.revealed {
+
             border: none;
             background: transparent;
+            background: var(--grid-btn-selected) !important;
             box-shadow: none;
+        
         }
 
         .slot.filled:hover {
@@ -288,15 +311,6 @@
     </div>
 
     <h3 id="instruction-banner" class="stats-style">Clicca sulle parole nella prima lista per ricomporre la frase nella seconda lista, nell'ordine giusto.</h3>
-
-    <!--<div class="controls" id="action-controls">
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span>Caricamento...</span>
-        </button>
-        <button id="reveal-btn" class="cool-btn">
-            <span>💡 Help!</span>
-        </button>
-    </div>-->
 
     <div class="controls" id="action-controls">
         <!-- Next Button (Text only) -->

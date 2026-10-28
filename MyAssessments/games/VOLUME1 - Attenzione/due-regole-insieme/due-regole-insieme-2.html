@@ -12,6 +12,8 @@
      <!-- Main CSS File -->
      <link href="../stylesheet.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <style>
 
         .button-grid {
@@ -22,6 +24,64 @@
             gap: 14px;
         }
     
+    </style>
+
+    <style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
     </style>
 
 </head>
@@ -48,14 +108,9 @@
     </div>
 
     <div class="controls" id="action-controls">
-        <!-- Next Button (Text only) -->
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span class="btn-text">Caricamento...</span>
-        </button>
-        <!-- Reveal Button (Icon + Text as separate siblings) -->
         <button id="reveal-btn" class="cool-btn">
-            <span class="btn-icon">💡</span>
-            <span class="btn-text">Help!</span>
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -149,6 +204,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameStats = document.getElementById('game-stats');
     const progressBar = document.querySelector('.progress-bar-container');
     const progressBarTitle = document.getElementById('progress-title');
+    const btnIcon = document.getElementById('btn-icon');
 
     // Elementi nascosti durante il riepilogo
     const gameElements = [
@@ -156,6 +212,13 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBarTitle, gameTitle, actionControls
     ];
 
+    // Cambia l'icona del pulsante: 'fa-lightbulb-o' (aiuto) o 'fa-check' (completato)
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove('fa-lightbulb-o', 'fa-check');
+        btnIcon.classList.add(iconClass);
+    }
+    
     function setGameVisible(visible) {
         gameElements.forEach(el => {
             if (el) el.style.display = visible ? '' : 'none';
@@ -265,9 +328,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameLoading = true;
             stopElapsedTimer();
 
-        //    if (revealBtn) revealBtn.innerHTML = '<span>💡 Help</span>';
-            if (revealBtn) revealBtn.querySelector('.btn-text').textContent = "Help!";
-
             if (!gameData) {
                 const response = await fetch(DATA_URL);
                 if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
@@ -305,6 +365,10 @@ document.addEventListener('DOMContentLoaded', () => {
             updateProgressBar(0);
             updateGridUI(currentCategoryTitle);
             startElapsedTimer();
+
+            setButtonIcon('fa-lightbulb-o');
+            const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+            if (textEl) textEl.textContent = 'Clicca qui per avere un aiuto!';
 
             if (gameTitle && gameData.title) gameTitle.textContent = gameData.title;
 
@@ -404,14 +468,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 //if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
 
                 if (revealBtn) {
-                    // Hide the icon element
-                    const iconEl = revealBtn.querySelector('.btn-icon');
-                    if (iconEl) iconEl.style.display = 'none';
-                    // Update the text
                     const textEl = revealBtn.querySelector('.btn-text');
-                    if (textEl) textEl.textContent = "✓ Fatto!";
+                    textEl.textContent = "Hai completato il gioco!";
+                    setButtonIcon('fa-check');
                 }
-
             }
 
             // --- Solo dopo: animazioni ---

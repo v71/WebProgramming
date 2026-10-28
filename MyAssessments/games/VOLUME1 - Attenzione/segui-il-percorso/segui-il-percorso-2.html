@@ -8,129 +8,12 @@
      <!-- File esterni condivisi -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
-    
+
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <style>
-
-        :root {
-            --body-background: #2a113d;
-            --game-area-background: #4a1d6e;
-            --summary-background: #553d94;
-
-            --accent: #ff9800;
-            --accent-2: #06b6d4;
-            --correct: #ffffff;
-            --wrong: #ef4444;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: #000205;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background:
-                radial-gradient(circle at center, rgba(99, 102, 241, 0.06), transparent 40%),
-                radial-gradient(circle at center, rgba(6, 182, 212, 0.06), transparent 40%),
-                var(--body-background);
-            color: var(--text);
-            margin: 0;
-            padding: 20px 20px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* =========================================
-           TEMPORARLY HIDES THE BODY TO AVOID ABRUPT CHANGES FOR THE RAW CONTENT
-         ========================================= */
-
-        body {
-            opacity: 0;
-            transition: opacity 0.2s ease-in;
-        }
-
-        body.loaded {
-            opacity: 1;
-        }
-
-        /* =========================================
-            GAME TITLE
-        ========================================= */
-
-        h1 {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* =========================================
-            COUNTERS
-        ========================================= */
-
-        #game-stats {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--game-area-background);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-            flex-wrap: wrap;
-        }
-
-        #game-stats strong {
-            color: var(--text);
-            font-weight: 700;
-        }
-
-        /* =========================================
-            INFORMATION BOX
-        ========================================= */
-        
-        #instruction-banner {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--game-area-background);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-        }
-
-        /* =========================================
-            EMPTY GAME AREA
-        ========================================= */
 
         #game-area {
             width: 100%;
@@ -146,49 +29,6 @@
             background: var(--game-area-background);
             border: 2px solid var(--border);
             box-shadow: var(--shadow-md);
-        }
-
-        /* =========================================
-            PROGRESS TITLE
-        ========================================= */
-
-        #progress-title {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* =========================================
-            PROGRESS BAR
-        ========================================= */
-
-        .progress-bar-container {
-            width: 100%;
-            max-width: 1100px;
-            height: 12px;
-            margin-bottom: 16px;
-            background: var(--game-area-background);
-            border: 1px solid var(--border);
-            border-radius: 99px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            border-radius: 99px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* =========================================
@@ -215,8 +55,9 @@
         }
 
         .game-select {
+            
             width: 100%;
-            height: 42px;
+            height: 50px;
             padding: 0 45px 0 14px !important;
             font-size: 1.25rem;
             font-family: inherit;
@@ -231,21 +72,48 @@
             appearance: none;
             transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
             box-shadow: var(--shadow-sm);
+            /* Aggiungi opacity e background alla transizione generale */
+            transition:
+                background 0.3s ease,
+                border-color 0.3s ease,
+                transform 0.3s ease,
+                opacity 0.4s ease; 
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px  1px 0 #000,
+                1px  1px 0 #000;
         }
 
+        /*
         .game-select option {
             background-color: var(--game-area-background);
             color: var(--text);
             padding: 10px;
         }
-
+        */
+        
         .game-select:hover {
-            border-color: var(--accent);
+            
+            /*border-color: var(--accent);
             background-color: #624b9e;
+            */
+
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+
         }
 
         .game-select:focus {
+            /*
             border-color: var(--accent);
+            */
+            border-color: var(--grid-btn-hovered-border-color);
+        
         }
 
        .game-select:disabled,
@@ -328,14 +196,6 @@
 
         .cool-btn:active {
             transform: translateY(1px);
-        }
-
-        #next-btn {
-            background-color: #4f46e5;
-        }
-
-        #next-btn:hover {
-            background-color: #10b981;
         }
 
         /* =========================================
@@ -519,12 +379,8 @@
     </div>
 
     <div class="controls" id="action-controls">
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span>Caricamento...</span>
-        </button>
-
         <button id="reveal-btn" class="cool-btn">
-            <span>💡 Help!</span>
+            <span>Help!</span>
         </button>
     </div>
 
@@ -682,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Pulsante Help: icona 💡 + "Help!"; a fine gioco l'icona sparisce e resta "✓ Fatto!" ---
     function setRevealButton(done) {
         if (!revealBtn) return;
-        const iconEl = revealBtn.querySelector('.btn-icon');
+    //    const iconEl = revealBtn.querySelector('.btn-icon');
         let textEl = revealBtn.querySelector('.btn-text');
         if (!textEl) { // markup con un <span> semplice
             revealBtn.textContent = '';
@@ -690,8 +546,8 @@ document.addEventListener('DOMContentLoaded', () => {
             textEl.className = 'btn-text';
             revealBtn.appendChild(textEl);
         }
-        if (iconEl) iconEl.style.display = done ? 'none' : '';
-        textEl.textContent = done ? '✓ Fatto!' : (iconEl ? 'Help!' : '💡 Help!');
+      //  if (iconEl) iconEl.style.display = done ? 'none' : '';
+        textEl.textContent = done ? '✓ Fatto!' : 'Help!';
     }
 
     // --- Punteggio e riepilogo ---
@@ -965,7 +821,7 @@ document.addEventListener('DOMContentLoaded', () => {
         selectFoundState[inputIndex] = true;
         input.disabled = true;
         input.classList.add('selected');
-        input.style.backgroundColor = '#ff9800';
+        input.style.backgroundColor = '#10b981';
         input.style.color = '#ffffff';
         input.style.borderColor = '#ffffff';
         foundCorrectCount++;

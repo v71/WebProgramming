@@ -2,7 +2,13 @@
   "title": "Dividi in sillabe",
   "label": "Dividi la parola in sillabe",
   "words": [
-    { "text": "AGNELLO", "syllables": ["A", "GNEL", "LO"], "image": "images/animali/da-cortile/lamb.png" },
-    { "text": "GATTO",   "syllables": ["GAT", "TO"], "image": "images/animali/da-cortile/cat.png" }
+    { "text": "AGNELLO",  "syllables": ["A", "GNEL", "LO"], "image": "../../images/animali/da-cortile/lamb.png" },
+    { "text": "GATTO",    "syllables": ["GAT", "TO"],       "image": "../../images/animali/da-cortile/cat.png" },
+    { "text": "GALLO",    "syllables": ["GAL", "LO"],       "image": "../../images/animali/da-cortile/rooster.png" },
+    { "text": "GALLINA",  "syllables": ["GAL", "LI", "NA"], "image": "../../images/animali/da-cortile/hen.png" },
+    { "text": "CAVALLO",  "syllables": ["CA", "VAL","LO"],  "image": "../../images/animali/da-cortile/horse.png" },
+    { "text": "CAPRETTO", "syllables": ["CA", "PRET","TO"], "image": "../../images/animali/da-cortile/goat.png" },
+    { "text": "MUCCA",    "syllables": ["MUC", "CA"],       "image": "../../images/animali/da-cortile/cow.png" },
+    { "text": "MAIALE",   "syllables": ["MA", "IA","LE"],   "image": "../../images/animali/da-cortile/pig.png" }
   ]
 }

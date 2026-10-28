@@ -1,0 +1,17 @@
+{
+    "categories": [
+      {
+        "instruction":"Leggi il testo e scrivi, nell'ordine, i quattro luoghi in cui è stata davvero Carolina. Ignora oggetti e luoghi non visitati.",
+        "sentences": [
+              { "sentence": "L'ISTRUZIONE È L'ARMA PIÙ POTENTE AL MONDO"         , "image": "../../images/famiglia/scuola.png" },
+              { "sentence": "LA TECNOLOGIA CAMBIA IL NOSTRO MODO DI VIVERE"      , "image": "../../images/famiglia/tecnologia.png" },
+              { "sentence": "LA MONTAGNA OFFRE ARIA PURA E UNA PACE INFINITA"    , "image": "../../images/famiglia/famiglia-in-escursione.png" },
+              { "sentence": "IL DIALOGO RISOLVE RAPIDAMENTE OGNI INCOMPRENSIONE" , "image": "../../images/famiglia/mamma-e-figlia-studiano.png" },
+              { "sentence": "IMPARARE È UN VIAGGIO"                              , "image": "../../images/famiglia/mamma-e-figlia-studiano.png" },
+              { "sentence": "UN BUON LIBRO APRE LA MENTE"                        , "image": "../../images/famiglia/lettura-con-mamma.png" },
+              { "sentence": "LA FAMIGLIA È IL TESORO PIÙ GRANDE"                 , "image": "../../images/famiglia/ritratto-di-famiglia.png" },
+              { "sentence": "IL LAVORO DI SQUADRA PORTA AL SUCCESSO"             , "image": "../../images/famiglia/office-milestone.png" }
+        ]
+      }
+  ]
+}

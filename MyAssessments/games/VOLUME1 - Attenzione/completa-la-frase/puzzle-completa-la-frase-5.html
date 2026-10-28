@@ -12,6 +12,8 @@
     <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <style>
 
         :root {
@@ -37,7 +39,7 @@
             gap: 14px;
             width: fit-content;
             max-width: 100%;
-            min-height: clamp(90px, 14vh, 130px);
+            min-height: clamp(90px, 14vh, 40px);
             padding: 20px;
             border-radius: 20px;
             align-items: center;
@@ -94,11 +96,11 @@
                 background-color 0.25s ease,
                 color 0.25s ease;
             text-shadow:
-            -1px -1px 0 #000,
-             1px -1px 0 #000,
-            -1px  1px 0 #000,
-             1px  1px 0 #000;
-            }
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px  1px 0 #000,
+                1px  1px 0 #000;
+        }
         
         /* hover (source list only) */
         
@@ -177,6 +179,7 @@
             align-items: center;
             justify-content: center;
             box-shadow: var(--shadow-sm);
+            text-shadow: none;
         }
         
         /* revealed with Help (help-correct) */
@@ -356,6 +359,64 @@
        
     </style>
     
+        <style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -372,15 +433,16 @@
 
     <h3 id="instruction-banner" class="stats-style">Alcune parole sono già al posto giusto. Clicca sulle parole mancanti nella prima lista per completare la frase nelle caselle vuote.</h3>
 
-    <div class="controls" id="action-controls">
-        <!-- Next Button (Text only) -->
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span class="btn-text">Caricamento...</span>
-        </button>
-        <!-- Reveal Button (Icon + Text as separate siblings) -->
+    <!--<div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
-            <span class="btn-icon">💡</span>
             <span class="btn-text">Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -513,6 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!revealBtn) return;
 
         const textEl = revealBtn.querySelector('.btn-text');
+        /*
         const iconEl = revealBtn.querySelector('.btn-icon');
 
         if (iconEl) {
@@ -534,6 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 iconEl.style.removeProperty('text-shadow');
             }
         }
+            */
         if (textEl) textEl.textContent = label;
     }
 
@@ -555,6 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const actionControls = document.getElementById('action-controls');
     const progressTitle = document.getElementById('progress-title');
     const progressContainer = document.querySelector('.progress-bar-container');
+    const btnIcon = document.getElementById('btn-icon');
 
     // Contatore delle frasi: è il <span id="round-value"> dentro #game-stats (nell'HTML)
     const roundValueEl = document.getElementById('round-value');
@@ -566,6 +631,9 @@ document.addEventListener('DOMContentLoaded', () => {
         puzzleWorkspace, instructionBanner, gameStats, gameTitle,
         progressTitle, progressContainer, actionControls
     ];
+
+    // Cambia l'icona del pulsante (classe Font Awesome 4.7)
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-exclamation-triangle', 'fa-arrow-right', 'fa-check'];
 
     // ---------- Stato ----------
     let roundSentences = [];      // una frase per round
@@ -580,6 +648,13 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundCompleted = false;
     let isRevealing = false;
     let buttonMode = 'help';      // 'help' | 'wrong' | 'next' | 'done'
+
+    // Cambia l'icona del pulsante: 'fa-lightbulb-o' (aiuto) o 'fa-check' (completato)
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
 
     // ---------- Utilità ----------
     function shuffleArray(array) {
@@ -711,16 +786,16 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
         revealBtn.disabled = (mode === 'wrong');
 
-        // outline = spessore del contorno nero in px; 0 = nessun outline inline (usa il CSS, come la lampadina)
-        const labels = {
-            help:  { icon: '💡', text: 'Help!',          outline: 0 },
-            wrong: { icon: '⚠️', text: 'Frase errata',   outline: 1 },
-            next:  { icon: '▶',  text: 'Prossima frase', outline: 1 },
-            done:  { icon: '✓',  text: 'Fatto',          outline: 1 }
+        const states = {
+            help:  { icon: 'fa-lightbulb-o',          text: 'Clicca qui per avere un aiuto!' },
+            wrong: { icon: 'fa-exclamation-triangle', text: 'Frase errata' },
+            next:  { icon: 'fa-arrow-right',          text: 'Prossima frase' },
+            done:  { icon: 'fa-check',                text: 'Fatto' }
         };
 
-        // Icona, testo e contorno cambiano insieme a ogni modalità
-        setRevealLabel(labels[mode].text, labels[mode].icon, labels[mode].outline);
+        setButtonIcon(states[mode].icon);
+        const textEl = revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = states[mode].text;
     }
 
     // ---------- Accessibilità ----------
@@ -1051,6 +1126,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             loadRound(0);
             document.body.classList.add('loaded');
+
+            setButtonIcon('fa-lightbulb-o');
+            const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+            if (textEl) textEl.textContent = 'Clicca qui per avere un aiuto!';
 
             // Ora che il workspace è visibile (e i font sono caricati) ricalcola le larghezze
             syncContainerWidths();

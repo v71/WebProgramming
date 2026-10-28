@@ -12,6 +12,8 @@
     <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <style>
 
         #game-area {
@@ -160,23 +162,9 @@
         Instruzion banner.
     </div>
 
-    <!--<div class="controls" id="action-controls">
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span>Caricamento...</span>
-        </button>
-        <button id="reveal-btn" class="cool-btn">
-            <span>💡 Help!</span>
-        </button>
-    </div>-->
-
     <div class="controls" id="action-controls">
-        <!-- Next Button (Text only) -->
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span class="btn-text">Caricamento...</span>
-        </button>
         <!-- Reveal Button (Icon + Text as separate siblings) -->
         <button id="reveal-btn" class="cool-btn">
-            <span class="btn-icon">💡</span>
             <span class="btn-text">Help!</span>
         </button>
     </div>
@@ -629,10 +617,12 @@ document.addEventListener('DOMContentLoaded', () => {
                // if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
 
                 if (revealBtn) {
+                    /*
                     // Hide the icon element
                     const iconEl = revealBtn.querySelector('.btn-icon');
                     if (iconEl) iconEl.style.display = 'none';
                     // Update the text
+                    */
                     const textEl = revealBtn.querySelector('.btn-text');
                     if (textEl) textEl.textContent = "✓ Fatto!";
                 }

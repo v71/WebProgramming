@@ -12,6 +12,8 @@
     <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <style>
 
          :root {
@@ -161,6 +163,64 @@
 
 </style>
 
+    <style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -184,14 +244,9 @@
     </div>
 
     <div class="controls" id="action-controls">
-        <!-- Next Button (Text only) -->
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span class="btn-text">Caricamento...</span>
-        </button>
-        <!-- Reveal Button (Icon + Text as separate siblings) -->
         <button id="reveal-btn" class="cool-btn">
-            <span class="btn-icon">💡</span>
-            <span class="btn-text">Help!</span>
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -259,7 +314,15 @@
         const summaryScreen = document.getElementById('summary-screen');
         const summaryTbody = document.getElementById('summary-tbody');
         const summaryTotals = document.getElementById('summary-totals');
+        const btnIcon = document.getElementById('btn-icon');
 
+        // Cambia l'icona del pulsante: 'fa-lightbulb-o' (aiuto) o 'fa-check' (completato)
+        function setButtonIcon(iconClass) {
+            if (!btnIcon) return;
+            btnIcon.classList.remove('fa-lightbulb-o', 'fa-check');
+            btnIcon.classList.add(iconClass);
+        }
+        
         function showSummaryScreen() {
             gameArea.style.display = 'none';
             instructionBanner.style.display = 'none';
@@ -443,17 +506,10 @@
                         console.warn('Confetti animation failed:', err);
                     }
                 }
-
                 if (revealBtn) {
-
-                    // Hide the icon element
-                    const iconEl = revealBtn.querySelector('.btn-icon');
-                    if (iconEl) iconEl.style.display = 'none';
-                    // Update the text
                     const textEl = revealBtn.querySelector('.btn-text');
-                    if (textEl) textEl.textContent = "✓ Fatto!";
-
-                    //revealBtn.innerHTML = "<span>✓ Fatto</span>";
+                    textEl.textContent = "Hai completato il gioco!";
+                    setButtonIcon('fa-check');
                 }
             }
         }
@@ -476,7 +532,6 @@
             try {
                 isGameLoading = true;
                 
-              //  if (revealBtn) revealBtn.innerHTML = "<span>💡 Help!</span>";
                 if (revealBtn) revealBtn.querySelector('.btn-text').textContent = "Help!";
 
                 const response = await fetch('due-compiti-nello-stesso-testo.json');
@@ -520,6 +575,10 @@
                 renderClickableText(currentExercise.text, currentCategoryTitle);
                 startElapsedTimer();
             
+                setButtonIcon('fa-lightbulb-o');
+                const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+                if (textEl) textEl.textContent = 'Clicca qui per avere un aiuto!';
+
                 revealBtn.classList.remove('smooth-hidden');
                 revealBtn.disabled = false;
 

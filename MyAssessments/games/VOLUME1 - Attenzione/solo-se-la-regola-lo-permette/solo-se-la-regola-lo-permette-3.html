@@ -10,6 +10,8 @@
     <script src="../../js/celebrazion.js"></script>
 
     <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     
     <style>
 
@@ -23,160 +25,11 @@
 
     </style>
 
-<style>
-
-        .controls {
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 1100px;
-            flex-wrap: wrap;
-            position: relative;
-            min-height: 52px;
-        }
-        
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5;
-            border: none;
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        .cool-btn.smooth-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: scale(0.95);
-            position: absolute;
-        }
-
-        .cool-btn i {
-            font-size: 1.1rem;
-            -webkit-text-stroke: 1px currentColor;
-            transition: transform 0.25s ease;
-        }
-
-        .cool-btn:hover {
-            transform: translateY(-2px);
-            background-color: #10b981;
-        }
-
-        .cool-btn:hover i {
-            transform: translateX(3px);
-        }
-
-        .cool-btn:active {
-            transform: translateY(1px);
-        }
-
-        #next-btn {
-            background-color: #4f46e5;
-        }
-
-        #next-btn:hover {
-            background-color: #10b981;
-        }
-
-        .cool-btn.wrong-btn {
-            background-color: var(--wrong);
-            cursor: default;
-            pointer-events: none;
-            box-shadow: 0 10px 25px -3px rgba(239, 68, 68, 0.25);
-            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
-        }
-
-        .grid-button.help-correct {
-            background: #4caf50;
-            border-color: #ffffff;
-        }
-
-        #reveal-btn * {
-            pointer-events: none;
-        }
-
-</style>
-
-<style>
-
-        /* Results Summary Screen */
-        #summary-screen {
-            display: none;
-            width: 100%;
-            max-width: 650px;
-            background: var(--game-area-background);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 36px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-        }
-
-        #summary-screen h2 {
-            margin-top: 0;
-            color: var(--correct);
-            font-size: 2rem;
-        }
-
-        .summary-table {
-            width: 100%;
-            margin: 24px 0;
-            border-collapse: collapse;
-        }
-
-        .summary-table th, .summary-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-
-        .summary-table th {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .summary-totals {
-            margin-top: 20px;
-            padding: 18px;
-            background: var(--summary-background);
-            border-radius: 14px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .summary-totals strong {
-            color: var(--accent);
-        }
-    
-</style>
-
 </head>
 
 <body>
 
     <!-- TITLE -->
-
     <h1 id="game-title">
         Applica la regola
     </h1>
@@ -190,18 +43,13 @@
     </div>
 
     <!-- INFORMATION / INSTRUCTION BOX -->
-
     <div id="instruction-banner">
        Instruzion banner.
     </div>
 
     <div class="controls" id="action-controls">
-        <button id="next-btn" class="cool-btn smooth-hidden">
-            <span>Caricamento...</span>
-        </button>
-
         <button id="reveal-btn" class="cool-btn">
-            <span>💡 Help!</span>
+            <span>Help!</span>
         </button>
     </div>
 
@@ -306,8 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
             revealBtn.appendChild(textEl);
         }
 
-        const iconEl = revealBtn.querySelector('.btn-icon');
-        if (iconEl) iconEl.style.display = 'none';
+     //   const iconEl = revealBtn.querySelector('.btn-icon');
+     //   if (iconEl) iconEl.style.display = 'none';
 
         const parts = String(label).trim().split(/\s+/);
         const hasEmoji = parts.length > 1 && /\p{Extended_Pictographic}/u.test(parts[0]);
@@ -454,7 +302,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameLoading = true;
             stopElapsedTimer();
 
-            if (revealBtn) setRevealLabel('💡 Help!');
+            if (revealBtn) setRevealLabel('Help!');
 
             if (!gameData) {
                 const response = await fetch(DATA_URL);
@@ -574,14 +422,6 @@ document.addEventListener('DOMContentLoaded', () => {
             foundCorrectCount++;
             updateWordCountDisplay();
             updateProgressBar(foundCorrectCount / totalCorrectItems);
-
-           /* const justCompleted = foundCorrectCount === totalCorrectItems;
-            if (justCompleted) {
-                isGameCompleted = true;
-                stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
-                gridButtons.forEach(btn => { btn.disabled = true; });
-                if (revealBtn) setRevealLabel('✓ Fatto');
-            }*/
 
             const justCompleted = foundCorrectCount === totalCorrectItems;
             if (justCompleted) {

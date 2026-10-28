@@ -2,13 +2,13 @@
     "title": "Lettere al posto giusto",
     "label": "Clicca su un carattere per ricomporre la parola.",
     "words": [
-           { "text": "AGNELLO",   "image": "images/animali/da-cortile/lamb.png" },
-           { "text": "GATTO",     "image": "images/animali/da-cortile/cat.png" },
-           { "text": "GALLO",     "image": "images/animali/da-cortile/rooster.png" },
-           { "text": "GALLINA",   "image": "images/animali/da-cortile/hen.png" },
-           { "text": "CAVALLO",   "image": "images/animali/da-cortile/horse.png" },
-           { "text": "CAPRETTO",  "image": "images/animali/da-cortile/goat.png" },
-           { "text": "MUCCA",     "image": "images/animali/da-cortile/cow.png" },
-           { "text": "MAIALE",    "image": "images/animali/da-cortile/pig.png" }
+           { "text": "AGNELLO",   "image": "../../images/animali/da-cortile/lamb.png" },
+           { "text": "GATTO",     "image": "../../images/animali/da-cortile/cat.png" },
+           { "text": "GALLO",     "image": "../../images/animali/da-cortile/rooster.png" },
+           { "text": "GALLINA",   "image": "../../images/animali/da-cortile/hen.png" },
+           { "text": "CAVALLO",   "image": "../../images/animali/da-cortile/horse.png" },
+           { "text": "CAPRETTO",  "image": "../../images/animali/da-cortile/goat.png" },
+           { "text": "MUCCA",     "image": "../../images/animali/da-cortile/cow.png" },
+           { "text": "MAIALE",    "image": "../../images/animali/da-cortile/pig.png" }
     ]
 }

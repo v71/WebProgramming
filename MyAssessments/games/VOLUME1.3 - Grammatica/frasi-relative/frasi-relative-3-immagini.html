@@ -266,12 +266,13 @@
             margin-bottom: 0.3rem;
         }
 
+        /* 3 Image Display Container Accommodating 340x380 */
         .images-grid {
             display: flex;
             justify-content: center;
-            gap: 25px;
+            gap: 15px;
             width: 100%;
-            max-width: 800px;
+            max-width: 1100px;
         }
 
         .image-card-slot {
@@ -305,7 +306,7 @@
             display: block;
             border-radius: 12px;
             opacity: 0;
-            transition: opacity 0.5s ease-in-out; /* Effetto dissolvenza (fade-in) */
+            transition: opacity 0.5s ease-in-out;
         }
 
         .image-card-slot img.loaded {
@@ -440,7 +441,7 @@
             <!-- Dynamic tokens populate here -->
         </div>
 
-        <!-- 2 Image Slots Container placed under the cards -->
+        <!-- 3 Image Slots Container (340x380 each) placed under the cards -->
         <div class="images-grid" id="imagesGrid">
             <!-- Dynamic image slots populate here -->
         </div>
@@ -558,27 +559,31 @@
     </script>
 
     <script>
+        
         const ROUNDS = [
             { 
-                text: "La Mamma prende la gonna che è sulla sedia", 
-                images: ["immagini-per-scelta-2/mamma-che-prende-la-gonna-su-una-sedia-1.png", "immagini-per-scelta-2/mamma-che-prende-la-gonna-su-una-sedia-2.png"], 
-                correctIndex: 1 
-            },
+                text: "La bambina mangia la mela che era sul tavolo assieme alle altre.", 
+                images: ["immagini-per-scelta-3/apple-girl-a.png", "immagini-per-scelta-3/pear-girl-c.png", "immagini-per-scelta-3/apple-girl-b.png"], 
+                correctIndex: 2 
+            }
+            
+            /*,
             { 
                 text: "Il cane rincorre il gatto", 
-                images: ["images/cane_gatto_1.jpg", "images/cane_gatto_2.jpg"], 
+                images: ["images/cane_gatto_1.jpg", "images/cane_gatto_2.jpg", "images/cane_gatto_3.jpg"], 
                 correctIndex: 1 
             },
             { 
                 text: "Il gatto dorme al sole", 
-                images: ["images/gatto_sole_1.jpg", "images/gatto_sole_2.jpg"], 
-                correctIndex: 1 
+                images: ["images/gatto_sole_1.jpg", "images/gatto_sole_2.jpg", "images/gatto_sole_3.jpg"], 
+                correctIndex: 2 
             },
             { 
                 text: "Il bambino gioca con il cane", 
-                images: ["images/bambino_cane_1.jpg", "images/bambino_cane_2.jpg"], 
+                images: ["images/bambino_cane_1.jpg", "images/bambino_cane_2.jpg", "images/bambino_cane_3.jpg"], 
                 correctIndex: 0 
             }
+                */
         ];
 
         let currentRoundIndex = 0;
@@ -610,7 +615,7 @@
         function initImageSlots() {
             imagesGrid.innerHTML = '';
             optionElements = [];
-            for (let i = 0; i < 2; i++) {
+            for (let i = 0; i < 3; i++) {
                 const slot = document.createElement('div');
                 slot.className = 'image-card-slot';
                 
@@ -668,7 +673,6 @@
                 const img = slot.querySelector('img');
                 const span = slot.querySelector('span');
                 
-                // Rimuovi la classe loaded per resettare il fade-in ad ogni cambio round
                 img.classList.remove('loaded');
                 span.style.display = 'block';
                 
@@ -677,7 +681,6 @@
                 
                 img.onload = function() {
                     span.style.display = 'none';
-                    // Aggiunge la classe per attivare la transizione di opacità
                     requestAnimationFrame(() => {
                         img.classList.add('loaded');
                     });

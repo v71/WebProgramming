@@ -2,13 +2,13 @@
     "title": "Lettere al posto giusto",
     "label": "Clicca su un carattere per ricomporre la parola.",
     "words": [
-           { "text": "COLEOTTERO",   "image": "images/animali/insetti/beetle.png","hint": "coleottero" },
-           { "text": "FARFALLA",   "image": "images/animali/insetti/butterfly.png","hint": "farfalla" },
-           { "text": "PROCESSIONARIA",   "image": "images/animali/insetti/caterpillar.png","hint": "processionaria" },
-           { "text": "LIBELLULA",   "image": "images/animali/insetti/dragonfly.png","hint": "libellula" },
-           { "text": "MOSCA",   "image": "images/animali/insetti/fly.png","hint": "E' molto fastidiosa" },
-           { "text": "LOCUSTA",   "image": "images/animali/insetti/grasshopper.png","hint": "locusta" },
-           { "text": "COCCINELLA",   "image": "images/animali/insetti/ladybug.png","hint": "coccinella" },
-           { "text": "SCARAFAGGIO",   "image": "images/animali/insetti/roach.png","hint": "E' molto disgustoso" }
+           { "text": "COLEOTTERO",       "image": "../../images/animali/insetti/beetle.png","hint": "coleottero" },
+           { "text": "FARFALLA",         "image": "../../images/animali/insetti/butterfly.png","hint": "farfalla" },
+           { "text": "PROCESSIONARIA",   "image": "../../images/animali/insetti/caterpillar.png","hint": "processionaria" },
+           { "text": "LIBELLULA",        "image": "../../images/animali/insetti/dragonfly.png","hint": "libellula" },
+           { "text": "MOSCA",            "image": "../../images/animali/insetti/fly.png","hint": "E' molto fastidiosa" },
+           { "text": "LOCUSTA",          "image": "../../images/animali/insetti/grasshopper.png","hint": "locusta" },
+           { "text": "COCCINELLA",       "image": "../../images/animali/insetti/ladybug.png","hint": "coccinella" },
+           { "text": "SCARAFAGGIO",      "image": "../../images/animali/insetti/roach.png","hint": "E' molto disgustoso" }
     ]
 }

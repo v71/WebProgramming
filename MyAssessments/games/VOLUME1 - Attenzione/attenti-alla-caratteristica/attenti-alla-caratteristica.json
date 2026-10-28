@@ -56,7 +56,7 @@
           { "label": "Forbici"     , "value": false },
           { "label": "Mattone"     , "value": false },
           { "label": "Tavolo"      , "value": false },
-          { "label": "Matita"      , "value": true },
+          { "label": "Poltrona"      , "value": true },
           { "label": "Computer"    , "value": false },
           { "label": "Stilografo"  , "value": true }
         ]

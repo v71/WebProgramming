@@ -2,9 +2,13 @@
     "title": "Lettere al posto giusto",
     "label": "Clicca su un carattere per ricomporre la parola.",
     "words": [
-           { "text": "GIAGUARO",     "image": "images/animali/foresta/jaguar.png" },
-           { "text": "PAPPAGALLO",     "image": "images/animali/foresta/parrot.png" },
-           { "text": "PITONE",     "image": "images/animali/foresta/python.png" }
-           
+           { "text": "GIAGUARO",           "image": "../../images/animali/foresta/jaguar.png" },
+           { "text": "PAPPAGALLO",         "image": "../../images/animali/foresta/parrot.png" },
+           { "text": "PITONE",             "image": "../../images/animali/foresta/python.png" },
+           { "text": "BRADIPO",            "image": "../../images/animali/foresta/bradipo.png" },
+           { "text": "FORMICA DI FUOCO",   "image": "../../images/animali/foresta/fire-ant.png" },
+           { "text": "RANA",               "image": "../../images/animali/foresta/frog.png" },
+           { "text": "SCIMMIA SCOIATTOLO", "image": "../../images/animali/foresta/monkey.png" },
+           { "text": "TUCANO",             "image": "../../images/animali/foresta/tucan.png" }
     ]
 }

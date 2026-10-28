@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Puzzle di Frasi</title>
+
+     <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <link href="../stylesheet.css" rel="stylesheet">
+    
+    <style>
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: var(--text-dim);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Container sizes dynamically and stays centered */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            width: fit-content;
+            max-width: 100%;
+            min-height: clamp(90px, 14vh, 130px);
+            padding: 20px;
+            border-radius: 20px;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: var(--game-area-background);
+            box-shadow: var(--shadow-md);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            margin: 0 auto;
+        }
+
+        #source-container {
+            border-color: var(--border);
+        }
+
+       #target-container {
+            border: 2px solid #000000;
+            background-color: #37275e;
+            padding: 20px;
+            width: fit-content;
+            max-width: 100%;
+            justify-content: center; /* Centra gli elementi slot se avanzano spazi */
+        }
+
+        /* Card inserite nel container di destinazione: stesso verde delle card rivelate */
+        #target-container .slot.filled .card {
+            border-color: #ffffff;
+            background-color: #10b981;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Frase completa ma errata: card rosse opache */
+        #target-container .slot.error-slot .card {
+             border-color: var(--grid-btn-wrong-border-color);
+            background-color:var(--grid-btn-wrong);
+            color: var(--grid-btn-wrong-text );
+        }
+
+        /* Lo slot ha un background !important: va sovrascritto con !important */
+        #target-container .slot.filled.error-slot {
+            background: var(--grid-btn-wrong) !important;
+        }
+
+        /* Slot styles for Drop Zone */
+        .slot {
+            position: relative;
+            flex-shrink: 0;
+            min-width: 90px;
+            height: 60px;
+            padding: 0;
+            background-color: var(--summary-background);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            /* Only properties that do NOT change the slot's size are animated.
+               "transition: all" used to animate the border going from 2px to none,
+               so the slot kept changing width for 0.25s after a word was placed. */
+            transition: border-color 0.25s ease, background-color 0.25s ease,
+                        box-shadow 0.25s ease, transform 0.25s ease;
+            cursor: pointer;
+        }
+        
+        /* Highlight for the current active slot */
+        .slot.active-slot {
+            border-color: #ffffff;
+            border-style: solid;
+            background-color: #544b7a;
+        }
+
+        /* Filled slot becomes an invisible wrapper: the card inside keeps its
+           normal, unmodified styling. */
+        .slot.filled,
+        .slot.revealed {
+
+            border: none;
+            background: transparent;
+            background: var(--grid-btn-selected) !important;
+            box-shadow: none;
+        
+        }
+
+        .slot.filled:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+
+        /* Error state for incorrect slots */
+        .slot.error-slot {
+            animation: shake 0.4s ease;
+        }
+
+        .slot.error-slot .card {
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.05);
+            color: var(--wrong);
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+
+        .target-wrapper {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        #reveal-overlay {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: min(92vw, 1060px);
+            min-width: 100%;
+            height: max-content;
+            min-height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 19px;
+            border-radius: 20px;
+            background-color: #37275e;
+            border: 2px solid var(--correct);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        #reveal-overlay.visible {
+            opacity: 1;
+        }
+        
+        /* Stile specifico per le lettere rivelate con il tasto Help */
+        .card.reveal-letter {
+            border-color: #ffffff !important;
+            background-color: #10b981 !important; /* Verde brillante e ben visibile */
+            color: #ffffff !important;
+            cursor: default;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: none !important;
+        }
+
+        /* 2. Reintegra lo stile per gli spazi vuoti nell'overlay */
+        .card.reveal-letter.space {
+            background-color: rgba(255, 255, 255, 0.15); /* Sfondo traslucido chiaro per lo spazio */
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card.space::after {
+            content: '';
+            width: 30px;
+            height: 14px;
+            margin-top: 14px;
+            border: 4px solid currentColor;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            opacity: 0.85;
+        }
+
+        /* Cards hold a whole word: flexible width, no fixed square */
+        .card {
+            flex-shrink: 0;
+            min-width: 90px;
+            height: 60px;
+            padding: 0 18px;
+            background: #7931b4;
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.15rem;
+            font-weight: 700;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .card.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            cursor: default;
+            filter: grayscale(100%);
+        }
+        
+        /* Hover effect for source cards */
+        #source-container .card:hover {
+            /*
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            background: #ffffff;
+            color: var(--accent);
+            z-index: 5;
+            */
+
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+
+        #game-stats, .stats-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--game-area-background);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        button:hover {
+            filter: brightness(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+    </style>
+
+</head>
+
+<body>
+    
+    <h1 id="game-title">Puzzle di Frasi</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">Clicca sulle parole nella prima lista per ricomporre la frase nella seconda lista, nell'ordine giusto.</h3>
+
+    <div class="controls" id="action-controls">
+        <!-- Next Button (Text only) -->
+        <button id="next-btn" class="cool-btn smooth-hidden">
+            <span class="btn-text">Caricamento...</span>
+        </button>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-icon">💡</span>
+            <span class="btn-text">Help!</span>
+        </button>
+    </div>
+
+    <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
+        <div class="section-wrapper">
+            <div id="source-container" class="card-container"></div>
+        </div>
+
+        <div class="section-wrapper" style="margin-bottom:0;">
+            <div class="target-wrapper">
+                <div id="target-container" class="card-container"></div>
+                <div id="reveal-overlay" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <h1 id="progress-title" >Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const DATA_URL = 'sentences-set-1.json';
+    const MIN_WORDS = 2; // frasi con meno parole non hanno senso come puzzle
+
+    // --- Elementi ---
+    const revealBtn = document.getElementById('reveal-btn');
+
+    // Aggiorna l'etichetta del pulsante Help. L'icona viene scritta dentro .btn-text insieme al testo
+    // (contorno definito su ".cool-btn .btn-text"). Le emoji a colori (💡, ⚠️) sono racchiuse in
+    // <span class="btn-emoji"> con un contorno più sottile: con lo stesso text-shadow del testo
+    // risulterebbero troppo spesse. Per regolarlo: --btn-emoji-outline nel CSS (default 0.5px, 0 = nessuno).
+    
+    function setRevealLabel(label) {
+        if (!revealBtn) return;
+       
+        /*
+        if (!document.getElementById('btn-emoji-style')) {
+            const style = document.createElement('style');
+            style.id = 'btn-emoji-style';
+            style.textContent = `
+                .cool-btn .btn-emoji {
+                    --w: var(--btn-emoji-outline, 0.5px);
+                    text-shadow:
+                        calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                        var(--w) calc(var(--w) * -1) 0 #000,
+                        calc(var(--w) * -1) var(--w) 0 #000,
+                        var(--w) var(--w) 0 #000;
+                }
+            `;
+            document.head.prepend(style);
+        }
+        */
+        // Crea .btn-text se manca (es. markup con un <span> semplice)
+        let textEl = revealBtn.querySelector('.btn-text');
+        if (!textEl) {
+            revealBtn.textContent = '';
+            textEl = document.createElement('span');
+            textEl.className = 'btn-text';
+            revealBtn.appendChild(textEl);
+        }
+
+        const iconEl = revealBtn.querySelector('.btn-icon');
+        if (iconEl) iconEl.style.display = 'none';
+
+        const parts = String(label).trim().split(/\s+/);
+        const hasEmoji = parts.length > 1 && /\p{Extended_Pictographic}/u.test(parts[0]);
+
+        textEl.textContent = '';
+        if (hasEmoji) {
+            const emojiEl = document.createElement('span');
+            emojiEl.className = 'btn-emoji';
+            emojiEl.textContent = parts.shift();
+            textEl.appendChild(emojiEl);
+            textEl.appendChild(document.createTextNode(' ' + parts.join(' ')));
+        } else {
+            // "✓ Fatto", "Avanti ➜", "Help!": testo semplice, con il contorno normale
+            textEl.textContent = parts.join(' ');
+        }
+    }
+
+    const revealOverlay = document.getElementById('reveal-overlay');
+    const sourceContainer = document.getElementById('source-container');
+    const targetContainer = document.getElementById('target-container');
+    const timeValueEl = document.getElementById('time-value');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const roundValueEl = document.getElementById('round-value'); // può essere null
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const puzzleWorkspace = document.getElementById('puzzle-workspace');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameTitle = document.getElementById('game-title');
+    const gameStats = document.getElementById('game-stats');
+    const actionControls = document.getElementById('action-controls');
+    const progressTitle = document.getElementById('progress-title');
+    const progressContainer = document.querySelector('.progress-bar-container');
+
+    const hiddenOnSummary = [
+        puzzleWorkspace, instructionBanner, gameStats, gameTitle,
+        progressTitle, progressContainer, actionControls
+    ];
+
+    // --- Stato ---
+    let sentences = [];
+    let sentenceIndex = 0;   // frase (round) corrente
+    let results = [];        // risultato di ogni frase completata
+    let originalWords = [];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let moveCount = 0;
+    let revealCount = 0;
+    let finalScore = 0;
+    let sentenceCompleted = false;
+    let isRevealing = false;
+    let slotsMeta = [];
+    let rowCap = 0;          // larghezza massima (px) dei due contenitori
+    let buttonMode = 'help'; // 'help' | 'wrong' | 'next' | 'done'
+
+    // --- Timer ---
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    // --- Display ---
+    function updateMovesDisplay() {
+        movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealsDisplay() {
+        revealsValueEl.textContent = revealCount;
+    }
+
+    function updateRoundDisplay() {
+        if (roundValueEl) roundValueEl.textContent = `${sentenceIndex + 1} / ${sentences.length}`;
+    }
+
+    // Barra generale: frasi completate / frasi totali
+    function setOverallProgress(done) {
+        const total = sentences.length;
+        progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    }
+
+    // Aspetta che la barra finisca di riempirsi (con un limite di sicurezza)
+    function waitForProgressBar() {
+        return new Promise(resolve => {
+            const finish = () => {
+                clearTimeout(fallback);
+                progressBarFill.removeEventListener('transitionend', onEnd);
+                resolve();
+            };
+            const onEnd = (e) => { if (e.propertyName === 'width') finish(); };
+            const fallback = setTimeout(finish, 700); // se la transizione non parte, non resta bloccato
+            progressBarFill.addEventListener('transitionend', onEnd);
+        });
+    }
+
+    function updateSlotHighlights() {
+        slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
+        const firstEmpty = slotsMeta.find(m => !m.element.querySelector('.card'));
+        if (firstEmpty) firstEmpty.element.classList.add('active-slot');
+    }
+
+    function refreshBoard() {
+        updateSlotHighlights();
+    }
+
+    // --- Stato del pulsante ---
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
+        revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
+        revealBtn.disabled = (mode === 'wrong');
+
+        const labels = {
+            help: 'Help!',
+            wrong: '⚠️ Frase errata',
+            next: '➜ Prossima Parola',
+            done: '✓ Fatto'
+        };
+
+         if ( labels[mode]!=='Help!'){
+                revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+                const iconEl = revealBtn.querySelector('.btn-icon');
+                iconEl.hidden = true;  
+            }
+        else{
+            revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+            const iconEl = revealBtn.querySelector('.btn-icon');
+            iconEl.hidden = false;   // hide
+        }
+
+        /*
+         // --- Stato del pulsante ---
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
+        revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
+        revealBtn.disabled = (mode === 'wrong');
+
+       const labels = {
+            help: 'Help!',
+            wrong: '⚠️ Parola errata',
+            next: '➜ Prossima Parola',
+            done: '✓ Fatto'
+        };
+
+        if ( labels[mode]!=='Help!'){
+                revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+                const iconEl = revealBtn.querySelector('.btn-icon');
+                iconEl.hidden = true;  
+            }
+        else{
+            revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+            const iconEl = revealBtn.querySelector('.btn-icon');
+            iconEl.hidden = false;   // hide
+        }
+    }
+        */
+    //    setRevealLabel(labels[mode]);
+    }
+
+    function showLoadError(message) {
+        document.body.classList.add('loaded'); // senza questa classe la pagina resta invisibile e l'errore non si vede
+        stopElapsedTimer();
+        if (instructionBanner) instructionBanner.textContent = message;
+        revealBtn.disabled = true; // il gioco resta disabilitato
+    }
+    /*
+    // --- Larghezza dei contenitori ---
+    // Misura la riga completa e la larghezza di ogni singola card
+    function measureRow(words) {
+        const temp = document.createElement('div');
+        temp.className = 'card-container';
+        temp.style.visibility = 'hidden';
+        temp.style.position = 'absolute';
+        temp.style.pointerEvents = 'none';
+
+        const cards = words.map(word => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.textContent = word;
+            temp.appendChild(card);
+            return card;
+        });
+
+        puzzleWorkspace.appendChild(temp);
+        const total = temp.getBoundingClientRect().width;
+        const widths = cards.map(c => c.getBoundingClientRect().width);
+        puzzleWorkspace.removeChild(temp);
+        return { total, widths };
+    }
+
+    function syncContainerWidths() {
+        if (!originalWords.length) return;
+        if (!puzzleWorkspace.clientWidth) return; // workspace nascosto (es. riepilogo): niente da misurare
+
+        const { total, widths } = measureRow(originalWords);
+        if (!total) return;
+
+        // Ogni slot prende la larghezza della card della sua parola
+        slotsMeta.forEach((m, i) => {
+            m.element.style.minWidth = widths[i] + 'px';
+        });
+
+        rowCap = Math.min(total, Math.max(0, puzzleWorkspace.clientWidth - 40));
+        sourceContainer.style.width = rowCap + 'px';
+        targetContainer.style.width = rowCap + 'px';
+    }
+    */
+
+        // --- Larghezza dei contenitori ---
+    function measureFullRowWidth(words) {
+        const temp = document.createElement('div');
+        temp.className = 'card-container';
+        temp.style.visibility = 'hidden';
+        temp.style.position = 'absolute';
+        temp.style.pointerEvents = 'none';
+
+        words.forEach(word => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.textContent = word;
+            temp.appendChild(card);
+        });
+
+        puzzleWorkspace.appendChild(temp);
+        const width = temp.getBoundingClientRect().width;
+        puzzleWorkspace.removeChild(temp);
+        return width;
+    }
+
+    function syncContainerWidths() {
+        if (!originalWords.length) return;
+        if (!puzzleWorkspace.clientWidth) return; // workspace nascosto (es. riepilogo): niente da misurare
+
+        const fullWidth = measureFullRowWidth(originalWords);
+        if (!fullWidth) return;
+
+        rowCap = Math.min(fullWidth, Math.max(0, puzzleWorkspace.clientWidth - 40));
+        sourceContainer.style.width = rowCap + 'px';
+        targetContainer.style.width = rowCap + 'px';
+    }
+
+
+    // --- Utilità ---
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function makeCard(word) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.word = word;
+        card.textContent = word;
+        return card;
+    }
+
+    function setCardDisabled(card, disabled) {
+        card.classList.toggle('disabled', disabled);
+        card.setAttribute('aria-disabled', String(disabled));
+        card.tabIndex = disabled ? -1 : 0;
+    }
+
+    function makeActivatable(el, handler) {
+        el.setAttribute('role', 'button');
+        el.tabIndex = 0;
+        el.addEventListener('click', handler);
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handler(e);
+            }
+        });
+    }
+
+    // --- Animazioni (non bloccano mai lo stato di gioco) ---
+    function playCheckmark(element) {
+        if (typeof Checkmark === 'undefined') return;
+        try {
+            Promise.resolve(Checkmark.show({ element, size: 48, rise: 70, duration: 1600 }))
+                .catch(err => console.warn('Checkmark animation failed:', err));
+        } catch (err) {
+            console.warn('Checkmark animation failed:', err);
+        }
+    }
+
+    async function playConfetti() {
+        if (typeof Confetti === 'undefined') return;
+        try {
+            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+        } catch (err) {
+            console.warn('Confetti animation failed:', err);
+        }
+    }
+
+    // --- Logica di gioco ---
+    function registerMove() {
+        if (sentenceCompleted) return;
+        moveCount++;
+        updateMovesDisplay();
+        refreshBoard();
+        checkSentenceAutomatic();
+    }
+
+    function placeWord(card) {
+        if (sentenceCompleted || card.classList.contains('disabled')) return;
+
+        const emptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+        if (!emptyMeta) return;
+
+        const word = card.dataset.word;
+        const slot = emptyMeta.element;
+
+        setCardDisabled(card, true);
+
+        const slotCard = makeCard(word);
+        slotCard.sourceCard = card;
+        slotCard.setAttribute('role', 'button');
+        slotCard.tabIndex = 0;
+        slotCard.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                removeFromSlot(slot);
+            }
+        });
+
+        slot.appendChild(slotCard);
+        slot.classList.add('filled');
+
+        const isCorrect = word === emptyMeta.expected;
+
+        // Prima lo stato (completamento, timer, pulsante), poi l'animazione
+        registerMove();
+        if (isCorrect) playCheckmark(slot);
+    }
+
+    function removeFromSlot(slot) {
+        if (sentenceCompleted) return;
+        const slotCard = slot.querySelector('.card');
+        if (!slotCard) return;
+
+        if (slotCard.sourceCard) setCardDisabled(slotCard.sourceCard, false);
+        slot.innerHTML = '';
+        slot.classList.remove('filled');
+
+        registerMove(); // checkSentenceAutomatic ripristina errori e pulsante
+    }
+
+    function computeScore() {
+        // Ogni parola richiede almeno un posizionamento: il resto sono mosse in più
+        const extraMoves = Math.max(0, moveCount - originalWords.length);
+        const raw = 100 - extraMoves * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    // A frase completata nulla deve più reagire: niente click, hover o cursore a mano.
+    // Si usa lo stile inline così funziona anche se il CSS della pagina non ha regole
+    // per .locked / .disabled (le classi servono solo per l'aspetto, non per bloccare).
+    function lockInteraction() {
+        [sourceContainer, targetContainer].forEach(container => {
+            container.querySelectorAll('.slot, .card').forEach(el => {
+                el.style.pointerEvents = 'none';
+                el.style.cursor = 'default';
+                el.removeAttribute('role');
+                el.removeAttribute('tabindex'); // non più raggiungibile da tastiera
+                el.setAttribute('aria-disabled', 'true');
+            });
+        });
+    }
+
+    function completeSentence() {
+        sentenceCompleted = true;
+        stopElapsedTimer();
+        hideReveal();
+        refreshBoard();
+
+        slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+        sourceContainer.querySelectorAll('.card').forEach(card => setCardDisabled(card, true));
+        targetContainer.querySelectorAll('.card').forEach(card => { card.tabIndex = -1; });
+        targetContainer.querySelectorAll('.slot').forEach(slot => slot.classList.add('locked'));
+        lockInteraction();
+
+        finalScore = computeScore();
+        results.push({
+            text: originalWords.join(' '),
+            seconds: elapsedSeconds,
+            moves: moveCount,
+            reveals: revealCount,
+            score: finalScore
+        });
+
+        const isLast = sentenceIndex >= sentences.length - 1;
+        setOverallProgress(sentenceIndex + 1);   // la barra avanza di un round
+        setButtonMode(isLast ? 'done' : 'next'); // subito, senza aspettare i coriandoli
+
+        // Coriandoli solo a fine gioco, a barra completamente riempita.
+        // Per averli a ogni frase: sostituisci con playConfetti();
+        if (isLast) waitForProgressBar().then(() => playConfetti());
+    }
+
+    function checkSentenceAutomatic() {
+        if (sentenceCompleted) return;
+
+        const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+        const isCorrect = allSlotsFilled &&
+            slotsMeta.every(m => m.element.querySelector('.card').dataset.word === m.expected);
+
+        if (isCorrect) {
+            completeSentence();
+        } else if (allSlotsFilled) {
+            slotsMeta.forEach(m => m.element.classList.add('error-slot'));
+            setButtonMode('wrong');
+        } else {
+            slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+            if (buttonMode === 'wrong') setButtonMode('help');
+        }
+    }
+
+    function loadSentence(index) {
+        sentenceIndex = index;
+        const sentenceText = sentences[sentenceIndex];
+        originalWords = sentenceText.split(/\s+/);
+
+        hideReveal();
+        sourceContainer.style.width = '';
+        targetContainer.style.width = '';
+        sourceContainer.innerHTML = '';
+        targetContainer.innerHTML = '';
+        sentenceCompleted = false;
+        moveCount = 0;
+        revealCount = 0;
+        slotsMeta = [];
+
+        updateMovesDisplay();
+        updateRevealsDisplay();
+        updateRoundDisplay();
+        setButtonMode('help');
+
+        // 1. Slot di destinazione
+        originalWords.forEach(word => {
+            const slot = document.createElement('div');
+            slot.classList.add('slot');
+            slot.addEventListener('click', () => removeFromSlot(slot));
+            targetContainer.appendChild(slot);
+            slotsMeta.push({ element: slot, expected: word });
+        });
+
+        // 2. Carte sorgente (restano al loro posto e si disabilitano quando usate)
+        shuffleArray(originalWords).forEach(word => {
+            const card = makeCard(word);
+            makeActivatable(card, () => placeWord(card));
+            sourceContainer.appendChild(card);
+        });
+
+        setOverallProgress(sentenceIndex); // a ogni nuova frase la barra riparte dai round completati
+        refreshBoard();
+        syncContainerWidths();
+        startElapsedTimer();
+    }
+
+    // --- Help (tieni premuto) ---
+    function showReveal() {
+        if (buttonMode !== 'help' || isRevealing || sentenceCompleted) return;
+        isRevealing = true;
+
+        revealCount++;
+        updateRevealsDisplay();
+
+        revealOverlay.innerHTML = '';
+        originalWords.forEach(word => {
+            const slot = document.createElement('div');
+            slot.classList.add('slot', 'revealed');
+
+            const card = document.createElement('div');
+            card.classList.add('card', 'reveal-letter');
+            card.textContent = word;
+
+            slot.appendChild(card);
+            revealOverlay.appendChild(slot);
+        });
+        revealOverlay.classList.add('visible');
+    }
+
+    function hideReveal() {
+        isRevealing = false;
+        revealOverlay.classList.remove('visible');
+    }
+
+    revealBtn.addEventListener('pointerdown', showReveal);
+    revealBtn.addEventListener('pointerup', hideReveal);
+    revealBtn.addEventListener('pointerleave', hideReveal);
+    revealBtn.addEventListener('pointercancel', hideReveal);
+    revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+
+    revealBtn.addEventListener('keydown', (e) => {
+        if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showReveal();
+    });
+    revealBtn.addEventListener('keyup', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') hideReveal();
+    });
+    revealBtn.addEventListener('blur', hideReveal);
+
+    // A frase completata il tasto diventa "Avanti" (frase successiva) o "Fatto" (riepilogo finale)
+    revealBtn.addEventListener('click', () => {
+        if (buttonMode === 'next') loadSentence(sentenceIndex + 1);
+        else if (buttonMode === 'done') showSummaryScreen();
+    });
+
+    // --- Riepilogo ---
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        hideReveal();
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+
+        if (summaryTbody) {
+            summaryTbody.innerHTML = '';
+            results.forEach(r => {
+                const row = document.createElement('tr');
+                addCell(row, r.text, true);
+                addCell(row, `${r.seconds}s`);
+                addCell(row, String(r.moves));
+                addCell(row, String(r.reveals));
+                addCell(row, String(r.score), true);
+                summaryTbody.appendChild(row);
+            });
+        }
+
+        if (summaryTotals) {
+            const sum = key => results.reduce((t, r) => t + r[key], 0);
+            summaryTotals.innerHTML = `
+                <div>Tempo: <strong>${sum('seconds')}s</strong></div>
+                <div>Tentativi: <strong>${sum('moves')}</strong></div>
+                <div>Aiuti: <strong>${sum('reveals')}</strong></div>
+                <div>Punti: <strong>${sum('score')}</strong></div>
+            `;
+        }
+
+        if (summaryScreen) summaryScreen.style.display = 'block';
+    }
+
+    // --- Avvio ---
+    async function initGame() {
+        try {
+            const response = await fetch(DATA_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
+            const data = await response.json();
+            if (!Array.isArray(data.sentences)) {
+                showLoadError('Nessuna frase disponibile.');
+                return;
+            }
+
+            // Solo stringhe con almeno MIN_WORDS parole; gli spazi multipli vengono normalizzati
+            sentences = data.sentences
+                .filter(s => typeof s === 'string')
+                .map(s => s.trim().replace(/\s+/g, ' '))
+                .filter(s => s.split(' ').length >= MIN_WORDS);
+
+            if (sentences.length < data.sentences.length) {
+                console.warn(`${data.sentences.length - sentences.length} frasi scartate perché non valide.`);
+            }
+            if (sentences.length === 0) {
+                showLoadError('Nessuna frase valida.');
+                return;
+            }
+
+            if (data.title) {
+                document.title = data.title;
+                if (gameTitle) gameTitle.textContent = data.title;
+            }
+
+            sentences = shuffleArray(sentences); // ordine casuale a ogni partita, senza ripetizioni
+            results = [];
+            loadSentence(0);
+            document.body.classList.add('loaded');
+
+            // Ora il workspace è visibile (e i font caricati): ricalcola le larghezze
+            syncContainerWidths();
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(syncContainerWidths);
+            }
+        } catch (err) {
+            console.error(`Could not load ${DATA_URL}:`, err);
+            showLoadError('Errore nel caricamento del gioco.');
+        }
+    }
+
+    let resizeDebounceTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeDebounceTimer);
+        resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
+    });
+
+    initGame();
+});
+
+
+
+</script>
+
+</body>
+</html>

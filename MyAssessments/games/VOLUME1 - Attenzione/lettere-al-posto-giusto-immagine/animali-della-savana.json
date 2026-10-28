@@ -2,14 +2,14 @@
     "title": "Lettere al posto giusto",
     "label": "Clicca su un carattere per ricomporre la parola.",
     "words": [
-           { "text": "COCCODRILLO",   "image": "images/animali/savana/croc.png" },
-           { "text": "ELEFANTE",   "image": "images/animali/savana/elephant.png" },
-           { "text": "GAZZELLA",   "image": "images/animali/savana/gazelle.png" },
-           { "text": "GIRAFFA",   "image": "images/animali/savana/giraffe.png" },
-           { "text": "IPPOPOTAMO",   "image": "images/animali/savana/hyppo.png" },
-           { "text": "LEONE",   "image": "images/animali/savana/lion.png" },
-           { "text": "STRUZZO",   "image": "images/animali/savana/ostrich.png" },
-           { "text": "BABBUINO",   "image": "images/animali/savana/baboon.png" }
+           { "text": "COCCODRILLO",   "image": "../../images/animali/savana/croc.png" },
+           { "text": "ELEFANTE",      "image": "../../images/animali/savana/elephant.png" },
+           { "text": "GAZZELLA",      "image": "../../images/animali/savana/gazelle.png" },
+           { "text": "GIRAFFA",       "image": "../../images/animali/savana/giraffe.png" },
+           { "text": "IPPOPOTAMO",    "image": "../../images/animali/savana/hyppo.png" },
+           { "text": "LEONE",         "image": "../../images/animali/savana/lion.png" },
+           { "text": "STRUZZO",       "image": "../../images/animali/savana/ostrich.png" },
+           { "text": "BABBUINO",      "image": "../../images/animali/savana/baboon.png" }
           
     ]
 }

@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Completa la Frase</title>
+
+     <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <!-- Main CSS File -->
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        :root {
+            --target-background : #37275e;
+        }
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* =========================================
+           CARD CONTAINERS (source + target)
+        ========================================= */
+        
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            width: fit-content;
+            max-width: 100%;
+            min-height: clamp(90px, 14vh, 130px);
+            padding: 20px;
+            border-radius: 20px;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: var(--game-area-background);
+            box-shadow: var(--shadow-md);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            margin: 0 auto;
+        }
+        
+        #source-container {
+            border-color: var(--border);
+        }
+
+        #target-container {
+            border: 2px solid var(--border);
+            background-color: var(--target-background);
+            padding: 19px;
+        }
+        
+        .target-wrapper {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto;
+        }
+        
+        /* =========================================
+           GRID BUTTONS -> .card (word buttons)
+        ========================================= */
+        
+        .card {
+            flex-shrink: 0;
+            min-width: 90px;
+            height: 60px;
+            padding: 0 18px;
+            background: var(--default-btn);
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: sans-serif, system-ui, -apple-system, sans-serif;
+            font-size: 1.0rem;
+            font-weight: 500;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            transition:
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease,
+                color 0.25s ease;
+            text-shadow:
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px  1px 0 #000,
+                1px  1px 0 #000;
+        }
+        
+        /* hover (source list only) */
+        
+        #source-container .card:hover {
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+        
+        /* cards placed in a slot: same look, no movement */
+        
+        .slot .card {
+            transform: none !important;
+            background: var(--default-btn);
+        }
+        
+        /* correct (selected) */
+        
+        .slot .card.correct,
+        .card.correct {
+            background-color: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
+        }
+        
+        .slot .card:not(.correct):not(.given):not(.reveal-letter) {
+            background: var(--disabled-btn);
+            box-shadow: none;
+            border-color: #ffffff; /* your wrong-border color */
+        }
+
+        /* disabled */
+        
+        .card.disabled {
+            background: var(--disabled-btn);
+            opacity: 1;
+            filter: none;
+            pointer-events: none;
+            cursor: default;
+            box-shadow: none;
+        }
+        
+        /* wrongly placed cards in the drop zone */
+        
+        .slot .card:not(.correct):not(.given):not(.reveal-letter) {
+            background: var(--disabled-btn);
+            box-shadow: none;
+        }
+        
+        /* given (pre-filled) cards */
+        
+        .card.given {
+            position: relative;
+            border-color: var(--text);
+            background: #7931b4;
+            color: var(--text);
+            cursor: default;
+        }
+        
+        .card.given::after {
+            content: '✓';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--text);
+            color: #000000;
+            font-size: 0.7rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+            text-shadow: none;
+        }
+        
+        /* revealed with Help (help-correct) */
+        
+        .card.reveal-letter {
+            border-color: var(--grid-btn-help-border-color) !important;
+            background-color: var(--grid-btn-help) !important;
+            color: var(--grid-btn-help-text) !important;
+            cursor: default;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: none !important;
+        }
+        
+        /* =========================================
+           SLOTS (drop zone)
+        ========================================= */
+        
+        .slot {
+            position: relative;
+            flex-shrink: 0;
+            min-width: 90px;
+            height: 60px;
+            padding: 0;
+            background-color: var(--default-btn);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
+            transition: border-color 0.25s ease, background-color 0.25s ease,
+                        box-shadow 0.25s ease, transform 0.25s ease;
+            cursor: pointer;
+        }
+        
+        .slot.active-slot {
+            border-color: #ffffff;
+            border-style: solid;
+            background-color: var(--default-btn);
+        }
+        
+        /* filled slot = invisible wrapper around the card */
+        
+        .slot.filled,
+        .slot.revealed {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+        }
+        
+        .slot.filled:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+        
+        .slot.error-slot {
+            animation: shake 0.4s ease;
+            background-color: var(--wrong);
+            cursor: default;
+            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
+        }
+        
+        .slot.given {
+            cursor: default;
+        }
+
+        .slot.given:hover {
+            transform: none;
+            box-shadow: none;
+            z-index: auto;
+        }
+
+        /* Drop zone: cards react on hover exactly like the source cards */
+        .slot.filled:not(.given):hover .card:not(.given):not(.reveal-letter) {
+            border-color: var(--grid-btn-hovered-border-color) !important;
+            background: var(--grid-btn-hovered) !important;
+            color: var(--grid-btn-hovered-text) !important;
+            box-shadow: var(--shadow-md) !important;
+        }
+
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        
+        /* =========================================
+           HELP OVERLAY
+        ========================================= */
+        
+        #reveal-overlay {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: min(92vw, 1060px);
+            min-width: 100%;
+            height: max-content;
+            min-height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 19px;
+            border-radius: 20px;
+            background-color: var(--target-background);
+            border: 2px solid var(--correct);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        #reveal-overlay.visible {
+            opacity: 1;
+        }
+        
+        /* =========================================
+           COOL BUTTONS
+        ========================================= */
+        
+        button:hover {
+            filter: brightness(1.05);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+        
+        /* Drop zone locked after the sentence is completed */
+        #target-container .slot.locked {
+            pointer-events: none;
+            cursor: default;
+        }
+
+        #target-container .slot.locked:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        #target-container .slot.locked .card.disabled {
+            background: var(--default-btn) !important;
+            color: var(--text) !important;
+            border-color: var(--border) !important;
+            opacity: 0.5 !important; /* Passerà da 1 a 0.5 con un bel fade */
+            transform: none !important;
+            box-shadow: none !important;
+            cursor: default !important;
+            transition:
+                background-color 0.6s ease,
+                border-color 0.6s ease,
+                color 0.6s ease,
+                opacity 0.6s ease;
+        }
+
+        /* =========================================
+           IMAGE CONTAINER (sotto il pulsante Help)
+        ========================================= */
+
+        #puzzle-image-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 0 0 16px;
+        }
+
+        /* senza questa regola il display:flex annulla l'attributo hidden */
+        #puzzle-image-wrapper[hidden] {
+            display: none !important;
+        }
+
+        #puzzle-image {
+            max-width: min(100%, 320px);
+            max-height: 220px;
+            object-fit: contain;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            background-color: var(--game-area-background);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media (max-width: 700px) {
+            body { padding: 16px 12px 30px; }
+            h1, #progress-title { font-size: 1.9rem; }
+            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
+            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
+        }
+
+       
+    </style>
+    
+        <style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1 id="game-title">Completa la Frase</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 5</strong></span>
+        <span>Parole Corrette: <strong id="progress-value">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">Alcune parole sono già al posto giusto. Clicca sulle parole mancanti nella prima lista per completare la frase nelle caselle vuote.</h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <div id="puzzle-image-wrapper" hidden>
+        <img id="puzzle-image" alt="">
+    </div>
+
+    <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
+        <div class="section-wrapper">
+            <div id="source-container" class="card-container"></div>
+        </div>
+        <div class="section-wrapper" style="margin-bottom:0;">
+            <div class="target-wrapper">
+                <div id="target-container" class="card-container"></div>
+                <div id="reveal-overlay" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <h1>Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Global variable initialized as empty array
+    let PUZZLE_SENTENCES = [];
+
+    // Numero di round per partita = numero di "chunk" in cui viene diviso l'array.
+    const ROUNDS_PER_GAME = 5;
+    // true: i chunk sono ordinati per lunghezza (round 1 = frasi corte, ultimo round = frasi lunghe).
+    // false: i chunk sono casuali.
+    const PROGRESSIVE_DIFFICULTY = true;
+
+    // ---------- Elementi ----------
+    const revealBtn = document.getElementById('reveal-btn');
+    const revealOverlay = document.getElementById('reveal-overlay');
+    const sourceContainer = document.getElementById('source-container');
+    const targetContainer = document.getElementById('target-container');
+    const timeValueEl = document.getElementById('time-value');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressValueEl = document.getElementById('progress-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const puzzleWorkspace = document.getElementById('puzzle-workspace');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameTitle = document.getElementById('game-title');
+    const gameStats = document.getElementById('game-stats');
+    const actionControls = document.getElementById('action-controls');
+    const progressTitle = document.getElementById('progress-title');
+    const progressContainer = document.querySelector('.progress-bar-container');
+    const btnIcon = document.getElementById('btn-icon');
+    const imageWrapper = document.getElementById('puzzle-image-wrapper');
+    const puzzleImage = document.getElementById('puzzle-image');
+
+    // Contatore delle frasi: è il <span id="round-value"> dentro #game-stats (nell'HTML)
+    const roundValueEl = document.getElementById('round-value');
+    if (!roundValueEl) {
+        console.warn('Manca <span id="round-value"> dentro #game-stats: il contatore delle frasi non verrà mostrato.');
+    }
+
+    const hiddenOnSummary = [
+        puzzleWorkspace, instructionBanner, gameStats, gameTitle,
+        progressTitle, progressContainer, actionControls, imageWrapper
+    ];
+    
+    // ---------- Stato ----------
+    let roundSentences = [];      // una frase per round
+    let currentRound = 0;
+    let roundResults = [];        // risultati dei round completati
+    let originalWords = [];       // parole della frase del round corrente
+    let slotsMeta = [];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let moveCount = 0;
+    let revealCount = 0;
+    let roundCompleted = false;
+    let isRevealing = false;
+    let buttonMode = 'help';      // 'help' | 'wrong' | 'next' | 'done'
+
+    // Cambia l'icona del pulsante (classe Font Awesome 4.7)
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-exclamation-triangle', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+
+    // ---------- Immagine ----------
+    function setPuzzleImage(src) {
+        if (!src) {
+            console.log("Nessuna immagine configurata per questa frase.");
+            imageWrapper.hidden = true;
+            puzzleImage.removeAttribute('src');
+            return;
+        }
+        console.log("Tentativo di caricamento immagine:", src);
+        imageWrapper.hidden = false;
+        puzzleImage.src = src;
+    }
+
+    // Se il file non esiste, il container sparisce e logga l'errore
+    puzzleImage.addEventListener('error', (e) => {
+        console.warn("Impossibile caricare l'immagine dal percorso specificato:", puzzleImage.src);
+        imageWrapper.hidden = true;
+    });
+
+    /*
+    // ---------- Immagine ----------
+    function setPuzzleImage(src) {
+        if (!src) {
+            console.log(src);
+            imageWrapper.hidden = true;
+            puzzleImage.removeAttribute('src');
+            return;
+        }
+        imageWrapper.hidden = false;
+        puzzleImage.src = src;
+    }
+
+    // Se il file non esiste, il container sparisce
+    puzzleImage.addEventListener('error', () => {
+        imageWrapper.hidden = true;
+    });
+    */
+    // ---------- Utilità ----------
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Divide l'array in "chunk" e prende una frase casuale da ciascuno.
+    function buildRoundSentences() {
+        const pool = shuffleArray(PUZZLE_SENTENCES);
+        if (PROGRESSIVE_DIFFICULTY) {
+            pool.sort((a, b) => a.split(' ').length - b.split(' ').length);
+        }
+        const parts = Math.min(ROUNDS_PER_GAME, pool.length);
+        const chunks = [];
+        for (let i = 0; i < parts; i++) {
+            const start = Math.round((i * pool.length) / parts);
+            const end = Math.round(((i + 1) * pool.length) / parts);
+            chunks.push(pool.slice(start, end));
+        }
+        return chunks
+            .filter(chunk => chunk.length > 0)
+            .map(chunk => chunk[Math.floor(Math.random() * chunk.length)]);
+    }
+
+    // ---------- Timer ----------
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    // ---------- Display ----------
+    function updateMovesDisplay() {
+        movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealsDisplay() {
+        revealsValueEl.textContent = revealCount;
+    }
+
+    function updateRoundDisplay() {
+        if (roundValueEl) roundValueEl.textContent = `${currentRound + 1} / ${roundSentences.length}`;
+    }
+
+    function updateProgressDisplay() {
+        let total = 0;
+        let correct = 0;
+
+        slotsMeta.forEach(m => {
+            if (!m.element.classList.contains('given')) {
+                total++;
+                const card = m.element.querySelector('.card');
+                if (card && card.dataset.word === m.expected) correct++;
+            }
+        });
+
+        progressValueEl.textContent = `${correct} / ${total}`;
+        progressBarFill.style.width = (total > 0 ? (correct / total) * 100 : 0) + '%';
+    }
+
+    function updateSlotHighlights() {
+        slotsMeta.forEach(m => m.element.classList.remove('active-slot'));
+        const firstEmpty = slotsMeta.find(m => !m.element.querySelector('.card'));
+        if (firstEmpty) firstEmpty.element.classList.add('active-slot');
+    }
+
+    function refreshBoard() {
+        updateSlotHighlights();
+        updateProgressDisplay();
+    }
+
+    // ---------- Larghezza contenitori ----------
+    function measureFullRowWidth(words) {
+        const temp = document.createElement('div');
+        temp.className = 'card-container';
+        temp.style.visibility = 'hidden';
+        temp.style.position = 'absolute';
+        temp.style.pointerEvents = 'none';
+
+        words.forEach(word => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.textContent = word;
+            temp.appendChild(card);
+        });
+
+        puzzleWorkspace.appendChild(temp);
+        const width = temp.getBoundingClientRect().width;
+        puzzleWorkspace.removeChild(temp);
+        return width;
+    }
+
+    function syncContainerWidths() {
+        if (!originalWords.length) return;
+        const fullWidth = measureFullRowWidth(originalWords);
+        if (!fullWidth) return; // workspace ancora nascosto: riprova più tardi
+
+        const maxAllowed = Math.max(0, puzzleWorkspace.clientWidth - 40);
+        const targetWidth = maxAllowed ? Math.min(fullWidth, maxAllowed) : fullWidth;
+
+        sourceContainer.style.maxWidth = targetWidth + 'px';
+        targetContainer.style.maxWidth = targetWidth + 'px';
+    }
+
+    // ---------- Stato del pulsante ----------
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
+        revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
+        revealBtn.disabled = (mode === 'wrong');
+
+        const states = {
+            help:  { icon: 'fa-lightbulb-o',          text: 'Clicca qui per avere un aiuto!' },
+            wrong: { icon: 'fa-exclamation-triangle', text: 'Frase errata' },
+            next:  { icon: 'fa-arrow-right',          text: 'Prossima frase' },
+            done:  { icon: 'fa-check',                text: 'Fatto' }
+        };
+
+        setButtonIcon(states[mode].icon);
+        const textEl = revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = states[mode].text;
+    }
+
+    // ---------- Accessibilità ----------
+    function setCardDisabled(card, disabled) {
+        card.classList.toggle('disabled', disabled);
+        card.setAttribute('aria-disabled', String(disabled));
+        card.tabIndex = disabled ? -1 : 0;
+    }
+
+    function makeActivatable(el, handler) {
+        el.setAttribute('role', 'button');
+        el.tabIndex = 0;
+        el.addEventListener('click', handler);
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handler(e);
+            }
+        });
+    }
+
+    // ---------- Animazioni (non bloccano mai lo stato di gioco) ----------
+    function playCheckmark(element) {
+        if (typeof Checkmark === 'undefined') return;
+        try {
+            Promise.resolve(Checkmark.show({ element, size: 48, rise: 70, duration: 1600 }))
+                .catch(err => console.warn('Checkmark animation failed:', err));
+        } catch (err) {
+            console.warn('Checkmark animation failed:', err);
+        }
+    }
+
+    async function playConfetti(isFinal) {
+        if (typeof Confetti === 'undefined') return;
+        try {
+            if (isFinal) {
+                await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+            } else {
+                await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 60 });
+            }
+        } catch (err) {
+            console.warn('Confetti animation failed:', err);
+        }
+    }
+
+    // ---------- Logica di gioco ----------
+    function registerMove() {
+        if (roundCompleted) return;
+        moveCount++;
+        updateMovesDisplay();
+        refreshBoard();
+        checkSentenceAutomatic();
+    }
+
+    function placeWord(card) {
+        if (roundCompleted || card.classList.contains('disabled')) return;
+
+        const emptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+        if (!emptyMeta) return;
+
+        const word = card.dataset.word;
+        const slot = emptyMeta.element;
+
+        setCardDisabled(card, true);
+
+        const slotCard = document.createElement('div');
+        slotCard.classList.add('card');
+        slotCard.dataset.word = word;
+        slotCard.textContent = word;
+        slotCard.sourceCard = card;
+        slotCard.setAttribute('role', 'button');
+        slotCard.tabIndex = 0;
+        slotCard.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                removeFromSlot(slot);
+            }
+        });
+
+        slot.appendChild(slotCard);
+        slot.classList.add('filled');
+
+        const isWordCorrect = word === emptyMeta.expected;
+        if (isWordCorrect) slotCard.classList.add('correct');
+
+        // Prima lo stato (timer, completamento, pulsante), poi l'animazione
+        registerMove();
+        if (isWordCorrect) playCheckmark(slot);
+    }
+
+    function removeFromSlot(slot) {
+        if (roundCompleted || slot.classList.contains('given')) return;
+        const slotCard = slot.querySelector('.card');
+        if (!slotCard) return;
+
+        if (slotCard.sourceCard) setCardDisabled(slotCard.sourceCard, false);
+        slot.innerHTML = '';
+        slot.classList.remove('filled');
+
+        registerMove(); // checkSentenceAutomatic ripristina errori e pulsante
+    }
+
+    function checkSentenceAutomatic() {
+        if (roundCompleted) return;
+
+        const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+        const isCorrect = allSlotsFilled &&
+            slotsMeta.every(m => m.element.querySelector('.card').dataset.word === m.expected);
+
+        if (isCorrect) {
+            completeRound();
+        } else if (allSlotsFilled) {
+            slotsMeta.forEach(m => m.element.classList.add('error-slot'));
+            setButtonMode('wrong');
+        } else {
+            slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+            if (buttonMode === 'wrong') setButtonMode('help');
+        }
+    }
+
+    function computeRoundScore() {
+        const missing = slotsMeta.filter(m => !m.element.classList.contains('given')).length;
+        const extraMoves = Math.max(0, moveCount - missing);
+        const raw = 100 - extraMoves * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    function completeRound() {
+        roundCompleted = true;
+        stopElapsedTimer();
+        hideReveal();
+        refreshBoard();
+
+        slotsMeta.forEach(m => m.element.classList.remove('error-slot'));
+
+        // Carte sorgente: tutte disabilitate
+        sourceContainer.querySelectorAll('.card').forEach(card => setCardDisabled(card, true));
+        // Zona di destinazione: solo le carte non "correct" (quelle date) sbiadiscono
+        targetContainer.querySelectorAll('.card').forEach(card => { card.tabIndex = -1; });
+        targetContainer.querySelectorAll('.card:not(.correct)').forEach(card => card.classList.add('disabled'));
+        targetContainer.querySelectorAll('.slot').forEach(slot => slot.classList.add('locked'));
+
+        roundResults.push({
+            sentence: originalWords.join(' '),
+            seconds: elapsedSeconds,
+            moves: moveCount,
+            reveals: revealCount,
+            score: computeRoundScore()
+        });
+
+        const isLastRound = currentRound === roundSentences.length - 1;
+        setButtonMode(isLastRound ? 'done' : 'next');
+        if (isLastRound) playConfetti(true);
+    }
+
+        // Divide the items into chunks and pick a random item from each
+    function buildRoundSentences() {
+        const pool = shuffleArray(PUZZLE_SENTENCES);
+        
+        if (PROGRESSIVE_DIFFICULTY) {
+            pool.sort((a, b) => a.sentence.split(' ').length - b.sentence.split(' ').length);
+        }
+        
+        const parts = Math.min(ROUNDS_PER_GAME, pool.length);
+        const chunks = [];
+        for (let i = 0; i < parts; i++) {
+            const start = Math.round((i * pool.length) / parts);
+            const end = Math.round(((i + 1) * pool.length) / parts);
+            chunks.push(pool.slice(start, end));
+        }
+        
+        return chunks
+            .filter(chunk => chunk.length > 0)
+            .map(chunk => chunk[Math.floor(Math.random() * chunk.length)]);
+    }
+
+    // Loading a round using the current object item
+    function loadRound(index) {
+        currentRound = index;
+        const currentItem = roundSentences[index]; // currentItem has .sentence and .image
+        
+        originalWords = currentItem.sentence.split(' ');
+        setPuzzleImage(currentItem.image);
+
+        hideReveal();
+        sourceContainer.style.maxWidth = '';
+        targetContainer.style.maxWidth = '';
+        sourceContainer.innerHTML = '';
+        targetContainer.innerHTML = '';
+        roundCompleted = false;
+        moveCount = 0;
+        revealCount = 0;
+        slotsMeta = [];
+        
+                const wordCount = originalWords.length;
+        const givenCount = wordCount <= 2
+            ? 1
+            : Math.min(wordCount - 1, Math.max(1, Math.round(wordCount / 2)));
+        const givenPositions = new Set(shuffleArray(originalWords.map((_, i) => i)).slice(0, givenCount));
+
+        updateRoundDisplay();
+        updateMovesDisplay();
+        updateRevealsDisplay();
+        setButtonMode('help'); // ripristina anche l'icona 💡
+
+        // 1. Slot di destinazione
+        originalWords.forEach((word, i) => {
+            const slot = document.createElement('div');
+            slot.classList.add('slot');
+
+            if (givenPositions.has(i)) {
+                slot.classList.add('filled', 'given');
+
+                const givenCard = document.createElement('div');
+                givenCard.classList.add('card', 'given');
+                givenCard.dataset.word = word;
+                givenCard.textContent = word;
+                slot.appendChild(givenCard);
+            } else {
+                slot.addEventListener('click', () => removeFromSlot(slot));
+            }
+
+            targetContainer.appendChild(slot);
+            slotsMeta.push({ element: slot, expected: word });
+        });
+
+        // 2. Carte sorgente (le parole mancanti, mescolate)
+        const missingWords = originalWords.filter((_, i) => !givenPositions.has(i));
+        shuffleArray(missingWords).forEach(word => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.word = word;
+            card.textContent = word;
+            makeActivatable(card, () => placeWord(card));
+            sourceContainer.appendChild(card);
+        });
+
+        syncContainerWidths();
+        refreshBoard();
+        startElapsedTimer();
+
+    }
+
+    /*
+    // ---------- Round ----------
+    function loadRound(index) {
+        currentRound = index;
+        originalWords = roundSentences[index].split(' ');
+        setPuzzleImage(SENTENCE_IMAGES[roundSentences[index]]);
+
+        hideReveal();
+        sourceContainer.style.maxWidth = '';
+        targetContainer.style.maxWidth = '';
+        sourceContainer.innerHTML = '';
+        targetContainer.innerHTML = '';
+        roundCompleted = false;
+        moveCount = 0;
+        revealCount = 0;
+        slotsMeta = [];
+
+        const wordCount = originalWords.length;
+        const givenCount = wordCount <= 2
+            ? 1
+            : Math.min(wordCount - 1, Math.max(1, Math.round(wordCount / 2)));
+        const givenPositions = new Set(shuffleArray(originalWords.map((_, i) => i)).slice(0, givenCount));
+
+        updateRoundDisplay();
+        updateMovesDisplay();
+        updateRevealsDisplay();
+        setButtonMode('help'); // ripristina anche l'icona 💡
+
+        // 1. Slot di destinazione
+        originalWords.forEach((word, i) => {
+            const slot = document.createElement('div');
+            slot.classList.add('slot');
+
+            if (givenPositions.has(i)) {
+                slot.classList.add('filled', 'given');
+
+                const givenCard = document.createElement('div');
+                givenCard.classList.add('card', 'given');
+                givenCard.dataset.word = word;
+                givenCard.textContent = word;
+                slot.appendChild(givenCard);
+            } else {
+                slot.addEventListener('click', () => removeFromSlot(slot));
+            }
+
+            targetContainer.appendChild(slot);
+            slotsMeta.push({ element: slot, expected: word });
+        });
+
+        // 2. Carte sorgente (le parole mancanti, mescolate)
+        const missingWords = originalWords.filter((_, i) => !givenPositions.has(i));
+        shuffleArray(missingWords).forEach(word => {
+            const card = document.createElement('div');
+            card.classList.add('card');
+            card.dataset.word = word;
+            card.textContent = word;
+            makeActivatable(card, () => placeWord(card));
+            sourceContainer.appendChild(card);
+        });
+
+        syncContainerWidths();
+        refreshBoard();
+        startElapsedTimer();
+    }
+    */
+    function goToNextRound() {
+        if (currentRound < roundSentences.length - 1) {
+            loadRound(currentRound + 1);
+        }
+    }
+
+    // ---------- Help (tieni premuto) ----------
+    function showReveal() {
+        if (buttonMode !== 'help' || isRevealing || roundCompleted) return;
+        isRevealing = true;
+
+        revealCount++;
+        updateRevealsDisplay();
+
+        revealOverlay.innerHTML = '';
+        originalWords.forEach(word => {
+            const slot = document.createElement('div');
+            slot.classList.add('slot', 'revealed');
+
+            const card = document.createElement('div');
+            card.classList.add('card', 'reveal-letter');
+            card.textContent = word;
+
+            slot.appendChild(card);
+            revealOverlay.appendChild(slot);
+        });
+        revealOverlay.classList.add('visible');
+    }
+
+    function hideReveal() {
+        isRevealing = false;
+        revealOverlay.classList.remove('visible');
+    }
+
+    revealBtn.addEventListener('pointerdown', showReveal);
+    revealBtn.addEventListener('pointerup', hideReveal);
+    revealBtn.addEventListener('pointerleave', hideReveal);
+    revealBtn.addEventListener('pointercancel', hideReveal);
+    revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+
+    revealBtn.addEventListener('keydown', (e) => {
+        if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showReveal();
+    });
+    revealBtn.addEventListener('keyup', (e) => {
+        if (e.key === ' ' || e.key === 'Enter') hideReveal();
+    });
+    revealBtn.addEventListener('blur', hideReveal);
+
+    // "Avanti" passa al round successivo, "Fatto" apre il riepilogo
+    revealBtn.addEventListener('click', () => {
+        if (buttonMode === 'next') goToNextRound();
+        else if (buttonMode === 'done') showSummaryScreen();
+    });
+
+    // ---------- Riepilogo ----------
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        hideReveal();
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+
+        if (summaryTbody) {
+            summaryTbody.innerHTML = '';
+            roundResults.forEach(r => {
+                const row = document.createElement('tr');
+                addCell(row, r.sentence, true);
+                addCell(row, `${r.seconds}s`);
+                addCell(row, String(r.moves));
+                addCell(row, String(r.reveals));
+                addCell(row, String(r.score), true);
+                summaryTbody.appendChild(row);
+            });
+        }
+
+        if (summaryTotals) {
+            const sum = (key) => roundResults.reduce((acc, r) => acc + r[key], 0);
+            const maxScore = roundResults.length * 100;
+            summaryTotals.innerHTML = `
+                <div>Tempo: <strong>${sum('seconds')}s</strong></div>
+                <div>Tentativi: <strong>${sum('moves')}</strong></div>
+                <div>Aiuti: <strong>${sum('reveals')}</strong></div>
+                <div>Punteggio: <strong>${sum('score')} / ${maxScore}</strong></div>
+            `;
+        }
+
+        if (summaryScreen) summaryScreen.style.display = 'block';
+    }
+
+    // ---------- Avvio ----------
+    function initGame() {
+        try {
+            roundSentences = buildRoundSentences();
+            if (!roundSentences.length) {
+                if (instructionBanner) instructionBanner.textContent = 'Nessuna frase disponibile.';
+                return;
+            }
+
+            loadRound(0);
+            document.body.classList.add('loaded');
+
+            // Ora che il workspace è visibile (e i font sono caricati) ricalcola le larghezze
+            syncContainerWidths();
+            if (document.fonts && document.fonts.ready) {
+                document.fonts.ready.then(syncContainerWidths);
+            }
+        } catch (err) {
+            console.error('Could not load game:', err);
+        }
+    }
+
+    let resizeDebounceTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeDebounceTimer);
+        resizeDebounceTimer = setTimeout(syncContainerWidths, 150);
+    });
+
+    initGame();
+});
+
+
+    </script>
+
+</body>
+</html>

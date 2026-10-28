@@ -10,123 +10,34 @@
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
+    <link href="../stylesheet.css" rel="stylesheet">    
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
     <style>
+
         :root {
             --card-w: 72px;
             --card-h: 94px;
-
-            --body-background: #2a113d;
-            --game-area-background: #4a1d6e;
-            --summary-background: #553d94;
-
-            --accent: #ff9800;
-            --accent-2: #06b6d4;
-            --correct: #ffffff;
-            --wrong: #ef4444;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: #000205;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
         }
-
-        * { box-sizing: border-box; }
 
         body {
-                font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-                background:
-                    radial-gradient( circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40% ),
-                    radial-gradient( circle at 90% 90%, rgba(6, 182, 212, 0.06),  transparent 40% ),
-                    var(--body-background);
-                color: var(--text);
-                margin: 0;
-                padding: 20px 20px 40px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 100vh;
-                height: 100dvh;
-                min-height: 100vh;
-                overflow: hidden;
-        }
-
-        /* =========================================
-           TEMPORARLY HIDES THE BODY TO AVOID ABRUPT CHANGES FOR THE RAW CONTENT
-         ========================================= */
-
-        body {
-            opacity: 0;
-            transition: opacity 0.2s ease-in;
-        }
-
-        body.loaded {
-            opacity: 1;
-        }
-
-        h1 {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        .controls {
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            max-width: 1100px;
-            flex-wrap: wrap;
-            position: relative;
-            min-height: 52px;
-        }
-
-        #game-stats,
-        .stats-style {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--game-area-background);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-        }
-
-        #game-stats strong {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient( circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40% ),
+                radial-gradient( circle at 90% 90%, rgba(6, 182, 212, 0.06),  transparent 40% ),
+                var(--body-background);
             color: var(--text);
-            font-weight: 700;
-        }
-
-        #game-area {
-            width: 100%;
-            max-width: 1050px;
-            flex: 0 1 auto;
-            min-height: 0;
-            margin-top: 10px;
-            margin-bottom: 10px;
+            margin: 0;
+            padding: 20px 20px 40px;
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            align-items: stretch;
+            height: 100vh;
+            height: 100dvh;
+            min-height: 100vh;
+            overflow: hidden;
         }
 
         .dd-wrap {
@@ -176,10 +87,19 @@
         }
 
         .dd-chip:hover:not(:disabled) {
+            /*
             background: #ffffff;
             border-color: var(--accent);
             color: var(--accent);
             transform: translateY(-4px);
+            */
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+
         }
 
         .dd-chip.dd-used,
@@ -278,11 +198,25 @@
         }
 
         .dd-blank.dd-filled {
+                /*
             border-style: solid;
             border-color: var(--border);
             background: #5d258a;
             border-radius: 6px;
             color: #ffffff;
+            */
+
+            background: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
+            transform: none !important;
+            box-shadow: var(--shadow-sm) !important;
+         
+         /* Ombra centrata e simmetrica (0 spostamento orizzontale, 0 verticale) */
+         /*   box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.1) !important;*/
+            
+            opacity: 1 !important;
+            cursor: default !important;
         }
 
         .dd-blank.dd-filled .dd-sizer {
@@ -327,26 +261,6 @@
             .dd-shake { animation: none; }
         }
 
-        .progress-bar-container {
-            width: 100%;
-            max-width: 1100px;
-            background: var(--game-area-background);
-            border: 1px solid var(--border);
-            height: 12px;
-            border-radius: 99px;
-            margin-bottom: 16px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            background: linear-gradient( 135deg,#6366f1 0%,#a855f7 100% );
-            width: 0%;
-            border-radius: 99px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
         button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -354,87 +268,16 @@
             transform: none !important;
         }
 
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5;
-            border: none;
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
+        :root {
+            --btn-emoji-outline: 0.2px;  /* 0 = nessun contorno, 0.5px = default */
         }
 
-        .cool-btn:hover {
-            transform: translateY(-2px);
-            background-color: #10b981;
+        #reveal-btn .btn-icon,
+        #reveal-btn .btn-emoji {
+            text-shadow: none !important;
+            -webkit-text-stroke: 0 !important;
         }
 
-        .cool-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* =========================================================
-           FINAL REPORT
-           ========================================================= */
-
-        #summary-screen {
-            display: none;
-            width: 100%;
-            max-width: 1050px;
-            background: var(--game-area-background);
-            border: 2px solid var(--border);
-            border-radius: 16px;
-            padding: 28px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-        }
-
-        #summary-screen h2 {
-            margin: 0 0 22px;
-            color: var(--accent);
-            font-size: 2rem;
-        }
-
-        .summary-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 0 auto 20px;
-            background: #37275e;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .summary-table th,
-        .summary-table td {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .summary-table th {
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .summary-table tr:last-child td {
-            border-bottom: none;
-        }
-
-        #summary-totals {
-            font-size: 1.1rem;
-            font-weight: 600;
-            line-height: 1.8;
-        }
     </style>
 </head>
 
@@ -457,8 +300,9 @@
     </h3>
 
     <div class="controls" id="action-controls">
-        <button id="reveal-btn" class="cool-btn" type="button">
-            <span>💡 Help!</span>
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-text">Help!</span>
         </button>
     </div>
 
@@ -622,6 +466,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
+    function setRevealLabel(label) {
+        if (!revealBtn) return;
+        /*
+        if (!document.getElementById('btn-emoji-style')) {
+            const style = document.createElement('style');
+            style.id = 'btn-emoji-style';
+            style.textContent = `
+                .cool-btn .btn-emoji {
+                    --w: var(--btn-emoji-outline, 0.5px);
+                    text-shadow:
+                        calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                        var(--w) calc(var(--w) * -1) 0 #000,
+                        calc(var(--w) * -1) var(--w) 0 #000,
+                        var(--w) var(--w) 0 #000;
+                }
+            `;
+            document.head.prepend(style);
+        }
+        */
+        let textEl = revealBtn.querySelector('.btn-text');
+        
+        if (!textEl) {
+            revealBtn.textContent = '';
+            textEl = document.createElement('span');
+            textEl.className = 'btn-text';
+            revealBtn.appendChild(textEl);
+        }
+        
+       // const iconEl = revealBtn.querySelector('.btn-icon');
+       // if (iconEl) iconEl.style.display = 'none';
+
+        const parts = String(label).trim().split(/\s+/);
+        const hasEmoji = parts.length > 1 && /\p{Extended_Pictographic}/u.test(parts[0]);
+
+        textEl.textContent = '';
+        if (hasEmoji) {
+            const emojiEl = document.createElement('span');
+            emojiEl.className = 'btn-emoji';
+            emojiEl.textContent = parts.shift();
+            textEl.appendChild(emojiEl);
+            textEl.appendChild(document.createTextNode(' ' + parts.join(' ')));
+        } else {
+            textEl.textContent = parts.join(' ');
+        }
+    }
+
     // Trasforma un round in { title, parts, answers, distractors }; null se non è giocabile
     function parseRound(round) {
         if (!round || typeof round.text !== 'string') return null;
@@ -711,9 +601,24 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBarFill.style.width = Math.min(Math.max(percent, 0), 100) + '%';
     }
 
+    /*
     function setButtonMode(mode) {
         buttonMode = mode;
-        revealBtn.querySelector('span').textContent = (mode === 'done') ? '✓ Fatto' : '💡 Help!';
+       // revealBtn.querySelector('span').textContent = (mode === 'done') ? '✓ Fatto' : 'Help!';
+        if (mode==='done'){
+        // Hide the icon element
+        const iconEl = revealBtn.querySelector('.btn-icon');
+        if (iconEl) iconEl.style.display = 'none';
+        // Update the text
+        const textEl = revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = "✓ Fatto!";
+        }
+    }
+    */
+
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        setRevealLabel(mode === 'done' ? '✓ Fatto!' : 'Help!');
     }
 
     /* =========================================================
@@ -1028,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetStats();
         setProgress(0);
 
-        revealBtn.disabled = false;
+       
         setButtonMode('help');
         setInstruction('Tocca la parola giusta per lo spazio evidenziato');
 
@@ -1048,6 +953,10 @@ document.addEventListener('DOMContentLoaded', () => {
         ddBuild(playable[Math.floor(Math.random() * playable.length)]);
 
         document.body.classList.add('loaded');
+
+    //    revealBtn.querySelector('.btn-text').textContent = "Help!";
+    //    revealBtn.classList.remove('smooth-hidden');
+    //    revealBtn.disabled = false;
 
         // Ora l'area di gioco è visibile (e i font caricati): adatta la dimensione del testo
         ddFitText();
