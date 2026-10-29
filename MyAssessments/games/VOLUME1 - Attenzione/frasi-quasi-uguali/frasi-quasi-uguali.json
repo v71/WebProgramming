@@ -8,8 +8,19 @@
           { "label": "Elisa ha messo via gli occhiali dopo essere arrivata a casa.", "value": false },
           { "label": "In libreria, Elena ha chiesto aiuto per trovare l'aula N.5", "value": true },
           { "label": "In libreria, Maria ha consultato un libro per la sua tesi.", "value": false },
-          { "label": "Carolina ha trovato la tazza che pensava aver eperso.", "value": false },
+          { "label": "Carolina ha trovato la tazza che pensava avere perso.", "value": false },
           { "label": "In aula, Elena ha chiesto aiuto per trovare il suo posto.", "value": true }
+        ]
+      },
+      {
+        "instruction": "Confronta le frasi e trova la coppia quasi identica, che differisce per una sola informazione.",
+        "buttons": [
+          { "label": "In biblioteca, Sara ha chiesto aiuto per trovare il volume n. 12.", "value": true },
+          { "label": "Mentre era in libreria, Sofia ha consultato il catalogo online per la sua ricerca.", "value": false },
+          { "label": "Elisa ha riposto gli occhiali nella custodia dopo essere tornata a casa.", "value":false },
+          { "label": "In cucina, Giorgio ha usato il forno a microonde per cuocere la cena.", "value": false },
+          { "label": "Carolina ha ritrovato il libro che pensava di aver perso.", "value": true },
+          { "label": "In segreteria, Francesca ha chiesto aiuto per trovare l'ufficio immatricolazioni.", "value": false }
         ]
       }
       

@@ -2,7 +2,7 @@
     "title": "Chi entra e chi resta",
     "categories": [
       {
-        "instruction": "Clicca solo sulle parole che indicano «oggetti» e non clicclare su quelli che indicano «luoghi»",
+        "instruction": "Clicca solo sulle parole che indicano «Oggetti» e non clicclare su quelli che indicano «Luoghi»",
         "buttons": [
           { "label": "Asciugamano", "value": true },
           { "label": "Bottiglia", "value": true },
@@ -15,6 +15,23 @@
           { "label": "Piatto", "value": true },
           { "label": "Libreria", "value": false },
           { "label": "Cappello", "value": true },
+          { "label": "Ristorante", "value": false }
+        ]
+      },
+       {
+        "instruction": "Clicca solo sulle parole che indicano «Animali» e non clicclare su quelli che indicano «Luoghi»",
+        "buttons": [
+          { "label": "Antilope", "value": true },
+          { "label": "Orso", "value": true },
+          { "label": "Palestra", "value": false },
+          { "label": "Biblioteca", "value": false },
+          { "label": "Coniglio", "value": true },
+          { "label": "Serpente", "value": true },
+          { "label": "Ambulatorio", "value": false },
+          { "label": "Ufficio postale", "value": false },
+          { "label": "Cane", "value": true },
+          { "label": "Libreria", "value": false },
+          { "label": "Gatto", "value": true },
           { "label": "Ristorante", "value": false }
         ]
       }

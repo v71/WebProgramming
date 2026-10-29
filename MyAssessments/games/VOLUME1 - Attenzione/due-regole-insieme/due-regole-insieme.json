@@ -21,6 +21,28 @@
           { "label": "Termometro", "value": false },
           { "label": "Armardio", "value": true }
         ]
+      },
+
+      {
+        "instruction": "Clicca le voci della categoria «Luoghi» che iniziano con una vocale.",
+        "buttons": [
+          { "label": "Aula Magna", "value": true },
+          { "label": "Riso", "value": false },
+          { "label": "Zucchina", "value": false },
+          { "label": "Stadio", "value": false },
+          { "label": "Mucca", "value": false },
+          { "label": "Autosalone", "value": true },
+          { "label": "Marmotta", "value": false },
+          { "label": "Automobile", "value": false },
+          { "label": "Uffico Postale", "value": true },
+          { "label": "Tigre", "value": false },
+          { "label": "Cipolla", "value": false },
+          { "label": "Banca", "value": false },
+          { "label": "Cartina", "value": false },
+          { "label": "Supermarket", "value": false },
+          { "label": "Termometro", "value": false },
+          { "label": "Armardio", "value": false }
+        ]
       }
         
   ]

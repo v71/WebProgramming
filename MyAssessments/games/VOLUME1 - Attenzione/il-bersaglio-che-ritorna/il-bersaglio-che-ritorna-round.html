@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Il bersaglio che ritorna</title>
+
+    <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        :root {
+            --row-label-color: #8b5cf6;
+            --word-color: #ffffff;
+            --word-selected: #059669;
+            --word-error: #ef4444;
+        }
+
+        /* GAME AREA: a single grid (label column + one column per word).
+           The container is as wide as its columns together and is centered. */
+        #game-area {
+            width: fit-content;
+            max-width: 100%;
+            margin: 0 auto 24px;
+            display: grid;
+            grid-template-columns: auto repeat(var(--cols, 1), auto);
+            gap: 16px 10px;
+        }
+
+        /* Each row spans the whole grid and reuses its columns (subgrid) */
+        .row-card {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: subgrid;
+            column-gap: 10px;
+            align-items: center;
+            background: var(--game-area-background);
+            border-radius: 18px;
+            border: 2px solid #000000;
+            padding: 18px 28px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .row-label {
+            text-align: center;
+            min-width: 70px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--accent);
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+            user-select: none;
+            transform: translateY(-3px);
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Buttons become direct grid cells of the row */
+        .row-words-container {
+            display: contents;
+        }
+
+        .word-btn {
+            width: 100%;
+            background: #7931b4;
+            border: 2px solid var(--border);
+            color: var(--word-color);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-size: 1.3rem;
+            font-weight: 400;
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            outline: none;
+            position: relative;
+            z-index: 1;
+            text-shadow:
+            -1px -1px 0 #000,
+             1px -1px 0 #000,
+            -1px  1px 0 #000,
+             1px  1px 0 #000;
+        }
+
+        .word-btn:hover {
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+
+        .word-btn.selected {
+            background: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
+            transform: none !important;
+            box-shadow: var(--shadow-sm) !important;
+            opacity: 1 !important;
+            cursor: default !important;
+        }
+
+        .word-btn.help-correct {
+            background: var(--grid-btn-help);
+            border-color: var(--grid-btn-help-border-color);
+            color: var(--grid-btn-help-text);
+        }
+
+        .word-btn.error {
+            animation: buttonErrorShake 0.45s ease;
+            border-color: var(--grid-btn-wrong-border-color);
+            background-color: var(--grid-btn-wrong);
+            color: var(--grid-btn-wrong-text);
+        }
+
+        @keyframes buttonErrorShake {
+            0%   { transform: translateX(0); }
+            20%  { transform: translateX(-10px); }
+            40%  { transform: translateX(10px); }
+            60%  { transform: translateX(-8px); }
+            80%  { transform: translateX(8px); }
+            100% { transform: translateX(0); }
+        }
+
+        /* Small screens: back to a simple flex layout */
+        @media (max-width: 700px) {
+            #game-area {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
+            .row-card {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 14px 16px;
+                gap: 12px;
+            }
+            .row-label { min-width: 0; }
+            .row-words-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                width: 100%;
+                font-size: 1.05rem;
+            }
+            .word-btn {
+                width: auto;
+                font-size: 1.05rem;
+                padding: 2px 6px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .row-label { min-width: 0; margin: 0; }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1 id="game-title">Titolo gioco</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <div id="instruction-banner">Caricamento istruzioni...</div>
+
+    <div class="controls" id="action-controls">
+        <!-- Reveal Button (Icon + Text as separate siblings) -->
+        <button id="reveal-btn" class="cool-btn">
+            <span class="btn-text">Help!</span>
+        </button>
+    </div>
+
+    <!-- DYNAMIC GAME AREA -->
+    <div id="game-area"></div>
+
+    <h1 id="progress-title">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Punteggio</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const DATA_URL = 'il-bersaglio-che-ritorna.json';
+    const FALLBACK_ROW_COUNT = 4; // usato solo se la categoria non fornisce "rows"
+    const SHUFFLE_ROUNDS = true;  // false = round nell'ordine del file
+
+    // --- Stato ---
+    let categories = [];          // tutti i round (solo quelli validi)
+    let roundIndex = 0;           // round corrente
+    let results = [];             // risultato di ogni round completato
+    let rowsData = [];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let totalCorrectItems = 0;
+    let foundCorrectCount = 0;
+    let isGameCompleted = false;  // true = round corrente completato
+    let isGameReady = false;      // true solo dopo il caricamento dei dati
+    let moveCount = 0;
+    let revealCount = 0;
+    let currentCategoryTitle = '';
+    let currentCategoryTarget = '';
+
+    // --- Elementi (letti una sola volta) ---
+    const gameTitle = document.getElementById('game-title');
+    const gameArea = document.getElementById('game-area');
+    const actionControls = document.getElementById('action-controls');
+    const revealBtn = document.getElementById('reveal-btn');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const wordCountEl = document.getElementById('word-count');
+    const roundValueEl = document.getElementById('round-value'); // può essere null
+    const instructionBanner = document.getElementById('instruction-banner');
+    const timeValueEl = document.getElementById('time-value');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameStats = document.getElementById('game-stats');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = document.getElementById('progress-title');
+
+    const hiddenOnSummary = [
+        gameArea, gameStats, instructionBanner, progressBar,
+        progressBarTitle, gameTitle, actionControls
+    ];
+
+    // --- Pulsante: testo ---
+    // help = in gioco, next = round completato, done = ultimo round completato
+    function setButtonState(mode) {
+        const texts = {
+            help: 'Help!',
+            next: '➜ Prossimo round',
+            done: '✓ Fatto'
+        };
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode];
+    }
+
+    // --- Punteggio e riepilogo ---
+    function computeScore() {
+        const mistakes = Math.max(0, moveCount - totalCorrectItems);
+        const raw = 100 - mistakes * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+
+        summaryTbody.innerHTML = '';
+        results.forEach(r => {
+            const row = document.createElement('tr');
+            // La frase d'istruzione è lunga: nel riepilogo basta la parola bersaglio
+            addCell(row, `«${r.target}»`, true);
+            addCell(row, `${r.seconds}s`);
+            addCell(row, String(r.moves));
+            addCell(row, String(r.reveals));
+            addCell(row, String(r.score), true);
+            summaryTbody.appendChild(row);
+        });
+
+        const sum = key => results.reduce((t, r) => t + r[key], 0);
+        summaryTotals.innerHTML = `
+            <div>Tempo Totale: <strong>${sum('seconds')}s</strong></div>
+            <div>Mosse Totali: <strong>${sum('moves')}</strong></div>
+            <div>Aiuti Totali: <strong>${sum('reveals')}</strong></div>
+            <div>Punti: <strong>${sum('score')}</strong></div>
+        `;
+        summaryScreen.style.display = 'block';
+    }
+
+    // --- Timer ---
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        if (timeValueEl) timeValueEl.textContent = '0s';
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+        }, 1000);
+    }
+
+    // --- UI ---
+    function updateWordCountDisplay() {
+        if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+    }
+
+    // Barra generale: round completati / round totali
+    function setOverallProgress(done) {
+        const total = categories.length;
+        if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    }
+
+    function updateRoundDisplay() {
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${categories.length}`;
+    }
+
+    function showLoadError(message) {
+        isGameReady = false; // il gioco resta disabilitato
+        stopElapsedTimer();
+        document.body.classList.add('loaded'); // senza questa classe la pagina resta invisibile e l'errore non si vede
+        if (instructionBanner) instructionBanner.textContent = message;
+    }
+
+    function renderRowsUI() {
+        if (instructionBanner) instructionBanner.textContent = currentCategoryTitle;
+        gameArea.innerHTML = '';
+
+        // Una colonna di griglia per ogni parola della riga più lunga
+        gameArea.style.setProperty('--cols', Math.max(1, ...rowsData.map(r => r.length)));
+
+        rowsData.forEach((rowWords, rowIndex) => {
+            const card = document.createElement('div');
+            card.className = 'row-card';
+
+            const label = document.createElement('div');
+            label.className = 'row-label';
+            label.textContent = `Riga ${rowIndex + 1} : `;
+            card.appendChild(label);
+
+            const wordsContainer = document.createElement('div');
+            wordsContainer.className = 'row-words-container';
+
+            rowWords.forEach((wordObj, wordIndex) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'word-btn';
+                btn.textContent = wordObj.label;
+                btn.dataset.rowIndex = rowIndex;
+                btn.dataset.wordIndex = wordIndex;
+
+                if (wordObj.found) {
+                    btn.classList.add('selected');
+                    btn.disabled = true;
+                }
+
+                btn.addEventListener('click', () => handleWordClick(btn, wordObj));
+                wordsContainer.appendChild(btn);
+            });
+
+            card.appendChild(wordsContainer);
+            gameArea.appendChild(card);
+        });
+    }
+
+    // --- Click su una parola ---
+    async function handleWordClick(button, wordObj) {
+        if (isGameCompleted || !isGameReady || wordObj.found) return;
+
+        moveCount++;
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+
+        if (wordObj.value !== true) {
+            button.classList.remove('error');
+            void button.offsetWidth; // riavvia l'animazione di shake
+            button.classList.add('error');
+            setTimeout(() => button.classList.remove('error'), 450);
+            return;
+        }
+
+        // Risposta corretta: aggiorna TUTTO lo stato in modo sincrono, prima delle animazioni
+        wordObj.found = true;
+        button.classList.add('selected');
+        button.disabled = true;
+        foundCorrectCount++;
+        updateWordCountDisplay();
+
+        const justCompleted = foundCorrectCount === totalCorrectItems;
+        const isLastRound = roundIndex >= categories.length - 1;
+
+        if (justCompleted) {
+            isGameCompleted = true;
+            stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
+            gameArea.querySelectorAll('.word-btn').forEach(btn => { btn.disabled = true; });
+
+            results.push({
+                target: currentCategoryTarget,
+                seconds: elapsedSeconds,
+                moves: moveCount,
+                reveals: revealCount,
+                score: computeScore()
+            });
+
+            setOverallProgress(roundIndex + 1);          // la barra avanza di un round
+            setButtonState(isLastRound ? 'done' : 'next');
+        }
+
+        // Solo dopo: animazioni
+        if (typeof Checkmark !== 'undefined') {
+            try {
+                await Checkmark.show({ element: button, size: 36, rise: 50, duration: 1400 });
+            } catch (err) {
+                console.warn('Checkmark animation failed:', err);
+            }
+        }
+
+        // Coriandoli solo alla fine del gioco (per averli a ogni round togli "isLastRound &&")
+        if (justCompleted && isLastRound && typeof Confetti !== 'undefined') {
+            try {
+                await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+            } catch (err) {
+                console.warn('Confetti animation failed:', err);
+            }
+        }
+    }
+
+    // --- Costruzione delle righe ---
+    function buildRows(category) {
+        const toWord = (b) => ({ ...b, found: false });
+
+        // Formato preferito: "rows" (array di array di parole)
+        if (Array.isArray(category.rows)) {
+            return category.rows
+                .filter(row => Array.isArray(row) && row.length > 0)
+                .map(row => row.map(toWord));
+        }
+
+        // Ripiego: "buttons" diviso in FALLBACK_ROW_COUNT righe
+        if (Array.isArray(category.buttons) && category.buttons.length > 0) {
+            const all = category.buttons.map(toWord);
+            const rowSize = Math.ceil(all.length / FALLBACK_ROW_COUNT);
+            const rows = [];
+            for (let i = 0; i < FALLBACK_ROW_COUNT; i++) {
+                const slice = all.slice(i * rowSize, (i + 1) * rowSize);
+                if (slice.length > 0) rows.push(slice);
+            }
+            return rows;
+        }
+
+        return [];
+    }
+
+    // Un round è valido se ha la parola bersaglio e almeno una risposta corretta
+    function isValidRound(category) {
+        if (!category || typeof category.target !== 'string' || !category.target.trim()) return false;
+        const rows = buildRows(category);
+        return rows.length > 0 && rows.flat().some(b => b.value === true);
+    }
+
+    // --- Round ---
+    function loadRound(index) {
+        roundIndex = index;
+        const category = categories[roundIndex];
+
+        rowsData = buildRows(category);
+        totalCorrectItems = rowsData.flat().filter(b => b.value === true).length;
+        currentCategoryTarget = category.target.trim();
+        currentCategoryTitle = `Scorri la sequenza da sinistra a destra e segna solo la parola «${currentCategoryTarget}». Non tornare indietro a correggere prima di arrivare in fondo.`;
+
+        isGameCompleted = false;
+        moveCount = 0;
+        revealCount = 0;
+        foundCorrectCount = 0;
+
+        if (movesValueEl) movesValueEl.textContent = '0';
+        if (revealsValueEl) revealsValueEl.textContent = '0';
+
+        revealBtn.classList.remove('smooth-hidden');
+        revealBtn.disabled = false;
+
+        renderRowsUI();
+        updateRoundDisplay();
+        updateWordCountDisplay();
+        setOverallProgress(roundIndex);   // la barra mostra i round già completati
+        setButtonState('help');
+        startElapsedTimer();
+        isGameReady = true;
+    }
+
+    // --- Inizializzazione ---
+    async function initGame() {
+        try {
+            isGameReady = false;
+            stopElapsedTimer();
+
+            const response = await fetch(DATA_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
+            const data = await response.json();
+
+            // Solo round validi: con parola bersaglio e almeno una risposta corretta
+            categories = (Array.isArray(data.categories) ? data.categories : []).filter(isValidRound);
+
+            if (categories.length === 0) {
+                showLoadError('Nessuna categoria valida disponibile.');
+                return;
+            }
+
+            if (SHUFFLE_ROUNDS) {
+                for (let i = categories.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [categories[i], categories[j]] = [categories[j], categories[i]];
+                }
+            }
+
+            results = [];
+            if (gameTitle && data.title) gameTitle.textContent = data.title;
+            loadRound(0);
+
+            document.body.classList.add('loaded');
+        } catch (err) {
+            console.error(`Could not load ${DATA_URL}:`, err);
+            showLoadError('Errore nel caricamento del gioco.');
+        }
+    }
+
+    // --- Pulsante Help (tieni premuto) ---
+    if (revealBtn) {
+        const showHelp = () => {
+            if (isGameCompleted || !isGameReady) return;
+            revealCount++;
+            if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+            gameArea.querySelectorAll('.word-btn').forEach(btn => {
+                const word = rowsData[btn.dataset.rowIndex]?.[btn.dataset.wordIndex];
+                if (word && word.value === true) btn.classList.add('help-correct');
+            });
+        };
+
+        const hideHelp = () => {
+            gameArea.querySelectorAll('.word-btn').forEach(btn => btn.classList.remove('help-correct'));
+        };
+
+        // Pointer events: mouse, touch e penna, senza doppi conteggi
+        let helpActive = false;
+        const startHelp = () => {
+            if (helpActive) return;
+            helpActive = true;
+            showHelp();
+        };
+        const endHelp = () => {
+            helpActive = false;
+            hideHelp();
+        };
+
+        revealBtn.addEventListener('pointerdown', startHelp);
+        revealBtn.addEventListener('pointerup', endHelp);
+        revealBtn.addEventListener('pointerleave', endHelp);
+        revealBtn.addEventListener('pointercancel', endHelp);
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+
+        // Tastiera (Spazio / Invio)
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp();
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') endHelp();
+        });
+        revealBtn.addEventListener('blur', endHelp);
+
+        // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
+        revealBtn.addEventListener('click', () => {
+            if (!isGameCompleted) return;
+            if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
+            else showSummaryScreen();
+        });
+    }
+
+    initGame();
+});
+
+
+</script>
+
+</body>
+</html>

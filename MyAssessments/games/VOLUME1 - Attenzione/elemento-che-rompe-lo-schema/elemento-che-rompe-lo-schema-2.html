@@ -469,9 +469,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameReady = false;
             stopElapsedTimer();
 
-            //if (revealBtn) revealBtn.innerHTML = '<span>💡 Help</span>';
-            if (revealBtn) revealBtn.querySelector('.btn-text').textContent = "Help!";
-
             const response = await fetch(DATA_URL);
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
 
@@ -510,6 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (gameTitle && data.title) gameTitle.textContent = data.title;
 
+            revealBtn.querySelector('.btn-text').textContent = "Help!";
             revealBtn.classList.remove('smooth-hidden');
             revealBtn.disabled = false;
 
@@ -617,12 +615,6 @@ document.addEventListener('DOMContentLoaded', () => {
                // if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
 
                 if (revealBtn) {
-                    /*
-                    // Hide the icon element
-                    const iconEl = revealBtn.querySelector('.btn-icon');
-                    if (iconEl) iconEl.style.display = 'none';
-                    // Update the text
-                    */
                     const textEl = revealBtn.querySelector('.btn-text');
                     if (textEl) textEl.textContent = "✓ Fatto!";
                 }

@@ -25,6 +25,31 @@
           { "label": "Spiaggia", "value": false },
           { "label": "Porta", "value": true }
         ]
+      },
+       {
+        "instruction": "",
+        "target" :"Cavallo",
+        "buttons": [
+          { "label": "Fotografia", "value": false },
+          { "label": "Cavallo", "value": true },
+          { "label": "Porta", "value": false },
+          { "label": "Porta", "value": false },
+
+          { "label": "Uccello", "value": false },
+          { "label": "Giardino", "value": false },
+          { "label": "Cavallo", "value": true },
+          { "label": "Memoria", "value": false },
+
+          { "label": "Porta", "value": false },
+          { "label": "Cavallo", "value": true },
+          { "label": "Cavallo", "value": true },
+          { "label": "Porta", "value": false },
+          
+          { "label": "Ritratto", "value": false },
+          { "label": "Cavallo", "value": true },
+          { "label": "Spiaggia", "value": false },
+          { "label": "Porta", "value": false }
+        ]
       }
         
   ]

@@ -25,6 +25,31 @@
           { "label": "Autobus", "value": false },
           { "label": "Faro", "value": false }
         ]
+      },
+      {
+        "id": 2,
+        "title": "Categoria 2",
+        "text": "15 elementi 8 luoghi e 7 automobili",
+        "instruction": "Clicca solo le parole scritte esattamente come «Porsche». Le forme simili non valgono.",
+        "buttons": [
+          { "label": "Ferrari", "value": false },
+          { "label": "Audi", "value": false },
+          { "label": "Porsche", "value": true },
+          { "label": "BMW", "value": false },
+          { "label": "BWM", "value": false },
+          { "label": "Ferari", "value": false },
+          { "label": "Poscrhe", "value": false },
+          { "label": "Audio", "value": false },
+          { "label": "Audi", "value": false },
+          { "label": "Lamborghino", "value": false },
+          { "label": "Porsche", "value": true },
+          { "label": "Lambrenedetto", "value": false },
+          { "label": "Porsche", "value": true },
+          { "label": "Lambrusco", "value": false },
+          { "label": "Popcorn", "value": false }
+        ]
       }
+
+
   ]
 }

@@ -18,6 +18,24 @@
           { "label": "Serpente a sonagli", "value": true }
         ]
       }
-        
+        ,
+      {
+        "instruction": "Esegui solo le istruzioni che chiedono un segno sulla parola tra virgolette, salta quelle che dicono di non fare qualcosa. Anche «ignora la riga successiva» si salta.",
+        "descriptions": [ {"label": "Clicca su «Porsche»"},
+                          {"label": "Non cliccare su «Ferrari»"}, 
+                          {"label": "Non cliccare su «Audi»"},
+                          {"label": "Clicca su «BMW»"},
+                          {"label": "Non cliccare su «Maserati»"} ,
+                          {"label": "Non ignorare «Chevrolet»"} 
+                      ],
+        "buttons": [
+          { "label": "Porsche", "value": true },
+          { "label": "Ferrari", "value": false },
+          { "label": "Maserati", "value": false },
+          { "label": "Auto", "value": false },
+          { "label": "BMW", "value": true },
+          { "label": "Chevrolet", "value": true }
+        ]
+      }
   ]
 }

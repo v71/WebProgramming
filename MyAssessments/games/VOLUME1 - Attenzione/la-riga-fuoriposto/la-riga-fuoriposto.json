@@ -10,6 +10,17 @@
           { "label": "Luca ha trovato la penna che aveva perso.", "value": false },
           { "label": "Luca ha dimenticato il suo zaino in biblioteca.", "value": false }
         ]
+      },
+      {
+        "instruction": "Leggi riga per riga e segna la sola riga che non c'entra con le altre.",
+        "buttons": [
+          { "label": "Marco ha appoggiato le chiavi vicino al portone.", "value": false },
+          { "label": "Martina ha ritrovato gli occhiali da sole.", "value": false },
+          { "label": "Il treno regionale per Milano ha accumulato dieci minuti di ritardo.", "value": true },
+          { "label": "Simone ha lasciato la giacca sulla sedia.", "value": false },
+          { "label": "Chiara ha trovato il biglietto del cinema che cercava.", "value": false },
+          { "label": "Davide ha risolto un problema matematico definito 'impossibile'.", "value": false }
+        ]
       }
         
   ]

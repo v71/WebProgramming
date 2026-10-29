@@ -9,7 +9,20 @@
           { "label": "30 Minuti", "value": false },
           { "label": "40 Minuti", "value": false },
           { "label": "60 Minuti", "value": false },
-          { "label": "Vincenzo non si è mai presentato.", "value": false }
+          { "label": "Vincenzo non si è mai presentato", "value": false }
+        ]
+      },
+
+      {
+        "text": "Davide ha infranto ogni record appartenente alle capacità umane, intelligenza, cultura, e come se non bastasse, ha anche un corpo da dio greco.",
+        "instruction": "Leggi con attenzione il breve testo e rispondi solo a questa domanda: «Come si chiama questo famoso  individuo?»",
+        "buttons": [
+          { "label": "Vincenzo", "value": false },
+          { "label": "Giuseppino", "value": false },
+          { "label": "Albertino", "value": false },
+          { "label": "Davide", "value": true },
+          { "label": "Giuggiolo", "value": false },
+          { "label": "Ifigenio", "value": false }
         ]
       }
         

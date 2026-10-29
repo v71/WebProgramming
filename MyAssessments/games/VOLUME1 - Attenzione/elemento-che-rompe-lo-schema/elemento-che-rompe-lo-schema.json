@@ -4,20 +4,20 @@
     {
       "instruction": "Trova tutte le forme uguali al triangolo",
       "descriptions": [
-        { "shape": "images/square.png" },
-        { "shape": "images/circle.png" },
-        { "shape": "images/square.png" },
-        { "shape": "images/circle.png" },
-        { "shape": "images/square.png" },
-        { "shape": "images/circle.png" }
+        { "shape": "../../images/shapes/square.png" },
+        { "shape": "../../images/shapes/circle.png" },
+        { "shape": "../../images/shapes/square.png" },
+        { "shape": "../../images/shapes/circle.png" },
+        { "shape": "../../images/shapes/square.png" },
+        { "shape": "../../images/shapes/circle.png" }
       ],
       "buttons": [
-        { "label": "images/square.png", "value": false },
-        { "label": "images/circle.png", "value": false },
-        { "label": "images/square.png", "value": false },
-        { "label": "images/triangle.png", "value": true },
-        { "label": "images/square.png", "value": false },
-        { "label": "images/square.png", "value": false }
+        { "label": "../../images/shapes/square.png",   "value": false },
+        { "label": "../../images/shapes/circle.png",   "value": false },
+        { "label": "../../images/shapes/square.png",   "value": false },
+        { "label": "../../images/shapes/triangle.png", "value": true },
+        { "label": "../../images/shapes/square.png",   "value": false },
+        { "label": "../../images/shapes/square.png",   "value": true }
       ]
     }
   ]

@@ -2,28 +2,52 @@
     "title":"Cambio di regola a metà",
     "categories": [
       {
-        "instruction": "Prima colonna: clicca solo su «alimenti», per la seconda colonna la regola cambia: clicca solo su «animali»",
+        "instruction": "Prima colonna: clicca solo su «Alimenti», per la seconda colonna la regola cambia: clicca solo su «Animali»",
         "headers" :[ "Alimenti","Animali"],
         "buttons": [
-          { "label": "Cartina" , "value": 0 },
-          { "label": "Zaino"   , "value": 0 },
-          { "label": "Patata"  , "value": 1 },
-          { "label": "Cane"    , "value": 2 },
-          { "label": "Olive"   , "value": 1 },
-          { "label": "Mais"    , "value": 0 },
-          { "label": "Cigno"   , "value": 0 },
-          { "label": "Marmotta", "value": 2 },
-          { "label": "Candela" , "value": 0 },
-          { "label": "Pecora"  , "value": 2 },
-          { "label": "Teatro"  , "value": 0 },
-          { "label": "Piazza"  , "value": 0 },
-          { "label": "Giraffa" , "value": 0 },
-          { "label": "Cervo"   , "value": 2 },
-          { "label": "Pomodoro", "value": 1 },
-          { "label": "Parco"   , "value": 0 },
-          { "label": "Arancia" , "value": 1 },
-          { "label": "Uva"     , "value": 0 }
-        
+          { "label": "Cartella" , "value": 0 },
+          { "label": "Zaino"    , "value": 0 },
+          { "label": "Patata"   , "value": 1 },
+          { "label": "Cane"     , "value": 2 },
+          { "label": "Olive"    , "value": 1 },
+          { "label": "Mais"     , "value": 0 },
+          { "label": "Cigno"    , "value": 0 },
+          { "label": "Marmotta" , "value": 2 },
+          { "label": "Candela"  , "value": 0 },
+          { "label": "Pecora"   , "value": 2 },
+          { "label": "Teatro"   , "value": 0 },
+          { "label": "Piazza"   , "value": 0 },
+          { "label": "Giraffa"  , "value": 0 },
+          { "label": "Cervo"    , "value": 2 },
+          { "label": "Pomodoro" , "value": 1 },
+          { "label": "Parco"    , "value": 0 },
+          { "label": "Arancia"  , "value": 1 },
+          { "label": "Uva"      , "value": 0 }
+        ]
+      },
+
+      {
+        "instruction": "Prima colonna: clicca solo su «Automobili», per la seconda colonna la regola cambia: clicca solo su «Animali»",
+        "headers" :[ "Automobili","Animali"],
+        "buttons": [
+          { "label": "Chevrolet" , "value": 1 },
+          { "label": "Zaino"     , "value": 0 },
+          { "label": "Canotto"   , "value": 0 },
+          { "label": "Cane"      , "value": 2 },
+          { "label": "Maserati"  , "value": 1 },
+          { "label": "Mais"      , "value": 0 },
+          { "label": "Cigno"     , "value": 0 },
+          { "label": "Caramella" , "value": 0 },
+          { "label": "Porsche"   , "value": 1 },
+          { "label": "Pecora"    , "value": 2 },
+          { "label": "Teatro"    , "value": 0 },
+          { "label": "Piazza"    , "value": 0 },
+          { "label": "Giraffa"   , "value": 0 },
+          { "label": "Cervo"     , "value": 2 },
+          { "label": "Ferrari"   , "value": 1 },
+          { "label": "Parco"     , "value": 0 },
+          { "label": "Arancia"   , "value": 0 },
+          { "label": "Uva"       , "value": 0 }
         ]
       }
 
