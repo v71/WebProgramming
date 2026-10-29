@@ -1,0 +1,13 @@
+{
+    "rounds": [
+        {
+            "label": "La Mamma prende la gonna che è sulla sedia.",
+            "options": [
+                "../images/frasi-relative/immagini-per-scelta-2/mamma-che-prende-la-gonna-su-una-sedia-1.png",
+                "../images/frasi-relative/immagini-per-scelta-2/mamma-che-prende-la-gonna-su-una-sedia-2.png"
+            ],
+            "correctIndex": 1
+        }
+
+    ]
+}
