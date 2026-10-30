@@ -2,7 +2,7 @@
    "title":"Attenti alla Caratteristica",
     "categories": [
       {
-        "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «serve per tagliare».",
+        "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «Serve per tagliare»",
         "buttons": [
           { "label": "Martello"    , "value": false },
           { "label": "Borsa"       , "value": false },
@@ -22,7 +22,7 @@
         ]
       },
       {
-        "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «è un alimento».",
+        "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «E' un alimento»",
         "buttons": [
           { "label": "Pizza"      , "value": true },
           { "label": "Borsa"      , "value": false },
@@ -42,7 +42,7 @@
         ]
       },
       {
-      "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «si usa per scrivere o disegnare».",
+      "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «Si usa per scrivere o disegnare»",
         "buttons": [
           { "label": "Matita"      , "value": true },
           { "label": "Martello"    , "value": false },
@@ -62,7 +62,7 @@
         ]
       },
       {
-        "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «si indossa».",
+        "instruction": "Esamina ogni voce e segna solo quelle che hanno la caratteristica: «Si indossa»",
         "buttons": [
           { "label": "Maglietta"   , "value": true },
           { "label": "Tavolo"      , "value": false },

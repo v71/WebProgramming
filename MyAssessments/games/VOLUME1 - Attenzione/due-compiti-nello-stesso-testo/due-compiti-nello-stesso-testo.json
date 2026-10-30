@@ -2,12 +2,17 @@
     "title": "Due compiti nello stesso testo",
     "categories": [
       {
-        "text": "Anna si era data appuntamento con Olivia al mercato, a mezzogiorno. Prima di uscire ha preparato il martello e gli occhiali. Lungo la strada ha dovuto passare dalla merceria a prendere le forbici, però era chiusa. Ha provato in ferramenta, però c'era una coda lunghissima. Alla fine è arrivata all'appuntamento con dieci minuti di ritardo.",
-        "instruction":"Leggi il testo e fai due cose: cerchia il connettivo «però» ogni volta che compare e sottolinea tutti i nomi di luogo.",
+        "text": "Anna si era data appuntamento con Olivia al mercato, a mezzogiorno. Prima di uscire ha preparato il pranzo. Lungo la strada ha dovuto passare dalla merceria a prendere le forbici, però era chiusa. Ha provato in ferramenta, però c'era una coda lunghissima. Alla fine è arrivata all'appuntamento con dieci minuti di ritardo.",
+        "instruction":"Leggi il testo e fai due cose: clicca sul connettivo «però» ogni volta che compare e su tutti i nomi di luogo.",
         "connectors":["però"],
-        "solutions" :["mercato","merceria","ferramenta"],
-        "buttons": []
+        "solutions" :["mercato","merceria","ferramenta"]
+      },
+      {
+        "text": "Marco si era dato appuntamento con Davide in centro, alle ore quindici. Prima di uscire di casa ha controllato i documenti. Lungo il tragitto ha dovuto fermarsi in cartoleria a comprare una risma di carta, ma era momentaneamente sprovvista. Ha provato in edicola, ma la fila alla cassa era interminabile. Alla fine è arrivato al punto d'incontro con un quarto d'ora di ritardo.",
+        "instruction":"Leggi il testo e fai due cose: clicca sugli avverbi di tempo ogni volta che compaiono e su tutti i nomi dei personaggi.",
+        "connectors":["Prima", "momentaneamente"],
+        "solutions" :["Marco","Davide"]
       }
-        
+
   ]
 }

@@ -858,6 +858,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startElapsedTimer();
     }
 
+   
     // --- Help (tieni premuto) ---
     function showReveal() {
         if (buttonMode !== 'help' || isRevealing || sentenceCompleted) return;
@@ -869,22 +870,9 @@ document.addEventListener('DOMContentLoaded', () => {
         revealOverlay.innerHTML = '';
 
         originalWords.forEach((word, i) => {
-        const slot = document.createElement('div');
-        slot.classList.add('slot', 'revealed');
-        if (slotWidths[i]) slot.style.width = slotWidths[i] + 'px';
-
-        const card = document.createElement('div');
-        card.classList.add('card', 'reveal-letter');
-        card.textContent = word;
-
-        slot.appendChild(card);
-        revealOverlay.appendChild(slot);
-    });
-
-        /*
-        originalWords.forEach(word => {
             const slot = document.createElement('div');
             slot.classList.add('slot', 'revealed');
+            if (slotWidths[i]) slot.style.width = slotWidths[i] + 'px';
 
             const card = document.createElement('div');
             card.classList.add('card', 'reveal-letter');
@@ -893,9 +881,10 @@ document.addEventListener('DOMContentLoaded', () => {
             slot.appendChild(card);
             revealOverlay.appendChild(slot);
         });
+    
         revealOverlay.classList.add('visible');
-        */
     }
+
 
     function hideReveal() {
         isRevealing = false;
@@ -1021,7 +1010,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initGame();
 });
-
 
 
 </script>

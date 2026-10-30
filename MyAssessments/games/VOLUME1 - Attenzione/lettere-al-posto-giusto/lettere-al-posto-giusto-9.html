@@ -335,6 +335,65 @@
         }
 
     </style>
+
+<style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+</style>
+
 </head>
 <body>
 
@@ -349,10 +408,16 @@
 
     <h3 id="instruction-banner" class="stats-style">Caricamento...</h3>
 
-    <div class="controls" id="action-controls">
-        <!-- Reveal Button (Icon + Text as separate siblings) -->
+    <!--<div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
             <span class="btn-text">Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -428,6 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressTitle = document.getElementById('progress-title');
     const progressContainer = document.querySelector('.progress-bar-container');
     const hintEl = document.getElementById('hint-style');   // NEW
+    const btnIcon = document.getElementById('btn-icon');
 
     const hiddenOnSummary = [
         puzzleWorkspace, instructionBanner, gameStats, gameTitle,
@@ -458,6 +524,60 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundIndex = 0;      // round corrente
     let results = [];        // risultato di ogni round completato
 
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+    /*
+    // --- Pulsante: testo ---
+    // help = in gioco, next = round completato, done = ultimo round completato
+    function setButtonMode(mode) {
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
+    }
+    */
+   
+    // --- Stato del pulsante ---
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
+        revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
+        revealBtn.disabled = (mode === 'wrong');
+        
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
+        
+        /*
+       const labels = {
+            help: 'Help!',
+            wrong: '⚠️ Parola errata',
+            next: '➜ Prossima Parola',
+            done: '✓ Fatto'
+        };
+        if ( labels[mode]!=='Help!'){
+                revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+            }
+        else{
+            revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
+        }
+            */
+    }
+   
     // --- Timer ---
     function stopElapsedTimer() {
         if (elapsedTimerInterval) {
@@ -465,7 +585,7 @@ document.addEventListener('DOMContentLoaded', () => {
             elapsedTimerInterval = null;
         }
     }
-
+    
     function updateTimerDisplay() {
         timeValueEl.textContent = elapsedSeconds + 's';
     }
@@ -520,32 +640,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgressDisplay();
     }
 
-    // --- Stato del pulsante ---
-    function setButtonMode(mode) {
-        buttonMode = mode;
-        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
-        revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
-        revealBtn.disabled = (mode === 'wrong');
-
-       const labels = {
-            help: 'Help!',
-            wrong: '⚠️ Parola errata',
-            next: '➜ Prossima Parola',
-            done: '✓ Fatto'
-        };
-
-        if ( labels[mode]!=='Help!'){
-                revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
-               // const iconEl = revealBtn.querySelector('.btn-icon');
-               // iconEl.hidden = true;  
-            }
-        else{
-            revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
-           // const iconEl = revealBtn.querySelector('.btn-icon');
-           // iconEl.hidden = false;   // hide
-        }
-    }
-
+    
+    
     // --- Utilità ---
     function shuffleArray(array) {
         const arr = [...array];

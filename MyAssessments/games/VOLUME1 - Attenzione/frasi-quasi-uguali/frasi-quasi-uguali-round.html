@@ -34,6 +34,64 @@
 
     </style>
 
+    <style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+</style>
+
 </head>
 
 <body>
@@ -59,10 +117,16 @@
        Instruzion banner.
     </div>
 
-    <div class="controls" id="action-controls">
-        <!-- Reveal Button (Icon + Text as separate siblings) -->
+    <!--<div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
             <span class="btn-text">Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -147,6 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameStats = document.getElementById('game-stats');
     const progressBar = document.querySelector('.progress-bar-container');
     const progressBarTitle = document.getElementById('progress-title');
+    const btnIcon = document.getElementById('btn-icon');
 
     // Elementi nascosti durante il riepilogo
     const gameElements = [
@@ -154,6 +219,28 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBarTitle, gameTitle, actionControls
     ];
 
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+  
+    // --- Pulsante: testo ---
+    // help = in gioco, next = round completato, done = ultimo round completato
+    function setButtonState(mode) {
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
+    }
+
+    /*
     // --- Pulsante: testo ---
     // help = in gioco, next = round completato, done = ultimo round completato
     function setButtonState(mode) {
@@ -165,7 +252,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const textEl = revealBtn && revealBtn.querySelector('.btn-text');
         if (textEl) textEl.textContent = texts[mode];
     }
-
+    */
     function setGameVisible(visible) {
         gameElements.forEach(el => {
             if (el) el.style.display = visible ? '' : 'none';

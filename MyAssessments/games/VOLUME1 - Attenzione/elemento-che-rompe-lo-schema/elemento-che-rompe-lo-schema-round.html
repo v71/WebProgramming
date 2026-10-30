@@ -3,49 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leggi prima di agire</title>
+    <title>Elemento che rompe lo schema</title>
 
      <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
     
+    <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
 
-        .grid-button {
-            min-height: 50px;
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            background: var(--default-btn);
-            color: var(--text);
-            font-family: Arial, sans-serif;
-            font-size: 1.4rem;
-            font-weight: 400;
-            cursor: pointer;
-            /* Aggiungi opacity e background alla transizione generale */
-            transition:
-                background 0.3s ease,
-                border-color 0.3s ease,
-                transform 0.3s ease,
-                opacity 0.4s ease; 
-            text-shadow:
-            -1px -1px 0 #000,
-             1px -1px 0 #000,
-            -1px  1px 0 #000,
-             1px  1px 0 #000;
+        #game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 16px;
         }
+
+    </style>
+
+    <style>
+        
+      .grid-button {
+                width: 140px;          
+                height: 140px;         
+                border: 2px solid #000000; 
+                border-radius: 12px;
+                background-color: var(--game-area-background);
+                display: flex;        
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                padding: 20px;          
+                box-sizing: border-box;
+                transition:
+                    background 0.2s ease,
+                    border-color 0.2s ease,
+                    transform 0.15s ease;
+        }
+        
+        /* Ensures the PNG scales proportionally and stays centered */
+        
+        .grid-button img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                pointer-events: none; 
+        }
+        
+
+    </style>
+    
+    <style>
+
 
         .button-grid {
             width: 100%;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 12px;
+            display: flex;           /* Changes layout to flexible box */
+            justify-content: center; /* Centers the group of buttons */
+            gap: 32px;                /* Controls the exact space between buttons (make it smaller, e.g., 6px or 8px) */
         }
 
+        .button-grid:last-of-type .grid-button:hover:not(:disabled) {
+            border-color: var(--grid-btn-hovered-border-color);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+            background: var(--grid-btn-hovered);   /* viola più chiaro, adatta al tuo gusto */
+            z-index: 5;
+        }
+
+        .button-grid:last-of-type .grid-button.selected {
+            background: #ff9800;
+            border-color: #000205;
+        }
+
+        .button-grid:last-of-type .grid-button.error {
+            animation: buttonErrorShake 0.45s ease;
+            border-color: var(--wrong);
+            background-color: rgba(239, 68, 68, 0.15);
+        }
+
+        /* Bottom button group (Interactive choices) */
+        
+        .button-grid:last-of-type .grid-button {
+            background: #7931b4;
+        }
+        
+        .button-grid:first-of-type .grid-button {
+            pointer-events: none; 
+            cursor: default;     
+            background-color: #7931b4; 
+        }
+        
+        .button-grid .grid-button.help-correct {
+            background: #4caf50 !important;
+            border-color: #ffffff !important;
+        }
+        
+        @media (max-width: 700px) { 
+            .button-grid { gap: 8px; }
+            .grid-button {
+                min-height: 46px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @keyframes buttonErrorShake { 
+            0% { transform: translateX(0); }
+            20% { transform: translateX(-10px); } 
+            40% { transform: translateX(10px); } 
+            60% { transform: translateX(-8px); } 
+            80% { transform: translateX(8px); } 
+            100% { transform: translateX(0); } 
+        }
+        
     </style>
 
     <style>
@@ -63,13 +137,6 @@
             margin: 5px 0;                      /* Adjust spacing above and below */
         }
 
-        /* Target only the buttons inside the first button-grid */
-        .button-grid:first-of-type .grid-button {
-            pointer-events: none; /* Completely disables clicks, hovers, and touches */
-            cursor: default;     /* Changes the cursor to a standard arrow */
-            background-color: #4f46e5; /* Blue for interactive buttons */
-        }
-
     </style>
 
 </head>
@@ -78,12 +145,13 @@
 
     <!-- TITLE -->
     <h1 id="game-title">
-        Leggi prima di agire
+        titolo gioco
     </h1>
 
     <!-- COUNTERS -->
     <div id="game-stats">
-        <span>Parole Trovate: <strong id="word-count">0</strong></span>
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span>Forme Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -105,20 +173,22 @@
     <!-- EMPTY GAME AREA -->
     <div id="game-area">
         <!-- Read-only debug text area placed above the buttons -->
-        
-        <!-- NEW: Inserted buttons container -->
-        <div class="button-grid">
-            <button class="grid-button">Action 1</button>
-            <button class="grid-button">Action 2</button>
-            <button class="grid-button">Action 3</button>
-            <button class="grid-button">Action 4</button>
-            <button class="grid-button">Action 5</button>
-            <button class="grid-button">Action 6</button>
-        </div>
-        
-        <!-- Divider between the two button groups -->
-        <hr class="button-divider">
 
+       <h2>Prima serie</h2>
+
+        <!-- TOP BUTTON GROUP (Shapes) -->
+        <div class="button-grid">
+            <button class="grid-button">■</button>
+            <button class="grid-button">●</button>
+            <button class="grid-button">▲</button>
+            <button class="grid-button">■</button>
+            <button class="grid-button">●</button>
+            <button class="grid-button">▲</button>
+        </div>
+       
+        <h2>Seconda serie</h2>
+       
+        <!-- BOTTOM BUTTON GROUP (Interactive Grid) -->
         <div class="button-grid">
             <button class="grid-button" data-index="0"></button>
             <button class="grid-button" data-index="1"></button>
@@ -159,19 +229,24 @@
     </div>
 
 <script>
-
 document.addEventListener('DOMContentLoaded', () => {
-    const DATA_URL = 'leggi-prima-di-agire.json';
+    const DATA_URL = 'elemento-che-rompe-lo-schema.json';
+    const IMAGE_LOAD_TIMEOUT_MS = 8000;
+    const SHUFFLE_ROUNDS = true;   // false = round nell'ordine del file
 
     // --- Stato ---
+    let categories = [];           // tutti i round (solo quelli validi)
+    let roundIndex = 0;            // round corrente
+    let results = [];              // risultato di ogni round completato
+    let roundLoadToken = 0;        // evita che un caricamento immagini vecchio sovrascriva il round corrente
     let buttons = [];
     let descriptions = [];
     let elapsedSeconds = 0;
     let elapsedTimerInterval = null;
     let totalCorrectItems = 0;
     let foundCorrectCount = 0;
-    let isGameCompleted = false;
-    let isGameReady = false; // true solo dopo il caricamento dei dati
+    let isGameCompleted = false;   // true = round corrente completato
+    let isGameReady = false;       // true solo dopo caricamento dati E immagini
     let moveCount = 0;
     let revealCount = 0;
     let currentCategoryTitle = '';
@@ -184,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const wordCountEl = document.getElementById('word-count');
+    const roundValueEl = document.getElementById('round-value'); // può essere null
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
     const timeValueEl = document.getElementById('time-value');
@@ -203,9 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const topGridButtons = (topGrid && topGrid !== bottomGrid)
         ? topGrid.querySelectorAll('.grid-button') : [];
     const gridButtons = bottomGrid ? bottomGrid.querySelectorAll('.grid-button') : [];
-    if (gridButtons.length === 0) {
-        console.warn('Nessun pulsante .grid-button trovato: controlla gli id #top-grid / #bottom-grid o la struttura HTML.');
-    }
 
     const hiddenOnSummary = [
         gameArea, gameStats, instructionBanner, progressBar,
@@ -217,6 +290,53 @@ document.addEventListener('DOMContentLoaded', () => {
         button.tabIndex = -1;
         button.setAttribute('aria-disabled', 'true');
     });
+
+    // --- Effetto "dim" a fine round ---
+    // Stili di default (modificabili: basta ridefinire .dimmed / .keep-bright nel tuo CSS)
+    (function injectDimStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            button.grid-button.dimmed {
+                opacity: 0.3;
+                filter: grayscale(0.7);
+                transition: opacity 0.4s ease, filter 0.4s ease;
+            }
+            button.grid-button.keep-bright,
+            button.grid-button.keep-bright:disabled {
+                opacity: 1;
+                filter: none;
+            }
+        `;
+        document.head.prepend(style);
+    })();
+
+    // Attenua tutti i pulsanti tranne quelli corretti
+    function dimAllExceptCorrect() {
+        // Pulsanti in alto (esempi): sempre attenuati
+        topGridButtons.forEach(button => button.classList.add('dimmed'));
+
+        // Pulsanti in basso: attenuati tranne quelli corretti
+        gridButtons.forEach(button => {
+            const item = buttons[Number(button.dataset.index)];
+            if (item && item.value === true) {
+                button.classList.add('keep-bright');
+            } else {
+                button.classList.add('dimmed');
+            }
+        });
+    }
+
+    // --- Pulsante: testo ---
+    // help = in gioco, next = round completato, done = ultimo round completato
+    function setButtonState(mode) {
+        const texts = {
+            help: 'Help!',
+            next: '➜ Prossimo round',
+            done: '✓ Fatto'
+        };
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode];
+    }
 
     // --- Riepilogo ---
     function computeScore() {
@@ -238,21 +358,26 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showSummaryScreen() {
+        stopElapsedTimer();
         hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
 
         summaryTbody.innerHTML = '';
-        const row = document.createElement('tr');
-        addCell(row, currentCategoryTitle, true);
-        addCell(row, `${elapsedSeconds}s`);
-        addCell(row, String(moveCount));
-        addCell(row, String(revealCount));
-        addCell(row, String(computeScore()), true);
-        summaryTbody.appendChild(row);
+        results.forEach(r => {
+            const row = document.createElement('tr');
+            addCell(row, r.title, true);
+            addCell(row, `${r.seconds}s`);
+            addCell(row, String(r.moves));
+            addCell(row, String(r.reveals));
+            addCell(row, String(r.score), true);
+            summaryTbody.appendChild(row);
+        });
 
+        const sum = key => results.reduce((t, r) => t + r[key], 0);
         summaryTotals.innerHTML = `
-            <div>Tempo Totale: <strong>${elapsedSeconds}s</strong></div>
-            <div>Mosse Totali: <strong>${moveCount}</strong></div>
-            <div>Aiuti Totali: <strong>${revealCount}</strong></div>
+            <div>Tempo Totale: <strong>${sum('seconds')}s</strong></div>
+            <div>Mosse Totali: <strong>${sum('moves')}</strong></div>
+            <div>Aiuti Totali: <strong>${sum('reveals')}</strong></div>
+            <div>Punti: <strong>${sum('score')}</strong></div>
         `;
         summaryScreen.style.display = 'block';
     }
@@ -284,10 +409,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
     }
 
-    function updateProgressBar(value) {
-        if (progressBarFill) {
-            progressBarFill.style.width = (Math.min(Math.max(value, 0), 1) * 100) + '%';
-        }
+    // Barra generale: round completati / round totali
+    function setOverallProgress(done) {
+        const total = categories.length;
+        if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    }
+
+    function updateRoundDisplay() {
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${categories.length}`;
     }
 
     function updateMovesDisplay() {
@@ -301,7 +430,35 @@ document.addEventListener('DOMContentLoaded', () => {
     function showLoadError(message) {
         isGameReady = false; // il gioco resta disabilitato
         stopElapsedTimer();
+        document.body.classList.add('loaded'); // senza questa classe la pagina resta invisibile e l'errore non si vede
         if (instructionBanner) instructionBanner.textContent = message;
+    }
+
+    // --- Immagini ---
+    function setButtonImage(button, src, alt) {
+        button.textContent = '';
+        const img = document.createElement('img');
+        img.src = src;
+        img.alt = alt;
+        img.draggable = false;
+        button.appendChild(img);
+    }
+
+    // Precarica le immagini; non blocca mai il gioco: errori e timeout vengono solo segnalati.
+    function preloadImages(urls) {
+        const unique = [...new Set(urls.filter(Boolean))];
+        return Promise.all(unique.map(src => new Promise(resolve => {
+            const img = new Image();
+            let timer;
+            const done = (ok) => {
+                clearTimeout(timer);
+                resolve({ src, ok });
+            };
+            timer = setTimeout(() => done(false), IMAGE_LOAD_TIMEOUT_MS);
+            img.onload = () => done(true);
+            img.onerror = () => done(false);
+            img.src = src;
+        })));
     }
 
     function updateGridUI(title) {
@@ -310,8 +467,9 @@ document.addEventListener('DOMContentLoaded', () => {
         // Pulsanti in alto (descrizioni)
         topGridButtons.forEach((button, index) => {
             const item = descriptions[index];
-            if (item && typeof item.label === 'string') {
-                button.textContent = item.label;
+            button.classList.remove('dimmed');
+            if (item && item.shape) {
+                setButtonImage(button, item.shape, item.alt || `Esempio ${index + 1}`);
                 button.style.display = '';
             } else {
                 button.style.display = 'none';
@@ -322,9 +480,9 @@ document.addEventListener('DOMContentLoaded', () => {
         gridButtons.forEach(button => {
             const index = Number(button.dataset.index);
             const item = buttons[index];
-            button.classList.remove('selected', 'error', 'help-correct');
+            button.classList.remove('selected', 'error', 'help-correct', 'dimmed', 'keep-bright');
             if (item) {
-                button.textContent = item.label;
+                setButtonImage(button, item.label, item.alt || `Immagine ${index + 1}`);
                 button.style.display = '';
                 button.disabled = false;
             } else {
@@ -334,14 +492,56 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Round ---
+    async function loadRound(index) {
+        const token = ++roundLoadToken;
+
+        roundIndex = index;
+        const category = categories[roundIndex];
+
+        buttons = [...category.buttons];
+        descriptions = Array.isArray(category.descriptions) ? [...category.descriptions] : [];
+        currentCategoryTitle = category.instruction;
+        totalCorrectItems = buttons.filter(b => b.value === true).length;
+
+        isGameCompleted = false;
+        isGameReady = false;
+        stopElapsedTimer();
+        moveCount = 0;
+        revealCount = 0;
+        foundCorrectCount = 0;
+
+        revealBtn.classList.remove('smooth-hidden');
+        revealBtn.disabled = false;
+
+        updateRoundDisplay();
+        updateMovesDisplay();
+        updateRevealDisplay();
+        updateWordCountDisplay();
+        setOverallProgress(roundIndex);   // la barra mostra i round già completati
+        updateGridUI(currentCategoryTitle);
+        setButtonState('help');
+        if (timeValueEl) timeValueEl.textContent = '0s';
+
+        // Il timer parte solo quando tutte le immagini del round sono pronte
+        const loaded = await preloadImages([
+            ...descriptions.map(d => d.shape),
+            ...buttons.map(b => b.label)
+        ]);
+        if (token !== roundLoadToken) return; // nel frattempo è partito un altro round
+
+        const failed = loaded.filter(r => !r.ok).map(r => r.src);
+        if (failed.length) console.warn('Immagini non caricate:', failed);
+
+        startElapsedTimer();
+        isGameReady = true;
+    }
+
     // --- Inizializzazione ---
     async function initGame() {
         try {
             isGameReady = false;
             stopElapsedTimer();
-
-            //if (revealBtn) revealBtn.innerHTML = '<span>💡 Help!</span>';
-            if (revealBtn) revealBtn.querySelector('.btn-text').textContent = "Help!";
 
             const response = await fetch(DATA_URL);
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
@@ -352,48 +552,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Si sceglie solo tra le categorie valide (almeno un pulsante corretto)
+            // Solo round validi: con bottoni e almeno una risposta corretta (altrimenti non si completerebbero mai)
             const isValidCategory = c => c && Array.isArray(c.buttons) && c.buttons.some(b => b && b.value === true);
-            const validCategories = data.categories.filter(isValidCategory);
-            if (validCategories.length < data.categories.length) {
-                console.warn(`${data.categories.length - validCategories.length} categorie scartate perché non valide.`);
+            categories = data.categories.filter(isValidCategory);
+            if (categories.length < data.categories.length) {
+                console.warn(`${data.categories.length - categories.length} categorie scartate perché non valide.`);
             }
-            if (validCategories.length === 0) {
+            if (categories.length === 0) {
                 showLoadError('Nessuna categoria valida.');
                 return;
             }
 
-            const category = validCategories[Math.floor(Math.random() * validCategories.length)];
-            const newButtons = [...category.buttons];
-            const newDescriptions = Array.isArray(category.descriptions) ? [...category.descriptions] : [];
-            const newTotal = newButtons.filter(b => b.value === true).length;
+            if (SHUFFLE_ROUNDS) {
+                for (let i = categories.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [categories[i], categories[j]] = [categories[j], categories[i]];
+                }
+            }
 
-            // Tutto valido: ora si può aggiornare lo stato
-            buttons = newButtons;
-            descriptions = newDescriptions;
-            currentCategoryTitle = category.instruction;
-            totalCorrectItems = newTotal;
-
-            isGameCompleted = false;
-            moveCount = 0;
-            revealCount = 0;
-            foundCorrectCount = 0;
-
-            updateMovesDisplay();
-            updateRevealDisplay();
-            updateWordCountDisplay();
-            updateProgressBar(0);
-            updateGridUI(currentCategoryTitle);
-
+            results = [];
             if (gameTitle && data.title) gameTitle.textContent = data.title;
-            
-            revealBtn.classList.remove('smooth-hidden');
-            revealBtn.disabled = false;
-            
-            document.body.classList.add('loaded');
 
-            startElapsedTimer();
-            isGameReady = true;
+            // La pagina appare subito; il timer parte quando le immagini sono pronte
+            const ready = loadRound(0);
+            document.body.classList.add('loaded');
+            await ready;
         } catch (err) {
             console.error(`Could not load ${DATA_URL}:`, err);
             showLoadError('Errore nel caricamento del gioco.');
@@ -445,9 +628,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         revealBtn.addEventListener('blur', endHelp);
 
-        // A gioco finito il tasto diventa "Fatto" e apre il riepilogo
+        // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
         revealBtn.addEventListener('click', () => {
-            if (isGameCompleted) showSummaryScreen();
+            if (!isGameCompleted) return;
+            if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
+            else showSummaryScreen();
         });
     }
 
@@ -475,26 +660,26 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('selected');
             foundCorrectCount++;
             updateWordCountDisplay();
-            updateProgressBar(foundCorrectCount / totalCorrectItems);
 
             const justCompleted = foundCorrectCount === totalCorrectItems;
+            const isLastRound = roundIndex >= categories.length - 1;
+
             if (justCompleted) {
                 isGameCompleted = true;
                 stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
                 gridButtons.forEach(btn => { btn.disabled = true; });
-             //   if (revealBtn) revealBtn.innerHTML = '<span>✓ Fatto</span>';
+                dimAllExceptCorrect();
 
-                if (revealBtn) {
-                    /*
-                    // Hide the icon element
-                    const iconEl = revealBtn.querySelector('.btn-icon');
-                    if (iconEl) iconEl.style.display = 'none';
-                    */
-                    // Update the text
-                    const textEl = revealBtn.querySelector('.btn-text');
-                    if (textEl) textEl.textContent = "✓ Fatto!";
-                }
+                results.push({
+                    title: currentCategoryTitle,
+                    seconds: elapsedSeconds,
+                    moves: moveCount,
+                    reveals: revealCount,
+                    score: computeScore()
+                });
 
+                setOverallProgress(roundIndex + 1);          // la barra avanza di un round
+                setButtonState(isLastRound ? 'done' : 'next');
             }
 
             // Solo dopo: animazioni
@@ -506,7 +691,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            if (justCompleted && typeof Confetti !== 'undefined') {
+            // Coriandoli solo alla fine del gioco (per averli a ogni round togli "isLastRound &&")
+            if (justCompleted && isLastRound && typeof Confetti !== 'undefined') {
                 try {
                     await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
                     await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });

@@ -2,7 +2,7 @@
     "categories": [
       {
         "text": "Carolina è uscita dal parco e ha camminato fino alla fermata dell'autobus per lasciare un messaggio a un'amica. Non è salita sull'autobus: ha proseguito a piedi fino alla panetteria, con l'ombrello sotto il braccio, e da lì è passata in farmacia, senza fermarsi in banca.",
-        "instruction":"Leggi il testo e scrivi, nell'ordine, i quattro luoghi in cui è stata davvero Carolina. Ignora oggetti e luoghi non visitati.",
+        "instruction":"Leggi il testo e scrivi, nell'ordine, i quattro luoghi in cui è stata Carolina.",
         "solutions":["Parco","Fermata autobus","Panetteria","Farmacia"],
         "buttons": [
           { "label": "Parco", "value": 1 },
@@ -13,6 +13,21 @@
           { "label": "Casa di Valentina", "value": 0 },
           { "label": "Caserma della polizia", "value": 0 }
         ]
+      },
+
+      {
+          "text": "Matteo è uscito dalla biblioteca e ha camminato fino alla stazione della metropolitana per controllare l'orario dei treni. Non è entrato nei tornelli: ha proseguito a piedi fino alla libreria, con la sciarpa attorno al collo, e da lì è passato in edicola, ma senza fermarsi.",
+          "instruction":"Leggi il testo e scrivi, nell'ordine, i quattro luoghi in cui è stato Matteo.",
+          "solutions":["Biblioteca","Stazione","Libreria","Edicola"],
+          "buttons": [
+            { "label": "Biblioteca", "value": 1 },
+            { "label": "Stazione", "value": 2 },
+            { "label": "Farmacia", "value": 0 },
+            { "label": "Fermata autobus", "value": 0 },
+            { "label": "Libreria", "value": 3 },
+            { "label": "Ufficio Postale", "value": 0 },
+            { "label": "Edicola", "value": 4 }
+          ]
       }
         
   ]

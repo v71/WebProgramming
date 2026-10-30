@@ -2,7 +2,7 @@
   "title":"L'elemento che rompe lo schema",
   "categories": [
     {
-      "instruction": "Trova tutte le forme uguali al triangolo",
+      "instruction": "Trova l'elemento che interrompe la sequenza",
       "descriptions": [
         { "shape": "../../images/shapes/square.png" },
         { "shape": "../../images/shapes/circle.png" },
@@ -19,6 +19,28 @@
         { "label": "../../images/shapes/square.png",   "value": false },
         { "label": "../../images/shapes/square.png",   "value": true }
       ]
+    },
+    {
+      "instruction": "Trova l'elemento che interrompe la sequenza",
+      "descriptions": [
+        { "shape": "../../images/shapes/triangle.png" },
+        { "shape": "../../images/shapes/circle.png" },
+        { "shape": "../../images/shapes/square.png" },
+        { "shape": "../../images/shapes/triangle.png" },
+        { "shape": "../../images/shapes/circle.png" },
+        { "shape": "../../images/shapes/square.png" }
+      ],
+      "buttons": [
+
+        { "label": "../../images/shapes/triangle.png", "value": false },
+        { "label": "../../images/shapes/circle.png",   "value": false },
+        { "label": "../../images/shapes/cross.png",    "value": true },
+        { "label": "../../images/shapes/triangle.png", "value": false },
+        { "label": "../../images/shapes/circle.png",   "value": false },
+        { "label": "../../images/shapes/circle.png",   "value": true }
+     
+      ]
     }
+    
   ]
 }

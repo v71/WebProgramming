@@ -14,6 +14,22 @@
           { "label": "Formica", "value": false },
           { "label": "Torcia", "value": false }
         ]
+      },
+
+       {
+        "instruction": "Segna solo le parole che rispettano la regola: «ha solo 2 vocali». Leggi ogni parola fino in fondo prima di segnare.",
+        "buttons": [
+          { "label": "Lupo", "value": true },
+          { "label": "Gallina", "value": false },
+          { "label": "Torre", "value": true },
+          { "label": "Marmotta", "value": false },
+          { "label": "Cappello", "value": false },
+          { "label": "Fango", "value": true },
+          { "label": "Coniglio", "value": false },
+          { "label": "Olive", "value": false },
+          { "label": "Formica", "value": false },
+          { "label": "Sole", "value": true }
+        ]
       }
         
   ]

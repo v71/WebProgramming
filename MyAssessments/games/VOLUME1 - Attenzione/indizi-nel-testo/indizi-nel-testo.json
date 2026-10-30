@@ -3,8 +3,12 @@
       {
         "text": "Domenica mattina Giorgio e sua sorella Marta sono andati al mercato con una borsa verde. Hanno comprato tre mele, un formaggio e due pani. Un gatto dormiva sul banco del fruttivendolo, accanto a una bilancia. All'ora di pranzo sono tornati a casa.",
         "instruction":"Leggi il testo e scrivi solo le parole che indicano una persona o un ruolo di persona. Ignora tutte le altre informazioni.",
-        "solutions":["Giorgio","Marta","Fruttivendolo"],
-        "buttons": []
+        "solutions":["Giorgio","Marta","Fruttivendolo"]
+      },
+      {
+        "text": "Sabato pomeriggio Chiara e suo cugino Lorenzo sono andati al supermercato con una sporta blu. Hanno comprato due yogurt, una confezione di biscotti e quattro pacchi di fazzoletti. Un cane tranquillo riposava all'ingresso del negozio, vicino a un carrello vuoto. Nel tardo pomeriggio sono rientrati a casa.",
+        "instruction":"Leggi il testo e scrivi solo le parole che indicano un animale o un alimento. Ignora tutte le altre informazioni.",
+        "solutions":["cane","yogurt","biscotti"]
       }
         
   ]
