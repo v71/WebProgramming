@@ -4,51 +4,51 @@
     "rounds": [
         {
             "label":"Zaino",
-            "img": "../images/articoli/backpack.png",
-            "options": ["le", "lo" ,"il", "i"],
+            "img": "../../images/animali/savana/elephant.png",
+            "options": ["le", "l'" ,"il", "i"],
             "correctIndex": 1
         },
         {
             "label":"Libro",
-            "img": "../images/articoli/book.png",
+            "img": "../../images/animali/deserto/camel.png",
             "options": ["la", "lo" ,"il", "i"],
             "correctIndex": 2
         },
         {
             "label":"Automobile",
-            "img": "../images/articoli/car.png",
+            "img": "../../images/animali/foresta/bradipo.png",
             "options": ["la", "le" ,"il", "a"],
-            "correctIndex": 0
+            "correctIndex": 2
         },
         {
             "label":"Gatto",
-            "img": "../images/articoli/cat.png",
+            "img": "../../images/animali/da-cortile/cat.png",
             "options": ["il", "u" ,"lo", "le"],
             "correctIndex": 0
         },
         {
             "label":"Pastello",
-            "img": "../images/articoli/crayon.png",
+            "img": "../../images/animali/da-cortile/dog.png",
             "options": ["il", "u" ,"lo", "la"],
             "correctIndex": 0
         },
         {
             "label":"Iena",
-            "img": "../images/articoli/hyiena.png",
+            "img": "../../images/animali/savana/hyena.png",
             "options": ["il", "u" ,"lo", "la"],
             "correctIndex": 3
         },
         {
             "label":"Lampada",
-            "img": "../images/articoli/lamp.png",
-            "options": ["la", "a" ,"il", "la"],
-            "correctIndex": 0
+            "img": "../../images/animali/insetti/dragonfly.png",
+            "options": ["lo", "a" ,"il", "la"],
+            "correctIndex": 3
         },
         {
             "label":"Smartphone",
-            "img": "../images/articoli/mobile.png",
+            "img": "../../images/animali/bosco/fox.png",
             "options": ["lo", "a" ,"il", "la"],
-            "correctIndex": 0
+            "correctIndex": 3
         }
     ]
 }

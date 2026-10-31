@@ -96,16 +96,16 @@
 
         h2 {
             margin: 0 0 10px;
-            font-size: 1.3rem;
+            font-size: 1.0rem;
             font-weight: 400;
             letter-spacing: -0.5px;
             color: var(--accent);
             text-align: center;
             text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
+                -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000,
                  0px 4px 8px rgba(0, 0, 0, 0.5);
         }
 

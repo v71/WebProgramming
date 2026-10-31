@@ -282,7 +282,7 @@
 
 <style>
 
-        .cool-btn {
+    .cool-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -358,9 +358,16 @@
         Clicca la parola giusta per lo spazio evidenziato
     </h3>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
             <span class="btn-text">Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -444,6 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameArea = document.getElementById('game-area');
     const progressTitle = document.getElementById('progress-title');
     const progressContainer = document.querySelector('.progress-bar-container');
+    const btnIcon = document.getElementById('btn-icon');
 
     const hiddenOnSummary = [
         gameTitle, gameStats, instructionBanner, actionControls,
@@ -528,6 +536,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
+    /*
     function setRevealLabel(label) {
         if (!revealBtn) return;
 
@@ -554,7 +563,7 @@ document.addEventListener('DOMContentLoaded', () => {
             textEl.textContent = parts.join(' ');
         }
     }
-
+        */
     // Trasforma un round in { title, parts, answers, distractors }; null se non è giocabile
     function parseRound(round) {
         if (!round || typeof round.text !== 'string') return null;
@@ -650,17 +659,55 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
     }
 
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+    /*
+    // --- Pulsante: testo ---
+    // help = in gioco, next = round completato, done = ultimo round completato
+    function setButtonMode(mode) {
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
+        setRevealLabel(texts[mode].text);
+    }
+    */
+    /*
     // help = in gioco, next = round completato, done = ultimo round completato
     function setButtonMode(mode) {
         buttonMode = mode;
-        const labels = {
+        const texts = {
             help: 'Help!',
             next: '➜ Prossimo round',
             done: '✓ Fatto!'
         };
-        setRevealLabel(labels[mode]);
+        setRevealLabel(texts[mode]);
     }
-
+    */
+  
+    // help = in gioco, next = round completato, done = ultimo round completato
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
+       // setRevealLabel(texts[mode].text);
+    }
+  
     /* =========================================================
        HELP / PEEK (tieni premuto)
        ========================================================= */
@@ -1013,6 +1060,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (playable.length < GAME_ROUNDS.length) {
             console.warn(`${GAME_ROUNDS.length - playable.length} round scartati: servono un testo e almeno una parola tra {graffe}.`);
         }
+
         if (playable.length === 0) {
             setInstruction('Nessun paragrafo disponibile.');
             revealBtn.disabled = true;

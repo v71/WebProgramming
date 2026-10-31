@@ -426,6 +426,7 @@
             display: none !important;
         }
 
+        /*
         #puzzle-image {
             max-width: min(100%, 256px);
             max-height: 256px;
@@ -434,6 +435,22 @@
             border: 2px solid var(--border);
             background-color: var(--game-area-background);
             box-shadow: var(--shadow-md);
+        }
+        */
+        #puzzle-image {
+            max-width: min(100%, 256px);
+            max-height: 256px;
+            object-fit: contain;
+            border-radius: 16px;
+            border: 2px solid var(--border);
+            background-color: var(--game-area-background);
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        #puzzle-image.visible {
+            opacity: 1;
         }
 
     </style>
@@ -507,6 +524,9 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+    const IMAGE_FADE_MS = 350;   // keep in sync with the CSS transition
+    let imageToken = 0;          // ignores older loads if the round changes quickly
+
     // ---------- Configurazione ----------
     const DATA_URL = 'set-1.json';
   
@@ -578,21 +598,49 @@ document.addEventListener('DOMContentLoaded', () => {
     let buttonMode = 'help';      // 'help' | 'wrong' | 'next' | 'done'
     let sentencePool = [];        // tutte le frasi valide della categoria: { text, image }
 
-   function setPuzzleImage(src) {
-        if (!imageWrapper || !puzzleImage) return; // container assente: nessuna immagine
+    function setPuzzleImage(src) {
+        if (!imageWrapper || !puzzleImage) return; // container missing: no image
+
+        const token = ++imageToken;
+        const wasVisible = !imageWrapper.hidden && puzzleImage.classList.contains('visible');
+
+        // 1. Fade the old image out
+        puzzleImage.classList.remove('visible');
+
         if (!src) {
-            imageWrapper.hidden = true;
-            puzzleImage.removeAttribute('src');
+            // No image for this round: hide the container once the fade-out is done
+            setTimeout(() => {
+                if (token !== imageToken) return;
+                imageWrapper.hidden = true;
+                puzzleImage.removeAttribute('src');
+            }, wasVisible ? IMAGE_FADE_MS : 0);
             return;
         }
-        imageWrapper.hidden = false;
-        puzzleImage.src = src;
-    }
 
-    // Se il file non esiste, il container sparisce
-    if (puzzleImage) {
-        puzzleImage.addEventListener('error', () => {
-            if (imageWrapper) imageWrapper.hidden = true;
+        // 2. Preload the new image while the old one fades out
+        const preload = new Promise(resolve => {
+            const loader = new Image();
+            loader.onload = () => resolve(true);
+            loader.onerror = () => resolve(false);
+            loader.src = src;
+        });
+        const fadeOut = new Promise(resolve => setTimeout(resolve, wasVisible ? IMAGE_FADE_MS : 0));
+
+        // 3. When both are done, swap the source and fade the new image in
+        Promise.all([preload, fadeOut]).then(([loaded]) => {
+            if (token !== imageToken) return; // another round started in the meantime
+
+            if (!loaded) {
+                imageWrapper.hidden = true;
+                return;
+            }
+
+            puzzleImage.src = src;
+            imageWrapper.hidden = false;
+            // Two frames so the browser registers opacity 0 before animating to 1
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                if (token === imageToken) puzzleImage.classList.add('visible');
+            }));
         });
     }
 

@@ -25,7 +25,7 @@
 
     </style>
 
-<style>
+    <style>
 
         .cool-btn {
             display: inline-flex;
@@ -81,7 +81,7 @@
             transition: none !important;
         }
 
-</style>
+    </style>
 
 </head>
 
@@ -106,9 +106,16 @@
        Instruzion banner.
     </div>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
             <span class="btn-text">Help!</span>
+        </button>
+    </div>-->
+
+     <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -183,6 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
+    const btnIcon = document.getElementById('btn-icon');
 
     // Aggiorna l'etichetta del pulsante Help. L'icona viene scritta dentro .btn-text insieme al testo
     // (contorno definito su ".cool-btn .btn-text"). Le emoji a colori (💡, ⚠️) sono racchiuse in
@@ -231,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
             textEl.textContent = parts.join(' ');
         }
     }
-
+    
     // help = in gioco, next = round completato, done = ultimo round completato
     function setButtonState(mode) {
         const labels = {
@@ -240,6 +248,27 @@ document.addEventListener('DOMContentLoaded', () => {
             done: '✓ Fatto'
         };
         setRevealLabel(labels[mode]);
+    }
+    
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+  
+    // --- Pulsante: testo ---
+    // help = in gioco, next = round completato, done = ultimo round completato
+    function setButtonState(mode) {
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
     }
 
     const gridButtons = document.querySelectorAll('.grid-button');
@@ -263,6 +292,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBarTitle, gameTitle, actionControls
     ];
 
+    
     function setGameVisible(visible) {
         gameElements.forEach(el => {
             if (el) el.style.display = visible ? '' : 'none';

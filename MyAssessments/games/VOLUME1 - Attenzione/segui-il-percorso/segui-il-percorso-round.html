@@ -437,9 +437,16 @@
         Instruzion banner.
     </div>
 
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
             <span class="btn-text">Help!</span>
+        </button>
+    </div>-->
+
+     <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -557,6 +564,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const gameStats = document.getElementById('game-stats');
     const progressBar = document.querySelector('.progress-bar-container');
     const progressBarTitle = document.getElementById('progress-title');
+    const btnIcon = document.getElementById('btn-icon');
 
     // Testo dell'esercizio (nell'HTML l'id è "debug-text-area"): è contenuto di gioco, non debug
     const passageArea = document.getElementById('debug-text-area');
@@ -599,6 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
             && buildExpectedLabels(exercise.buttons).some(label => label !== null);
     }
 
+    /*
     // --- Pulsante Help: help = in gioco, next = round completato, done = ultimo round completato ---
     function setRevealButton(mode) {
         if (!revealBtn) return;
@@ -615,6 +624,28 @@ document.addEventListener('DOMContentLoaded', () => {
             done: '✓ Fatto!'
         };
         textEl.textContent = texts[mode];
+    }
+            */
+
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+  
+    // --- Pulsante: testo ---
+    // help = in gioco, next = round completato, done = ultimo round completato
+    function setRevealButton(mode) {
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
     }
 
     // --- Punteggio e riepilogo ---

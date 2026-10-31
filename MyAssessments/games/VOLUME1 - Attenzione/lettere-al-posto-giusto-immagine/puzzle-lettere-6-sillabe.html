@@ -493,6 +493,47 @@
 
 </style>
 
+<style>
+
+    #puzzle-image {
+        height: 100%;
+        width: auto;
+        max-width: 100%;
+        object-fit: contain;
+        border-radius: 14px;
+        box-shadow: var(--shadow-md);
+        border: 2px solid #000000;
+        opacity: 0;                      /* new */
+        transition: opacity 0.35s ease;  /* new */
+    }
+
+    #puzzle-image.visible {
+        opacity: 1;
+    }
+
+    /* Lettera giusta nel suo slot: verde */
+    .slot.filled .card.correct {
+        background-color: #10b981;
+        border-color: #ffffff;
+        color: #ffffff;
+        box-shadow: none;
+    }
+
+    /* Lettera sbagliata nel suo slot: rossa */
+    .slot.filled .card.wrong-letter {
+        /*
+        background-color: var(--wrong, #ef4444);
+        border-color: #ffffff;
+        color: #ffffff;
+        */
+        border-color: var(--grid-btn-wrong-border-color);
+        background-color:var(--grid-btn-wrong);
+        color: var(--grid-btn-wrong-text );
+        box-shadow: none;
+    }
+
+</style>
+
 </head>
 <body>
 
@@ -507,12 +548,6 @@
     </div>
 
     <h3 id="instruction-banner" class="stats-style">Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.</h3>
-
-    <!--<div class="controls" id="action-controls">
-        <button id="reveal-btn" class="cool-btn">
-            <span class="btn-text">Help!</span>
-        </button>
-    </div>-->
 
     <div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
@@ -578,6 +613,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Le voci vengono mostrate una alla volta, in ordine casuale.
     const PUZZLE_URL = 'set-1.json';
 
+    const IMAGE_FADE_MS = 350;   // keep in sync with the CSS transition
+    let imageToken = 0;          // ignores older loads if the round changes quickly
+
     // Dimensioni card: devono restare coerenti con il CSS (--card-gap, --box-pad, bordo 2px dei container)
     const CARD_MIN = 24;
     const CARD_MAX = 52;
@@ -639,16 +677,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Dimensione card ---
     // Cerca di tenere l'intera frase su una sola riga (meno altezza);
     // se non basta, scende fino a CARD_MIN e poi va a capo.
-   /*
-    function fitCards() {
-        const len = originalTextString.length;
-        if (!len) return;
-        const avail = Math.min(MAX_CONTENT_WIDTH, document.documentElement.clientWidth - PAGE_SIDE_PADDING);
-        const w = Math.floor((avail - BOX_EXTRA - (len - 1) * CARD_GAP) / len);
-        const size = Math.max(CARD_MIN, Math.min(CARD_MAX, w));
-        document.documentElement.style.setProperty('--card-w', size + 'px');
-    }
-    */
 
     function fitCards() {
         const len = originalTextString.length;
@@ -663,15 +691,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('resize', fitCards);
 
-    // --- Immagine ---
     function setPuzzleImage(src) {
+        const token = ++imageToken;
+        const wasVisible = !imageWrapper.hidden && puzzleImage.classList.contains('visible');
+
+        // 1. Fade the old image out
+        puzzleImage.classList.remove('visible');
+
         if (!src) {
-            imageWrapper.hidden = true;
-            puzzleImage.removeAttribute('src');
+            // No image for this round: hide the container once the fade-out is done
+            setTimeout(() => {
+                if (token !== imageToken) return;
+                imageWrapper.hidden = true;
+                puzzleImage.removeAttribute('src');
+            }, wasVisible ? IMAGE_FADE_MS : 0);
             return;
         }
-        imageWrapper.hidden = false;
-        puzzleImage.src = src;
+
+        // 2. Preload the new image while the old one fades out
+        const preload = new Promise(resolve => {
+            const loader = new Image();
+            loader.onload = () => resolve(true);
+            loader.onerror = () => resolve(false);
+            loader.src = src;
+        });
+        const fadeOut = new Promise(resolve => setTimeout(resolve, wasVisible ? IMAGE_FADE_MS : 0));
+
+        // 3. When both are done, swap the source and fade the new image in
+        Promise.all([preload, fadeOut]).then(([loaded]) => {
+            if (token !== imageToken) return; // another round started in the meantime
+
+            if (!loaded) {
+                imageWrapper.hidden = true;
+                return;
+            }
+
+            puzzleImage.src = src;
+            imageWrapper.hidden = false;
+            // Two frames so the browser registers opacity 0 before animating to 1
+            requestAnimationFrame(() => requestAnimationFrame(() => {
+                if (token === imageToken) puzzleImage.classList.add('visible');
+            }));
+        });
     }
 
     // Se il file non esiste, l'area sparisce e lo spazio torna al gioco
@@ -739,7 +800,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProgressDisplay();
     }
 
-        const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-exclamation-triangle', 'fa-arrow-right', 'fa-check'];
 
     function setButtonIcon(iconClass) {
         if (!btnIcon) return;
@@ -747,39 +808,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnIcon.classList.add(iconClass);
     }
 
-     // --- Stato del pulsante ---
-    function setButtonMode(mode) {
-        buttonMode = mode;
-        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
-        revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
-        revealBtn.disabled = (mode === 'wrong');
-        
-        const texts = {
-            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
-            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
-            done: { icon: 'fa-check',       text: 'Fatto' }
-        };
-        setButtonIcon(texts[mode].icon);
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
-        if (textEl) textEl.textContent = texts[mode].text;
-        
-        /*
-       const labels = {
-            help: 'Help!',
-            wrong: '⚠️ Parola errata',
-            next: '➜ Prossima Parola',
-            done: '✓ Fatto'
-        };
-        if ( labels[mode]!=='Help!'){
-                revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
-            }
-        else{
-            revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
-        }
-            */
-    }
-
-    /*
     // --- Stato del pulsante ---
     function setButtonMode(mode) {
         buttonMode = mode;
@@ -787,25 +815,16 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
         revealBtn.disabled = (mode === 'wrong');
 
-       const labels = {
-            help: 'Help!',
-            wrong: '⚠️ Parola errata',
-            next: '➜ Prossima Parola',
-            done: '✓ Fatto'
+        const texts = {
+            help:  { icon: 'fa-lightbulb-o',          text: 'Clicca qui per avere un aiuto!' },
+            wrong: { icon: 'fa-exclamation-triangle', text: 'Parola sbagliata!' },
+            next:  { icon: 'fa-arrow-right',          text: 'Prossimo round' },
+            done:  { icon: 'fa-check',                text: 'Fatto' }
         };
-
-        if ( labels[mode]!=='Help!'){
-                revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
-            //    const iconEl = revealBtn.querySelector('.btn-icon');
-            //    iconEl.hidden = true;  
-            }
-        else{
-            revealBtn.querySelector('.btn-text').textContent = `${labels[mode]}`;
-          //  const iconEl = revealBtn.querySelector('.btn-icon');
-          //  iconEl.hidden = false;   // hide
-        }
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
     }
-    */
 
     // --- Utilità ---
     function shuffleArray(array) {
@@ -915,9 +934,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        slot.appendChild(slotCard);
-        slot.classList.add('filled');
-        //const isCorrect = char === emptyMeta.expected;
+     //   slot.appendChild(slotCard);
+     //   slot.classList.add('filled');
 
         const idx = slotsMeta.indexOf(emptyMeta);
         const isCorrect = char === emptyMeta.expected &&
@@ -926,6 +944,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 return c && c.dataset.char === m.expected;
             });
             
+        slotCard.classList.add(isCorrect ? 'correct' : 'wrong-letter');
+        slot.appendChild(slotCard);
+        slot.classList.add('filled');
+
         // Prima lo stato (completamento, timer, pulsante), poi l'animazione
         registerMove();
         if (isCorrect) playCheckmark(slot);
@@ -995,19 +1017,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (buttonMode === 'wrong') setButtonMode('help');
         }
     }
-    /*
-    function normalizeEntries(list) {
-        return (Array.isArray(list) ? list : [])
-            .map(w => (typeof w === 'string')
-                ? { text: w.trim(), image: '', hint: '' }
-                : {
-                    text: String((w && w.text) || '').trim(),
-                    image: (w && w.image) || '',
-                    hint: (w && w.hint) || ''
-                })
-            .filter(e => e.text);
-    }
-    */
 
     function normalizeEntries(list) {
         return (Array.isArray(list) ? list : [])
@@ -1076,30 +1085,21 @@ document.addEventListener('DOMContentLoaded', () => {
             targetContainer.appendChild(group);
         });
 
-        /*
-        Array.from(originalTextString).forEach(char => {
-            const slot = document.createElement('div');
-            slot.classList.add('slot');
-            slot.addEventListener('click', () => removeFromSlot(slot));
-            targetContainer.appendChild(slot);
-            slotsMeta.push({ element: slot, expected: char });
-        });
-        */
         // 2. Carte sorgente (restano al loro posto e si disabilitano quando usate)
-        /*shuffleArray(Array.from(originalTextString)).forEach(char => {
+        shuffleArray(Array.from(originalTextString)).forEach(char => {
             const card = makeCard(char);
             makeActivatable(card, () => placeChar(card));
             sourceContainer.appendChild(card);
         });
-        */
-
+        
+        /*
         // 2. Carte sorgente: la parola nell'ordine corretto, cliccabile
         Array.from(originalTextString).forEach(char => {
             const card = makeCard(char);
             makeActivatable(card, () => placeChar(card));
             sourceContainer.appendChild(card);
         });
-
+        */
         setOverallProgress(itemIndex); // a ogni nuova parola la barra avanza
         refreshBoard();
         startElapsedTimer();

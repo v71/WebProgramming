@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Indovina l'emozione</title>
+    <title>Indovina l'articolo determinativo</title>
 
     <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
     <link href="stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
 
@@ -305,7 +307,8 @@
             let optionElements = [];
             let currentRound = null;
             let imageLoadToken = 0;
-
+            let isGameLoading = true;
+ 
             function startElapsedTimer() {
                 stopElapsedTimer();
                 elapsedSeconds = 0;
@@ -580,6 +583,8 @@
 
             async function initGame() {
                 try {
+                     isGameLoading = true;
+                     stopElapsedTimer();
                     // MODIFICA: il file JSON può essere passato nell'URL con ?json=nomefile.json
                     const params = new URLSearchParams(window.location.search);
                     const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
@@ -591,6 +596,9 @@
                     gameTitle.textContent=data.title;                    
                     instructionBanner.textContent = data.label;   // testo del banner = label del round
                     ROUNDS = shuffleArray(data.rounds);
+
+                    document.body.classList.add('loaded');
+                    isGameLoading = false;
                 } catch (err) {
                     console.error('Could not load JSON file:', err);
                 }
