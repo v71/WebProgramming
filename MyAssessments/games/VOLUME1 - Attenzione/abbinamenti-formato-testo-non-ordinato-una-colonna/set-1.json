@@ -1,0 +1,15 @@
+ {
+         "title": "Scegli la colonna giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": ["Domande","Risposte"],
+             "items": [
+                { "label": "Quanto fa 2+2?", "answer": "4" },
+                { "label": "Qual' è la capitale d'Italia?", "answer": "Roma" },
+                { "label": "Qual' è il colore del cielo?", "answer": "Blu" },
+               { "label": "Quanti giorni ci sono in una settimana?", "answer": "7" }
+             ]
+           }
+         ]
+}
