@@ -233,12 +233,20 @@
         }
         
         .slot.error-slot {
+            border-color: var(--grid-btn-wrong-border-color, #f5c6cb) !important;
+            background-color: var(--grid-btn-wrong, #f8d7da) !important;
+            color: var(--grid-btn-wrong-text, #721c24) !important;
+            animation: shake 0.4s ease;
+            cursor: default;
+            opacity: 1 !important; 
+            /*
             animation: shake 0.4s ease;
             background-color: var(--wrong);
             cursor: default;
-            opacity: 1 !important; /* <-- Mantiene il colore pieno senza trasparenza */
+            opacity: 1 !important; 
+            */
         }
-        
+
         .slot.given {
             cursor: default;
         }
@@ -426,17 +434,6 @@
             display: none !important;
         }
 
-        /*
-        #puzzle-image {
-            max-width: min(100%, 256px);
-            max-height: 256px;
-            object-fit: contain;
-            border-radius: 16px;
-            border: 2px solid var(--border);
-            background-color: var(--game-area-background);
-            box-shadow: var(--shadow-md);
-        }
-        */
         #puzzle-image {
             max-width: min(100%, 256px);
             max-height: 256px;
@@ -461,6 +458,13 @@
             background-color: var(--grid-btn-wrong);
             color: var(--grid-btn-wrong-text);
             box-shadow: none;
+        }
+
+        .slot .card.wrong,
+        .card.wrong {
+            border-color: var(--grid-btn-wrong-border-color, #f5c6cb) !important;
+            background-color: var(--grid-btn-wrong, #f8d7da) !important;
+            color: var(--grid-btn-wrong-text, #721c24) !important;
         }
 
     </style>
@@ -873,6 +877,7 @@ document.addEventListener('DOMContentLoaded', () => {
         checkSentenceAutomatic();
     }
 
+    /*
     function placeWord(card) {
         if (roundCompleted || card.classList.contains('disabled')) return;
 
@@ -901,15 +906,52 @@ document.addEventListener('DOMContentLoaded', () => {
         slot.appendChild(slotCard);
         slot.classList.add('filled');
 
-        /*
-        const isWordCorrect = word === emptyMeta.expected;
-        if (isWordCorrect) slotCard.classList.add('correct');
-        */
-
         const isWordCorrect = word === emptyMeta.expected;
         slotCard.classList.add(isWordCorrect ? 'correct' : 'wrong-word');
 
         // Prima lo stato (timer, completamento, pulsante), poi l'animazione
+        registerMove();
+        if (isWordCorrect) playCheckmark(slot);
+    }
+    */
+
+        function placeWord(card) {
+        if (roundCompleted || card.classList.contains('disabled')) return;
+
+        const emptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+        if (!emptyMeta) return;
+
+        const word = card.dataset.word;
+        const slot = emptyMeta.element;
+
+        setCardDisabled(card, true);
+
+        const slotCard = document.createElement('div');
+        slotCard.classList.add('card');
+        slotCard.dataset.word = word;
+        slotCard.textContent = word;
+        slotCard.sourceCard = card;
+        slotCard.setAttribute('role', 'button');
+        slotCard.tabIndex = 0;
+        slotCard.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                removeFromSlot(slot);
+            }
+        });
+
+        slot.appendChild(slotCard);
+        slot.classList.add('filled');
+
+        // --- CHECK CORRECT VS WRONG POSITION ---
+        const isWordCorrect = word === emptyMeta.expected;
+        if (isWordCorrect) {
+            slotCard.classList.add('correct');
+        } else {
+            slotCard.classList.add('wrong'); // Add the wrong CSS class
+        }
+
+        // State update & animation
         registerMove();
         if (isWordCorrect) playCheckmark(slot);
     }

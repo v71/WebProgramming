@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Gioco</title>
+
+    <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <!-- Main CSS File -->
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+       #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+    </style>
+
+<style>
+
+:root {
+    --split-gap: 12px;
+}
+
+/* =========================================
+   CONTENITORE PRINCIPALE E LAYOUT
+   ========================================= */
+#game-area {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 20px;
+    padding-bottom: 20px;
+    overflow-y: visible;
+}
+
+.split-side {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* ---------- GRIGLIE E COLONNE ---------- */
+.col-heads,
+.source-grid,
+.drop-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    width: 100%;
+}
+
+.source-grid {
+    align-items: start;
+}
+
+.source-col {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 0;
+}
+
+/* ---------- BOTTONI DI SINISTRA (SORGENTE) ---------- */
+/*
+.list-btn {
+    font-family: inherit;
+    font-size: 1.15rem;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    cursor: pointer;
+    min-height: 52px;
+    padding: 6px 16px;
+    background: var(--default-btn);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, opacity 0.3s ease;
+    text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
+}
+*/
+
+.list-btn {
+    font-family: inherit;
+    font-size: 1.5rem;                 /* Font più grande (prima era 1.15rem) */
+    font-weight: 500;                  /* Leggermente più marcato per leggibilità */
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    cursor: pointer;
+    min-height: 138px;                  /* Altezza maggiore per allinearsi visivamente meglio */
+    padding: 10px 20px;                /* Più respiro interno */
+    background: var(--default-btn);
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, opacity 0.3s ease;
+    text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
+}
+
+.list-btn:hover:not(:disabled):not(.placed) {
+    border-color: var(--grid-btn-hovered-border-color);
+    background: var(--grid-btn-hovered);
+    color: var(--grid-btn-hovered-text);
+    transform: translateY(-2px);
+}
+
+.list-btn.is-selected {
+    border-color: #ffffff;
+    background: var(--grid-btn-hovered);
+    color: var(--grid-btn-hovered-text);
+}
+
+.list-btn.placed {
+    opacity: 0.35;
+    cursor: default;
+    transform: none;
+}
+
+.list-btn.help-active::after {
+    content: '  \2192  ' attr(data-hint);
+    font-weight: 700;
+}
+
+.list-btn.help-active {
+    border-color: var(--grid-btn-help-border-color);
+    background: var(--grid-btn-help);
+    color: var(--grid-btn-help-text);
+}
+
+/* ---------- INTESTAZIONI DI COLONNA ---------- */
+.col-head {
+    margin: 0;
+    padding: 6px 12px;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    box-sizing: border-box;
+    text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000;
+}
+
+/* ---------- CELLE DI DESTRA (DESTINAZIONE 128x128) ---------- */
+.drop-cell {
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 5px 3px;
+    gap: 20px;
+    height: 138px;
+    min-height: 138px;
+    max-height: 138px;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: var(--summary-background);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    color: var(--text);
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.drop-cell:hover:not(:disabled):not(.filled) {
+    border-color: var(--grid-btn-hovered-border-color);
+}
+
+.drop-cell.filled,
+.drop-cell.help-preview {
+    background: var(--grid-btn-selected);
+    color: var(--grid-btn-selected-color);
+    border-color: var(--grid-btn-selected-border-color);
+    cursor: default;
+}
+
+/* Quando la cella è correttamente riempita */
+.drop-cell.filled {
+  /*
+    background-color: #2e7d32 !important; 
+    color: #ffffff !important;          
+    border-color: #1b5e20 !important;    
+    cursor: default;
+*/
+    background: var(--grid-btn-selected) !important;
+    color: var(--grid-btn-selected-color) !important;
+    border-color: var(--grid-btn-selected-border-color) !important;
+    transform: none !important;
+    box-shadow: var(--shadow-sm) !important;
+    /* Ombra centrata e simmetrica (0 spostamento orizzontale, 0 verticale) */
+    /*   box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.1) !important;*/
+    opacity: 1 !important;
+    cursor: default !important;
+
+}
+
+/* Stile del testo quando l'aiuto (preview) è attivo */
+.drop-cell.help-preview .cell-label-placeholder {
+    color: #ffffff !important;
+    text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000 !important;
+}
+
+/* Assicura che anche il testo all'interno erediti il colore bianco */
+/* Aggiunge il bordo nero (text-shadow) al testo dentro la cella completata */
+.drop-cell.filled .cell-label-placeholder {
+    color: #ffffff !important;           /* Testo bianco */
+    text-shadow:
+        -1px -1px 0 #000,
+         1px -1px 0 #000,
+        -1px  1px 0 #000,
+         1px  1px 0 #000 !important;   /* Contorno nero nitido */
+}
+
+/* Contenuto interno immagine + testo */
+.cell-content-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+    height: 100%;
+}
+
+.cell-target-img {
+    width: 128px;
+    height: 128px;
+    min-width: 128px;
+    min-height: 128px;
+    max-width: 128px;
+    max-height: 128px;
+    object-fit: contain;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+}
+
+.cell-label-placeholder {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+    flex-grow: 1;
+    word-break: break-word;
+}
+
+/* ---------- STATI D'ERRORE ED EFFETTI ---------- */
+.list-btn.error,
+.drop-cell.error {
+    animation: gameShake 0.4s ease;
+    border-color: var(--grid-btn-wrong-border-color);
+    background-color: var(--grid-btn-wrong);
+    color: var(--grid-btn-wrong-text);
+}
+
+@keyframes gameShake {
+    0%   { transform: translateX(0); }
+    20%  { transform: translateX(-8px); }
+    40%  { transform: translateX(8px); }
+    60%  { transform: translateX(-6px); }
+    80%  { transform: translateX(6px); }
+    100% { transform: translateX(0); }
+}
+
+button:disabled {
+    cursor: default;
+}
+
+/* Responsiveness per schermi piccoli */
+@media (max-width: 700px) {
+    #game-area {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .list-btn, .drop-cell {
+        font-size: 1rem;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+        <!-- TITLE -->
+        <h1 id="game-title">
+        Titolo Gioco
+        </h1>
+
+        <!-- COUNTERS -->
+        <div id="game-stats">
+            <span>Round: <strong id="round-value">1 / 1</strong></span>
+            <span>Parole Corrette: <strong id="word-count">0</strong></span>
+            <span>Tempo: <strong id="time-value">0s</strong></span>
+            <span>Mosse: <strong id="moves-value">0</strong></span>
+            <span>Aiuti: <strong id="reveals-value">0</strong></span>
+        </div>
+
+        <!-- INFORMATION / INSTRUCTION BOX -->
+        <div id="instruction-banner">
+            Instruzion banner
+        </div>
+
+        <div class="controls" id="action-controls">
+            <button id="reveal-btn" class="cool-btn">
+                <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+                <span class="btn-text">Clicca qui per avere un aiuto!</span>
+            </button>
+        </div>
+
+   <div id="game-area">
+        <!-- Contenitore di Sinistra (Sorgente: 2 colonne di pulsanti) -->
+        <div class="split-side" id="left-side-container">
+            <div class="col-heads">
+                <h2 class="col-head" id="col-left-1-title">Colonna 1</h2>
+                <h2 class="col-head" id="col-left-2-title">Colonna 2</h2>
+            </div>
+            <!-- Area pulsanti di sinistra divisa in 2 colonne -->
+            <div class="source-grid" id="left-source-grid">
+                <div class="source-col" id="source-col-1"></div>
+                <div class="source-col" id="source-col-2"></div>
+            </div>
+        </div>
+
+        <!-- Contenitore di Destra (Destinazione: griglia 5x2 di celle) -->
+        <div class="split-side" id="right-side-container">
+            <div class="col-heads">
+                <h2 class="col-head" id="col-right-1-title">Colonna 1</h2>
+                <h2 class="col-head" id="col-right-2-title">Colonna 2</h2>
+            </div>
+            <!-- Griglia di arrivo 5x2 -->
+            <div class="drop-grid" id="right-drop-grid">
+                <!-- Le 10 celle di destinazione -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <h1 id="progress-title">
+        Progresso
+    </h1>
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"> </div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const DATA_URL = 'set-1.json';
+        const SHUFFLE_ROUNDS = true;
+        const ROWS = 5; // Celle per colonna nella griglia di destra
+
+        /* =========================================================
+        STATO DEL GIOCO
+        ========================================================= */
+        let categories = [];
+        let roundIndex = 0;
+        let currentCategory = null;
+        let isGameReady = false;
+        let isGameCompleted = false;
+        let selectedItem = null; // Pulsante selezionato a sinistra
+        let currentRoundItems = []; // <--- Aggiungi questo array
+        let isHoldingHelp = false;
+        let currentButtonMode = 'help';
+        let helpPreviewElements = []; // Traccia le celle riempite temporaneamente dall'aiuto
+
+        // Statistiche e metriche
+        let moveCount = 0;
+        let revealCount = 0;
+        let foundCorrectCount = 0;
+        let totalCorrectItems = 0;
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let results = [];
+
+        /* =========================================================
+        SELETTORI DOM (Basati sul nuovo layout simmetrico)
+        ========================================================= */
+        const gameTitle = document.getElementById('game-title');
+        const gameArea = document.getElementById('game-area');
+        const actionControls = document.getElementById('action-controls');
+        const instructionBanner = document.getElementById('instruction-banner');
+        const roundValueEl = document.getElementById('round-value');
+        const wordCountEl = document.getElementById('word-count');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const gameStats = document.getElementById('game-stats');
+        const progressBar = document.querySelector('.progress-bar-container');
+        const progressBarTitle = document.getElementById('progress-title');
+        const summaryScreen = document.getElementById('summary-screen');
+
+        // Titoli delle colonne (Sinistra e Destra)
+        const colLeft1Title = document.getElementById('col-left-1-title');
+        const colLeft2Title = document.getElementById('col-left-2-title');
+        const colRight1Title = document.getElementById('col-right-1-title');
+        const colRight2Title = document.getElementById('col-right-2-title');
+
+        // Colonne di sinistra (Sorgente) e griglia di destra (Destinazione)
+        const sourceCol1 = document.getElementById('source-col-1');
+        const sourceCol2 = document.getElementById('source-col-2');
+        const rightDropGrid = document.getElementById('right-drop-grid');
+
+        const revealBtn = document.getElementById('reveal-btn');
+        const btnIcon = document.getElementById('btn-icon');
+
+        // Elementi nascosti durante il riepilogo
+        const gameElements = [
+            gameArea, gameStats, instructionBanner, progressBar,
+            progressBarTitle, gameTitle, actionControls
+        ];
+
+
+        /* =========================================================
+        UTILITY: UTILS & VALIDAZIONE
+        ========================================================= */
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Un round è valido se ha elementi con etichetta e colonna (1 o 2) e non supera il limite per colonna
+        function isValidRound(category) {
+            if (!category || !Array.isArray(category.items) || category.items.length === 0) return false;
+            const wellFormed = category.items.every(it =>
+                it && typeof it.label === 'string' && it.label.trim() !== '' && (it.column === 1 || it.column === 2));
+            if (!wellFormed) return false;
+            return [1, 2].every(c => category.items.filter(it => it.column === c).length <= ROWS);
+        }
+
+       /* =========================================================
+       TIMER
+       ========================================================= */
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        /* =========================================================
+        PULSANTE: ICONA E TESTO
+        ========================================================= */
+
+        const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+        function setButtonIcon(iconClass) {
+            if (!btnIcon) return;
+            btnIcon.classList.remove(...BUTTON_ICONS);
+            btnIcon.classList.add(iconClass);
+        }
+
+        // help = in gioco, next = round completato, done = ultimo round completato
+        function setButtonState(mode) {
+            currentButtonMode = mode; // <--- Mancava questa assegnazione cruciale!
+            const states = {
+                help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+                next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+                done: { icon: 'fa-check',       text: 'Fatto' }
+            };
+            setButtonIcon(states[mode].icon);
+            const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+            if (textEl) textEl.textContent = states[mode].text;
+        }
+
+        function setGameVisible(visible) {
+            gameElements.forEach(el => {
+                if (el) el.style.display = visible ? '' : 'none';
+            });
+            if (summaryScreen) summaryScreen.style.display = visible ? 'none' : 'block';
+        }
+
+        /* =========================================================
+       LOGICA DI TRACCIAMENTO ED ERRORI (REGISTER FUNCTIONS)
+       ========================================================= */
+
+        // Incrementa e aggiorna il contatore delle mosse
+        function registerMove() {
+            if (isGameCompleted || !isGameReady) return;
+            moveCount++;
+            if (movesValueEl) movesValueEl.textContent = moveCount;
+        }
+
+        // Risposta sbagliata: applica l'animazione di shake sulla cella o sul pulsante
+        function registerWrong(element) {
+            if (isGameCompleted || !isGameReady || !element) return;
+            element.classList.remove('error');
+            void element.offsetWidth; // Riavvia l'animazione CSS
+            element.classList.add('error');
+            setTimeout(() => element.classList.remove('error'), 400);
+        }
+
+        // Risposta corretta: aggiorna il contatore risposte ed eventualmente chiude il round
+        function registerCorrect(element) {
+            if (isGameCompleted || !isGameReady) return;
+            foundCorrectCount++;
+            if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+
+            // Se tutti gli elementi sono stati posizionati, il round si completa
+            if (foundCorrectCount >= totalCorrectItems) {
+                completeRound();
+            }
+
+            // Animazione opzionale se la libreria Checkmark è disponibile
+            if (typeof Checkmark !== 'undefined' && element) {
+                try {
+                    Checkmark.show({ element, size: 48, rise: 70, duration: 1600 });
+                } catch (err) {
+                    console.warn('Checkmark error:', err);
+                }
+            }
+        }
+
+        // A round completato si bloccano gli elementi
+        function completeRound() {
+            isGameCompleted = true;
+            stopElapsedTimer();
+
+            // Disabilita tutti i pulsanti rimasti
+            document.querySelectorAll('.list-btn, .drop-cell').forEach(btn => {
+                btn.disabled = true;
+            });
+
+            // Aggiorna lo stato del pulsante azione (Next round o Fine)
+            const isLastRound = roundIndex >= categories.length - 1;
+            setButtonState(isLastRound ? 'done' : 'next');
+
+            if (isLastRound && typeof Confetti !== 'undefined') {
+                Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+            }
+        }
+
+    /* =========================================================
+    LOGICA DI SELEZIONE E SPOSTAMENTO (Scegli elemento -> Clicca cella)
+    ========================================================= */
+
+    // 1. Clic su un elemento a sinistra (Seleziona / Deseleziona)
+    function selectItem(itemObj) {
+        if (isGameCompleted || !isGameReady || itemObj.placed) return;
+
+        const wasSelected = (selectedItem === itemObj);
+        deselectAllItems();
+
+        if (wasSelected) {
+            selectedItem = null;
+            return;
+        }
+
+        selectedItem = itemObj;
+        itemObj.button.classList.add('is-selected');
+        itemObj.button.setAttribute('aria-pressed', 'true');
+    }
+
+    function deselectAllItems() {
+        const allButtons = document.querySelectorAll('.list-btn');
+        allButtons.forEach(btn => {
+            btn.classList.remove('is-selected');
+            btn.setAttribute('aria-pressed', 'false');
+        });
+    }
+
+    // Clic su una cella della griglia a destra (Piazzamento libero ma rigoroso sulla posizione)
+    function chooseCell(targetColumn, targetPosition, clickedCell) {
+        if (isGameCompleted || !isGameReady || !selectedItem || clickedCell.classList.contains('filled')) return;
+
+        registerMove();
+
+        // ESITO SBAGLIATO: L'elemento non corrisponde esattamente a questa cella (colonna o posizione errata)
+        if (selectedItem.column !== targetColumn || selectedItem.position !== targetPosition) {
+            registerWrong(clickedCell);
+            return;
+        }
+
+        // ESITO CORRETTO: Posiziona l'elemento nella cella cliccata
+
+      //  clickedCell.textContent = selectedItem.label;
+        clickedCell.classList.add('filled');
+      //  clickedCell.disabled = true;
+
+        // CORRETTO: Inserisce il testo nell'apposito span della cella senza toccare l'immagine
+        const placeholder = clickedCell.querySelector('.cell-label-placeholder');
+        if (placeholder) {
+            placeholder.textContent = selectedItem.label;
+        } else {
+            // Fallback nel caso in cui il wrapper non esista, ma preservando l'immagine se possibile
+            const img = clickedCell.querySelector('.cell-target-img');
+            const wrapper = clickedCell.querySelector('.cell-content-wrapper');
+            
+            if (wrapper && img) {
+                // Se c'è il wrapper ma manca lo span, lo creiamo al volo
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'cell-label-placeholder';
+                labelSpan.textContent = selectedItem.label;
+                wrapper.appendChild(labelSpan);
+            } else {
+                // Ultima spiaggia: se la cella è vuota, ricostruiamo la struttura completa
+                clickedCell.innerHTML = `
+                    <div class="cell-content-wrapper">
+                        <img src="${selectedItem.image}" alt="${selectedItem.label}" class="cell-target-img">
+                        <span class="cell-label-placeholder">${selectedItem.label}</span>
+                    </div>
+                `;
+            }
+        }
+
+        // Disabilita il pulsante sorgente a sinistra
+        selectedItem.placed = true;
+        selectedItem.button.classList.remove('is-selected');
+        selectedItem.button.classList.add('placed');
+        selectedItem.button.setAttribute('aria-pressed', 'false');
+        selectedItem.button.disabled = true;
+
+        deselectAllItems();
+
+        // Registra il successo e controlla se il round è finito
+        registerCorrect(clickedCell);
+    }
+
+    /* =========================================================
+    POPOLAMENTO DELLA UI (Sostituisci interamente renderRound)
+    ========================================================= */
+    function renderRound(category) {
+        currentCategory = category;
+        isGameCompleted = false;
+        selectedItem = null;
+        moveCount = 0;
+        revealCount = 0;
+        foundCorrectCount = 0;
+
+        if (instructionBanner) instructionBanner.textContent = category.instruction || '';
+        
+        const headers = Array.isArray(category.headers) ? category.headers : ['Colonna 1', 'Colonna 2'];
+        colRight1Title.textContent = headers[0];
+        colRight2Title.textContent = headers[1];
+
+        const leftHeaders = Array.isArray(category.leftHeaders) ? category.leftHeaders : ['Gruppo 1', 'Gruppo 2'];
+        colLeft1Title.textContent = leftHeaders[0];
+        colLeft2Title.textContent = leftHeaders[1];
+
+        sourceCol1.innerHTML = '';
+        sourceCol2.innerHTML = '';
+        rightDropGrid.innerHTML = '';
+        currentRoundItems = []; // Reset dell'array del round
+
+        const shuffledItems = shuffleArray(category.items);
+        totalCorrectItems = shuffledItems.length;
+
+        shuffledItems.forEach((data ,index) => {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'list-btn';
+            button.textContent = data.label.trim();
+            button.setAttribute('aria-pressed', 'false');
+
+            const itemObj = { label: data.label.trim(), 
+                              column: data.column, 
+                              position: data.position, // <-- Aggiunto qui
+                              button, 
+                              placed: false };
+            
+            currentRoundItems.push(itemObj); // <--- Registriamo l'oggetto nel round
+            
+            button.addEventListener('click', () => selectItem(itemObj));
+
+            // Distribuzione alternata tra le due colonne di sinistra
+            if (index % 2 === 0) {
+                sourceCol1.appendChild(button);
+            } else {
+                sourceCol2.appendChild(button);
+            }
+        });
+
+        // Pulisci la griglia di destra prima di popolarla
+        rightDropGrid.innerHTML = '';
+
+        for (let i = 0; i < ROWS * 2; i++) {
+            const colIndex = i % 2;
+            const rowIndex = Math.floor(i / 2);
+            const cellCol = colIndex + 1;
+            const cellPos = rowIndex + 1;
+
+            const cell = document.createElement('button');
+            cell.type = 'button';
+            cell.className = 'drop-cell';
+            cell.dataset.column = cellCol;
+            cell.dataset.position = cellPos;
+            cell.setAttribute('aria-label', `Colonna ${cellCol}, posizione ${cellPos}`);
+
+            // Cerca l'elemento corrispondente nel JSON della categoria corrente
+            const targetItem = category.items.find(it => it.column === cellCol && it.position === cellPos);
+
+            if (targetItem && targetItem.image) {
+                // Contenitore interno per disporre immagine ed eventuale testo in modo ordinato
+                const contentWrapper = document.createElement('div');
+                contentWrapper.className = 'cell-content-wrapper';
+
+                // Creazione dell'elemento immagine
+                const img = document.createElement('img');
+                img.src = targetItem.image;
+                img.alt = targetItem.label || "Target";
+                img.className = 'cell-target-img';
+                
+                // Span per l'etichetta (inizialmente vuoto, mostrerà il testo quando corretto)
+                const labelSpan = document.createElement('span');
+                labelSpan.className = 'cell-label-placeholder';
+
+                contentWrapper.appendChild(img);
+                contentWrapper.appendChild(labelSpan);
+                cell.appendChild(contentWrapper);
+            }
+
+            // Evento di click sulla cella
+            cell.addEventListener('click', () => chooseCell(cellCol, cellPos, cell));
+            
+            rightDropGrid.appendChild(cell);
+        }
+
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${categories.length}`;
+        if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+        setButtonState('help');
+        startElapsedTimer();
+        isGameReady = true;
+    }
+        
+    /* =========================================================
+       PULSANTE AIUTO (REVEAL / HINT)
+       ========================================================= */
+    function handleRevealClick() {
+        if (isGameCompleted || !isGameReady) return;
+
+        revealCount++;
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+        const headers = Array.isArray(currentCategory.headers) ? currentCategory.headers : ['Colonna 1', 'Colonna 2'];
+
+        // Mostra l'indizio su tutti gli elementi non ancora posizionati
+        currentRoundItems.forEach(item => {
+            if (!item.placed) {
+                item.button.classList.add('help-active');
+                item.button.setAttribute('data-hint', headers[item.column - 1]);
+            }
+        });
+
+        // Rimuove l'indizio automaticamente dopo 3 secondi
+        setTimeout(() => {
+            currentRoundItems.forEach(item => {
+                item.button.classList.remove('help-active');
+            });
+        }, 3000);
+    }
+
+    // Gestisce il clic normale solo per 'next' o 'done'
+    function handleActionButtonClick() {
+        if (currentButtonMode === 'next') {
+            saveRoundResult();
+            roundIndex++;
+            if (roundIndex < categories.length) {
+                renderRound(categories[roundIndex]);
+            }
+        } else if (currentButtonMode === 'done') {
+            saveRoundResult();
+            showFinalSummary();
+        }
+    }
+    /*
+    // Attiva l'aiuto alla pressione (mostra i rimanenti nelle celle corrette a destra)
+    function startHelpReveal(e) {
+        if (isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
+        
+        revealCount++;
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+        // Prende gli elementi non ancora posizionati
+        const unplacedItems = currentRoundItems.filter(item => !item.placed);
+        
+        // Trova tutte le celle vuote nella griglia di destra
+        const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
+
+        // Per ogni cella vuota, assegna temporaneamente un elemento non posizionato della stessa colonna
+        emptyCells.forEach(cell => {
+            const colNum = parseInt(cell.dataset.column, 10);
+            const matchingItem = unplacedItems.find(item => item.column === colNum && !item._previewed);
+            
+            if (matchingItem) {
+                matchingItem._previewed = true; // Segna come "anteprima attiva"
+                cell.textContent = matchingItem.label;
+                cell.classList.add('help-preview'); // Classe opzionale per stilizzare l'aiuto
+                helpPreviewElements.push({ cell, item: matchingItem });
+            }
+        });
+
+        isHoldingHelp = true;
+    }
+    */
+
+    function startHelpReveal(e) {
+        if (isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
+        
+        revealCount++;
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+        const unplacedItems = currentRoundItems.filter(item => !item.placed);
+        const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
+
+        emptyCells.forEach(cell => {
+            const colNum = parseInt(cell.dataset.column, 10);
+            const matchingItem = unplacedItems.find(item => item.column === colNum && !item._previewed);
+            
+            if (matchingItem) {
+                matchingItem._previewed = true;
+                
+                // INVECE DI cell.textContent, aggiorniamo solo il placeholder testuale
+                const placeholder = cell.querySelector('.cell-label-placeholder');
+                if (placeholder) {
+                    placeholder.textContent = matchingItem.label;
+                }
+                
+                cell.classList.add('help-preview');
+                helpPreviewElements.push({ cell, item: matchingItem });
+            }
+        });
+
+        isHoldingHelp = true;
+    }
+
+    /*
+    // Disattiva l'aiuto al rilascio (ripulisce le celle di destra)
+    function stopHelpReveal() {
+        if (!isHoldingHelp) return;
+
+        // Ripristina lo stato originale delle celle svuotandole
+        helpPreviewElements.forEach(({ cell, item }) => {
+            cell.textContent = '';
+            cell.classList.remove('help-preview');
+            delete item._previewed;
+        });
+        helpPreviewElements = [];
+
+        isHoldingHelp = false;
+    }
+    */
+
+    function stopHelpReveal() {
+        if (!isHoldingHelp) return;
+
+        // Ripristina lo stato rimuovendo solo il testo temporaneo e la classe, SENZA toccare l'immagine
+        helpPreviewElements.forEach(({ cell, item }) => {
+            const placeholder = cell.querySelector('.cell-label-placeholder');
+            if (placeholder) {
+                placeholder.textContent = ''; // Svuota solo il testo, l'immagine resta intatta!
+            }
+            cell.classList.remove('help-preview');
+            delete item._previewed;
+        });
+        helpPreviewElements = [];
+
+        isHoldingHelp = false;
+    }
+
+    /* =========================================================
+       SALVATAGGIO RISULTATI E RIEPILOGO FINALE
+       ========================================================= */
+
+    // Salva le metriche del round corrente nell'array results
+    function saveRoundResult() {
+        results.push({
+            roundNum: roundIndex + 1,
+            instruction: currentCategory ? (currentCategory.instruction || `Round ${roundIndex + 1}`) : `Round ${roundIndex + 1}`,
+            moves: moveCount,
+            reveals: revealCount,
+            time: elapsedSeconds
+        });
+    }
+
+    // Mostra la schermata finale di riepilogo usando l'HTML esistente
+    function showFinalSummary() {
+        setGameVisible(false);
+        isGameCompleted = true;
+        stopElapsedTimer();
+
+        // 1. Popola la tabella dei risultati
+        const tbody = document.getElementById('summary-tbody');
+        if (tbody) {
+            tbody.innerHTML = '';
+            results.forEach(res => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${res.instruction}</td>
+                    <td>${res.time}s</td>
+                    <td>${res.moves}</td>
+                    <td>${res.reveals}</td>
+                    <td>-</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 2. Calcola i totali e popola il blocco dedicato
+        const totalMoves = results.reduce((acc, curr) => acc + curr.moves, 0);
+        const totalReveals = results.reduce((acc, curr) => acc + curr.reveals, 0);
+        const totalTime = results.reduce((acc, curr) => acc + curr.time, 0);
+
+        const totalsContainer = document.getElementById('summary-totals');
+        if (totalsContainer) {
+            totalsContainer.innerHTML = `
+                <p><strong>Tempo Totale:</strong> ${totalTime}s | <strong>Mosse Totali:</strong> ${totalMoves} | <strong>Aiuti Totali:</strong> ${totalReveals}</p>
+            `;
+        }
+    }
+
+    // ==========================================
+    // COLLEGAMENTO EVENTO PULSANTE AIUTO (REVEAL)
+    // ==========================================
+    
+    if (revealBtn) {
+        // Gestione del "tieni premuto" per l'aiuto
+        revealBtn.addEventListener('pointerdown', startHelpReveal);
+        revealBtn.addEventListener('pointerup', stopHelpReveal);
+        revealBtn.addEventListener('pointerleave', stopHelpReveal);
+        revealBtn.addEventListener('pointercancel', stopHelpReveal);
+
+        // Gestione del clic standard per Prossimo / Fatto
+        revealBtn.addEventListener('click', handleActionButtonClick);
+    }
+
+        /* =========================================================
+        AVVIO DEL GIOCO
+        ========================================================= */
+        async function initGame() {
+            try {
+                isGameReady = false;
+                const response = await fetch(DATA_URL);
+                if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+                
+                const data = await response.json();
+                const allCategories = Array.isArray(data.categories) ? data.categories : [];
+                categories = allCategories.filter(isValidRound);
+
+                if (categories.length === 0) {
+                    if (instructionBanner) instructionBanner.textContent = 'Nessuna categoria valida trovata nel JSON.';
+                    document.body.classList.add('loaded');
+                    return;
+                }
+
+                if (SHUFFLE_ROUNDS) {
+                    categories = shuffleArray(categories);
+                }
+
+                if (gameTitle && data.title) {
+                    gameTitle.textContent = data.title;
+                }
+
+                roundIndex = 0;
+                renderRound(categories[roundIndex]);
+                document.body.classList.add('loaded');
+
+            } catch (err) {
+                console.error('Errore nel caricamento del file JSON:', err);
+                if (instructionBanner) instructionBanner.textContent = 'Errore nel caricamento del gioco.';
+                document.body.classList.add('loaded');
+            }
+        }
+
+        initGame();
+    });
+
+</script>
+
+</body>
+</html>

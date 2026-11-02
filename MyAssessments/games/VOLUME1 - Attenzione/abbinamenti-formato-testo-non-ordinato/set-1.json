@@ -1,0 +1,37 @@
+ {
+         "title": "Scegli la colonna giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": ["Animali di casa", "Animali selvatici"],
+             "items": [
+               { "label": "Cane",   "column": 1 },
+               { "label": "Cinghiale",  "column": 2 },
+               { "label": "Gatto",  "column": 1 },
+               { "label": "Coniglio nano",  "column": 1 },
+               { "label": "Lupo",   "column": 2 },
+               { "label": "Volpe",  "column": 2 },
+               { "label": "Cervo",  "column": 2 },
+               { "label": "Criceto",  "column": 1 },
+               { "label": "Pesce rosso",  "column": 1 },
+               { "label": "Orso",  "column": 2 }
+             ]
+           },
+            {
+             "instruction": "Metti ogni automobile nella colonna giusta.",
+             "headers": ["Utilitarie", "Fuoriserie"],
+             "items": [
+               { "label": "Ferrari",   "column": 2 },
+               { "label": "Punto",   "column": 1 },
+               { "label": "Porsche",  "column": 2 },
+               { "label": "Panda",  "column": 1 },
+               { "label": "Renault",  "column": 1 },
+               { "label": "Huyndai",  "column": 1 },
+               { "label": "Lamborghini",  "column": 2 },
+               { "label": "Lotus",  "column": 2 },
+               { "label": "Chevrolet",  "column": 2 },
+               { "label": "BMW",  "column": 1 }
+             ]
+           }
+         ]
+}

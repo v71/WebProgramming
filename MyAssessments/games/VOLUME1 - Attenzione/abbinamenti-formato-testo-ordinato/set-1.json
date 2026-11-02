@@ -1,0 +1,22 @@
+ {
+         "title": "Scegli la colonna giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": ["Animali di casa", "Animali selvatici"],
+             "items": [
+               { "label": "primo A"   ,  "column": 1 ,"position": 1 },
+               { "label": "secondo A" ,  "column": 1 ,"position": 2 },
+               { "label": "terzo A"   ,  "column": 1 ,"position": 3 },
+               { "label": "quarto A"  ,  "column": 1 ,"position": 4 },
+               { "label": "quinto A"  ,  "column": 1 ,"position": 5 },
+
+               { "label": "primo B"   ,  "column": 2 ,"position": 1 },
+               { "label": "secondo B" ,  "column": 2 ,"position": 2 },
+               { "label": "terzo B"   ,  "column": 2 ,"position": 3 },
+               { "label": "quarto B"  ,  "column": 2 ,"position": 4 },
+               { "label": "quinto B"  ,  "column": 2 ,"position": 5 }
+              ]
+           }
+         ]
+}

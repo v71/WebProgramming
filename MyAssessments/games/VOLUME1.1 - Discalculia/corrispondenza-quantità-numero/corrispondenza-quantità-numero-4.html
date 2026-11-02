@@ -9,106 +9,11 @@
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <style>
-        :root {
-            --bg-0: #2a113d;
-            --bg-1: #4a1d6e;
-            --bg-2: #553d94;
-            --accent: #ff9800;
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-            --border: #000000;
-            --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 10px 25px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
-            --shadow-lg: 0 20px 35px -5px rgba(99, 102, 241, 0.15);
-        }
-
-        * { box-sizing: border-box; }
-
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background:
-                radial-gradient(circle at center,rgba(99, 102, 241, 0.06),transparent 40%),
-                radial-gradient(circle at center,rgba(6, 182, 212, 0.06),transparent 40%),
-                var(--bg-0);
-            color: var(--text);
-            margin: 0;
-            padding: 20px 20px 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-
-        /* =========================================
-            GAME TITLE
-        ========================================= */
-
-        h1 {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* =========================================
-            COUNTERS
-        ========================================= */
-
-        #game-stats {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-            flex-wrap: wrap;
-        }
-
-        #game-stats strong {
-            color: var(--text);
-            font-weight: 700;
-        }
-
-        /* =========================================
-            INFORMATION BOX
-        ========================================= */
-
-        #instruction-banner {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--text-dim);
-            background: var(--bg-1);
-            padding: 10px 20px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-        }
 
         /* =========================================
             GAME AREA
@@ -125,7 +30,7 @@
             margin-bottom: 15px;
             padding: 24px;
             border-radius: 20px;
-            background: var(--bg-1);
+            background: var(--game-area-background);
             border: 2px solid var(--border);
             box-shadow: var(--shadow-md);
         }
@@ -143,124 +48,10 @@
             min-height: 52px;
         }
 
-        /* =========================================
-            PROGRESS TITLE
-        ========================================= */
-
-        #progress-title {
-            margin: 0 0 10px;
-            font-size: 2.3rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: var(--accent);
-            text-align: center;
-            text-shadow:
-                -2px -2px 0 #000,
-                 2px -2px 0 #000,
-                -2px  2px 0 #000,
-                 2px  2px 0 #000,
-                 0px 4px 8px rgba(0, 0, 0, 0.5);
-        }
-
-        /* =========================================
-            PROGRESS BAR
-        ========================================= */
-
-        .progress-bar-container {
-            width: 100%;
-            max-width: 1100px;
-            height: 12px;
-            margin-bottom: 16px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 99px;
-            overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.03);
-        }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            border-radius: 99px;
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* =========================================
-            BUTTONS
-        ========================================= */
-
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #ffffff;
-            background-color: #4f46e5;
-            border: none;
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        .cool-btn.smooth-hidden {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-            transform: scale(0.95);
-            position: absolute;
-        }
-
-        .cool-btn i {
-            font-size: 1.1rem;
-            -webkit-text-stroke: 1px currentColor;
-            transition: transform 0.25s ease;
-        }
-
-        .cool-btn:hover {
-            transform: translateY(-2px);
-            background-color: #10b981;
-        }
-
-        .cool-btn:hover i {
-            transform: translateX(3px);
-        }
-
-        .cool-btn:active {
-            transform: translateY(1px);
-        }
-
-        #next-btn {
-            background-color: #4f46e5;
-        }
-
-        #next-btn:hover {
-           background-color: #10b981;
-        }
-
-        /* =========================================
-            RESPONSIVE
-        ========================================= */
-
-        @media (max-width: 700px) {
-            body { padding: 16px 12px 30px; }
-            h1, #progress-title { font-size: 1.9rem; }
-            #game-stats { gap: 12px; font-size: 0.95rem; padding: 9px 14px; }
-            #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
-            #game-area { min-height: 260px; padding: 16px; }
-            #options-container { width: 100% !important; grid-template-columns: 1fr !important; }
-        }
     </style>
 
     <style>
+        
         button:hover {
             filter: brightness(1.05);
         }
@@ -352,10 +143,18 @@
         }
 
         .option-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-2px);
+            /*
+            border-color: #ffffff;
+            transform: translateY(-4px);
             box-shadow: var(--shadow-md);
             background: #ffffff;
+            */
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
         }
 
         .option-card.correct-option:hover {
@@ -365,11 +164,20 @@
         }
 
         .option-card.correct-option {
+            /*
             border-color: #000000;
             background: var(--accent);
             cursor: default;
             transform: none !important;
             box-shadow: var(--shadow-sm);
+            */
+            background: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
+            transform: none !important;
+            box-shadow: var(--shadow-sm) !important;
+            opacity: 1 !important;
+            cursor: default !important;
         }
 
         .option-card.wrong-option {
@@ -396,63 +204,9 @@
             border-color: var(--correct);
             background: #10b981;
         }
+
     </style>
 
-    <style>
-        /* Results Summary Screen */
-        #summary-screen {
-            display: none;
-            width: 100%;
-            max-width: 650px;
-            background: var(--bg-1);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 36px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-        }
-
-        #summary-screen h2 {
-            margin-top: 0;
-            color: #10b981;
-            font-size: 2rem;
-        }
-
-        .summary-table {
-            width: 100%;
-            margin: 24px 0;
-            border-collapse: collapse;
-        }
-
-        .summary-table th, .summary-table td {
-            padding: 12px;
-            border-bottom: 1px solid var(--border);
-            text-align: left;
-        }
-
-        .summary-table th {
-            color: var(--text-dim);
-            font-size: 0.9rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .summary-totals {
-            margin-top: 20px;
-            padding: 18px;
-            background: var(--bg-2);
-            border-radius: 14px;
-            display: flex;
-            justify-content: space-around;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .summary-totals strong {
-            color: var(--accent);
-        }
-    </style>
 </head>
 
 <body>
@@ -558,7 +312,8 @@
             let optionElements = [];
             let currentRound = null;
             let imageLoadToken = 0;
-
+            let isGameLoading = true;
+ 
             function startElapsedTimer() {
                 stopElapsedTimer();
                 elapsedSeconds = 0;
@@ -601,7 +356,6 @@
                 const urlsToPreload = [];
                 if (round.img) urlsToPreload.push(round.img);
                 if (round.options) urlsToPreload.push(...round.options);
-                if (round.optionsHover) urlsToPreload.push(...round.optionsHover);
 
                 urlsToPreload.forEach(url => {
                     const img = new Image();
@@ -672,7 +426,7 @@
                     updateImageSource();
                 }
 
-                // ---------- POPOLA I TASTI CON IMMAGINI BITMAP ED EVENTUALE HOVER DAL JSON ----------
+                // POPOLA I TASTI CON IMMAGINI BITMAP ED EVENTUALE HOVER DAL JSON 
                 optionsContainer.innerHTML = '';
 
                 const correctIdx = currentRound.correctIndex;
@@ -697,23 +451,7 @@
                     imgEl.alt = "Opzione";
                     optionEl.appendChild(imgEl);
 
-                    // Gestione hover bitmap (se specificato in optionsHover nel JSON)
-                    const hoverImgSrc = currentRound.optionsHover ? currentRound.optionsHover[originalIdx] : null;
-                    if (hoverImgSrc) {
-                        optionEl.addEventListener('mouseenter', () => {
-                            if (!roundCompleted && !optionEl.classList.contains('disabled-option')) {
-                                imgEl.src = hoverImgSrc;
-                            }
-                        });
-                        optionEl.addEventListener('mouseleave', () => {
-                            if (!roundCompleted) {
-                                imgEl.src = defaultImgSrc;
-                            }
-                        });
-                    }
-
                     optionEl.dataset.isCorrect = (originalIdx === currentRound.correctIndex) ? 'true' : 'false';
-
                     optionEl.addEventListener('click', () => handleOptionClick(optionEl, imgEl, defaultImgSrc));
 
                     optionsContainer.appendChild(optionEl);
@@ -848,6 +586,9 @@
 
             async function initGame() {
                 try {
+                    isGameLoading = true;
+                    stopElapsedTimer();
+
                     const response = await fetch('corrispondenza-quantità-numero.json');
                     if (!response.ok) {
                         throw new Error(`HTTP error: ${response.status}`);
@@ -861,10 +602,14 @@
                     });
 
                     ROUNDS = shuffleArray(sortedRounds);
+
+                    document.body.classList.add('loaded');
+                    isGameLoading = false;
                 } catch (err) {
                     console.error('Could not load JSON file:', err);
                 }
-                loadRound(currentRoundIndex);
+               loadRound(currentRoundIndex);
+               document.body.classList.add('loaded');
             }
             
             revealBtn.addEventListener('mousedown', showPeek);

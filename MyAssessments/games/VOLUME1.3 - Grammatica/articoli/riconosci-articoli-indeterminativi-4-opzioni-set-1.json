@@ -3,52 +3,52 @@
     "label": "Osserva l'immagine e scegli, tra le 4 opzioni, l'articolo associato",
     "rounds": [
         {
-            "label":"Zaino",
+            "label":"Elefante",
             "img": "../../images/animali/savana/elephant.png",
-            "options": ["le", "l'" ,"il", "i"],
+            "options": ["una", "un" ,"uno","un'"],
             "correctIndex": 1
         },
         {
-            "label":"Libro",
+            "label":"Cammello",
             "img": "../../images/animali/deserto/camel.png",
-            "options": ["la", "lo" ,"il", "i"],
+            "options": ["uno", "una" ,"un","un'"],
             "correctIndex": 2
         },
         {
-            "label":"Automobile",
+            "label":"Bradipo",
             "img": "../../images/animali/foresta/bradipo.png",
-            "options": ["la", "le" ,"il", "a"],
-            "correctIndex": 2
+            "options": ["un", "una" ,"uno","un'"],
+            "correctIndex": 0
         },
         {
             "label":"Gatto",
             "img": "../../images/animali/da-cortile/cat.png",
-            "options": ["il", "u" ,"lo", "le"],
+            "options": ["un", "una" ,"uno","un'"],
             "correctIndex": 0
         },
         {
-            "label":"Pastello",
+            "label":"Cane",
             "img": "../../images/animali/da-cortile/dog.png",
-            "options": ["il", "u" ,"lo", "la"],
+            "options": ["un", "una" ,"uno","un'"],
             "correctIndex": 0
         },
         {
             "label":"Iena",
             "img": "../../images/animali/savana/hyena.png",
-            "options": ["il", "u" ,"lo", "la"],
-            "correctIndex": 3
+            "options": ["un", "uno" ,"una","un'"],
+            "correctIndex": 2
         },
         {
-            "label":"Lampada",
+            "label":"Libellula",
             "img": "../../images/animali/insetti/dragonfly.png",
-            "options": ["lo", "a" ,"il", "la"],
-            "correctIndex": 3
+            "options": ["una", "un" ,"uno","un'"],
+            "correctIndex": 0
         },
         {
-            "label":"Smartphone",
+            "label":"Volpe",
             "img": "../../images/animali/bosco/fox.png",
-            "options": ["lo", "a" ,"il", "la"],
-            "correctIndex": 3
+            "options": ["un", "una" ,"uno","un'"],
+            "correctIndex": 1
         }
     ]
 }

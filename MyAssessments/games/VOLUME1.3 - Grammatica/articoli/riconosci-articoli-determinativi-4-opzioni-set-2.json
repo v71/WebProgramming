@@ -3,10 +3,10 @@
     "label": "Osserva l'immagine e scegli, tra le 4 opzioni, l'articolo associato",
     "rounds": [
         {
-            "label":"Cane",
-            "img": "../images/articoli/dog.png",
+            "label":"Porta",
+            "img": "../images/articoli/door.png",
             "options": ["le", "lo" ,"il", "la"],
-            "correctIndex": 2
+            "correctIndex": 3
         },
         {
             "label":"Icecream",
@@ -21,10 +21,10 @@
             "correctIndex": 0
         },
         {
-            "label":"Elephant",
-            "img": "../images/articoli/elephant.png",
+            "label":"Bicicletta",
+            "img": "../images/articoli/bicycle.png",
             "options": ["l'", "le" ,"il", "la"],
-            "correctIndex": 0
+            "correctIndex": 3
         },
         {
             "label":"Mug",

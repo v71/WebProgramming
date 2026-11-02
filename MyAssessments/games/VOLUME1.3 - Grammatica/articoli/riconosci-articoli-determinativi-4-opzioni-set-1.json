@@ -1,0 +1,54 @@
+{
+    "title": "L'articolo giusto",
+    "label": "Osserva l'immagine e scegli, tra le 4 opzioni, l'articolo associato",
+    "rounds": [
+        {
+            "label":"Elefante",
+            "img": "../../images/animali/savana/elephant.png",
+            "options": ["le", "l'" ,"il", "i"],
+            "correctIndex": 1
+        },
+        {
+            "label":"Cammello",
+            "img": "../../images/animali/deserto/camel.png",
+            "options": ["la", "lo" ,"il", "i"],
+            "correctIndex": 2
+        },
+        {
+            "label":"Bradipo",
+            "img": "../../images/animali/foresta/bradipo.png",
+            "options": ["la", "le" ,"il", "a"],
+            "correctIndex": 2
+        },
+        {
+            "label":"Gatto",
+            "img": "../../images/animali/da-cortile/cat.png",
+            "options": ["il", "u" ,"lo", "le"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Cane",
+            "img": "../../images/animali/da-cortile/dog.png",
+            "options": ["il", "u" ,"lo", "la"],
+            "correctIndex": 0
+        },
+        {
+            "label":"Iena",
+            "img": "../../images/animali/savana/hyena.png",
+            "options": ["il", "u" ,"lo", "la"],
+            "correctIndex": 3
+        },
+        {
+            "label":"Libellula",
+            "img": "../../images/animali/insetti/dragonfly.png",
+            "options": ["lo", "a" ,"il", "la"],
+            "correctIndex": 3
+        },
+        {
+            "label":"Volpe",
+            "img": "../../images/animali/bosco/fox.png",
+            "options": ["lo", "a" ,"il", "la"],
+            "correctIndex": 3
+        }
+    ]
+}

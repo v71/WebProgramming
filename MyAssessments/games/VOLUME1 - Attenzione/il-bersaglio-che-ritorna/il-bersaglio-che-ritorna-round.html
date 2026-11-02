@@ -118,6 +118,12 @@
             color: var(--grid-btn-help-text);
         }
 
+        .word-btn.disabled-unselected {
+            opacity: 0.4; /* Dim them out */
+            cursor: not-allowed;
+            /* Add any other style you want, e.g., background-color or border changes */
+        }
+
         .word-btn.error {
             animation: buttonErrorShake 0.45s ease;
             border-color: var(--grid-btn-wrong-border-color);
@@ -161,6 +167,16 @@
                 font-size: 1.05rem;
                 padding: 2px 6px;
             }
+        }
+
+        .word-btn {
+            /* ... your existing button styles ... */
+            transition: opacity 0.4s ease, background-color 0.4s ease, transform 0.2s ease;
+        }
+
+        .word-btn.disabled-unselected {
+            opacity: 0.35; /* Fades out smoothly */
+            cursor: not-allowed;
         }
 
         @media (max-width: 700px) {
@@ -242,12 +258,6 @@
     </div>
 
     <div id="instruction-banner">Caricamento istruzioni...</div>
-
-    <!--<div class="controls" id="action-controls">
-        <button id="reveal-btn" class="cool-btn">
-            <span class="btn-text">Help!</span>
-        </button>
-    </div>-->
 
     <div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
@@ -352,19 +362,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (textEl) textEl.textContent = texts[mode].text;
     }
 
-    /*
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
-    function setButtonState(mode) {
-        const texts = {
-            help: 'Help!',
-            next: '➜ Prossimo round',
-            done: '✓ Fatto'
-        };
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
-        if (textEl) textEl.textContent = texts[mode];
-    }
-    */
     // --- Punteggio e riepilogo ---
     function computeScore() {
         const mistakes = Math.max(0, moveCount - totalCorrectItems);
@@ -515,11 +512,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const justCompleted = foundCorrectCount === totalCorrectItems;
         const isLastRound = roundIndex >= categories.length - 1;
-
+        /*
         if (justCompleted) {
             isGameCompleted = true;
             stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
             gameArea.querySelectorAll('.word-btn').forEach(btn => { btn.disabled = true; });
+
+            results.push({
+                target: currentCategoryTarget,
+                seconds: elapsedSeconds,
+                moves: moveCount,
+                reveals: revealCount,
+                score: computeScore()
+            });
+
+            setOverallProgress(roundIndex + 1);          // la barra avanza di un round
+            setButtonState(isLastRound ? 'done' : 'next');
+        }
+        */
+        if (justCompleted) {
+            isGameCompleted = true;
+            stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
+            
+            // Disable all buttons and add a special class to the unselected ones
+            gameArea.querySelectorAll('.word-btn').forEach(btn => { 
+                btn.disabled = true; 
+                if (!btn.classList.contains('selected')) {
+                    btn.classList.add('disabled-unselected');
+                }
+            });
 
             results.push({
                 target: currentCategoryTarget,
