@@ -1,7 +1,7 @@
 {
     "categories": [
       {
-        "instruction":"Leggi il testo e scrivi, nell'ordine, i quattro luoghi in cui è stata davvero Carolina. Ignora oggetti e luoghi non visitati.",
+        "instruction":"Clicca sulle parole nella prima lista per ricomporre la frase nella seconda lista, nell'ordine giusto.",
         "sentences": [
               { "sentence": "L'ISTRUZIONE È L'ARMA PIÙ POTENTE AL MONDO"         , "image": "../../images/famiglia/scuola.png" },
               { "sentence": "LA TECNOLOGIA CAMBIA IL NOSTRO MODO DI VIVERE"      , "image": "../../images/famiglia/tecnologia.png" },

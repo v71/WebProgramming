@@ -1,0 +1,57 @@
+ {
+         "title": "Scegli l'emozione giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Stupore"        ,  "column": 1 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-1/amazement.png"},
+               { "label": "Calma"          ,  "column": 1 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-1/calm.png"},
+               { "label": "Euforia"        ,  "column": 1 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-1/euforia.png"},
+               { "label": "Gioia"          ,  "column": 2 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-1/joy.png"},
+               { "label": "Love"           ,  "column": 2 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-1/love.png"},
+               { "label": "Sorpresa"       ,  "column": 2 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-1/surprise.png" }
+              ]
+           },
+            
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Soddisfazione" ,  "column": 1 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-1/satisfaction.png"},
+               { "label": "Fiducia"       ,  "column": 1 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-1/trust.png"},
+               { "label": "Rabbia"        ,  "column": 1 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-2/anger.png"},
+               { "label": "Curiosità"     ,  "column": 2 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-2/curiosity.png"},
+               { "label": "Paura"         ,  "column": 2 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-2/fear.png"},
+               { "label": "Gratitudine"   ,  "column": 2 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-2/gratitude.png" }
+              ]
+           },
+
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Ferita emotiva" ,  "column": 1 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-2/hurt.png"},
+               { "label": "Ispirazione"    ,  "column": 1 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-2/inspiration.png"},
+               { "label": "Orgoglio"       ,  "column": 1 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-2/pride.png"},
+               { "label": "Tristezza"      ,  "column": 2 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-2/sadness.png"},
+               { "label": "Ansia"          ,  "column": 2 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-3/anxiety.png"},
+               { "label": "Confusione"     ,  "column": 2 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-3/confusion.png" }
+              ]
+           },
+
+            {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Delusione"      ,  "column": 1 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-3/disappointment.png"},
+               { "label": "Disgusto"       ,  "column": 1 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-3/disgust.png"},
+               { "label": "Invidia"        ,  "column": 1 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-3/envy.png"},
+               { "label": "Senso di colpa" ,  "column": 2 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-3/guilt.png"},
+               { "label": "Gelosia"        ,  "column": 2 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-3/jelousy.png"},
+               { "label": "Vergogna"       ,  "column": 2 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-3/shame.png" }
+              ]
+           }
+
+          ]
+}

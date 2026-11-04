@@ -278,6 +278,35 @@
 
     </style>
 
+<style>
+
+   #game-area {
+    box-sizing: border-box;
+    padding: 10px 16px 16px 16px !important;   /* same top and bottom */
+    margin: 0 !important;
+    align-items: flex-start;
+}
+
+.split-side {
+    gap: 6px !important;
+}
+
+.col-heads {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.col-head,
+#game-area h2 {
+    margin: 0 !important;
+    padding: 0 8px !important;
+    min-height: 0 !important;
+    height: auto !important;
+    line-height: 1 !important;
+}
+
+</style>
+
 </head>
 
 <body>
@@ -409,7 +438,8 @@
         const progressBar = document.querySelector('.progress-bar-container');
         const progressBarTitle = document.getElementById('progress-title');
         const summaryScreen = document.getElementById('summary-screen');
-
+        const progressBarFill = document.getElementById('progress-bar-fill');
+     
         const colLeftTitle = document.getElementById('col-left-1-title');
         const colRightTitle = document.getElementById('col-right-1-title');
 
@@ -447,6 +477,19 @@
             );
         }
 
+        // Barra generale: aggiorna la percentuale in base al round corrente o al completamento
+        function setOverallProgress() {
+            const total = categories.length;
+            if (progressBarFill && total > 0) {
+                if (isGameCompleted && roundIndex >= total - 1) {
+                    progressBarFill.style.width = '100%';
+                } else {
+                    const progressPercent = (roundIndex / total) * 100;
+                    progressBarFill.style.width = progressPercent + '%';
+                }
+            }
+        }
+        
         /* =========================================================
         TIMER
         ========================================================= */
@@ -552,6 +595,11 @@
             const isLastRound = roundIndex >= categories.length - 1;
             setButtonState(isLastRound ? 'done' : 'next');
 
+            // Aggiorna la barra di progresso al 100% se è l'ultimo round
+            if (isLastRound) {
+                setOverallProgress();
+            }
+
             if (isLastRound && typeof Confetti !== 'undefined') {
                 Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
             }
@@ -614,7 +662,7 @@
         /* =========================================================
         POPOLAMENTO DELLA UI
         ========================================================= */
-        /*
+
         function renderRound(category) {
             currentCategory = category;
             isGameCompleted = false;
@@ -623,85 +671,14 @@
             revealCount = 0;
             foundCorrectCount = 0;
 
-            if (instructionBanner) instructionBanner.textContent = category.instruction || '';
-            
-            const headers = Array.isArray(category.headers) ? category.headers : ['Risposte'];
-            if (colRightTitle) colRightTitle.textContent = headers[0];
-            if (colLeftTitle) colLeftTitle.textContent = 'Domande';
-
-            if (sourceCol) sourceCol.innerHTML = '';
-            if (rightDropGrid) rightDropGrid.innerHTML = '';
-            currentRoundItems = [];
-
-            // Mappa gli elementi del JSON in oggetti di gioco
-            const itemsWithData = category.items.map((data, index) => ({
-                label: data.label.trim(),
-                answer: data.answer.trim(),
-                originalIndex: index,
-                placed: false
-            }));
-
-            totalCorrectItems = itemsWithData.length;
-
-            // Mescoliamo separatamente le domande a sinistra e le risposte a destra per aumentare la sfida
-            const shuffledSource = shuffleArray(itemsWithData);
-            const shuffledTargets = shuffleArray(itemsWithData);
-
-            // 1. Popola la colonna di sinistra (Domande)
-            shuffledSource.forEach((itemObj) => {
-                const button = document.createElement('button');
-                button.type = 'button';
-                button.className = 'list-btn';
-                button.textContent = itemObj.label;
-                button.setAttribute('aria-pressed', 'false');
-
-                itemObj.button = button;
-                currentRoundItems.push(itemObj);
-                
-                button.addEventListener('click', () => selectItem(itemObj));
-                if (sourceCol) sourceCol.appendChild(button);
-            });
-
-            // 2. Popola la griglia di destra (Risposte di destinazione)
-            shuffledTargets.forEach((targetObj, index) => {
-                const cell = document.createElement('button');
-                cell.type = 'button';
-                cell.className = 'drop-cell';
-                cell.dataset.answer = targetObj.answer; // Memorizza la risposta corretta per questa cella
-                cell.setAttribute('aria-label', `Cella ${index + 1}`);
-                cell.textContent = ''; // Inizialmente vuota
-
-                cell.addEventListener('click', () => chooseCell(targetObj.answer, cell));
-                if (rightDropGrid) rightDropGrid.appendChild(cell);
-            });
-
-            if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${categories.length}`;
-            if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
-            if (movesValueEl) movesValueEl.textContent = moveCount;
-            if (revealsValueEl) revealsValueEl.textContent = revealCount;
-
-            setButtonState('help');
-            startElapsedTimer();
-            isGameReady = true;
-        }
-        */
-
-        /* =========================================================
-        POPOLAMENTO DELLA UI (Risposte visibili fin dall'inizio)
-        ========================================================= */
-        function renderRound(category) {
-            currentCategory = category;
-            isGameCompleted = false;
-            selectedItem = null;
-            moveCount = 0;
-            revealCount = 0;
-            foundCorrectCount = 0;
+            // Aggiorna la barra di progresso generale
+            setOverallProgress();
 
             if (instructionBanner) instructionBanner.textContent = category.instruction || '';
             
             const headers = Array.isArray(category.headers) ? category.headers : ['Risposte'];
             if (colRightTitle) colRightTitle.textContent = headers[0];
-            if (colLeftTitle) colLeftTitle.textContent = 'Domande';
+            if (colLeftTitle) colLeftTitle.textContent = headers[1];
 
             if (sourceCol) sourceCol.innerHTML = '';
             if (rightDropGrid) rightDropGrid.innerHTML = '';
@@ -764,46 +741,7 @@
         /* =========================================================
         PULSANTE AIUTO (REVEAL / PREVIEW)
         ========================================================= */
-       /*
-        function startHelpReveal(e) {
-            if (isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
-            
-            revealCount++;
-            if (revealsValueEl) revealsValueEl.textContent = revealCount;
-
-            const unplacedItems = currentRoundItems.filter(item => !item.placed);
-            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
-
-            emptyCells.forEach(cell => {
-                const targetAns = cell.dataset.answer;
-                // Trova l'elemento non ancora posizionato la cui risposta coincide con la cella
-                const matchingItem = unplacedItems.find(item => item.answer === targetAns && !item._previewed);
-                
-                if (matchingItem) {
-                    matchingItem._previewed = true;
-                    cell.textContent = matchingItem.answer;
-                    cell.classList.add('help-preview');
-                    helpPreviewElements.push({ cell, item: matchingItem });
-                }
-            });
-
-            isHoldingHelp = true;
-        }
-
-        function stopHelpReveal() {
-            if (!isHoldingHelp) return;
-
-            helpPreviewElements.forEach(({ cell, item }) => {
-                cell.textContent = '';
-                cell.classList.remove('help-preview');
-                delete item._previewed;
-            });
-            helpPreviewElements = [];
-
-            isHoldingHelp = false;
-        }
-        */
-
+        
         // Attiva l'aiuto alla pressione (evidenzia le celle corrette rimanenti a destra)
         function startHelpReveal(e) {
             if (isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
@@ -831,15 +769,12 @@
         // Disattiva l'aiuto al rilascio (rimuove solo l'evidenziazione, lasciando le risposte visibili)
         function stopHelpReveal() {
             if (!isHoldingHelp) return;
-
             helpPreviewElements.forEach(({ cell }) => {
-                cell.classList.remove('help-preview');
-            });
+                cell.classList.remove('help-preview'); });
             helpPreviewElements = [];
-
             isHoldingHelp = false;
         }
-        
+
         function handleActionButtonClick() {
             if (currentButtonMode === 'next') {
                 saveRoundResult();

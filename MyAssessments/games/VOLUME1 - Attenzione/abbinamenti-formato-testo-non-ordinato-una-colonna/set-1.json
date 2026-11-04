@@ -2,14 +2,47 @@
          "title": "Scegli la colonna giusta",
          "categories": [
            {
-             "instruction": "Metti ogni animale nella colonna giusta.",
-             "headers": ["Domande","Risposte"],
+             "instruction": "Rispondi ad ogni domanda.",
+             "headers": ["Risposte","Domande"],
              "items": [
-                { "label": "Quanto fa 2+2?", "answer": "4" },
-                { "label": "Qual' è la capitale d'Italia?", "answer": "Roma" },
-                { "label": "Qual' è il colore del cielo?", "answer": "Blu" },
-               { "label": "Quanti giorni ci sono in una settimana?", "answer": "7" }
-             ]
+                { "label": "Il primo giorno della settimana", "answer": "Lunedì" },
+                { "label": "Precede Luglio", "answer": "Giugno" },
+                { "label": "L'ultimo mese dell'anno", "answer": "Dicembre" },
+                { "label": "Il mese dopo Febbraio", "answer": "Marzo" },             
+                { "label": "Il mese più corto dell'anno", "answer": "Febbraio" },
+                { "label": "Il giorno tra Martedì e Giovedì", "answer": "Mercoledì" },
+                { "label": "In un anno sono quattro", "answer": "Le stagioni" }
+              ]
+           },
+
+           {
+             "instruction": "I giorni della settimana",
+             "headers": ["Risposte","Domande"],
+             "items": [
+                { "label": "1° giorno della settimana", "answer": "Lunedì"},
+                { "label": "2° giorno della settimana", "answer": "Martedì" },
+                { "label": "3° giorno della settimana", "answer": "Mercoledì" },
+                { "label": "4° giorno della settimana", "answer": "Giovedì" },
+                { "label": "5° giorno della settimana", "answer": "Venerdì"},
+                { "label": "6° giorno della settimana", "answer": "Sabato"},
+                { "label": "7° giorno della settimana", "answer": "Domenica" }
+              ]
+           },
+
+            {
+             "instruction": "I mesi dell'anno",
+             "headers": ["Risposte","Domande"],
+             "items": [
+                { "label": "1° mese dell'anno", "answer": "Gennaio"},
+                { "label": "2° mese dell'anno", "answer": "Febbraio" },
+                { "label": "3° mese dell'anno", "answer": "Marzo" },
+                { "label": "4° mese dell'anno", "answer": "Aprile" },
+                { "label": "5° mese dell'anno", "answer": "Maggio"},
+                { "label": "6° mese dell'anno", "answer": "Giugno"},
+                { "label": "7° mese dell'anno", "answer": "Luglio" }
+              ]
            }
+
+
          ]
 }

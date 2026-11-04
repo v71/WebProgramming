@@ -1,0 +1,58 @@
+ {
+         "title": "Scegli l'immagine giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Agnello" , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/lamb.png"},
+               { "label": "Gatto"   , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/cat.png"},
+               { "label": "Gallo"   , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/rooster.png"},
+
+               { "label": "Cammello" , "column": 2 ,"position": 1 ,"image": "../../images/animali/deserto/camel.png"},
+               { "label": "Fennec"   , "column": 2 ,"position": 2 ,"image": "../../images/animali/deserto/fennec.png"},
+               { "label": "Suricato" , "column": 2 ,"position": 3 ,"image": "../../images/animali/deserto/merkat.png" }
+              ]
+           },
+            {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Mucca"   , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/cow.png"},
+               { "label": "Capra"   , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/goat.png"},
+               { "label": "Gallina" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/hen.png"},
+
+               { "label": "Addace"              , "column": 2 ,"position": 1 ,"image": "../../images/animali/deserto/addax.png"},
+               { "label": "Lucertola del Fuoco" , "column": 2 ,"position": 2 ,"image": "../../images/animali/deserto/lizard.png"},
+               { "label": "Scorpione"           , "column": 2 ,"position": 3 ,"image": "../../images/animali/deserto/scorpion.png" }
+              ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Cane"    , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/dog.png"},
+               { "label": "Criceto" , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/hamster.png"},
+               { "label": "Cavallo" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/horse.png"},
+
+               { "label": "Tasso"     , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/badger-1.png"},
+               { "label": "Orso"      , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/bear-1.png"},
+               { "label": "Cinchiale" , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/boar-1.png" }
+              ]
+           },
+            {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Maiale"    , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/pig.png"},
+               { "label": "Coniglio"  , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/rabbit.png"},
+               { "label": "Pecora"    , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/sheep.png"},
+
+               { "label": "Cervo"     , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/deer-1.png"},
+               { "label": "Aquila"    , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/eagle-1.png"},
+               { "label": "Cerbiatto" , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/fawn-1.png" }
+              ]
+           }
+
+         ]
+}

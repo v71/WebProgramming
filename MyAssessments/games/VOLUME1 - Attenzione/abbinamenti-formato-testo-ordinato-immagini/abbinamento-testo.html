@@ -235,12 +235,6 @@
 
 /* Quando la cella è correttamente riempita */
 .drop-cell.filled {
-  /*
-    background-color: #2e7d32 !important; 
-    color: #ffffff !important;          
-    border-color: #1b5e20 !important;    
-    cursor: default;
-*/
     background: var(--grid-btn-selected) !important;
     color: var(--grid-btn-selected-color) !important;
     border-color: var(--grid-btn-selected-border-color) !important;
@@ -250,7 +244,6 @@
     /*   box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.1) !important;*/
     opacity: 1 !important;
     cursor: default !important;
-
 }
 
 /* Stile del testo quando l'aiuto (preview) è attivo */
@@ -297,7 +290,7 @@
 }
 
 .cell-label-placeholder {
-    font-size: 1.1rem;
+    font-size: 0.8rem;
     font-weight: 600;
     color: #333;
     flex-grow: 1;
@@ -337,18 +330,34 @@ button:disabled {
     }
 }
 
-    .controls-2 {
-        margin-bottom: 12px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
-        width: 100%;
-        max-width: 1100px;
-        flex-wrap: wrap;
-        position: relative;
-        min-height: 52px;
-    }
+</style>
+
+<style>
+
+   #game-area {
+    box-sizing: border-box;
+    padding: 10px 16px 16px 16px !important;   /* same top and bottom */
+    margin: 0 !important;
+    align-items: flex-start;
+}
+
+.split-side {
+    gap: 6px !important;
+}
+
+.col-heads {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.col-head,
+#game-area h2 {
+    margin: 0 !important;
+    padding: 0 8px !important;
+    min-height: 0 !important;
+    height: auto !important;
+    line-height: 1 !important;
+}
 
 </style>
 
@@ -371,9 +380,9 @@ button:disabled {
         </div>
 
         <!-- INFORMATION / INSTRUCTION BOX -->
-        <div id="instruction-banner">
+        <!--<div id="instruction-banner">
             Instruzion banner
-        </div>
+        </div>-->
 
         <div class="controls" id="action-controls">
             <button id="reveal-btn" class="cool-btn">
@@ -443,7 +452,7 @@ button:disabled {
 
         const DATA_URL = 'set-1.json';
         const SHUFFLE_ROUNDS = true;
-        const ROWS = 5; // Celle per colonna nella griglia di destra
+        let ROWS = 5; // Celle per colonna nella griglia di destra
 
         /* =========================================================
         STATO DEL GIOCO
@@ -519,13 +528,36 @@ button:disabled {
             return arr;
         }
 
-        // Un round è valido se ha elementi con etichetta e colonna (1 o 2) e non supera il limite per colonna
+        // Un round è valido se ha elementi con etichetta e colonna (1 o 2)
         function isValidRound(category) {
             if (!category || !Array.isArray(category.items) || category.items.length === 0) return false;
-            const wellFormed = category.items.every(it =>
-                it && typeof it.label === 'string' && it.label.trim() !== '' && (it.column === 1 || it.column === 2));
-            if (!wellFormed) return false;
-            return [1, 2].every(c => category.items.filter(it => it.column === c).length <= ROWS);
+            return category.items.every(it =>
+                it && typeof it.label === 'string' && it.label.trim() !== '' && (it.column === 1 || it.column === 2)
+            );
+        }
+
+        /*
+        // Barra generale: aggiorna la percentuale in base al round corrente
+        function setOverallProgress() {
+            const total = categories.length;
+            if (progressBarFill && total > 0) {
+                // Mostra l'avanzamento considerando quanti round sono completati o in corso
+                const progressPercent = (roundIndex / total) * 100;
+                progressBarFill.style.width = progressPercent + '%';
+          }
+        }*/
+        
+        // Barra generale: aggiorna la percentuale in base al round corrente o al completamento
+        function setOverallProgress() {
+            const total = categories.length;
+            if (progressBarFill && total > 0) {
+                if (isGameCompleted && roundIndex >= total - 1) {
+                    progressBarFill.style.width = '100%';
+                } else {
+                    const progressPercent = (roundIndex / total) * 100;
+                    progressBarFill.style.width = progressPercent + '%';
+                }
+            }
         }
 
        /* =========================================================
@@ -625,7 +657,7 @@ button:disabled {
                 }
             }
         }
-
+        /*
         // A round completato si bloccano gli elementi
         function completeRound() {
             isGameCompleted = true;
@@ -644,7 +676,29 @@ button:disabled {
                 Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
             }
         }
+        */
 
+        function completeRound() {
+            isGameCompleted = true;
+            stopElapsedTimer();
+
+            document.querySelectorAll('.list-btn, .drop-cell').forEach(btn => {
+                btn.disabled = true;
+            });
+
+            const isLastRound = roundIndex >= categories.length - 1;
+            setButtonState(isLastRound ? 'done' : 'next');
+
+            // Aggiorna la barra di progresso al 100% se è l'ultimo round
+            if (isLastRound) {
+                setOverallProgress();
+            }
+
+            if (isLastRound && typeof Confetti !== 'undefined') {
+                Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+            }
+        }
+        
     /* =========================================================
     LOGICA DI SELEZIONE E SPOSTAMENTO (Scegli elemento -> Clicca cella)
     ========================================================= */
@@ -687,10 +741,7 @@ button:disabled {
         }
 
         // ESITO CORRETTO: Posiziona l'elemento nella cella cliccata
-
-      //  clickedCell.textContent = selectedItem.label;
         clickedCell.classList.add('filled');
-      //  clickedCell.disabled = true;
 
         // CORRETTO: Inserisce il testo nell'apposito span della cella senza toccare l'immagine
         const placeholder = clickedCell.querySelector('.cell-label-placeholder');
@@ -731,6 +782,10 @@ button:disabled {
         registerCorrect(clickedCell);
     }
 
+    function isCategoryEmpty(category) {
+        return !category || !Array.isArray(category.items) || category.items.length === 0;
+    }
+
     /* =========================================================
     POPOLAMENTO DELLA UI (Sostituisci interamente renderRound)
     ========================================================= */
@@ -742,15 +797,29 @@ button:disabled {
         revealCount = 0;
         foundCorrectCount = 0;
 
+        // Aggiorna la barra di progresso generale
+        setOverallProgress();
+
         if (instructionBanner) instructionBanner.textContent = category.instruction || '';
         
-        const headers = Array.isArray(category.headers) ? category.headers : ['Colonna 1', 'Colonna 2'];
-        colRight1Title.textContent = headers[0];
-        colRight2Title.textContent = headers[1];
+        // se non ci sono headers nel json file non li disegna
+        const rightHeaders = category.headers;
+        const leftHeaders = ['Gruppo 1', 'Gruppo 2'];
 
-        const leftHeaders = Array.isArray(category.leftHeaders) ? category.leftHeaders : ['Gruppo 1', 'Gruppo 2'];
-        colLeft1Title.textContent = leftHeaders[0];
-        colLeft2Title.textContent = leftHeaders[1];
+        if ( rightHeaders.length!==0 )
+        {
+            colRight1Title.textContent = rightHeaders[0];
+            colRight2Title.textContent = rightHeaders[1];
+            colLeft1Title.textContent = leftHeaders[0];
+            colLeft2Title.textContent = leftHeaders[1];
+        }
+        else
+        {
+            colRight1Title.style.display='none';
+            colRight2Title.style.display='none';
+            colLeft1Title.style.display='none';
+            colLeft2Title.style.display='none';
+        }
 
         sourceCol1.innerHTML = '';
         sourceCol2.innerHTML = '';
@@ -840,214 +909,172 @@ button:disabled {
         isGameReady = true;
     }
         
-    /* =========================================================
-       PULSANTE AIUTO (REVEAL / HINT)
-       ========================================================= */
-    function handleRevealClick() {
-        if (isGameCompleted || !isGameReady) return;
-
-        revealCount++;
-        if (revealsValueEl) revealsValueEl.textContent = revealCount;
-
-        const headers = Array.isArray(currentCategory.headers) ? currentCategory.headers : ['Colonna 1', 'Colonna 2'];
-
-        // Mostra l'indizio su tutti gli elementi non ancora posizionati
-        currentRoundItems.forEach(item => {
-            if (!item.placed) {
-                item.button.classList.add('help-active');
-                item.button.setAttribute('data-hint', headers[item.column - 1]);
-            }
-        });
-
-        // Rimuove l'indizio automaticamente dopo 3 secondi
-        setTimeout(() => {
-            currentRoundItems.forEach(item => {
-                item.button.classList.remove('help-active');
-            });
-        }, 3000);
-    }
-
-    // Gestisce il clic normale solo per 'next' o 'done'
-    function handleActionButtonClick() {
-        if (currentButtonMode === 'next') {
-            saveRoundResult();
-            roundIndex++;
-            if (roundIndex < categories.length) {
-                renderRound(categories[roundIndex]);
-            }
-        } else if (currentButtonMode === 'done') {
-            saveRoundResult();
-            showFinalSummary();
-        }
-    }
-    /*
-    // Attiva l'aiuto alla pressione (mostra i rimanenti nelle celle corrette a destra)
-    function startHelpReveal(e) {
-        if (isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
+        /* =========================================================
+        PULSANTE AIUTO (REVEAL / HINT) - CORRETTO
+        ========================================================= */
         
-        revealCount++;
-        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+        let isPreviewActive = false;
 
-        // Prende gli elementi non ancora posizionati
-        const unplacedItems = currentRoundItems.filter(item => !item.placed);
-        
-        // Trova tutte le celle vuote nella griglia di destra
-        const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
-
-        // Per ogni cella vuota, assegna temporaneamente un elemento non posizionato della stessa colonna
-        emptyCells.forEach(cell => {
-            const colNum = parseInt(cell.dataset.column, 10);
-            const matchingItem = unplacedItems.find(item => item.column === colNum && !item._previewed);
+        function startHelpReveal(e) {
+            if (isGameCompleted || !isGameReady || currentButtonMode !== 'help' || isPreviewActive) return;
             
-            if (matchingItem) {
-                matchingItem._previewed = true; // Segna come "anteprima attiva"
-                cell.textContent = matchingItem.label;
-                cell.classList.add('help-preview'); // Classe opzionale per stilizzare l'aiuto
-                helpPreviewElements.push({ cell, item: matchingItem });
-            }
-        });
+            isPreviewActive = true;
+            revealCount++;
+            if (revealsValueEl) revealsValueEl.textContent = revealCount;
 
-        isHoldingHelp = true;
-    }
-    */
+            const unplacedItems = currentRoundItems.filter(item => !item.placed);
+            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
 
-    function startHelpReveal(e) {
-        if (isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
-        
-        revealCount++;
-        if (revealsValueEl) revealsValueEl.textContent = revealCount;
-
-        const unplacedItems = currentRoundItems.filter(item => !item.placed);
-        const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
-
-        emptyCells.forEach(cell => {
-            const colNum = parseInt(cell.dataset.column, 10);
-            const matchingItem = unplacedItems.find(item => item.column === colNum && !item._previewed);
-            
-            if (matchingItem) {
-                matchingItem._previewed = true;
+            emptyCells.forEach(cell => {
+                const cellCol = parseInt(cell.dataset.column, 10);
+                const cellPos = parseInt(cell.dataset.position, 10);
                 
-                // INVECE DI cell.textContent, aggiorniamo solo il placeholder testuale
+                // Match rigoroso per colonna e posizione esatta della cella
+                const matchingItem = unplacedItems.find(item => 
+                    item.column === cellCol && item.position === cellPos && !item._previewed
+                );
+                
+                if (matchingItem) {
+                    matchingItem._previewed = true;
+                    
+                    const placeholder = cell.querySelector('.cell-label-placeholder');
+                    if (placeholder) {
+                        placeholder.textContent = matchingItem.label;
+                    }
+                    
+                    cell.classList.add('help-preview');
+                    helpPreviewElements.push({ cell, item: matchingItem });
+                }
+            });
+
+            isHoldingHelp = true;
+        }
+
+        function stopHelpReveal(e) {
+            if (!isHoldingHelp) return;
+
+            helpPreviewElements.forEach(({ cell, item }) => {
                 const placeholder = cell.querySelector('.cell-label-placeholder');
                 if (placeholder) {
-                    placeholder.textContent = matchingItem.label;
+                    placeholder.textContent = ''; 
                 }
-                
-                cell.classList.add('help-preview');
-                helpPreviewElements.push({ cell, item: matchingItem });
+                cell.classList.remove('help-preview');
+                delete item._previewed;
+            });
+            helpPreviewElements = [];
+
+            isHoldingHelp = false;
+
+            // Piccolo timeout per ripulire lo stato ed evitare conflitti con il click event successivo
+            setTimeout(() => {
+                isPreviewActive = false;
+            }, 50);
+        }
+
+        // Gestisce il clic normale solo per 'next' o 'done'
+        function handleActionButtonClick(e) {
+            if (currentButtonMode === 'help') {
+                return; // Ignora i click spuri in modalità aiuto
             }
-        });
 
-        isHoldingHelp = true;
-    }
-
-    /*
-    // Disattiva l'aiuto al rilascio (ripulisce le celle di destra)
-    function stopHelpReveal() {
-        if (!isHoldingHelp) return;
-
-        // Ripristina lo stato originale delle celle svuotandole
-        helpPreviewElements.forEach(({ cell, item }) => {
-            cell.textContent = '';
-            cell.classList.remove('help-preview');
-            delete item._previewed;
-        });
-        helpPreviewElements = [];
-
-        isHoldingHelp = false;
-    }
-    */
-
-    function stopHelpReveal() {
-        if (!isHoldingHelp) return;
-
-        // Ripristina lo stato rimuovendo solo il testo temporaneo e la classe, SENZA toccare l'immagine
-        helpPreviewElements.forEach(({ cell, item }) => {
-            const placeholder = cell.querySelector('.cell-label-placeholder');
-            if (placeholder) {
-                placeholder.textContent = ''; // Svuota solo il testo, l'immagine resta intatta!
+            if (currentButtonMode === 'next') {
+                saveRoundResult();
+                roundIndex++;
+                if (roundIndex < categories.length) {
+                    renderRound(categories[roundIndex]);
+                }
+            } else if (currentButtonMode === 'done') {
+                saveRoundResult();
+                showFinalSummary();
             }
-            cell.classList.remove('help-preview');
-            delete item._previewed;
-        });
-        helpPreviewElements = [];
+        }
 
-        isHoldingHelp = false;
-    }
-
-    /* =========================================================
+       /* =========================================================
        SALVATAGGIO RISULTATI E RIEPILOGO FINALE
        ========================================================= */
 
-    // Salva le metriche del round corrente nell'array results
-    function saveRoundResult() {
-        results.push({
-            roundNum: roundIndex + 1,
-            instruction: currentCategory ? (currentCategory.instruction || `Round ${roundIndex + 1}`) : `Round ${roundIndex + 1}`,
-            moves: moveCount,
-            reveals: revealCount,
-            time: elapsedSeconds
-        });
-    }
-
-    // Mostra la schermata finale di riepilogo usando l'HTML esistente
-    function showFinalSummary() {
-        setGameVisible(false);
-        isGameCompleted = true;
-        stopElapsedTimer();
-
-        // 1. Popola la tabella dei risultati
-        const tbody = document.getElementById('summary-tbody');
-        if (tbody) {
-            tbody.innerHTML = '';
-            results.forEach(res => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${res.instruction}</td>
-                    <td>${res.time}s</td>
-                    <td>${res.moves}</td>
-                    <td>${res.reveals}</td>
-                    <td>-</td>
-                `;
-                tbody.appendChild(row);
+        // Salva le metriche del round corrente nell'array results
+        function saveRoundResult() {
+            results.push({
+                roundNum: roundIndex + 1,
+                instruction: currentCategory ? (currentCategory.instruction || `Round ${roundIndex + 1}`) : `Round ${roundIndex + 1}`,
+                moves: moveCount,
+                reveals: revealCount,
+                time: elapsedSeconds
             });
         }
 
-        // 2. Calcola i totali e popola il blocco dedicato
-        const totalMoves = results.reduce((acc, curr) => acc + curr.moves, 0);
-        const totalReveals = results.reduce((acc, curr) => acc + curr.reveals, 0);
-        const totalTime = results.reduce((acc, curr) => acc + curr.time, 0);
+        // Mostra la schermata finale di riepilogo usando l'HTML esistente
+        function showFinalSummary() {
+            setGameVisible(false);
+            isGameCompleted = true;
+            stopElapsedTimer();
 
-        const totalsContainer = document.getElementById('summary-totals');
-        if (totalsContainer) {
-            totalsContainer.innerHTML = `
-                <p><strong>Tempo Totale:</strong> ${totalTime}s | <strong>Mosse Totali:</strong> ${totalMoves} | <strong>Aiuti Totali:</strong> ${totalReveals}</p>
-            `;
+            // 1. Popola la tabella dei risultati
+            const tbody = document.getElementById('summary-tbody');
+            if (tbody) {
+                tbody.innerHTML = '';
+                results.forEach(res => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${res.instruction}</td>
+                        <td>${res.time}s</td>
+                        <td>${res.moves}</td>
+                        <td>${res.reveals}</td>
+                        <td>-</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            }
+
+            // 2. Calcola i totali e popola il blocco dedicato
+            const totalMoves = results.reduce((acc, curr) => acc + curr.moves, 0);
+            const totalReveals = results.reduce((acc, curr) => acc + curr.reveals, 0);
+            const totalTime = results.reduce((acc, curr) => acc + curr.time, 0);
+
+            const totalsContainer = document.getElementById('summary-totals');
+            if (totalsContainer) {
+                totalsContainer.innerHTML = `
+                    <p><strong>Tempo Totale:</strong> ${totalTime}s | <strong>Mosse Totali:</strong> ${totalMoves} | <strong>Aiuti Totali:</strong> ${totalReveals}</p>
+                `;
+            }
         }
-    }
 
-    // ==========================================
-    // COLLEGAMENTO EVENTO PULSANTE AIUTO (REVEAL)
-    // ==========================================
-    
-    if (revealBtn) {
-        // Gestione del "tieni premuto" per l'aiuto
-        revealBtn.addEventListener('pointerdown', startHelpReveal);
-        revealBtn.addEventListener('pointerup', stopHelpReveal);
-        revealBtn.addEventListener('pointerleave', stopHelpReveal);
-        revealBtn.addEventListener('pointercancel', stopHelpReveal);
+        // ==========================================
+        // COLLEGAMENTO EVENTO PULSANTE AIUTO (REVEAL)
+        // ==========================================
+        
+        if (revealBtn) {
+            revealBtn.addEventListener('pointerdown', startHelpReveal);
+            revealBtn.addEventListener('pointerup', stopHelpReveal);
+            revealBtn.addEventListener('pointerleave', stopHelpReveal);
+            revealBtn.addEventListener('pointercancel', stopHelpReveal);
 
-        // Gestione del clic standard per Prossimo / Fatto
-        revealBtn.addEventListener('click', handleActionButtonClick);
-    }
-
+            // Scherma il click standard quando siamo in modalità aiuto per evitare doppi trigger
+            revealBtn.addEventListener('click', (e) => {
+                if (currentButtonMode === 'help') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                handleActionButtonClick(e);
+            });
+        }
+   
         /* =========================================================
         AVVIO DEL GIOCO
         ========================================================= */
+        /*
         async function initGame() {
             try {
                 isGameReady = false;
-                const response = await fetch(DATA_URL);
+                stopElapsedTimer();
+
+                // MODIFICA: il file JSON può essere passato nell'URL con ?json=nomefile.json
+                const params = new URLSearchParams(window.location.search);
+                const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
+
+                const response = await fetch(jsonFile);
                 if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
                 
                 const data = await response.json();
@@ -1078,7 +1105,64 @@ button:disabled {
                 document.body.classList.add('loaded');
             }
         }
+        */
 
+        async function initGame() {
+            try {
+                isGameReady = false;
+                stopElapsedTimer();
+
+                const params = new URLSearchParams(window.location.search);
+                const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
+
+                const response = await fetch(jsonFile);
+                if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+                
+                const data = await response.json();
+                const allCategories = Array.isArray(data.categories) ? data.categories : [];
+
+                // CALCOLO DINAMICO DI ROWS IN BASE AL JSON CARICATO
+                if (allCategories.length > 0) {
+                    let maxRowsFound = 0;
+                    allCategories.forEach(cat => {
+                        if (cat && Array.isArray(cat.items)) {
+                            const col1 = cat.items.filter(it => it.column === 1).length;
+                            const col2 = cat.items.filter(it => it.column === 2).length;
+                            maxRowsFound = Math.max(maxRowsFound, col1, col2);
+                        }
+                    });
+                    if (maxRowsFound > 0) {
+                        ROWS = maxRowsFound;
+                    }
+                }
+
+                categories = allCategories.filter(isValidRound);
+
+                if (categories.length === 0) {
+                    if (instructionBanner) instructionBanner.textContent = 'Nessuna categoria valida trovata nel JSON.';
+                    document.body.classList.add('loaded');
+                    return;
+                }
+
+                if (SHUFFLE_ROUNDS) {
+                    categories = shuffleArray(categories);
+                }
+
+                if (gameTitle && data.title) {
+                    gameTitle.textContent = data.title;
+                }
+
+                roundIndex = 0;
+                renderRound(categories[roundIndex]);
+                document.body.classList.add('loaded');
+
+            } catch (err) {
+                console.error('Errore nel caricamento del file JSON:', err);
+                if (instructionBanner) instructionBanner.textContent = 'Errore nel caricamento del gioco.';
+                document.body.classList.add('loaded');
+            }
+        }
+        
         initGame();
     });
 
