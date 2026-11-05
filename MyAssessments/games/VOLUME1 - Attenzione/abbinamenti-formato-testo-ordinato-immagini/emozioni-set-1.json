@@ -2,7 +2,7 @@
          "title": "Scegli l'emozione giusta",
          "categories": [
            {
-             "instruction": "Metti ogni animale nella colonna giusta.",
+             "instruction": "Metti ogni emozione nella colonna giusta.",
              "headers": [],
              "items": [
                { "label": "Stupore"        ,  "column": 1 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-1/amazement.png"},
@@ -15,7 +15,7 @@
            },
             
            {
-             "instruction": "Metti ogni animale nella colonna giusta.",
+             "instruction": "Metti ogni emozione nella colonna giusta.",
              "headers": [],
              "items": [
                { "label": "Soddisfazione" ,  "column": 1 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-1/satisfaction.png"},
@@ -28,7 +28,7 @@
            },
 
            {
-             "instruction": "Metti ogni animale nella colonna giusta.",
+             "instruction": "Metti ogni emozione nella colonna giusta.",
              "headers": [],
              "items": [
                { "label": "Ferita emotiva" ,  "column": 1 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-2/hurt.png"},
@@ -53,5 +53,5 @@
               ]
            }
 
-          ]
+      ]
 }

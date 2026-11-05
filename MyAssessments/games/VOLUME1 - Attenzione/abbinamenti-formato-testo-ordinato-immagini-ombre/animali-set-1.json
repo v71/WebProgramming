@@ -1,0 +1,18 @@
+ {
+         "title": "Scegli l'immagine giusta",
+         "categories": [
+           {
+             "instruction": " Abbina ogni immagine a sinistra a quella corretta a destra.",
+             "headers": [],
+             "items": [
+               { "image_src": "../../images/animali/bosco/badger-shadow.png" , "column": 1 ,"position": 1 , "image_dest": "../../images/animali/bosco/badger-1.png","label":"Tasso"},
+               { "image_src": "../../images/animali/bosco/bear-shadow.png"   , "column": 1 ,"position": 2 , "image_dest": "../../images/animali/bosco/bear-1.png","label":"Orso"},
+               { "image_src": "../../images/animali/bosco/boar-shadow.png"   , "column": 1 ,"position": 3 , "image_dest": "../../images/animali/bosco/boar-1.png","label":"Cinghiale"},
+
+               { "image_src": "../../images/animali/bosco/deer-shadow.png"   , "column": 2 ,"position": 1 ,"image_dest": "../../images/animali/bosco/deer-1.png","label":"Cervo"},
+               { "image_src": "../../images/animali/bosco/fawn-shadow.png"   , "column": 2 ,"position": 2 ,"image_dest": "../../images/animali/bosco/fawn-1.png","label":"Cerbiatto"},
+               { "image_src": "../../images/animali/bosco/fox-shadow.png"    , "column": 2 ,"position": 3 ,"image_dest": "../../images/animali/bosco/fox-1.png" ,"label":"Volpe"}
+              ]
+           }
+         ]
+}

@@ -534,21 +534,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------- Configurazione ----------
     const DATA_URL = 'set-1.json';
   
-    // Ogni voce è una frase intera; viene divisa in parole, che sono le unità cliccabili.
-    const PUZZLE_SENTENCES = [
-        "IL FUTURO APPARTIENE A CHI CREDE NEI PROPRI SOGNI",
-        "L'EDUCAZIONE È L'ARMA PIÙ POTENTE AL MONDO",
-        "LA TECNOLOGIA CAMBIA IL NOSTRO MODO DI VIVERE",
-        "LA MONTAGNA OFFRE ARIA PURA E UNA PACE INFINITA",
-        "IL DIALOGO RISOLVE RAPIDAMENTE OGNI INCOMPRENSIONE",
-        "IL SOLE SORGE A EST",
-        "MI PIACE IL CAFFÈ CALDO",
-        "LA LUNA ILLUMINA LA NOTTE"
-    ];
-
-    // Numero di round per partita = numero di "chunk" in cui viene diviso l'array.
-    const ROUNDS_PER_GAME = 8;   // quante frasi per partita
-
     // ---------- Elementi ----------
     const revealBtn = document.getElementById('reveal-btn');
     const revealOverlay = document.getElementById('reveal-overlay');

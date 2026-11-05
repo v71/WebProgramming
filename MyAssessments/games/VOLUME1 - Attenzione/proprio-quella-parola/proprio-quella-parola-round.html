@@ -232,19 +232,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (textEl) textEl.textContent = texts[mode].text;
     }
 
-    /*
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
-    function setButtonState(mode) {
-        const texts = {
-            help: 'Help!',
-            next: '➜ Prossimo round',
-            done: '✓ Fatto'
-        };
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
-        if (textEl) textEl.textContent = texts[mode];
-    }
-    */
     function setGameVisible(visible) {
         gameElements.forEach(el => {
             if (el) el.style.display = visible ? '' : 'none';

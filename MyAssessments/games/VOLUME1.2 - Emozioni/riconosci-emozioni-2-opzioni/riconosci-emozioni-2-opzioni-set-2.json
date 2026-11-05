@@ -4,49 +4,49 @@
     "rounds": [
         {
             "label":"Rabbia",
-            "img": "../images/emozioni-set-2/anger.png",
+            "img": "../../images/emozioni/emozioni-set-2/anger.png",
             "options": ["Rabbia", "Amore"],
             "correctIndex": 0
         },
         {
             "label":"Curiosità",
-            "img": "../images/emozioni-set-2/curiosity.png",
+            "img": "../../images/emozioni/emozioni-set-2/curiosity.png",
             "options": ["Gioia", "Curiosità"],
             "correctIndex": 1
         },
         {
             "label":"Paura",
-            "img": "../images/emozioni-set-2/fear.png",
+            "img": "../../images/emozioni/emozioni-set-2/fear.png",
             "options": ["Amore","Paura"],
             "correctIndex": 1
         },
         {
             "label":"Gratitudine",
-            "img": "../images/emozioni-set-2/gratitude.png",
+            "img": "../../images/emozioni/emozioni-set-2/gratitude.png",
             "options": ["Paura", "Gratitudine"],
             "correctIndex": 1
         },
         {
             "label":"Ferita Emotiva",
-            "img": "../images/emozioni-set-2/hurt.png",
+            "img": "../../images/emozioni/emozioni-set-2/hurt.png",
             "options": ["Disgusto", "Ferita emotiva"],
             "correctIndex": 1
         },
         {
             "label":"Ispirazione",
-            "img": "../images/emozioni-set-2/inspiration.png",
+            "img": "../../images/emozioni/emozioni-set-2/inspiration.png",
             "options": ["Ispirazione", "Rabbia"],
             "correctIndex": 0
         },
         {
             "label":"Orgoglio",
-            "img": "../images/emozioni-set-2/pride.png",
+            "img": "../../images/emozioni/emozioni-set-2/pride.png",
             "options": ["Paura", "Orgoglio"],
             "correctIndex": 1
         },
         {
             "label":"Tristezza",
-            "img": "../images/emozioni-set-2/sadness.png",
+            "img": "../../images/emozioni/emozioni-set-2/sadness.png",
             "options": ["Tristezza", "Gioia"],
             "correctIndex": 0
         }

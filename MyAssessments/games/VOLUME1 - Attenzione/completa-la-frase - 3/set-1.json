@@ -1,0 +1,21 @@
+{
+  "title": "Completa la Frase",
+  "categories": [
+    {
+      "instruction": "Clicca sulla parola mancante per completare la frase.",
+      "sentences": [
+        {
+          "sentence": "IL SOLE SORGE A {EST}",
+          "distractors": ["OVEST", "NORD", "SUD"],
+          "image": "../../images/famiglia/scuola.png"
+        },
+        {
+          "sentence": "MI PIACE IL {CAFFÈ} CALDO",
+          "distractors": ["TÈ", "LATTE", "SUCCO"],
+          "image": "../../images/famiglia/tecnologia.png"
+        }
+      ]
+    }
+  ]
+}
+

@@ -278,34 +278,6 @@
 
     </style>
 
-<style>
-
-   #game-area {
-    box-sizing: border-box;
-    padding: 10px 16px 16px 16px !important;   /* same top and bottom */
-    margin: 0 !important;
-    align-items: flex-start;
-}
-
-.split-side {
-    gap: 6px !important;
-}
-
-.col-heads {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.col-head,
-#game-area h2 {
-    margin: 0 !important;
-    padding: 0 8px !important;
-    min-height: 0 !important;
-    height: auto !important;
-    line-height: 1 !important;
-}
-
-</style>
 
 </head>
 
@@ -589,7 +561,7 @@
           }
         }
 
-        function completeRound() {
+        async function completeRound() {
             isGameCompleted = true;
             stopElapsedTimer();
 
@@ -606,8 +578,10 @@
             }
 
             if (isLastRound && typeof Confetti !== 'undefined') {
-                Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
-            }
+                await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+        }
         }
 
 

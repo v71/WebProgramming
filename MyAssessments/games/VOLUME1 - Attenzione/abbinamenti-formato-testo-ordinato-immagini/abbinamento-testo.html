@@ -126,7 +126,7 @@
 
 .list-btn {
     font-family: inherit;
-    font-size: 1.5rem;                 /* Font più grande (prima era 1.15rem) */
+    font-size: 1.25rem;                 /* Font più grande (prima era 1.15rem) */
     font-weight: 500;                  /* Leggermente più marcato per leggibilità */
     border: 2px solid var(--border);
     border-radius: 12px;
@@ -380,9 +380,9 @@ button:disabled {
         </div>
 
         <!-- INFORMATION / INSTRUCTION BOX -->
-        <!--<div id="instruction-banner">
+        <div id="instruction-banner">
             Instruzion banner
-        </div>-->
+        </div>
 
         <div class="controls" id="action-controls">
             <button id="reveal-btn" class="cool-btn">
@@ -536,17 +536,6 @@ button:disabled {
             );
         }
 
-        /*
-        // Barra generale: aggiorna la percentuale in base al round corrente
-        function setOverallProgress() {
-            const total = categories.length;
-            if (progressBarFill && total > 0) {
-                // Mostra l'avanzamento considerando quanti round sono completati o in corso
-                const progressPercent = (roundIndex / total) * 100;
-                progressBarFill.style.width = progressPercent + '%';
-          }
-        }*/
-        
         // Barra generale: aggiorna la percentuale in base al round corrente o al completamento
         function setOverallProgress() {
             const total = categories.length;
@@ -657,28 +646,8 @@ button:disabled {
                 }
             }
         }
-        /*
-        // A round completato si bloccano gli elementi
-        function completeRound() {
-            isGameCompleted = true;
-            stopElapsedTimer();
 
-            // Disabilita tutti i pulsanti rimasti
-            document.querySelectorAll('.list-btn, .drop-cell').forEach(btn => {
-                btn.disabled = true;
-            });
-
-            // Aggiorna lo stato del pulsante azione (Next round o Fine)
-            const isLastRound = roundIndex >= categories.length - 1;
-            setButtonState(isLastRound ? 'done' : 'next');
-
-            if (isLastRound && typeof Confetti !== 'undefined') {
-                Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
-            }
-        }
-        */
-
-        function completeRound() {
+        async function completeRound() {
             isGameCompleted = true;
             stopElapsedTimer();
 
@@ -695,7 +664,9 @@ button:disabled {
             }
 
             if (isLastRound && typeof Confetti !== 'undefined') {
-                Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                    await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                    await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                    await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
             }
         }
         
@@ -1064,48 +1035,6 @@ button:disabled {
         /* =========================================================
         AVVIO DEL GIOCO
         ========================================================= */
-        /*
-        async function initGame() {
-            try {
-                isGameReady = false;
-                stopElapsedTimer();
-
-                // MODIFICA: il file JSON può essere passato nell'URL con ?json=nomefile.json
-                const params = new URLSearchParams(window.location.search);
-                const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
-
-                const response = await fetch(jsonFile);
-                if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-                
-                const data = await response.json();
-                const allCategories = Array.isArray(data.categories) ? data.categories : [];
-                categories = allCategories.filter(isValidRound);
-
-                if (categories.length === 0) {
-                    if (instructionBanner) instructionBanner.textContent = 'Nessuna categoria valida trovata nel JSON.';
-                    document.body.classList.add('loaded');
-                    return;
-                }
-
-                if (SHUFFLE_ROUNDS) {
-                    categories = shuffleArray(categories);
-                }
-
-                if (gameTitle && data.title) {
-                    gameTitle.textContent = data.title;
-                }
-
-                roundIndex = 0;
-                renderRound(categories[roundIndex]);
-                document.body.classList.add('loaded');
-
-            } catch (err) {
-                console.error('Errore nel caricamento del file JSON:', err);
-                if (instructionBanner) instructionBanner.textContent = 'Errore nel caricamento del gioco.';
-                document.body.classList.add('loaded');
-            }
-        }
-        */
 
         async function initGame() {
             try {

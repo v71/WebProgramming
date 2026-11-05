@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abbina le immagini</title>
+
+    <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <!-- Main CSS File -->
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+    </style>
+
+    <style>
+
+        :root {
+            --split-gap: 12px;
+        }
+
+        /* =========================================
+           CONTENITORE PRINCIPALE E LAYOUT
+           ========================================= */
+        #game-area {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 20px;
+            padding-bottom: 20px;
+            overflow-y: visible;
+        }
+
+        .split-side {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* ---------- GRIGLIE E COLONNE ---------- */
+        .col-heads,
+        .source-grid,
+        .drop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
+
+        .source-grid {
+            align-items: start;
+        }
+
+        .source-col {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 0;
+        }
+
+        /* ---------- BOTTONI DI SINISTRA (SORGENTE, CON IMMAGINE) ---------- */
+
+        .list-btn {
+            font-family: inherit;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            cursor: pointer;
+            min-height: 138px;
+            padding: 6px;
+            background: var(--default-btn);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, opacity 0.3s ease;
+        }
+
+        .list-btn img {
+            width: 100%;
+            max-width: 128px;
+            height: 120px;
+            object-fit: contain;
+            border-radius: 6px;
+            pointer-events: none;   /* il click va sempre al bottone */
+            user-select: none;
+        }
+
+        .list-btn:hover:not(:disabled):not(.placed) {
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-2px);
+        }
+
+        .list-btn.is-selected {
+            border-color: #ffffff;
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+        }
+
+        .list-btn.placed {
+            opacity: 0.35;
+            cursor: default;
+            transform: none;
+        }
+
+        /* ---------- INTESTAZIONI DI COLONNA ---------- */
+        .col-head {
+            margin: 0;
+            padding: 6px 12px;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            box-sizing: border-box;
+            text-shadow:
+                -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000;
+        }
+
+        /* ---------- CELLE DI DESTRA (DESTINAZIONE 128x128) ---------- */
+        .drop-cell {
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 5px 3px;
+            gap: 20px;
+            height: 138px;
+            min-height: 138px;
+            max-height: 138px;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: var(--summary-background);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            color: var(--text);
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
+
+        .drop-cell:hover:not(:disabled):not(.filled) {
+            border-color: var(--grid-btn-hovered-border-color);
+        }
+
+        .drop-cell.filled,
+        .drop-cell.help-preview {
+            background: var(--grid-btn-selected);
+            color: var(--grid-btn-selected-color);
+            border-color: var(--grid-btn-selected-border-color);
+            cursor: default;
+        }
+
+        /* Quando la cella è correttamente riempita */
+        .drop-cell.filled {
+            background: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
+            transform: none !important;
+            box-shadow: var(--shadow-sm) !important;
+            opacity: 1 !important;
+            cursor: default !important;
+        }
+
+       
+        .cell-content-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+            min-width: 0;
+        }
+
+        /* destination image and matched image share the same rule, so they always have the same size */
+        .cell-target-img,
+        .cell-label-placeholder {
+            flex: 1 1 0;
+            min-width: 0;
+            max-width: 128px;
+            max-height: 128px;
+            aspect-ratio: 1 / 1;
+        }
+
+        .cell-target-img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+            box-sizing: border-box;
+        }
+
+        .cell-label-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cell-label-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 2px solid var(--text);
+            box-sizing: border-box;
+        }
+
+        /* ---------- STATI D'ERRORE ED EFFETTI ---------- */
+        .list-btn.error,
+        .drop-cell.error {
+            animation: gameShake 0.4s ease;
+            border-color: var(--grid-btn-wrong-border-color);
+            background-color: var(--grid-btn-wrong);
+            color: var(--grid-btn-wrong-text);
+        }
+
+        @keyframes gameShake {
+            0%   { transform: translateX(0); }
+            20%  { transform: translateX(-8px); }
+            40%  { transform: translateX(8px); }
+            60%  { transform: translateX(-6px); }
+            80%  { transform: translateX(6px); }
+            100% { transform: translateX(0); }
+        }
+
+        button:disabled {
+            cursor: default;
+        }
+
+        /* Responsiveness per schermi piccoli */
+        @media (max-width: 700px) {
+            #game-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+
+    </style>
+
+    <style>
+
+        #game-area {
+            box-sizing: border-box;
+            padding: 10px 16px 16px 16px !important;
+            margin: 0 !important;
+            align-items: flex-start;
+        }
+
+        .split-side {
+            gap: 6px !important;
+        }
+
+        .col-heads {
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        .col-head,
+        #game-area h2 {
+            margin: 0 !important;
+            padding: 0 8px !important;
+            min-height: 0 !important;
+            height: auto !important;
+            line-height: 1 !important;
+        }
+
+    </style>
+
+    <style>
+
+
+
+
+    </style>
+</head>
+
+<body>
+
+    <!-- TITLE -->
+    <h1 id="game-title">Abbina le immagini</h1>
+
+    <!-- COUNTERS -->
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span>Abbinamenti Corretti: <strong id="word-count">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <!-- INFORMATION / INSTRUCTION BOX -->
+    <div id="instruction-banner">
+        Caricamento...
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <div id="game-area">
+        <!-- Contenitore di Sinistra (Sorgente: 2 colonne di pulsanti con immagine) -->
+        <div class="split-side" id="left-side-container">
+            <div class="col-heads">
+                <h2 class="col-head" id="col-left-1-title">Colonna 1</h2>
+                <h2 class="col-head" id="col-left-2-title">Colonna 2</h2>
+            </div>
+            <div class="source-grid" id="left-source-grid">
+                <div class="source-col" id="source-col-1"></div>
+                <div class="source-col" id="source-col-2"></div>
+            </div>
+        </div>
+
+        <!-- Contenitore di Destra (Destinazione: griglia di celle) -->
+        <div class="split-side" id="right-side-container">
+            <div class="col-heads">
+                <h2 class="col-head" id="col-right-1-title">Colonna 1</h2>
+                <h2 class="col-head" id="col-right-2-title">Colonna 2</h2>
+            </div>
+            <div class="drop-grid" id="right-drop-grid"></div>
+        </div>
+    </div>
+
+    <!-- PROGRESS -->
+    <h1 id="progress-title">Progresso</h1>
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Round</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+
+        const DEFAULT_JSON = 'animali-set-1.json';   // oppure apri la pagina con ?json=nomefile.json
+        const SHUFFLE_ROUNDS = true;
+        let ROWS = 5; // Celle per colonna nella griglia di destra (ricalcolato dal JSON)
+
+        /* =========================================================
+        STATO DEL GIOCO
+        ========================================================= */
+        let categories = [];
+        let roundIndex = 0;
+        let currentCategory = null;
+        let isGameReady = false;
+        let isGameCompleted = false;
+        let selectedItem = null;          // Pulsante selezionato a sinistra
+        let currentRoundItems = [];
+        let isHoldingHelp = false;
+        let isPreviewActive = false;
+        let currentButtonMode = 'help';   // 'help' | 'next' | 'done'
+        let helpPreviewElements = [];     // Celle riempite temporaneamente dall'aiuto
+
+        // Statistiche e metriche
+        let moveCount = 0;
+        let revealCount = 0;
+        let foundCorrectCount = 0;
+        let totalCorrectItems = 0;
+        let elapsedSeconds = 0;
+        let elapsedTimerInterval = null;
+        let results = [];
+
+        /* =========================================================
+        SELETTORI DOM
+        ========================================================= */
+        const gameTitle = document.getElementById('game-title');
+        const gameArea = document.getElementById('game-area');
+        const actionControls = document.getElementById('action-controls');
+        const instructionBanner = document.getElementById('instruction-banner');
+        const roundValueEl = document.getElementById('round-value');
+        const wordCountEl = document.getElementById('word-count');
+        const timeValueEl = document.getElementById('time-value');
+        const movesValueEl = document.getElementById('moves-value');
+        const revealsValueEl = document.getElementById('reveals-value');
+        const progressBarFill = document.getElementById('progress-bar-fill');
+        const gameStats = document.getElementById('game-stats');
+        const progressBar = document.querySelector('.progress-bar-container');
+        const progressBarTitle = document.getElementById('progress-title');
+        const summaryScreen = document.getElementById('summary-screen');
+
+        const colLeft1Title = document.getElementById('col-left-1-title');
+        const colLeft2Title = document.getElementById('col-left-2-title');
+        const colRight1Title = document.getElementById('col-right-1-title');
+        const colRight2Title = document.getElementById('col-right-2-title');
+
+        const sourceCol1 = document.getElementById('source-col-1');
+        const sourceCol2 = document.getElementById('source-col-2');
+        const rightDropGrid = document.getElementById('right-drop-grid');
+
+        const revealBtn = document.getElementById('reveal-btn');
+        const btnIcon = document.getElementById('btn-icon');
+
+        // Elementi nascosti durante il riepilogo
+        const gameElements = [
+            gameArea, gameStats, instructionBanner, progressBar,
+            progressBarTitle, gameTitle, actionControls
+        ];
+
+        /* =========================================================
+        UTILITY
+        ========================================================= */
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Un round è valido se ogni elemento ha le due immagini, la colonna (1 o 2) e la posizione
+        function isValidRound(category) {
+            if (!category || !Array.isArray(category.items) || category.items.length === 0) return false;
+            return category.items.every(it =>
+                it &&
+                typeof it.image_src === 'string' && it.image_src.trim() !== '' &&
+                typeof it.image_dest === 'string' && it.image_dest.trim() !== '' &&
+                (it.column === 1 || it.column === 2) &&
+                Number.isInteger(it.position)
+            );
+        }
+
+        // Barra generale: aggiorna la percentuale in base al round corrente o al completamento
+        function setOverallProgress() {
+            const total = categories.length;
+            if (progressBarFill && total > 0) {
+                if (isGameCompleted && roundIndex >= total - 1) {
+                    progressBarFill.style.width = '100%';
+                } else {
+                    progressBarFill.style.width = ((roundIndex / total) * 100) + '%';
+                }
+            }
+        }
+
+        /* =========================================================
+        TIMER
+        ========================================================= */
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
+        function updateTimerDisplay() {
+            if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+        }
+
+        function startElapsedTimer() {
+            stopElapsedTimer();
+            elapsedSeconds = 0;
+            updateTimerDisplay();
+            elapsedTimerInterval = setInterval(() => {
+                elapsedSeconds++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        /* =========================================================
+        PULSANTE: ICONA E TESTO
+        ========================================================= */
+        const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+        function setButtonIcon(iconClass) {
+            if (!btnIcon) return;
+            btnIcon.classList.remove(...BUTTON_ICONS);
+            btnIcon.classList.add(iconClass);
+        }
+
+        // help = in gioco, next = round completato, done = ultimo round completato
+        function setButtonState(mode) {
+            currentButtonMode = mode;
+            const states = {
+                help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+                next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+                done: { icon: 'fa-check',       text: 'Fatto' }
+            };
+            setButtonIcon(states[mode].icon);
+            const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+            if (textEl) textEl.textContent = states[mode].text;
+        }
+
+        function setGameVisible(visible) {
+            gameElements.forEach(el => {
+                if (el) el.style.display = visible ? '' : 'none';
+            });
+            if (summaryScreen) summaryScreen.style.display = visible ? 'none' : 'block';
+        }
+
+        /* =========================================================
+        TRACCIAMENTO MOSSE, ERRORI E SUCCESSI
+        ========================================================= */
+        function registerMove() {
+            if (isGameCompleted || !isGameReady) return;
+            moveCount++;
+            if (movesValueEl) movesValueEl.textContent = moveCount;
+        }
+
+        // Risposta sbagliata: shake sulla cella
+        function registerWrong(element) {
+            if (isGameCompleted || !isGameReady || !element) return;
+            element.classList.remove('error');
+            void element.offsetWidth; // riavvia l'animazione CSS
+            element.classList.add('error');
+            setTimeout(() => element.classList.remove('error'), 400);
+        }
+
+        // Risposta corretta: aggiorna il contatore ed eventualmente chiude il round
+        function registerCorrect(element) {
+            if (isGameCompleted || !isGameReady) return;
+            foundCorrectCount++;
+            if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+
+            if (foundCorrectCount >= totalCorrectItems) {
+                completeRound();
+            }
+
+            if (typeof Checkmark !== 'undefined' && element) {
+                try {
+                    Promise.resolve(Checkmark.show({ element, size: 48, rise: 70, duration: 1600 }))
+                        .catch(err => console.warn('Checkmark error:', err));
+                } catch (err) {
+                    console.warn('Checkmark error:', err);
+                }
+            }
+        }
+
+        async function completeRound() {
+            isGameCompleted = true;
+            stopElapsedTimer();
+
+            document.querySelectorAll('.list-btn, .drop-cell').forEach(btn => {
+                btn.disabled = true;
+            });
+
+            const isLastRound = roundIndex >= categories.length - 1;
+            setButtonState(isLastRound ? 'done' : 'next');
+
+            if (isLastRound) setOverallProgress();
+
+            if (isLastRound && typeof Confetti !== 'undefined') {
+                try {
+                    await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                    await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                    await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                } catch (err) {
+                    console.warn('Confetti error:', err);
+                }
+            }
+        }
+
+        /* =========================================================
+        IMMAGINE ABBINATA DENTRO UNA CELLA
+        ========================================================= */
+
+        // Mostra l'immagine di sinistra (source) dentro la cella di destra
+        function setCellMatch(cell, item) {
+            let placeholder = cell.querySelector('.cell-label-placeholder');
+            if (!placeholder) {
+                let wrapper = cell.querySelector('.cell-content-wrapper');
+                if (!wrapper) {
+                    wrapper = document.createElement('div');
+                    wrapper.className = 'cell-content-wrapper';
+                    cell.appendChild(wrapper);
+                }
+                placeholder = document.createElement('span');
+                placeholder.className = 'cell-label-placeholder';
+                wrapper.appendChild(placeholder);
+            }
+            placeholder.replaceChildren();
+            const img = document.createElement('img');
+            img.src = item.source;
+            img.alt = item.label || '';
+            placeholder.appendChild(img);
+        }
+
+        function clearCellMatch(cell) {
+            const placeholder = cell.querySelector('.cell-label-placeholder');
+            if (placeholder) placeholder.replaceChildren();
+        }
+
+        /* =========================================================
+        SELEZIONE E PIAZZAMENTO (scegli immagine -> clicca cella)
+        ========================================================= */
+
+        // Clic su un'immagine a sinistra (seleziona / deseleziona)
+        function selectItem(itemObj) {
+            if (isGameCompleted || !isGameReady || itemObj.placed) return;
+
+            const wasSelected = (selectedItem === itemObj);
+            deselectAllItems();
+
+            if (wasSelected) {
+                selectedItem = null;
+                return;
+            }
+
+            selectedItem = itemObj;
+            itemObj.button.classList.add('is-selected');
+            itemObj.button.setAttribute('aria-pressed', 'true');
+        }
+
+        function deselectAllItems() {
+            document.querySelectorAll('.list-btn').forEach(btn => {
+                btn.classList.remove('is-selected');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+        }
+
+        // Clic su una cella a destra
+        function chooseCell(targetColumn, targetPosition, clickedCell) {
+            if (isGameCompleted || !isGameReady || !selectedItem || clickedCell.classList.contains('filled')) return;
+
+            registerMove();
+
+            // Sbagliato: colonna o posizione non corrispondono
+            if (selectedItem.column !== targetColumn || selectedItem.position !== targetPosition) {
+                registerWrong(clickedCell);
+                return;
+            }
+
+            // Corretto: mostra l'immagine abbinata accanto a quella di destinazione
+            clickedCell.classList.add('filled');
+            setCellMatch(clickedCell, selectedItem);
+
+            // Disabilita il pulsante sorgente a sinistra
+            selectedItem.placed = true;
+            selectedItem.button.classList.remove('is-selected');
+            selectedItem.button.classList.add('placed');
+            selectedItem.button.setAttribute('aria-pressed', 'false');
+            selectedItem.button.disabled = true;
+
+            deselectAllItems();
+            selectedItem = null;
+
+            registerCorrect(clickedCell);
+        }
+
+        /* =========================================================
+        POPOLAMENTO DELLA UI
+        ========================================================= */
+        function renderRound(category) {
+            currentCategory = category;
+            isGameCompleted = false;
+            selectedItem = null;
+            moveCount = 0;
+            revealCount = 0;
+            foundCorrectCount = 0;
+            helpPreviewElements = [];
+            isHoldingHelp = false;
+            isPreviewActive = false;
+
+            setOverallProgress();
+
+            if (instructionBanner) instructionBanner.textContent = category.instruction || '';
+
+            // Intestazioni: se mancano o sono vuote nel JSON, non vengono mostrate
+            const rightHeaders = Array.isArray(category.headers) ? category.headers : [];
+            const leftHeaders = ['Gruppo 1', 'Gruppo 2'];
+            const showHeaders = rightHeaders.length >= 2;
+
+            if (showHeaders) {
+                colRight1Title.textContent = rightHeaders[0];
+                colRight2Title.textContent = rightHeaders[1];
+                colLeft1Title.textContent = leftHeaders[0];
+                colLeft2Title.textContent = leftHeaders[1];
+            }
+            [colLeft1Title, colLeft2Title, colRight1Title, colRight2Title]
+                .forEach(el => { el.style.display = showHeaders ? '' : 'none'; });
+
+            sourceCol1.innerHTML = '';
+            sourceCol2.innerHTML = '';
+            rightDropGrid.innerHTML = '';
+            currentRoundItems = [];
+
+            const shuffledItems = shuffleArray(category.items);
+            totalCorrectItems = shuffledItems.length;
+
+            // ---- Sinistra: pulsanti con immagine (image_src) ----
+            shuffledItems.forEach((data, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'list-btn';
+                button.setAttribute('aria-pressed', 'false');
+                button.setAttribute('aria-label', data.label || 'Immagine');
+
+                const sourceImg = document.createElement('img');
+                sourceImg.src = data.image_src;
+                sourceImg.alt = data.label || '';
+                sourceImg.draggable = false;
+                button.appendChild(sourceImg);
+
+                const itemObj = {
+                    label: (data.label || '').trim(),
+                    source: data.image_src,
+                    target: data.image_dest,
+                    column: data.column,
+                    position: data.position,
+                    button,
+                    placed: false
+                };
+
+                currentRoundItems.push(itemObj);
+
+                button.addEventListener('click', () => selectItem(itemObj));
+
+                // Distribuzione alternata tra le due colonne di sinistra
+                if (index % 2 === 0) {
+                    sourceCol1.appendChild(button);
+                } else {
+                    sourceCol2.appendChild(button);
+                }
+            });
+
+            // ---- Destra: griglia di celle con immagine (image_dest) ----
+            for (let i = 0; i < ROWS * 2; i++) {
+                const colIndex = i % 2;
+                const rowIndex = Math.floor(i / 2);
+                const cellCol = colIndex + 1;
+                const cellPos = rowIndex + 1;
+
+                const cell = document.createElement('button');
+                cell.type = 'button';
+                cell.className = 'drop-cell';
+                cell.dataset.column = cellCol;
+                cell.dataset.position = cellPos;
+                cell.setAttribute('aria-label', `Colonna ${cellCol}, posizione ${cellPos}`);
+
+                const targetItem = category.items.find(it => it.column === cellCol && it.position === cellPos);
+
+                if (targetItem && targetItem.image_dest) {
+                    const contentWrapper = document.createElement('div');
+                    contentWrapper.className = 'cell-content-wrapper';
+
+                    const img = document.createElement('img');
+                    img.src = targetItem.image_dest;
+                    img.alt = targetItem.label || 'Target';
+                    img.className = 'cell-target-img';
+
+                    // Spazio per l'immagine abbinata (vuoto finché non è corretta)
+                    const labelSpan = document.createElement('span');
+                    labelSpan.className = 'cell-label-placeholder';
+
+                    contentWrapper.appendChild(img);
+                    contentWrapper.appendChild(labelSpan);
+                    cell.appendChild(contentWrapper);
+                }
+
+                cell.addEventListener('click', () => chooseCell(cellCol, cellPos, cell));
+
+                rightDropGrid.appendChild(cell);
+            }
+
+            if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${categories.length}`;
+            if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+            if (movesValueEl) movesValueEl.textContent = moveCount;
+            if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+            setButtonState('help');
+            startElapsedTimer();
+            isGameReady = true;
+        }
+
+        /* =========================================================
+        PULSANTE AIUTO (tieni premuto)
+        ========================================================= */
+        function startHelpReveal() {
+            if (isGameCompleted || !isGameReady || currentButtonMode !== 'help' || isPreviewActive) return;
+
+            isPreviewActive = true;
+            revealCount++;
+            if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+            const unplacedItems = currentRoundItems.filter(item => !item.placed);
+            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
+
+            emptyCells.forEach(cell => {
+                const cellCol = parseInt(cell.dataset.column, 10);
+                const cellPos = parseInt(cell.dataset.position, 10);
+
+                const matchingItem = unplacedItems.find(item =>
+                    item.column === cellCol && item.position === cellPos && !item._previewed
+                );
+
+                if (matchingItem) {
+                    matchingItem._previewed = true;
+                    setCellMatch(cell, matchingItem);
+                    cell.classList.add('help-preview');
+                    helpPreviewElements.push({ cell, item: matchingItem });
+                }
+            });
+
+            isHoldingHelp = true;
+        }
+
+        function stopHelpReveal() {
+            if (!isHoldingHelp) return;
+
+            helpPreviewElements.forEach(({ cell, item }) => {
+                clearCellMatch(cell);
+                cell.classList.remove('help-preview');
+                delete item._previewed;
+            });
+            helpPreviewElements = [];
+
+            isHoldingHelp = false;
+
+            // Piccolo timeout per evitare conflitti con il click successivo
+            setTimeout(() => {
+                isPreviewActive = false;
+            }, 50);
+        }
+
+        // Il click normale funziona solo in modalità 'next' o 'done'
+        function handleActionButtonClick() {
+            if (currentButtonMode === 'next') {
+                saveRoundResult();
+                roundIndex++;
+                if (roundIndex < categories.length) {
+                    renderRound(categories[roundIndex]);
+                }
+            } else if (currentButtonMode === 'done') {
+                saveRoundResult();
+                showFinalSummary();
+            }
+        }
+
+        /* =========================================================
+        SALVATAGGIO RISULTATI E RIEPILOGO FINALE
+        ========================================================= */
+        function saveRoundResult() {
+            results.push({
+                roundNum: roundIndex + 1,
+                instruction: currentCategory ? (currentCategory.instruction || `Round ${roundIndex + 1}`) : `Round ${roundIndex + 1}`,
+                moves: moveCount,
+                reveals: revealCount,
+                time: elapsedSeconds
+            });
+        }
+
+        function showFinalSummary() {
+            setGameVisible(false);
+            isGameCompleted = true;
+            stopElapsedTimer();
+
+            const tbody = document.getElementById('summary-tbody');
+            if (tbody) {
+                tbody.innerHTML = '';
+                results.forEach(res => {
+                    const row = document.createElement('tr');
+                    const cells = [res.instruction, `${res.time}s`, String(res.moves), String(res.reveals), '-'];
+                    cells.forEach(text => {
+                        const td = document.createElement('td');
+                        td.textContent = text;
+                        row.appendChild(td);
+                    });
+                    tbody.appendChild(row);
+                });
+            }
+
+            const totalMoves = results.reduce((acc, curr) => acc + curr.moves, 0);
+            const totalReveals = results.reduce((acc, curr) => acc + curr.reveals, 0);
+            const totalTime = results.reduce((acc, curr) => acc + curr.time, 0);
+
+            const totalsContainer = document.getElementById('summary-totals');
+            if (totalsContainer) {
+                totalsContainer.innerHTML = `
+                    <p><strong>Tempo Totale:</strong> ${totalTime}s | <strong>Mosse Totali:</strong> ${totalMoves} | <strong>Aiuti Totali:</strong> ${totalReveals}</p>
+                `;
+            }
+        }
+
+        /* =========================================================
+        EVENTI DEL PULSANTE
+        ========================================================= */
+        if (revealBtn) {
+            revealBtn.addEventListener('pointerdown', startHelpReveal);
+            revealBtn.addEventListener('pointerup', stopHelpReveal);
+            revealBtn.addEventListener('pointerleave', stopHelpReveal);
+            revealBtn.addEventListener('pointercancel', stopHelpReveal);
+            revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+
+            revealBtn.addEventListener('click', (e) => {
+                if (currentButtonMode === 'help') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                handleActionButtonClick();
+            });
+        }
+
+        /* =========================================================
+        AVVIO DEL GIOCO
+        ========================================================= */
+        async function initGame() {
+            try {
+                isGameReady = false;
+                stopElapsedTimer();
+
+                const params = new URLSearchParams(window.location.search);
+                const jsonFile = params.get('json') || DEFAULT_JSON;
+
+                const response = await fetch(jsonFile);
+                if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+
+                const data = await response.json();
+                const allCategories = Array.isArray(data.categories) ? data.categories : [];
+
+                categories = allCategories.filter(isValidRound);
+
+                if (categories.length === 0) {
+                    if (instructionBanner) instructionBanner.textContent = 'Nessuna categoria valida trovata nel JSON.';
+                    document.body.classList.add('loaded');
+                    return;
+                }
+
+                // Numero di righe = il massimo di elementi in una colonna, tra tutti i round validi
+                let maxRowsFound = 0;
+                categories.forEach(cat => {
+                    const col1 = cat.items.filter(it => it.column === 1).length;
+                    const col2 = cat.items.filter(it => it.column === 2).length;
+                    const maxPos = Math.max(0, ...cat.items.map(it => it.position));
+                    maxRowsFound = Math.max(maxRowsFound, col1, col2, maxPos);
+                });
+                if (maxRowsFound > 0) ROWS = maxRowsFound;
+
+                if (SHUFFLE_ROUNDS) categories = shuffleArray(categories);
+
+                if (gameTitle && data.title) {
+                    gameTitle.textContent = data.title;
+                    document.title = data.title;
+                }
+
+                roundIndex = 0;
+                results = [];
+                renderRound(categories[roundIndex]);
+                document.body.classList.add('loaded');
+
+            } catch (err) {
+                console.error('Errore nel caricamento del file JSON:', err);
+                if (instructionBanner) instructionBanner.textContent = 'Errore nel caricamento del gioco.';
+                document.body.classList.add('loaded');
+            }
+        }
+
+        initGame();
+    });
+
+</script>
+
+</body>
+</html>
