@@ -1,0 +1,19 @@
+ {
+         "title": "Scegli l'immagine giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni ogetto nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Zaino"    , "column": 1 ,"position": 1 , "image": "../../images/oggetti/moderni/backpack.png"},
+               { "label": "Borsetta" , "column": 1 ,"position": 2 , "image": "../../images/oggetti/moderni/bag.png"},
+               { "label": "Cintura"  , "column": 1 ,"position": 3 , "image": "../../images/oggetti/moderni/belt.png"},
+
+               { "label": "Scarponi" , "column": 2 ,"position": 1 ,"image": "../../images/oggetti/moderni/boots.png"},
+               { "label": "Giacca"   , "column": 2 ,"position": 2 ,"image": "../../images/oggetti/moderni/coat.png"},
+               { "label": "Scarpe"   , "column": 2 ,"position": 3 ,"image": "../../images/oggetti/moderni/shoes.png" }
+              ]
+           }
+
+         ]
+}

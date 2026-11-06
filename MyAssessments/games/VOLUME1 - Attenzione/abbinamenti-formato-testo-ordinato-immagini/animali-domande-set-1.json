@@ -35,7 +35,7 @@
                { "label": "Ho due tasche segrete ai lati della bocca dove nascondo il cibo" , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/hamster.png"},
                { "label": "Corro veloce come il vento e dormo in piedi" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/horse.png"},
 
-               { "label": "Indosso una mascherina bianca e nera sul muso"     , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/badger-1.png"},
+               { "label": "Indosso una mascherina bianca e nera sul muso"     , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/badger.png"},
                { "label": "Vivo tra i boschi e le montagne e amo il miele"      , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/bear-1.png"},
                { "label": "Indosso un fitto mantello di setole scure e sfoggio due zanne affilate" , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/boar-1.png" }
               ]
