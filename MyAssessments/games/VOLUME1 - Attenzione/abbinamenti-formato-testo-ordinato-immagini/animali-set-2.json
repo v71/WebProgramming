@@ -1,0 +1,57 @@
+ {
+         "title": "Scegli l'immagine giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Gatto"   , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/cat.png"},
+               { "label": "Mucca"   , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/cow.png"},
+               { "label": "Gallina" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/hen.png"},
+
+               { "label": "Volpe"      , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/fox-1.png"},
+               { "label": "Scoiattolo" , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/squirrel.png"},
+               { "label": "Lupo"       , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/wolf-1.png" }
+              ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Pecora"  , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/sheep.png"},
+               { "label": "Gallo"   , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/rooster.png"},
+               { "label": "Caprone" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/ram.png"},
+
+               { "label": "Puzzola"  , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/skunk.png"},
+               { "label": "Tacchino" , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/turkey-1.png"},
+               { "label": "Procione" , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/racoon.png" }
+              ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Bradipo"          , "column": 1 ,"position": 1 , "image": "../../images/animali/foresta/bradipo.png"},
+               { "label": "Formica-de-fuoco" , "column": 1 ,"position": 2 , "image": "../../images/animali/foresta/fire-ant.png"},
+               { "label": "Rana"             , "column": 1 ,"position": 3 , "image": "../../images/animali/foresta/frog.png"},
+
+               { "label": "Babbuino"    , "column": 2 ,"position": 1 ,"image": "../../images/animali/savana/baboon.png"},
+               { "label": "Coccodrillo" , "column": 2 ,"position": 2 ,"image": "../../images/animali/savana/croc.png"},
+               { "label": "Elefante"    , "column": 2 ,"position": 3 ,"image": "../../images/animali/savana/elephant.png" }
+              ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Giaguaro"          , "column": 1 ,"position": 1 , "image": "../../images/animali/foresta/jaguar.png"},
+               { "label": "Scimmia urlatrice" , "column": 1 ,"position": 2 , "image": "../../images/animali/foresta/monkey.png"},
+               { "label": "Pappagallo"        , "column": 1 ,"position": 3 , "image": "../../images/animali/foresta/parrot.png"},
+
+               { "label": "Gazzella" , "column": 2 ,"position": 1 ,"image": "../../images/animali/savana/gazelle.png"},
+               { "label": "Giraffa"  , "column": 2 ,"position": 2 ,"image": "../../images/animali/savana/giraffe.png"},
+               { "label": "Iena"     , "column": 2 ,"position": 3 ,"image": "../../images/animali/savana/hyena.png" }
+              ]
+           }              
+         ]
+}

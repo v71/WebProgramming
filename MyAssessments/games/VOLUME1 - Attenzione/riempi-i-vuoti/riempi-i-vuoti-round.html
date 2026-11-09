@@ -458,9 +458,6 @@ document.addEventListener('DOMContentLoaded', () => {
         gameArea, progressTitle, progressContainer
     ];
 
-    // Stato "selezionato" della parola corretta: verde, anche se il pulsante è disabilitato.
-    // (!important perché il pulsante disabilitato di solito viene sbiadito dal CSS della pagina;
-    // per cambiare colore basta modificare questi valori)
     (function injectChipStyles() {
         const style = document.createElement('style');
         style.textContent = `
@@ -482,9 +479,9 @@ document.addEventListener('DOMContentLoaded', () => {
        GAME STATE
        ========================================================= */
 
-    let rounds = [];           // round giocabili (già validati)
-    let roundIndex = 0;        // round corrente
-    let results = [];          // risultato di ogni round completato
+    let rounds = [];             // round giocabili (già validati)
+    let roundIndex = 0;          // round corrente
+    let results = [];            // risultato di ogni round completato
     let elapsedSeconds = 0;
     let elapsedTimerInterval = null;
     let moveCount = 0;
@@ -501,7 +498,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /* =========================================================
        GAME DATA
-       Le parole da inserire sono tra parentesi graffe nel testo.
        ========================================================= */
 
     const GAME_ROUNDS = [
@@ -536,35 +532,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     ];
 
-    /*
-    function setRevealLabel(label) {
-        if (!revealBtn) return;
-
-        let textEl = revealBtn.querySelector('.btn-text');
-        
-        if (!textEl) {
-            revealBtn.textContent = '';
-            textEl = document.createElement('span');
-            textEl.className = 'btn-text';
-            revealBtn.appendChild(textEl);
-        }
-
-        const parts = String(label).trim().split(/\s+/);
-        const hasEmoji = parts.length > 1 && /\p{Extended_Pictographic}/u.test(parts[0]);
-
-        textEl.textContent = '';
-        if (hasEmoji) {
-            const emojiEl = document.createElement('span');
-            emojiEl.className = 'btn-emoji';
-            emojiEl.textContent = parts.shift();
-            textEl.appendChild(emojiEl);
-            textEl.appendChild(document.createTextNode(' ' + parts.join(' ')));
-        } else {
-            textEl.textContent = parts.join(' ');
-        }
-    }
-        */
-    // Trasforma un round in { title, parts, answers, distractors }; null se non è giocabile
     function parseRound(round) {
         if (!round || typeof round.text !== 'string') return null;
 
@@ -595,7 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTimerDisplay() {
-        timeValueEl.textContent = elapsedSeconds + 's';
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
     }
 
     function startElapsedTimer() {
@@ -621,11 +588,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateMovesDisplay() {
-        movesValueEl.textContent = moveCount;
+        if (movesValueEl) movesValueEl.textContent = moveCount;
     }
 
     function updateRevealsDisplay() {
-        revealsValueEl.textContent = revealCount;
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
     }
 
     function addMove() {
@@ -650,13 +617,12 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================= */
 
     function setInstruction(text) {
-        instructionBanner.textContent = text;
+        if (instructionBanner) instructionBanner.textContent = text;
     }
 
-    // Barra generale: round completati / round totali
     function setOverallProgress(done) {
         const total = rounds.length;
-        progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+        if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
     }
 
     const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
@@ -666,35 +632,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnIcon.classList.remove(...BUTTON_ICONS);
         btnIcon.classList.add(iconClass);
     }
-    /*
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
-    function setButtonMode(mode) {
-        const texts = {
-            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
-            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
-            done: { icon: 'fa-check',       text: 'Fatto' }
-        };
-        setButtonIcon(texts[mode].icon);
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
-        if (textEl) textEl.textContent = texts[mode].text;
-        setRevealLabel(texts[mode].text);
-    }
-    */
-    /*
-    // help = in gioco, next = round completato, done = ultimo round completato
-    function setButtonMode(mode) {
-        buttonMode = mode;
-        const texts = {
-            help: 'Help!',
-            next: '➜ Prossimo round',
-            done: '✓ Fatto!'
-        };
-        setRevealLabel(texts[mode]);
-    }
-    */
-  
-    // help = in gioco, next = round completato, done = ultimo round completato
+
     function setButtonMode(mode) {
         buttonMode = mode;
         const texts = {
@@ -705,25 +643,34 @@ document.addEventListener('DOMContentLoaded', () => {
         setButtonIcon(texts[mode].icon);
         const textEl = revealBtn && revealBtn.querySelector('.btn-text');
         if (textEl) textEl.textContent = texts[mode].text;
-       // setRevealLabel(texts[mode].text);
     }
-  
+
     /* =========================================================
-       HELP / PEEK (tieni premuto)
+       HELP / PEEK
        ========================================================= */
 
-    function showPeek() {
-        if (buttonMode !== 'help' || isPeeking || roundCompleted || revealBtn.disabled) return;
+    function showPeek(e) {
+        if (buttonMode !== 'help' || isPeeking || roundCompleted || (revealBtn && revealBtn.disabled)) return;
         isPeeking = true;
+
+        if (e && e.pointerId && revealBtn) {
+            try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+
         revealCount++;
         updateRevealsDisplay();
-        ddText.classList.add('dd-peeking');
+        if (ddText) ddText.classList.add('dd-peeking');
     }
 
-    function hidePeek() {
+    function hidePeek(e) {
         if (!isPeeking) return;
         isPeeking = false;
-        ddText.classList.remove('dd-peeking');
+
+        if (e && e.pointerId && revealBtn) {
+            try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+
+        if (ddText) ddText.classList.remove('dd-peeking');
     }
 
     /* =========================================================
@@ -744,19 +691,19 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================= */
 
     function ddBuild(round) {
-        ddTray.innerHTML = '';
-        ddText.innerHTML = '';
+        if (ddTray) ddTray.innerHTML = '';
+        if (ddText) ddText.innerHTML = '';
         ddPlaced = 0;
         ddMisses = 0;
         ddCurrent = null;
         roundCompleted = false;
         currentRound = round;
 
-        gameTitle.textContent = round.title;
+        if (gameTitle) gameTitle.textContent = round.title;
 
         round.parts.forEach(part => {
             if (part.blank === undefined) {
-                ddText.appendChild(document.createTextNode(part.text));
+                if (ddText) ddText.appendChild(document.createTextNode(part.text));
                 return;
             }
 
@@ -767,7 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
             sizer.className = 'dd-sizer';
             sizer.textContent = part.blank;
             blank.appendChild(sizer);
-            ddText.appendChild(blank);
+            if (ddText) ddText.appendChild(blank);
         });
 
         ddTotal = round.answers.length;
@@ -780,20 +727,18 @@ document.addEventListener('DOMContentLoaded', () => {
             chip.textContent = word;
             chip.dataset.word = word;
             chip.addEventListener('click', () => ddChoose(chip));
-            ddTray.appendChild(chip);
+            if (ddTray) ddTray.appendChild(chip);
         });
 
-        ddNextBlank(false); // al primo caricamento la pagina non deve scorrere
+        ddNextBlank(false);
     }
-
-    /* =========================================================
-       FIND NEXT EMPTY PLACEHOLDER
-       ========================================================= */
 
     function ddNextBlank(scroll = true) {
         if (ddCurrent) ddCurrent.classList.remove('dd-current');
 
-        ddCurrent = ddText.querySelector('.dd-blank:not(.dd-filled)');
+        if (ddText) {
+            ddCurrent = ddText.querySelector('.dd-blank:not(.dd-filled)');
+        }
 
         if (ddCurrent) {
             ddCurrent.classList.add('dd-current');
@@ -802,7 +747,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* =========================================================
-       ANIMATIONS (non bloccano mai lo stato di gioco)
+       ANIMATIONS
        ========================================================= */
 
     function playCheckmark(element) {
@@ -838,21 +783,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         addMove();
 
-        // WRONG ANSWER
         if (!isCorrect) {
             ddMisses++;
             targetBlank.classList.remove('dd-shake', 'dd-error');
             targetBlank.classList.add('dd-error');
-            void targetBlank.offsetWidth; // riavvia l'animazione
+            void targetBlank.offsetWidth;
             targetBlank.classList.add('dd-shake');
             setTimeout(() => targetBlank.classList.remove('dd-shake', 'dd-error'), SHAKE_MS);
             return;
         }
 
-        // CORRECT ANSWER: tutto lo stato si aggiorna subito, le animazioni vengono dopo
         targetBlank.classList.add('dd-filled');
-
-        // La parola resta al suo posto in stato "selezionato" (verde) e non è più cliccabile
         chip.classList.add('dd-selected');
         chip.disabled = true;
 
@@ -865,12 +806,11 @@ document.addEventListener('DOMContentLoaded', () => {
             ddCurrent = null;
             ddFinish();
         } else {
-            ddNextBlank(); // lo spazio successivo si evidenzia subito
+            ddNextBlank();
         }
 
         playCheckmark(targetBlank);
 
-        // Coriandoli solo alla fine del gioco (per averli a ogni round togli "isLastRound")
         const isLastRound = roundIndex >= rounds.length - 1;
         if (completed && isLastRound) playConfetti();
     }
@@ -884,12 +824,12 @@ document.addEventListener('DOMContentLoaded', () => {
         stopElapsedTimer();
         hidePeek();
 
-        // Le parole non usate (distrattori) non devono sembrare ancora cliccabili;
-        // quelle corrette restano verdi (dd-selected)
-        ddTray.querySelectorAll('.dd-chip:not(.dd-selected)').forEach(chip => {
-            chip.disabled = true;
-            chip.classList.add('dd-disabled');
-        });
+        if (ddTray) {
+            ddTray.querySelectorAll('.dd-chip:not(.dd-selected)').forEach(chip => {
+                chip.disabled = true;
+                chip.classList.add('dd-disabled');
+            });
+        }
 
         finalScore = computeScore();
         results.push({
@@ -902,11 +842,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         const isLastRound = roundIndex >= rounds.length - 1;
-        setOverallProgress(roundIndex + 1);   // la barra avanza di un round
+        setOverallProgress(roundIndex + 1);
         setInstruction(isLastRound
             ? 'Paragrafo completato! Clicca Fatto per vedere il riepilogo.'
             : 'Paragrafo completato! Clicca per passare al prossimo.');
-        revealBtn.disabled = false;
+        if (revealBtn) revealBtn.disabled = false;
         setButtonMode(isLastRound ? 'done' : 'next');
     }
 
@@ -914,31 +854,31 @@ document.addEventListener('DOMContentLoaded', () => {
        BUTTON EVENTS
        ========================================================= */
 
-    revealBtn.addEventListener('pointerdown', showPeek);
-    revealBtn.addEventListener('pointerup', hidePeek);
-    revealBtn.addEventListener('pointerleave', hidePeek);
-    revealBtn.addEventListener('pointercancel', hidePeek);
-    revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+    if (revealBtn) {
+        revealBtn.addEventListener('pointerdown', (e) => showPeek(e));
+        revealBtn.addEventListener('pointerup', (e) => hidePeek(e));
+        revealBtn.addEventListener('pointerleave', (e) => hidePeek(e));
+        revealBtn.addEventListener('pointercancel', (e) => hidePeek(e));
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-    revealBtn.addEventListener('keydown', (e) => {
-        if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showPeek();
-    });
-    revealBtn.addEventListener('keyup', (e) => {
-        if (e.key === ' ' || e.key === 'Enter') hidePeek();
-    });
-    revealBtn.addEventListener('blur', hidePeek);
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showPeek(e);
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek(e);
+        });
+        revealBtn.addEventListener('blur', (e) => hidePeek(e));
 
-    // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
-    revealBtn.addEventListener('click', () => {
-        if (buttonMode === 'next') loadRound(roundIndex + 1);
-        else if (buttonMode === 'done') showSummaryScreen();
-    });
+        revealBtn.addEventListener('click', () => {
+            if (buttonMode === 'next') loadRound(roundIndex + 1);
+            else if (buttonMode === 'done') showSummaryScreen();
+        });
+    }
 
     /* =========================================================
        FINAL REPORT
        ========================================================= */
 
-    // Quale valore va sotto una colonna, in base al testo dell'intestazione
     function summaryKeyFor(headerText) {
         const t = headerText.trim().toLowerCase();
         if (/temp/.test(t)) return 'time';
@@ -953,48 +893,50 @@ document.addEventListener('DOMContentLoaded', () => {
         stopElapsedTimer();
         hidePeek();
 
-        // Le righe seguono le colonne dell'intestazione della tabella (nell'HTML): così non si sfasano
-        const table = summaryTbody.closest('table');
+        const table = summaryTbody ? summaryTbody.closest('table') : null;
         const headers = table ? Array.from(table.querySelectorAll('thead th')) : [];
         const keys = headers.length
             ? headers.map((th, i) => (i === 0 ? 'title' : summaryKeyFor(th.textContent)))
             : ['title', 'time', 'moves', 'hints', 'score'];
 
-        summaryTbody.innerHTML = '';
-        results.forEach(r => {
-            const values = {
-                title: r.title,
-                time: `${r.seconds}s`,
-                moves: String(r.moves),
-                errors: String(r.mistakes),
-                hints: String(r.reveals),
-                score: String(r.score)
-            };
+        if (summaryTbody) {
+            summaryTbody.innerHTML = '';
+            results.forEach(r => {
+                const values = {
+                    title: r.title,
+                    time: `${r.seconds}s`,
+                    moves: String(r.moves),
+                    errors: String(r.mistakes),
+                    hints: String(r.reveals),
+                    score: String(r.score)
+                };
 
-            const row = document.createElement('tr');
-            keys.forEach((key, i) => {
-                const td = document.createElement('td');
-                td.textContent = values[key] !== undefined ? values[key] : '';
-                if (i === 0 || key === 'score') td.style.fontWeight = '700';
-                row.appendChild(td);
+                const row = document.createElement('tr');
+                keys.forEach((key, i) => {
+                    const td = document.createElement('td');
+                    td.textContent = values[key] !== undefined ? values[key] : '';
+                    if (i === 0 || key === 'score') td.style.fontWeight = '700';
+                    row.appendChild(td);
+                });
+                summaryTbody.appendChild(row);
             });
-            summaryTbody.appendChild(row);
-        });
+        }
 
-        // Un blocco per ogni dato (come negli altri giochi), non righe separate da <br>
-        const sum = key => results.reduce((t, r) => t + r[key], 0);
-        summaryTotals.innerHTML = `
-            <div>Tempo: <strong>${sum('seconds')}s</strong></div>
-            <div>Tentativi: <strong>${sum('moves')}</strong></div>
-            <div>Errori: <strong>${sum('mistakes')}</strong></div>
-            <div>Aiuti: <strong>${sum('reveals')}</strong></div>
-            <div>Punteggio: <strong>${sum('score')}</strong></div>
-        `;
-        summaryTotals.style.flexWrap = 'wrap';
-        summaryTotals.style.gap = '8px 24px';
+        if (summaryTotals) {
+            const sum = key => results.reduce((t, r) => t + r[key], 0);
+            summaryTotals.innerHTML = `
+                <div>Tempo: <strong>${sum('seconds')}s</strong></div>
+                <div>Tentativi: <strong>${sum('moves')}</strong></div>
+                <div>Errori: <strong>${sum('mistakes')}</strong></div>
+                <div>Aiuti: <strong>${sum('reveals')}</strong></div>
+                <div>Punteggio: <strong>${sum('score')}</strong></div>
+            `;
+            summaryTotals.style.flexWrap = 'wrap';
+            summaryTotals.style.gap = '8px 24px';
+        }
 
         hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
-        summaryScreen.style.display = 'block';
+        if (summaryScreen) summaryScreen.style.display = 'block';
     }
 
     /* =========================================================
@@ -1002,7 +944,7 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================= */
 
     function ddFitText() {
-        if (!ddText.clientHeight) return; // area nascosta: niente da misurare
+        if (!ddText || !ddText.clientHeight) return;
 
         let lo = 12;
         let hi = 44;
@@ -1036,14 +978,12 @@ document.addEventListener('DOMContentLoaded', () => {
         hidePeek();
         resetStats();
         updateRoundDisplay();
-        setOverallProgress(roundIndex);   // la barra mostra i round già completati
+        setOverallProgress(roundIndex);
         setInstruction('Tocca la parola giusta per lo spazio evidenziato');
         setButtonMode('help');
-        revealBtn.disabled = false;
+        if (revealBtn) revealBtn.disabled = false;
 
         ddBuild(rounds[roundIndex]);
-
-        // Il testo cambia a ogni round: la dimensione del font va ricalcolata
         ddFitText();
         startElapsedTimer();
     }
@@ -1053,7 +993,7 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================================= */
 
     function initGame() {
-        summaryScreen.style.display = 'none';
+        if (summaryScreen) summaryScreen.style.display = 'none';
         hiddenOnSummary.forEach(el => { if (el) el.style.display = ''; });
 
         const playable = GAME_ROUNDS.map(parseRound).filter(Boolean);
@@ -1063,7 +1003,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (playable.length === 0) {
             setInstruction('Nessun paragrafo disponibile.');
-            revealBtn.disabled = true;
+            if (revealBtn) revealBtn.disabled = true;
             document.body.classList.add('loaded');
             return;
         }
@@ -1074,7 +1014,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('loaded');
         loadRound(0);
 
-        // Ora l'area di gioco è visibile (e i font caricati): adatta di nuovo la dimensione del testo
         if (document.fonts && document.fonts.ready) {
             document.fonts.ready.then(ddFitText);
         }
@@ -1082,7 +1021,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initGame();
 });
-
 
 </script>
     

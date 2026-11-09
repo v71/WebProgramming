@@ -4,49 +4,49 @@
     "rounds": [
         {
             "label":"Porta",
-            "img": "../images/articoli/door.png",
+            "img": "../../images/oggetti/moderni/door.png",
             "options": ["le", "lo" ,"il", "la"],
             "correctIndex": 3
         },
         {
             "label":"Icecream",
-            "img": "../images/articoli/icecream.png",
+            "img": "../../images/oggetti/moderni/icecream.png",
             "options": ["la", "lo" ,"il", "le"],
             "correctIndex": 2
         },
         {
             "label":"Tyre",
-            "img": "../images/articoli/tyre.png",
+            "img": "../../images/oggetti/moderni/tyre.png",
             "options": ["lo", "le" ,"il", "la"],
             "correctIndex": 0
         },
         {
             "label":"Bicicletta",
-            "img": "../images/articoli/bicycle.png",
+            "img": "../../images/oggetti/moderni/bicycle.png",
             "options": ["l'", "le" ,"il", "la"],
             "correctIndex": 3
         },
         {
             "label":"Mug",
-            "img": "../images/articoli/mug.png",
+            "img": "../../images/oggetti/moderni/mug.png",
             "options": ["il", "le" ,"il", "la"],
             "correctIndex": 3
         },
         {
             "label":"Sugar",
-            "img": "../images/articoli/sugar.png",
+            "img": "../../images/oggetti/moderni/sugar.png",
             "options": ["lo", "le" ,"il", "la"],
             "correctIndex": 0
         },
         {
             "label":"Smartphone",
-            "img": "../images/articoli/mobile.png",
+            "img": "../../images/oggetti/moderni/mobile.png",
             "options": ["lo", "le" ,"li", "la"],
             "correctIndex": 0
         },
         {
             "label":"picture",
-            "img": "../images/articoli/picture.png",
+            "img": "../../images/oggetti/moderni/picture.png",
             "options": ["lo", "le" ,"li", "la"],
             "correctIndex": 3
         }

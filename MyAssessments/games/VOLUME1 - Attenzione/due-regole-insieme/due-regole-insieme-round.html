@@ -19,9 +19,25 @@
         .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* Changed from 3 to 2 */
-            grid-template-rows: repeat(4, 1fr);    /* Changed from 5 to 3 */
+            grid-template-columns: repeat(4, 1fr);   /* 4 colonne */
+            grid-template-rows: repeat(4, 1fr);      /* 4 righe: 16 bottoni */
             gap: 14px;
+        }
+
+        .grid-button {
+            min-height: 60px;   /* i bottoni corti o vuoti non si schiacciano */
+        }
+
+        /* Schermi piccoli: 2 colonne x 8 righe, altrimenti i bottoni sono troppo stretti */
+        @media (max-width: 700px) {
+            .button-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(8, 1fr);
+                gap: 10px;
+            }
+            .grid-button {
+                font-size: 1rem;
+            }
         }
     
     </style>
@@ -47,6 +63,14 @@
             transform: translateY(0);
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
+        }
+
+        /* Il tasto Help si tiene premuto: evita menu contestuale, selezione e zoom al tocco lungo */
+        #reveal-btn {
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
@@ -188,6 +212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let moveCount = 0;
     let revealCount = 0;
     let currentCategoryTitle = '';
+    let pressStartedInHelpMode = false; // la pressione sul tasto è iniziata come "aiuto"?
 
     // --- Elementi ---
     const gameTitle = document.getElementById('game-title');
@@ -215,6 +240,28 @@ document.addEventListener('DOMContentLoaded', () => {
         gameArea, gameStats, instructionBanner, progressBar,
         progressBarTitle, gameTitle, actionControls
     ];
+
+    // --- Validazione dei round ---
+    // Un round è valido se ha da 1 a (numero di bottoni della griglia) bottoni, ognuno con
+    // "label" (testo) e "value" (true/false), e almeno un bottone con value true.
+    function isValidRound(category) {
+        const ok = category
+            && Array.isArray(category.buttons)
+            && category.buttons.length > 0
+            && category.buttons.length <= gridButtons.length
+            && category.buttons.every(b =>
+                b && typeof b.label === 'string' && b.label.trim() !== '' && typeof b.value === 'boolean')
+            && category.buttons.some(b => b.value === true);
+
+        if (!ok) {
+            console.warn(
+                `Round scartato: servono da 1 a ${gridButtons.length} bottoni con "label" (testo) e "value" (true/false), ` +
+                'e almeno uno con value true.',
+                category
+            );
+        }
+        return ok;
+    }
 
     // --- Pulsante: icona e testo ---
     const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
@@ -362,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const category = categories[roundIndex];
 
         buttons = [...category.buttons];
-        currentCategoryTitle = category.instruction;
+        currentCategoryTitle = category.instruction || `Round ${roundIndex + 1}`;
         totalCorrectItems = buttons.filter(b => b.value === true).length;
 
         isGameCompleted = false;
@@ -370,7 +417,6 @@ document.addEventListener('DOMContentLoaded', () => {
         revealCount = 0;
         foundCorrectCount = 0;
 
-        revealBtn.classList.remove('smooth-hidden');
         revealBtn.disabled = false;
 
         updateRoundDisplay();
@@ -393,9 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
             const data = await response.json();
 
-            // Solo round con bottoni e almeno una risposta corretta (altrimenti non si completerebbero mai)
-            categories = (Array.isArray(data.categories) ? data.categories : [])
-                .filter(c => c && Array.isArray(c.buttons) && c.buttons.some(b => b.value === true));
+            categories = (Array.isArray(data.categories) ? data.categories : []).filter(isValidRound);
 
             if (categories.length === 0) {
                 showLoadError('Nessuna categoria disponibile.');
@@ -410,7 +454,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             results = [];
-            if (gameTitle && data.title) gameTitle.textContent = data.title;
+            if (data.title) {
+                document.title = data.title;
+                if (gameTitle) gameTitle.textContent = data.title;
+            }
             loadRound(0);
 
             document.body.classList.add('loaded');
@@ -429,7 +476,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateRevealDisplay();
             gridButtons.forEach(button => {
                 const index = Number(button.dataset.index);
-                if (buttons[index] && buttons[index].value === true) {
+                // solo i bottoni corretti non ancora trovati
+                if (buttons[index] && buttons[index].value === true && !button.disabled) {
                     button.classList.add('help-correct');
                 }
             });
@@ -441,7 +489,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Pointer events: gestiscono mouse, touch e penna senza doppi conteggi
         let helpActive = false;
-        const startHelp = () => {
+        const startHelp = (e) => {
+            // Con il mouse conta solo il tasto sinistro (non destro / centrale)
+            if (e && e.pointerType === 'mouse' && e.button !== 0) return;
+
+            // Se la pressione parte come "aiuto", il click finale non deve far avanzare il round
+            // (succede se il round si completa mentre il tasto è ancora premuto)
+            pressStartedInHelpMode = !isGameCompleted;
+
             if (helpActive) return;
             helpActive = true;
             showHelp();
@@ -468,6 +523,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
         revealBtn.addEventListener('click', () => {
+            if (pressStartedInHelpMode) {
+                pressStartedInHelpMode = false;
+                return;
+            }
             if (!isGameCompleted) return;
             if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
             else showSummaryScreen();
@@ -519,7 +578,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setButtonState(isLastRound ? 'done' : 'next');
             }
 
-            // --- Solo dopo: animazioni ---
+            // --- Solo dopo: animazioni (non bloccano lo stato di gioco) ---
             if (typeof Checkmark !== 'undefined') {
                 try {
                     await Checkmark.show({ element: button, size: 48, rise: 70, duration: 1600 });

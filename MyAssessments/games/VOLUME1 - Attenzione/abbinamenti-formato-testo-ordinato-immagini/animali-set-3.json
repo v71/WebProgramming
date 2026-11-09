@@ -1,0 +1,58 @@
+ {
+         "title": "Scegli l'immagine giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Serpente a sonagli" , "column": 1 ,"position": 1 , "image": "../../images/animali/deserto/rattlesnake.png"},
+               { "label": "Pitone"             , "column": 1 ,"position": 2 , "image": "../../images/animali/foresta/python.png"},
+               { "label": "Tucano"             , "column": 1 ,"position": 3 , "image": "../../images/animali/foresta/tucan.png"},
+
+               { "label": "Tartaruga"  , "column": 2 ,"position": 1 ,"image": "../../images/animali/foresta/turtle.png"},
+               { "label": "Scoiattolo" , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/squirrel.png"},
+               { "label": "Lupo"       , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/wolf-1.png" }
+              ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Ippopotamo" , "column": 1 ,"position": 1 , "image": "../../images/animali/savana/hyppo.png"},
+               { "label": "Leone"      , "column": 1 ,"position": 2 , "image": "../../images/animali/savana/lion.png"},
+               { "label": "Struzzo"    , "column": 1 ,"position": 3 , "image": "../../images/animali/savana/ostrich.png"},
+
+               { "label": "Ape"        , "column": 2 ,"position": 1 ,"image": "../../images/animali/insetti/bee.png"},
+               { "label": "Coleottero" , "column": 2 ,"position": 2 ,"image": "../../images/animali/insetti/beetle.png"},
+               { "label": "Farfalla"   , "column": 2 ,"position": 3 ,"image": "../../images/animali/insetti/butterfly.png" }
+              ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Bruco"     , "column": 1 ,"position": 1 , "image": "../../images/animali/insetti/caterpillar.png"},
+               { "label": "Libellula" , "column": 1 ,"position": 2 , "image": "../../images/animali/insetti/dragonfly.png"},
+               { "label": "Mosca"     , "column": 1 ,"position": 3 , "image": "../../images/animali/insetti/fly.png"},
+
+               { "label": "Delfino"            , "column": 2 ,"position": 1 ,"image": "../../images/animali/mare/dolphin.png"},
+               { "label": "Piovra"             , "column": 2 ,"position": 2 ,"image": "../../images/animali/mare/octopus.png"},
+               { "label": "Cavalluccio marino" , "column": 2 ,"position": 3 ,"image": "../../images/animali/mare/seahorse.png" }
+              ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Locusta"     , "column": 1 ,"position": 1 , "image": "../../images/animali/insetti/grasshopper.png"},
+               { "label": "Coccinella"  , "column": 1 ,"position": 2 , "image": "../../images/animali/insetti/ladybug.png"},
+               { "label": "Scarafaggio" , "column": 1 ,"position": 3 , "image": "../../images/animali/insetti/roach.png"},
+
+               { "label": "Squalo"        , "column": 2 ,"position": 1 ,"image": "../../images/animali/mare/shark.png"},
+               { "label": "Stella marina" , "column": 2 ,"position": 2 ,"image": "../../images/animali/mare/starfish.png"},
+               { "label": "Pesce spada"   , "column": 2 ,"position": 3 ,"image": "../../images/animali/mare/swordfish.png" }
+              ]
+           }
+
+         ]
+}

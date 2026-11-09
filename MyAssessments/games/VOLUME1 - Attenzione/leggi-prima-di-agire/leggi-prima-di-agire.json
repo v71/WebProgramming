@@ -32,7 +32,7 @@
           { "label": "Porsche", "value": true },
           { "label": "Ferrari", "value": false },
           { "label": "Maserati", "value": false },
-          { "label": "Auto", "value": false },
+          { "label": "Audi", "value": false },
           { "label": "BMW", "value": true },
           { "label": "Chevrolet", "value": true }
         ]

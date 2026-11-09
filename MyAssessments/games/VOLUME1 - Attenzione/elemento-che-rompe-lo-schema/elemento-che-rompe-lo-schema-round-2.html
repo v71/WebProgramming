@@ -23,92 +23,91 @@
             gap: 16px;
         }
 
-    </style>
+        /* ---------- Pulsanti con immagine ---------- */
 
-    <style>
-        
-      .grid-button {
-                width: 140px;          
-                height: 140px;         
-                border: 2px solid #000000; 
-                border-radius: 12px;
-                background-color: var(--game-area-background);
-                display: flex;        
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                padding: 20px;          
-                box-sizing: border-box;
-                transition:
-                    background 0.2s ease,
-                    border-color 0.2s ease,
-                    transform 0.15s ease;
+        .grid-button {
+            width: 140px;
+            height: 140px;
+            border: 2px solid #000000;
+            border-radius: 12px;
+            background-color: var(--game-area-background);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 20px;
+            box-sizing: border-box;
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                transform 0.15s ease;
         }
-        
+
         /* Ensures the PNG scales proportionally and stays centered */
-        
         .grid-button img {
-                width: 100%;
-                height: 100%;
-                object-fit: contain;
-                pointer-events: none; 
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
         }
-        
 
-    </style>
-    
-    <style>
-
+        /* ---------- Gruppi di pulsanti ---------- */
 
         .button-grid {
             width: 100%;
-            display: flex;           /* Changes layout to flexible box */
-            justify-content: center; /* Centers the group of buttons */
-            gap: 32px;                /* Controls the exact space between buttons (make it smaller, e.g., 6px or 8px) */
+            display: flex;
+            flex-wrap: wrap;          /* su schermi stretti i pulsanti vanno a capo invece di schiacciarsi */
+            justify-content: center;
+            gap: 32px;
         }
 
-        .button-grid:last-of-type .grid-button:hover:not(:disabled) {
+        /* Gruppo in alto (esempi, non cliccabili) */
+        #top-grid .grid-button {
+            pointer-events: none;
+            cursor: default;
+            background-color: #7931b4;
+        }
+
+        /* Gruppo in basso (scelte interattive) */
+        #bottom-grid .grid-button {
+            background: #7931b4;
+        }
+
+        #bottom-grid .grid-button:hover:not(:disabled) {
             border-color: var(--grid-btn-hovered-border-color);
             transform: translateY(-3px);
             box-shadow: var(--shadow-md);
-            background: var(--grid-btn-hovered);   /* viola più chiaro, adatta al tuo gusto */
+            background: var(--grid-btn-hovered);
             z-index: 5;
         }
 
-        .button-grid:last-of-type .grid-button.selected {
+        #bottom-grid .grid-button.selected {
             background: #ff9800;
             border-color: #000205;
         }
 
-        .button-grid:last-of-type .grid-button.error {
+        #bottom-grid .grid-button.error {
             animation: buttonErrorShake 0.45s ease;
-            border-color: var(--wrong);
+            border-color: var(--grid-btn-wrong-border-color, #ef4444);
             background-color: rgba(239, 68, 68, 0.15);
         }
 
-        /* Bottom button group (Interactive choices) */
-        
-        .button-grid:last-of-type .grid-button {
-            background: #7931b4;
-        }
-        
-        .button-grid:first-of-type .grid-button {
-            pointer-events: none; 
-            cursor: default;     
-            background-color: #7931b4; 
-        }
-        
         .button-grid .grid-button.help-correct {
             background: #4caf50 !important;
             border-color: #ffffff !important;
         }
-        
-        @media (max-width: 700px) { 
-            .button-grid { gap: 8px; }
-            .grid-button {
-                min-height: 46px;
-                font-size: 0.85rem;
-            }
+
+        /* Effetto "dim" a fine round: tutti i pulsanti attenuati tranne quelli corretti */
+        .grid-button.dimmed {
+            opacity: 0.3;
+            filter: grayscale(0.7);
+            transition: opacity 0.4s ease, filter 0.4s ease;
+        }
+
+        .grid-button.keep-bright,
+        .grid-button.keep-bright:disabled {
+            opacity: 1;
+            filter: none;
         }
 
         @keyframes buttonErrorShake { 
@@ -119,24 +118,28 @@
             80% { transform: translateX(8px); } 
             100% { transform: translateX(0); } 
         }
+
+        /* Avviso se qualche immagine non si carica */
+        #load-warning {
+            text-align: center;
+            color: var(--grid-btn-wrong-text, #ef4444);
+            margin: 4px 0 8px;
+        }
+
+        #load-warning[hidden] {
+            display: none;
+        }
+
+        /* Schermi piccoli: pulsanti più piccoli, così stanno più per riga */
+        @media (max-width: 700px) { 
+            .button-grid { gap: 8px; }
+            .grid-button {
+                width: 90px;
+                height: 90px;
+                padding: 8px;
+            }
+        }
         
-    </style>
-
-    <style>
-
-        #game-area {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 16px;
-        }
-
-        .button-divider {
-            border: none;
-            border-top: 2px solid var(--border); /* Adjust color to fit your theme */
-            margin: 5px 0;                      /* Adjust spacing above and below */
-        }
-
     </style>
 
 <style>
@@ -160,6 +163,14 @@
             transform: translateY(0);
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
+        }
+
+        /* Il tasto Help si tiene premuto: evita menu contestuale, selezione e zoom al tocco lungo */
+        #reveal-btn {
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
@@ -221,11 +232,7 @@
         Instruzion banner.
     </div>
 
-    <!--<div class="controls" id="action-controls">
-        <button id="reveal-btn" class="cool-btn">
-            <span class="btn-text">Help!</span>
-        </button>
-    </div>-->
+    <div id="load-warning" hidden>Alcune immagini non si sono caricate: prova a ricaricare la pagina.</div>
 
     <div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
@@ -236,24 +243,23 @@
 
     <!-- EMPTY GAME AREA -->
     <div id="game-area">
-        <!-- Read-only debug text area placed above the buttons -->
 
        <h2>Prima serie</h2>
 
-        <!-- TOP BUTTON GROUP (Shapes) -->
-        <div class="button-grid">
-            <button class="grid-button">■</button>
-            <button class="grid-button">●</button>
-            <button class="grid-button">▲</button>
-            <button class="grid-button">■</button>
-            <button class="grid-button">●</button>
-            <button class="grid-button">▲</button>
+        <!-- TOP GROUP (esempi: non cliccabili) -->
+        <div class="button-grid" id="top-grid">
+            <div class="grid-button" role="img" aria-label="Esempio 1">■</div>
+            <div class="grid-button" role="img" aria-label="Esempio 2">●</div>
+            <div class="grid-button" role="img" aria-label="Esempio 3">▲</div>
+            <div class="grid-button" role="img" aria-label="Esempio 4">■</div>
+            <div class="grid-button" role="img" aria-label="Esempio 5">●</div>
+            <div class="grid-button" role="img" aria-label="Esempio 6">▲</div>
         </div>
        
         <h2>Seconda serie</h2>
        
-        <!-- BOTTOM BUTTON GROUP (Interactive Grid) -->
-        <div class="button-grid">
+        <!-- BOTTOM GROUP (scelte interattive) -->
+        <div class="button-grid" id="bottom-grid">
             <button class="grid-button" data-index="0"></button>
             <button class="grid-button" data-index="1"></button>
             <button class="grid-button" data-index="2"></button>
@@ -314,6 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let moveCount = 0;
     let revealCount = 0;
     let currentCategoryTitle = '';
+    let pressStartedInHelpMode = false; // la pressione sul tasto è iniziata come "aiuto"?
 
     // --- Elementi (letti una sola volta) ---
     const gameTitle = document.getElementById('game-title');
@@ -326,6 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const roundValueEl = document.getElementById('round-value'); // può essere null
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
+    const loadWarning = document.getElementById('load-warning');
     const timeValueEl = document.getElementById('time-value');
     const summaryScreen = document.getElementById('summary-screen');
     const summaryTbody = document.getElementById('summary-tbody');
@@ -335,27 +343,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBarTitle = document.getElementById('progress-title');
     const btnIcon = document.getElementById('btn-icon');
 
-    // Griglie: meglio con id (#top-grid / #bottom-grid). Se non esistono si usano i selettori
-    // originali come ripiego.
-    const topGrid = document.getElementById('top-grid')
-        || document.querySelector('.button-grid:first-of-type');
-    const bottomGrid = document.getElementById('bottom-grid')
-        || document.querySelector('.button-grid:last-of-type');
-    const topGridButtons = (topGrid && topGrid !== bottomGrid)
-        ? topGrid.querySelectorAll('.grid-button') : [];
-    const gridButtons = bottomGrid ? bottomGrid.querySelectorAll('.grid-button') : [];
+    // Le due griglie si trovano con l'id, non con la posizione nella pagina
+    const topGridButtons = document.querySelectorAll('#top-grid .grid-button');
+    const gridButtons = document.querySelectorAll('#bottom-grid .grid-button');
 
     const hiddenOnSummary = [
         gameArea, gameStats, instructionBanner, progressBar,
-        progressBarTitle, gameTitle, actionControls
+        progressBarTitle, gameTitle, actionControls, loadWarning
     ];
 
-    // I pulsanti in alto sono solo "esempi": non devono essere raggiungibili da tastiera
-    topGridButtons.forEach(button => {
-        button.tabIndex = -1;
-        button.setAttribute('aria-disabled', 'true');
-    });
+    // --- Validazione dei round ---
+    // Un round è valido se ha da 1 a (numero di pulsanti della griglia in basso) bottoni, ognuno con
+    // "label" (indirizzo dell'immagine) e "value" (true/false), e almeno un bottone con value true.
+    function isValidRound(category) {
+        const ok = category
+            && Array.isArray(category.buttons)
+            && category.buttons.length > 0
+            && category.buttons.length <= gridButtons.length
+            && category.buttons.every(b =>
+                b && typeof b.label === 'string' && b.label.trim() !== '' && typeof b.value === 'boolean')
+            && category.buttons.some(b => b.value === true);
 
+        if (!ok) {
+            console.warn(
+                `Round scartato: servono da 1 a ${gridButtons.length} bottoni con "label" (indirizzo dell'immagine) ` +
+                'e "value" (true/false), e almeno uno con value true.',
+                category
+            );
+        }
+        return ok;
+    }
+
+    // --- Pulsante: icona e testo ---
     const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
 
     function setButtonIcon(iconClass) {
@@ -363,21 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnIcon.classList.remove(...BUTTON_ICONS);
         btnIcon.classList.add(iconClass);
     }
-  
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
-    function setButtonState(mode) {
-        const texts = {
-            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
-            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
-            done: { icon: 'fa-check',       text: 'Fatto' }
-        };
-        setButtonIcon(texts[mode].icon);
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
-        if (textEl) textEl.textContent = texts[mode].text;
-    }
-  
-    /*
+
     // help = in gioco, next = round completato, done = ultimo round completato
     function setButtonState(mode) {
         const states = {
@@ -389,41 +394,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const textEl = revealBtn && revealBtn.querySelector('.btn-text');
         if (textEl) textEl.textContent = states[mode].text;
     }
-    */
-   /*
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
-    function setButtonState(mode) {
-        const texts = {
-            help: 'Help!',
-            next: '➜ Prossimo round',
-            done: '✓ Fatto'
-        };
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
-        if (textEl) textEl.textContent = texts[mode];
-    }
-   */
-   
-    // --- Effetto "dim" a fine round ---
-    // Stili di default (modificabili: basta ridefinire .dimmed / .keep-bright nel tuo CSS)
-    (function injectDimStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            button.grid-button.dimmed {
-                opacity: 0.3;
-                filter: grayscale(0.7);
-                transition: opacity 0.4s ease, filter 0.4s ease;
-            }
-            button.grid-button.keep-bright,
-            button.grid-button.keep-bright:disabled {
-                opacity: 1;
-                filter: none;
-            }
-        `;
-        document.head.prepend(style);
-    })();
 
-    // Attenua tutti i pulsanti tranne quelli corretti
+    // Attenua tutti i pulsanti tranne quelli corretti (fine round)
     function dimAllExceptCorrect() {
         // Pulsanti in alto (esempi): sempre attenuati
         topGridButtons.forEach(button => button.classList.add('dimmed'));
@@ -565,12 +537,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateGridUI(title) {
         if (instructionBanner) instructionBanner.textContent = title;
 
-        // Pulsanti in alto (descrizioni)
+        // Pulsanti in alto (descrizioni): quelli senza immagine si nascondono
         topGridButtons.forEach((button, index) => {
             const item = descriptions[index];
             button.classList.remove('dimmed');
-            if (item && item.shape) {
+            if (item) {
                 setButtonImage(button, item.shape, item.alt || `Esempio ${index + 1}`);
+                button.setAttribute('aria-label', item.alt || `Esempio ${index + 1}`);
                 button.style.display = '';
             } else {
                 button.style.display = 'none';
@@ -601,8 +574,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const category = categories[roundIndex];
 
         buttons = [...category.buttons];
-        descriptions = Array.isArray(category.descriptions) ? [...category.descriptions] : [];
-        currentCategoryTitle = category.instruction;
+
+        // Esempi in alto: solo voci con un'immagine ("shape"), al massimo quanti sono i pulsanti in alto
+        descriptions = (Array.isArray(category.descriptions) ? category.descriptions : [])
+            .filter(d => d && typeof d.shape === 'string' && d.shape.trim() !== '');
+        if (descriptions.length > topGridButtons.length) {
+            console.warn(`Troppi esempi in "descriptions": ne vengono mostrati solo ${topGridButtons.length}.`, category);
+            descriptions = descriptions.slice(0, topGridButtons.length);
+        }
+
+        currentCategoryTitle = category.instruction || `Round ${roundIndex + 1}`;
         totalCorrectItems = buttons.filter(b => b.value === true).length;
 
         isGameCompleted = false;
@@ -612,8 +593,8 @@ document.addEventListener('DOMContentLoaded', () => {
         revealCount = 0;
         foundCorrectCount = 0;
 
-        revealBtn.classList.remove('smooth-hidden');
         revealBtn.disabled = false;
+        if (loadWarning) loadWarning.hidden = true;
 
         updateRoundDisplay();
         updateMovesDisplay();
@@ -632,7 +613,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (token !== roundLoadToken) return; // nel frattempo è partito un altro round
 
         const failed = loaded.filter(r => !r.ok).map(r => r.src);
-        if (failed.length) console.warn('Immagini non caricate:', failed);
+        if (failed.length) {
+            console.warn('Immagini non caricate:', failed);
+            if (loadWarning) loadWarning.hidden = false;
+        }
 
         startElapsedTimer();
         isGameReady = true;
@@ -653,12 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Solo round validi: con bottoni e almeno una risposta corretta (altrimenti non si completerebbero mai)
-            const isValidCategory = c => c && Array.isArray(c.buttons) && c.buttons.some(b => b && b.value === true);
-            categories = data.categories.filter(isValidCategory);
-            if (categories.length < data.categories.length) {
-                console.warn(`${data.categories.length - categories.length} categorie scartate perché non valide.`);
-            }
+            categories = data.categories.filter(isValidRound);
             if (categories.length === 0) {
                 showLoadError('Nessuna categoria valida.');
                 return;
@@ -672,7 +651,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             results = [];
-            if (gameTitle && data.title) gameTitle.textContent = data.title;
+            if (data.title) {
+                document.title = data.title;
+                if (gameTitle) gameTitle.textContent = data.title;
+            }
 
             // La pagina appare subito; il timer parte quando le immagini sono pronte
             const ready = loadRound(0);
@@ -692,7 +674,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateRevealDisplay();
             gridButtons.forEach(button => {
                 const index = Number(button.dataset.index);
-                if (buttons[index] && buttons[index].value === true) {
+                // solo i bottoni corretti non ancora trovati
+                if (buttons[index] && buttons[index].value === true && !button.disabled) {
                     button.classList.add('help-correct');
                 }
             });
@@ -704,7 +687,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Pointer events: mouse, touch e penna, senza doppi conteggi
         let helpActive = false;
-        const startHelp = () => {
+        const startHelp = (e) => {
+            // Con il mouse conta solo il tasto sinistro (non destro / centrale)
+            if (e && e.pointerType === 'mouse' && e.button !== 0) return;
+
+            // Se la pressione parte come "aiuto", il click finale non deve far avanzare il round
+            // (succede se il round si completa mentre il tasto è ancora premuto)
+            pressStartedInHelpMode = !isGameCompleted;
+
             if (helpActive) return;
             helpActive = true;
             showHelp();
@@ -731,9 +721,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
         revealBtn.addEventListener('click', () => {
+            if (pressStartedInHelpMode) {
+                pressStartedInHelpMode = false;
+                return;
+            }
             if (!isGameCompleted) return;
-            if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
-            else showSummaryScreen();
+            if (roundIndex < categories.length - 1) {
+                loadRound(roundIndex + 1).catch(err => console.error('Errore nel caricamento del round:', err));
+            } else {
+                showSummaryScreen();
+            }
         });
     }
 
@@ -783,7 +780,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setButtonState(isLastRound ? 'done' : 'next');
             }
 
-            // Solo dopo: animazioni
+            // Solo dopo: animazioni (non bloccano lo stato di gioco)
             if (typeof Checkmark !== 'undefined') {
                 try {
                     await Checkmark.show({ element: button, size: 48, rise: 70, duration: 1600 });

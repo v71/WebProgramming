@@ -52,20 +52,6 @@
                { "label": "Aquila"    , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/eagle-1.png"},
                { "label": "Cerbiatto" , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/fawn-1.png" }
               ]
-           },
-           {
-             "instruction": "Metti ogni animale nella colonna giusta.",
-             "headers": [],
-             "items": [
-               { "label": "Delfino"    , "column": 1 ,"position": 1 , "image": "../../images/animali/mare/dolphin.png"},
-               { "label": "Squalo"     , "column": 1 ,"position": 2 , "image": "../../images/animali/mare/shark.png"},
-               { "label": "Tartaruga"  , "column": 1 ,"position": 3 , "image": "../../images/animali/mare/turtle.png"},
-
-               { "label": "Volpe"      , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/fox-1.png"},
-               { "label": "Scoiattolo" , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/squirrel.png"},
-               { "label": "Lupo"       , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/wolf-1.png" }
-              ]
            }
-
          ]
 }

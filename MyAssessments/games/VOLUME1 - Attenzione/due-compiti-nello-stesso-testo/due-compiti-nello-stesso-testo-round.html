@@ -22,15 +22,6 @@
             --target-background : #37275e;
         }
 
-        @keyframes selectErrorShake { 
-            0% { transform: translateX(0); }
-            20% { transform: translateX(-10px); } 
-            40% { transform: translateX(10px); } 
-            60% { transform: translateX(-8px); } 
-            80% { transform: translateX(8px); } 
-            100% { transform: translateX(0); } 
-        }
-
         @media (max-width: 700px) {
             body { padding: 16px 12px 30px; }
             h1, #progress-title { font-size: 1.9rem; }
@@ -49,6 +40,7 @@
             font-size: 1.5rem; 
             line-height: 1.5rem;
             padding: 16px;
+            white-space: pre-wrap;   /* mantiene gli a capo del testo nel JSON */
         }
 
         /* Text area locked after the round is completed */
@@ -75,6 +67,8 @@
             border-radius: 6px;
             border: 2px solid transparent; /* Increased thickness while keeping layout stable */
             cursor: pointer;
+            user-select: none;               /* il doppio clic non evidenzia il testo */
+            -webkit-user-select: none;
             transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
             font-weight: 400; /* change to the value you want */
 
@@ -90,6 +84,12 @@
             background-color:var(--grid-btn-hovered);
             border-color: #ffffff;
             color: #ffffff;
+        }
+
+        /* Navigazione da tastiera */
+        .word-span:focus-visible {
+            outline: 2px solid #ffffff;
+            outline-offset: 2px;
         }
 
         /* Correctly found state */
@@ -184,6 +184,14 @@
             transform: translateY(0);
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
+        }
+
+        /* Il tasto Help si tiene premuto: evita menu contestuale, selezione e zoom al tocco lungo */
+        #reveal-btn {
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
         }
 
         /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
@@ -291,7 +299,7 @@
         const DATA_URL = 'due-compiti-nello-stesso-testo.json';
         const SHUFFLE_ROUNDS = true;   // false = round nell'ordine del file
 
-        let categories = [];           // tutti i round (solo quelli validi)
+        let categories = [];           // tutti i round (solo quelli validi, già preparati)
         let roundIndex = 0;            // round corrente
         let results = [];              // risultato di ogni round completato
         let elapsedSeconds = 0;
@@ -301,11 +309,11 @@
         let moveCount = 0;
         let revealCount = 0;
         let currentCategoryTitle = '';
-        let currentExercise = null;
-        let connectors = [];
-        let solutions = [];
+        let targets = new Set();       // parole da trovare (connettivi + soluzioni), minuscole e senza punteggiatura ai bordi
         let totalCorrectItems = 0;
         let foundCorrectCount = 0;
+        let isHoldingHelp = false;
+        let pressStartedInHelpMode = false; // la pressione sul tasto è iniziata come "aiuto"?
 
         const gameTitle = document.getElementById('game-title');
         const gameArea = document.getElementById('game-area');
@@ -346,27 +354,75 @@
         }
 
         // --- Utilità sulle parole ---
-        const cleanToken = (token) => token.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?«»]/g, "").trim().toLowerCase();
+        // Toglie la punteggiatura (anche tipografica: “ ” ‘ ’ … – —) solo ai bordi della parola,
+        // così "e/o" o "l'amico" restano intatte, e porta tutto in minuscolo
+        const cleanToken = (token) =>
+            token.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, '').toLowerCase();
 
         // Una parola è un bersaglio se è un connettivo o una soluzione
-        function isTarget(cleanWord) {
-            return connectors.some(c => c.toLowerCase() === cleanWord) ||
-                   solutions.some(s => s.toLowerCase() === cleanWord);
+        const isTarget = (cleanWord) => targets.has(cleanWord);
+
+        // Pulisce una lista del JSON (connectors / solutions): solo testi con una parola sola
+        function normalizeList(list, label, category) {
+            if (list === undefined || list === null) return [];
+            if (!Array.isArray(list)) {
+                console.warn(`"${label}" deve essere una lista di parole (array): ignorato.`, category);
+                return [];
+            }
+            const result = [];
+            list.forEach(entry => {
+                if (typeof entry !== 'string') {
+                    console.warn(`Voce di "${label}" ignorata: non è un testo.`, entry);
+                    return;
+                }
+                const clean = cleanToken(entry.trim());
+                if (!clean) {
+                    console.warn(`Voce di "${label}" ignorata: vuota o fatta solo di punteggiatura.`, entry);
+                    return;
+                }
+                if (/\s/.test(clean)) {
+                    console.warn(`Voce di "${label}" ignorata: contiene più parole (ne serve una sola).`, entry);
+                    return;
+                }
+                result.push(clean);
+            });
+            return result;
         }
 
-        // Quanti bersagli ha un round (tutte le occorrenze nel testo). Serve anche a scartare i round non validi.
-        function countTargets(category) {
-            const conn = (category.connectors || []).map(c => String(c).toLowerCase());
-            const sol = (category.solutions || []).map(s => String(s).toLowerCase());
-            return category.text.split(/(\s+)/)
+        // Prepara un round: testo, istruzione, insieme dei bersagli e loro numero totale (tutte le occorrenze nel testo).
+        // Restituisce null se il round non è valido (testo mancante o nessun bersaglio nel testo).
+        function prepareRound(category) {
+            if (!category || typeof category.text !== 'string' || category.text.trim() === '') {
+                console.warn('Round scartato: serve "text" (testo non vuoto).', category);
+                return null;
+            }
+            const roundTargets = new Set([
+                ...normalizeList(category.connectors, 'connectors', category),
+                ...normalizeList(category.solutions, 'solutions', category)
+            ]);
+            const total = category.text.split(/\s+/)
                 .map(cleanToken)
-                .filter(t => t && (conn.includes(t) || sol.includes(t)))
+                .filter(t => t && roundTargets.has(t))
                 .length;
+            if (total === 0) {
+                console.warn('Round scartato: nel testo non compare nessuna parola di "connectors" o "solutions".', category);
+                return null;
+            }
+            return {
+                text: category.text,
+                instruction: (typeof category.instruction === 'string' && category.instruction.trim() !== '')
+                    ? category.instruction.trim() : '',
+                targets: roundTargets,
+                totalTargets: total
+            };
         }
 
         // --- Riepilogo ---
+        // Mosse sbagliate = mosse totali - parole da trovare (ogni parola giusta richiede una mossa)
         function computeScore() {
-            return Math.max(0, 100 - (moveCount * 2) - elapsedSeconds);
+            const wrongMoves = Math.max(0, moveCount - totalCorrectItems);
+            const raw = 100 - wrongMoves * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+            return Math.max(0, raw);
         }
 
         function addCell(row, text, bold = false) {
@@ -465,6 +521,70 @@
             if (instructionBanner) instructionBanner.textContent = message;
         }
 
+        // --- Animazioni (non bloccano mai lo stato di gioco) ---
+        function playCheckmark(element) {
+            if (typeof Checkmark === 'undefined') return;
+            try {
+                Promise.resolve(Checkmark.show({ element, size: 48, rise: 70, duration: 1600 }))
+                    .catch(err => console.warn('Checkmark animation failed:', err));
+            } catch (err) {
+                console.warn('Checkmark animation failed:', err);
+            }
+        }
+
+        // Coriandoli solo alla fine del gioco (per averli a ogni round togli il controllo "isLastRound")
+        async function playFinalConfetti() {
+            if (typeof Confetti === 'undefined') return;
+            try {
+                await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+            } catch (err) {
+                console.warn('Confetti animation failed:', err);
+            }
+        }
+
+        // --- Click (o tastiera) su una parola ---
+        function handleWordActivation(span) {
+            if (isGameCompleted || isGameLoading) return;
+
+            const cleanWord = span.dataset.word;
+
+            moveCount++;
+            updateMovesDisplay();
+
+            if (isTarget(cleanWord)) {
+                // La parola viene selezionata o deselezionata
+                const isNewSelection = !span.classList.contains('selected');
+
+                span.classList.remove('error-word');
+                span.classList.toggle('selected');
+                span.setAttribute('aria-pressed', String(span.classList.contains('selected')));
+
+                if (isNewSelection) {
+                    span.classList.add('help-correct');
+                    playCheckmark(span); // il segno di spunta compare solo su questa parola
+                } else {
+                    span.classList.remove('help-correct');
+                }
+
+                evaluateSelections();
+            } else {
+                // Parola sbagliata: shake e stile rosso, poi torna normale
+                span.classList.remove('selected', 'help-correct');
+                span.setAttribute('aria-pressed', 'false');
+                span.classList.remove('error-word');
+                void span.offsetWidth; // reflow per riavviare l'animazione
+                span.classList.add('error-word');
+
+                // Toglie lo stato di errore a fine animazione (0.4s, come lo shake)
+                clearTimeout(span._errorTimeout);
+                span._errorTimeout = setTimeout(() => {
+                    span.classList.remove('error-word');
+                }, 400);
+            }
+        }
+
         function renderClickableText(text, instruction) {
             if (instructionBanner) {
                 instructionBanner.textContent = instruction;
@@ -486,59 +606,19 @@
                     const span = document.createElement('span');
                     span.textContent = token;
                     span.className = 'word-span';
-                    // Clean punctuation to map correctly against solutions/connectors
+                    // Parola pulita dalla punteggiatura, per confrontarla con connettivi e soluzioni
                     span.dataset.word = cleanToken(token);
 
-                    span.addEventListener('click', () => {
-                        if (isGameCompleted || isGameLoading) return;
+                    // Accessibilità: ogni parola si raggiunge e si attiva anche da tastiera
+                    span.setAttribute('role', 'button');
+                    span.setAttribute('aria-pressed', 'false');
+                    span.tabIndex = 0;
 
-                        const cleanWord = span.dataset.word;
-
-                        moveCount++;
-                        updateMovesDisplay();
-
-                        if (isTarget(cleanWord)) {
-                            // Check if this specific word is being selected for the first time right now
-                            const isNewSelection = !span.classList.contains('selected');
-                            
-                            span.classList.remove('error-word');
-                            span.classList.toggle('selected');
-                            
-                            if (isNewSelection && span.classList.contains('selected')) {
-                                span.classList.add('help-correct');
-
-                                // Trigger checkmark ON THIS SPAN ONLY
-                                if (typeof Checkmark !== 'undefined') {
-                                    try {
-                                        Checkmark.show({
-                                            element: span, // Target only the clicked span
-                                            size: 48,
-                                            rise: 70,
-                                            duration: 1600
-                                        });
-                                    } catch (err) {
-                                        console.warn('Checkmark animation failed:', err);
-                                    }
-                                }
-                            } else {
-                                span.classList.remove('help-correct');
-                            }
-
-                            evaluateSelections();
-                        } else {
-                            // Wrong word: shake and red style, then go back to normal
-                            span.classList.remove('selected', 'help-correct');
-                            span.classList.remove('error-word');
-                            void span.offsetWidth; // Reflow to reset animation
-                            span.classList.add('error-word');
-
-                            // Remove the error state when the shake is over
-                            clearTimeout(span._errorTimeout);
-                            span._errorTimeout = setTimeout(() => {
-                                span.classList.remove('error-word');
-                            }, 400); // same duration as the shake animation (0.4s)
-
-                            evaluateSelections();
+                    span.addEventListener('click', () => handleWordActivation(span));
+                    span.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            handleWordActivation(span);
                         }
                     });
                     
@@ -565,9 +645,10 @@
                 isGameCompleted = true;
                 stopElapsedTimer();
 
-                // Lock the text area so no more clicks are possible
+                // Blocca il testo: niente più click né tabulazione sulle parole
                 clickableTextContainer.classList.add('disabled');
-                // Lock and dim the whole game area
+                clickableTextContainer.querySelectorAll('.word-span').forEach(s => { s.tabIndex = -1; });
+                // Blocca e attenua tutta l'area di gioco
                 gameArea.classList.add('disabled');
 
                 const isLastRound = roundIndex >= categories.length - 1;
@@ -583,30 +664,20 @@
                 setOverallProgress(roundIndex + 1);          // la barra avanza di un round
                 setButtonState(isLastRound ? 'done' : 'next');
 
-                // Coriandoli solo alla fine del gioco (per averli a ogni round togli "isLastRound &&")
-                if (isLastRound && typeof Confetti !== 'undefined') {
-                    try {
-                        Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
-                        Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
-                        Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
-                    } catch (err) {
-                        console.warn('Confetti animation failed:', err);
-                    }
-                }
+                if (isLastRound) playFinalConfetti();
             }
         }
 
         // --- Round ---
         function loadRound(index) {
+            endHelp(); // toglie eventuali evidenziazioni dell'aiuto rimaste
+
             roundIndex = index;
-            currentExercise = categories[roundIndex];
+            const round = categories[roundIndex];
 
-            currentCategoryTitle = currentExercise.instruction;
-            connectors = currentExercise.connectors || [];
-            solutions = currentExercise.solutions || [];
-
-            // Totale bersagli = tutte le occorrenze di connettivi e soluzioni nel testo
-            totalCorrectItems = countTargets(currentExercise);
+            currentCategoryTitle = round.instruction || `Round ${roundIndex + 1}`;
+            targets = round.targets;
+            totalCorrectItems = round.totalTargets;
 
             foundCorrectCount = 0;
             isGameCompleted = false;
@@ -617,7 +688,6 @@
             clickableTextContainer.classList.remove('disabled');
             gameArea.classList.remove('disabled');
 
-            revealBtn.classList.remove('smooth-hidden');
             revealBtn.disabled = false;
 
             updateRoundDisplay();
@@ -625,7 +695,7 @@
             updateRevealDisplay();
             updateWordCountDisplay();
             setOverallProgress(roundIndex);   // la barra mostra i round già completati
-            renderClickableText(currentExercise.text, currentCategoryTitle);
+            renderClickableText(round.text, currentCategoryTitle);
             setButtonState('help');
             startElapsedTimer();
         }
@@ -642,9 +712,10 @@
 
                 const data = await response.json();
 
-                // Solo round con un testo e almeno un bersaglio (altrimenti non si completerebbero mai)
+                // Solo round con un testo e almeno un bersaglio nel testo (altrimenti non si completerebbero mai)
                 categories = (Array.isArray(data.categories) ? data.categories : [])
-                    .filter(c => c && typeof c.text === 'string' && countTargets(c) > 0);
+                    .map(prepareRound)
+                    .filter(Boolean);
 
                 if (categories.length === 0) {
                     showLoadError('Nessuna categoria valida disponibile.');
@@ -659,7 +730,10 @@
                 }
 
                 results = [];
-                if (gameTitle && data.title) gameTitle.textContent = data.title;
+                if (data.title) {
+                    document.title = data.title;
+                    if (gameTitle) gameTitle.textContent = data.title;
+                }
                 loadRound(0);
 
                 document.body.classList.add('loaded');
@@ -669,36 +743,61 @@
                 showLoadError('Errore nel caricamento del gioco.');
             }
         }
-          
+
+        // --- Pulsante Help (tieni premuto) ---
+        function startHelp(e) {
+            // Con il mouse conta solo il tasto sinistro (non destro / centrale)
+            if (e && e.pointerType === 'mouse' && e.button !== 0) return;
+
+            // Se la pressione parte come "aiuto", il click finale non deve far avanzare il round
+            // (succede se il round si completa mentre il tasto è ancora premuto)
+            pressStartedInHelpMode = !isGameCompleted;
+
+            // isHoldingHelp evita di contare più aiuti con più dita / tasti contemporanei
+            if (isHoldingHelp || isGameCompleted || isGameLoading) return;
+            isHoldingHelp = true;
+
+            revealCount++;
+            updateRevealDisplay();
+
+            clickableTextContainer.querySelectorAll('.word-span').forEach(span => {
+                if (isTarget(span.dataset.word)) {
+                    span.classList.add('help-active');
+                }
+            });
+        }
+
+        function endHelp() {
+            isHoldingHelp = false;
+            clickableTextContainer.querySelectorAll('.word-span.help-active')
+                .forEach(span => span.classList.remove('help-active'));
+        }
+
         if (revealBtn) {
-            const handleShowHelp = () => {
-                if (isGameCompleted || isGameLoading) return;
-                revealCount++;
-                updateRevealDisplay();
-                         
-                const spans = clickableTextContainer.querySelectorAll('.word-span');
-                spans.forEach(span => {
-                    if (isTarget(span.dataset.word)) {
-                        span.classList.add('help-active');
-                    }
-                });
-            };
+            // Pointer events: mouse, touch e penna con un solo gestore
+            revealBtn.addEventListener('pointerdown', startHelp);
+            revealBtn.addEventListener('pointerup', endHelp);
+            revealBtn.addEventListener('pointerleave', endHelp);
+            revealBtn.addEventListener('pointercancel', endHelp);
 
-            const handleHideHelp = () => {
-                if (isGameCompleted || isGameLoading) return;
-                const spans = clickableTextContainer.querySelectorAll('.word-span');
-                spans.forEach(span => span.classList.remove('help-active'));
-            };
+            // Tocco lungo su mobile: niente menu contestuale (che annullerebbe l'aiuto)
+            revealBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-            revealBtn.addEventListener('mousedown', handleShowHelp);
-            revealBtn.addEventListener('mouseup', handleHideHelp);
-            revealBtn.addEventListener('mouseleave', handleHideHelp);
-            revealBtn.addEventListener('touchstart', (e) => { e.preventDefault(); handleShowHelp(); }, { passive: false });
-            revealBtn.addEventListener('touchend', handleHideHelp);
-            revealBtn.addEventListener('touchcancel', handleHideHelp);
+            // Tastiera: Spazio / Invio tenuti premuti mostrano l'aiuto
+            revealBtn.addEventListener('keydown', (e) => {
+                if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp();
+            });
+            revealBtn.addEventListener('keyup', (e) => {
+                if (e.key === ' ' || e.key === 'Enter') endHelp();
+            });
+            revealBtn.addEventListener('blur', endHelp);
 
             // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
             revealBtn.addEventListener('click', () => {
+                if (pressStartedInHelpMode) {
+                    pressStartedInHelpMode = false;
+                    return;
+                }
                 if (!isGameCompleted) return;
                 if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
                 else showSummaryScreen();

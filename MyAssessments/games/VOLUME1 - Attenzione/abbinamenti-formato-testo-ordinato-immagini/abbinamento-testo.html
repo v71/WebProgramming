@@ -38,6 +38,14 @@
             text-decoration: none;
         }
 
+        /* Il tasto Help si tiene premuto: evita menu contestuale, selezione e zoom al tocco lungo */
+        #reveal-btn {
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
         /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
 
        #reveal-btn .fa {
@@ -74,10 +82,6 @@
     </style>
 
 <style>
-
-:root {
-    --split-gap: 12px;
-}
 
 /* =========================================
    CONTENITORE PRINCIPALE E LAYOUT
@@ -126,14 +130,14 @@
 
 .list-btn {
     font-family: inherit;
-    font-size: 1.25rem;                 /* Font più grande (prima era 1.15rem) */
-    font-weight: 500;                  /* Leggermente più marcato per leggibilità */
+    font-size: 1.25rem;
+    font-weight: 500;
     border: 2px solid var(--border);
     border-radius: 12px;
     color: var(--text);
     cursor: pointer;
-    min-height: 138px;                  /* Altezza maggiore per allinearsi visivamente meglio */
-    padding: 10px 20px;                /* Più respiro interno */
+    min-height: 138px;                  /* stessa altezza delle celle di destra */
+    padding: 10px 20px;
     background: var(--default-btn);
     text-align: center;
     display: flex;
@@ -166,17 +170,6 @@
     opacity: 0.35;
     cursor: default;
     transform: none;
-}
-
-.list-btn.help-active::after {
-    content: '  \2192  ' attr(data-hint);
-    font-weight: 700;
-}
-
-.list-btn.help-active {
-    border-color: var(--grid-btn-help-border-color);
-    background: var(--grid-btn-help);
-    color: var(--grid-btn-help-text);
 }
 
 /* ---------- INTESTAZIONI DI COLONNA ---------- */
@@ -240,31 +233,25 @@
     border-color: var(--grid-btn-selected-border-color) !important;
     transform: none !important;
     box-shadow: var(--shadow-sm) !important;
-    /* Ombra centrata e simmetrica (0 spostamento orizzontale, 0 verticale) */
-    /*   box-shadow: 0 0 12px 3px rgba(255, 255, 255, 0.1) !important;*/
     opacity: 1 !important;
     cursor: default !important;
 }
 
-/* Stile del testo quando l'aiuto (preview) è attivo */
-.drop-cell.help-preview .cell-label-placeholder {
+/* Posizione della griglia senza elemento in questo round: occupa lo spazio ma non si vede né si clicca */
+.drop-cell.empty-slot {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Testo bianco con contorno nero quando l'aiuto è attivo o la cella è completata */
+.drop-cell.help-preview .cell-label-placeholder,
+.drop-cell.filled .cell-label-placeholder {
     color: #ffffff !important;
     text-shadow:
         -1px -1px 0 #000,
          1px -1px 0 #000,
         -1px  1px 0 #000,
          1px  1px 0 #000 !important;
-}
-
-/* Assicura che anche il testo all'interno erediti il colore bianco */
-/* Aggiunge il bordo nero (text-shadow) al testo dentro la cella completata */
-.drop-cell.filled .cell-label-placeholder {
-    color: #ffffff !important;           /* Testo bianco */
-    text-shadow:
-        -1px -1px 0 #000,
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000 !important;   /* Contorno nero nitido */
 }
 
 /* Contenuto interno immagine + testo */
@@ -298,7 +285,6 @@
 }
 
 /* ---------- STATI D'ERRORE ED EFFETTI ---------- */
-.list-btn.error,
 .drop-cell.error {
     animation: gameShake 0.4s ease;
     border-color: var(--grid-btn-wrong-border-color);
@@ -334,30 +320,30 @@ button:disabled {
 
 <style>
 
-   #game-area {
-    box-sizing: border-box;
-    padding: 10px 16px 16px 16px !important;   /* same top and bottom */
-    margin: 0 !important;
-    align-items: flex-start;
-}
+    #game-area {
+        box-sizing: border-box;
+        padding: 10px 16px 16px 16px !important;   /* same top and bottom */
+        margin: 0 !important;
+        align-items: flex-start;
+    }
 
-.split-side {
-    gap: 6px !important;
-}
+    .split-side {
+        gap: 6px !important;
+    }
 
-.col-heads {
-    margin: 0 !important;
-    padding: 0 !important;
-}
+    .col-heads {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 
-.col-head,
-#game-area h2 {
-    margin: 0 !important;
-    padding: 0 8px !important;
-    min-height: 0 !important;
-    height: auto !important;
-    line-height: 1 !important;
-}
+    .col-head,
+    #game-area h2 {
+        margin: 0 !important;
+        padding: 0 8px !important;
+        min-height: 0 !important;
+        height: auto !important;
+        line-height: 1 !important;
+    }
 
 </style>
 
@@ -405,15 +391,15 @@ button:disabled {
             </div>
         </div>
 
-        <!-- Contenitore di Destra (Destinazione: griglia 5x2 di celle) -->
+        <!-- Contenitore di Destra (Destinazione: griglia di celle con immagine) -->
         <div class="split-side" id="right-side-container">
             <div class="col-heads">
                 <h2 class="col-head" id="col-right-1-title">Colonna 1</h2>
                 <h2 class="col-head" id="col-right-2-title">Colonna 2</h2>
             </div>
-            <!-- Griglia di arrivo 5x2 -->
+            <!-- Griglia di arrivo (2 colonne, righe in base al round) -->
             <div class="drop-grid" id="right-drop-grid">
-                <!-- Le 10 celle di destinazione -->
+                <!-- Le celle di destinazione vengono create da JS -->
             </div>
         </div>
     </div>
@@ -445,14 +431,42 @@ button:disabled {
         <div class="summary-totals" id="summary-totals">
         </div>
     </div>
-
+    
 <script>
+
+    // --- Gestione Audio ---
+    const sounds = {
+        correct: new Audio('../../sounds/check-correct.mp3'),
+        next_round: new Audio('../../sounds/next-round.mp3'),
+        error: new Audio('../../sounds/error.mp3'),
+        help: new Audio('../../sounds/help.mp3'),
+        click: new Audio('../../sounds/click.mp3'),
+        wow: new Audio('../../sounds/wow.mp3')
+    };
+
+    // Imposta il volume (da 0.0 a 1.0)
+    Object.values(sounds).forEach(sound => {
+        sound.volume = 0.4;
+    });
+
+    // Funzione helper per riprodurre i suoni in modo sicuro
+    function playSound(key) {
+        if (sounds[key]) {
+            sounds[key].currentTime = 0;
+            sounds[key].play().catch(err => console.log("Audio play prevented:", err));
+        }
+    }
 
     document.addEventListener('DOMContentLoaded', () => {
 
-        const DATA_URL = 'set-1.json';
+        // File JSON di default; si può cambiare con ?json=nome-file.json (solo file relativi .json)
+        const DEFAULT_DATA_URL = 'riconosci-emozioni-1.json';
         const SHUFFLE_ROUNDS = true;
-        let ROWS = 5; // Celle per colonna nella griglia di destra
+
+        // Punteggio per round: ogni click su una cella è una mossa;
+        // le mosse sbagliate = mosse totali - elementi da piazzare
+        const WRONG_PENALTY = 10;   // punti persi per ogni mossa sbagliata
+        const HELP_PENALTY = 20;    // punti persi per ogni aiuto
 
         /* =========================================================
         STATO DEL GIOCO
@@ -463,10 +477,11 @@ button:disabled {
         let isGameReady = false;
         let isGameCompleted = false;
         let selectedItem = null; // Pulsante selezionato a sinistra
-        let currentRoundItems = []; // <--- Aggiungi questo array
+        let currentRoundItems = [];
         let isHoldingHelp = false;
         let currentButtonMode = 'help';
-        let helpPreviewElements = []; // Traccia le celle riempite temporaneamente dall'aiuto
+        let helpPreviewElements = []; // Celle riempite temporaneamente dall'aiuto
+        let pressStartedInHelpMode = false; // la pressione sul tasto è iniziata come "aiuto"?
 
         // Statistiche e metriche
         let moveCount = 0;
@@ -478,7 +493,7 @@ button:disabled {
         let results = [];
 
         /* =========================================================
-        SELETTORI DOM (Basati sul nuovo layout simmetrico)
+        SELETTORI DOM
         ========================================================= */
         const gameTitle = document.getElementById('game-title');
         const gameArea = document.getElementById('game-area');
@@ -495,11 +510,12 @@ button:disabled {
         const progressBarTitle = document.getElementById('progress-title');
         const summaryScreen = document.getElementById('summary-screen');
 
-        // Titoli delle colonne (Sinistra e Destra)
+        // Titoli delle colonne (Sinistra e Destra) e loro contenitori
         const colLeft1Title = document.getElementById('col-left-1-title');
         const colLeft2Title = document.getElementById('col-left-2-title');
         const colRight1Title = document.getElementById('col-right-1-title');
         const colRight2Title = document.getElementById('col-right-2-title');
+        const colHeadsContainers = document.querySelectorAll('.col-heads');
 
         // Colonne di sinistra (Sorgente) e griglia di destra (Destinazione)
         const sourceCol1 = document.getElementById('source-col-1');
@@ -528,24 +544,37 @@ button:disabled {
             return arr;
         }
 
-        // Un round è valido se ha elementi con etichetta e colonna (1 o 2)
+        // Un round è valido se ogni elemento ha: label, colonna (1 o 2), posizione (intero >= 1),
+        // e se non ci sono due elementi sulla stessa cella (colonna + posizione).
+        // L'immagine è facoltativa.
         function isValidRound(category) {
-            if (!category || !Array.isArray(category.items) || category.items.length === 0) return false;
-            return category.items.every(it =>
-                it && typeof it.label === 'string' && it.label.trim() !== '' && (it.column === 1 || it.column === 2)
+            if (!category || !Array.isArray(category.items) || category.items.length === 0) {
+                console.warn('Round scartato: nessun elemento in "items".', category);
+                return false;
+            }
+            const wellFormed = category.items.every(it =>
+                it &&
+                typeof it.label === 'string' && it.label.trim() !== '' &&
+                (it.column === 1 || it.column === 2) &&
+                Number.isInteger(it.position) && it.position >= 1
             );
+            if (!wellFormed) {
+                console.warn('Round scartato: ogni elemento deve avere "label" (testo), "column" (1 o 2) e "position" (intero >= 1).', category);
+                return false;
+            }
+            const cells = new Set(category.items.map(it => `${it.column}-${it.position}`));
+            if (cells.size !== category.items.length) {
+                console.warn('Round scartato: due elementi hanno la stessa colonna e posizione.', category);
+                return false;
+            }
+            return true;
         }
 
-        // Barra generale: aggiorna la percentuale in base al round corrente o al completamento
-        function setOverallProgress() {
+        // Barra generale: round completati / round totali
+        function setOverallProgress(completedRounds) {
             const total = categories.length;
             if (progressBarFill && total > 0) {
-                if (isGameCompleted && roundIndex >= total - 1) {
-                    progressBarFill.style.width = '100%';
-                } else {
-                    const progressPercent = (roundIndex / total) * 100;
-                    progressBarFill.style.width = progressPercent + '%';
-                }
+                progressBarFill.style.width = ((completedRounds / total) * 100) + '%';
             }
         }
 
@@ -588,7 +617,7 @@ button:disabled {
 
         // help = in gioco, next = round completato, done = ultimo round completato
         function setButtonState(mode) {
-            currentButtonMode = mode; // <--- Mancava questa assegnazione cruciale!
+            currentButtonMode = mode;
             const states = {
                 help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
                 next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
@@ -607,40 +636,51 @@ button:disabled {
         }
 
         /* =========================================================
-       LOGICA DI TRACCIAMENTO ED ERRORI (REGISTER FUNCTIONS)
-       ========================================================= */
+        LOGICA DI TRACCIAMENTO ED ERRORI (REGISTER FUNCTIONS)
+        ========================================================= */
 
-        // Incrementa e aggiorna il contatore delle mosse
+        // Ogni click su una cella di destra (giusto o sbagliato) è una mossa
         function registerMove() {
             if (isGameCompleted || !isGameReady) return;
             moveCount++;
             if (movesValueEl) movesValueEl.textContent = moveCount;
         }
 
-        // Risposta sbagliata: applica l'animazione di shake sulla cella o sul pulsante
+        // Risposta sbagliata: animazione di shake sulla cella
         function registerWrong(element) {
             if (isGameCompleted || !isGameReady || !element) return;
+            playSound('error');
             element.classList.remove('error');
             void element.offsetWidth; // Riavvia l'animazione CSS
             element.classList.add('error');
             setTimeout(() => element.classList.remove('error'), 400);
         }
 
-        // Risposta corretta: aggiorna il contatore risposte ed eventualmente chiude il round
+        // Risposta corretta: aggiorna il contatore ed eventualmente chiude il round
         function registerCorrect(element) {
             if (isGameCompleted || !isGameReady) return;
             foundCorrectCount++;
             if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
 
-            // Se tutti gli elementi sono stati posizionati, il round si completa
             if (foundCorrectCount >= totalCorrectItems) {
                 completeRound();
             }
 
-            // Animazione opzionale se la libreria Checkmark è disponibile
             if (typeof Checkmark !== 'undefined' && element) {
                 try {
                     Checkmark.show({ element, size: 48, rise: 70, duration: 1600 });
+
+                    const isLastRound = roundIndex >= categories.length - 1;
+
+                    if (totalCorrectItems-foundCorrectCount !== 0) {
+                            playSound('correct');
+                        }
+                        else{
+                            if ( isLastRound===false){
+                                playSound('next_round');
+                            }
+                        }
+
                 } catch (err) {
                     console.warn('Checkmark error:', err);
                 }
@@ -657,262 +697,251 @@ button:disabled {
 
             const isLastRound = roundIndex >= categories.length - 1;
             setButtonState(isLastRound ? 'done' : 'next');
-
-            // Aggiorna la barra di progresso al 100% se è l'ultimo round
-            if (isLastRound) {
-                setOverallProgress();
-            }
-
+            
+            // La barra avanza subito al completamento del round (round completati / totali)
+            setOverallProgress(roundIndex + 1);
+                   
             if (isLastRound && typeof Confetti !== 'undefined') {
+                try {
+                    playSound('wow');
                     await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
                     await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
                     await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                } catch (err) {
+                    console.warn('Confetti error:', err);
+                }
             }
         }
-        
-    /* =========================================================
-    LOGICA DI SELEZIONE E SPOSTAMENTO (Scegli elemento -> Clicca cella)
-    ========================================================= */
 
-    // 1. Clic su un elemento a sinistra (Seleziona / Deseleziona)
-    function selectItem(itemObj) {
-        if (isGameCompleted || !isGameReady || itemObj.placed) return;
+        /* =========================================================
+        LOGICA DI SELEZIONE E SPOSTAMENTO (Scegli elemento -> Clicca cella)
+        ========================================================= */
 
-        const wasSelected = (selectedItem === itemObj);
-        deselectAllItems();
+        // 1. Clic su un elemento a sinistra (Seleziona / Deseleziona)
+        function selectItem(itemObj) {
+            if (isGameCompleted || !isGameReady || itemObj.placed) return;
 
-        if (wasSelected) {
+            const wasSelected = (selectedItem === itemObj);
+            deselectAllItems();
+
+            if (wasSelected) {
+                selectedItem = null;
+                return;
+            }
+
+            playSound('click');
+
+            selectedItem = itemObj;
+            itemObj.button.classList.add('is-selected');
+            itemObj.button.setAttribute('aria-pressed', 'true');
+        }
+
+        function deselectAllItems() {
+            const allButtons = document.querySelectorAll('.list-btn');
+            allButtons.forEach(btn => {
+                btn.classList.remove('is-selected');
+                btn.setAttribute('aria-pressed', 'false');
+            });
+        }
+
+        // 2. Clic su una cella della griglia a destra (colonna e posizione devono coincidere)
+        function chooseCell(targetColumn, targetPosition, clickedCell) {
+            if (isGameCompleted || !isGameReady || !selectedItem) return;
+            // Celle già piene o in anteprima dell'aiuto non sono cliccabili
+            if (clickedCell.classList.contains('filled') || clickedCell.classList.contains('help-preview')) return;
+
+            registerMove(); // ogni click su una cella conta come mossa
+
+            // ESITO SBAGLIATO: l'elemento non corrisponde a questa cella
+            if (selectedItem.column !== targetColumn || selectedItem.position !== targetPosition) {
+                registerWrong(clickedCell);
+                return;
+            }
+
+            // ESITO CORRETTO: scrive l'etichetta nella cella, l'immagine resta com'è
+            clickedCell.classList.add('filled');
+            const placeholder = clickedCell.querySelector('.cell-label-placeholder');
+            if (placeholder) placeholder.textContent = selectedItem.label;
+
+            // Disabilita il pulsante sorgente a sinistra
+            selectedItem.placed = true;
+            selectedItem.button.classList.remove('is-selected');
+            selectedItem.button.classList.add('placed');
+            selectedItem.button.setAttribute('aria-pressed', 'false');
+            selectedItem.button.disabled = true;
+
+            deselectAllItems();
             selectedItem = null;
-            return;
+
+            // Registra il successo e controlla se il round è finito
+            registerCorrect(clickedCell);
         }
 
-        selectedItem = itemObj;
-        itemObj.button.classList.add('is-selected');
-        itemObj.button.setAttribute('aria-pressed', 'true');
-    }
+        /* =========================================================
+        POPOLAMENTO DELLA UI
+        ========================================================= */
+        function renderRound(category) {
+            // Pulisce eventuali anteprime dell'aiuto rimaste dal round precedente
+            stopHelpReveal();
+            helpPreviewElements = [];
+            isHoldingHelp = false;
 
-    function deselectAllItems() {
-        const allButtons = document.querySelectorAll('.list-btn');
-        allButtons.forEach(btn => {
-            btn.classList.remove('is-selected');
-            btn.setAttribute('aria-pressed', 'false');
-        });
-    }
+            currentCategory = category;
+            isGameCompleted = false;
+            selectedItem = null;
+            moveCount = 0;
+            revealCount = 0;
+            foundCorrectCount = 0;
 
-    // Clic su una cella della griglia a destra (Piazzamento libero ma rigoroso sulla posizione)
-    function chooseCell(targetColumn, targetPosition, clickedCell) {
-        if (isGameCompleted || !isGameReady || !selectedItem || clickedCell.classList.contains('filled')) return;
+            // Barra di progresso: round già completati
+            setOverallProgress(roundIndex);
 
-        registerMove();
+            if (instructionBanner) instructionBanner.textContent = category.instruction || '';
 
-        // ESITO SBAGLIATO: L'elemento non corrisponde esattamente a questa cella (colonna o posizione errata)
-        if (selectedItem.column !== targetColumn || selectedItem.position !== targetPosition) {
-            registerWrong(clickedCell);
-            return;
-        }
+            // Intestazioni: se il round non ne ha, vengono nascoste (e rimostrate nei round che le hanno)
+            const rightHeaders = Array.isArray(category.headers) ? category.headers : [];
+            const leftHeaders = Array.isArray(category.leftHeaders) ? category.leftHeaders : ['Gruppo 1', 'Gruppo 2'];
+            const showHeaders = rightHeaders.length > 0;
 
-        // ESITO CORRETTO: Posiziona l'elemento nella cella cliccata
-        clickedCell.classList.add('filled');
+            colHeadsContainers.forEach(el => { el.style.display = showHeaders ? '' : 'none'; });
 
-        // CORRETTO: Inserisce il testo nell'apposito span della cella senza toccare l'immagine
-        const placeholder = clickedCell.querySelector('.cell-label-placeholder');
-        if (placeholder) {
-            placeholder.textContent = selectedItem.label;
-        } else {
-            // Fallback nel caso in cui il wrapper non esista, ma preservando l'immagine se possibile
-            const img = clickedCell.querySelector('.cell-target-img');
-            const wrapper = clickedCell.querySelector('.cell-content-wrapper');
-            
-            if (wrapper && img) {
-                // Se c'è il wrapper ma manca lo span, lo creiamo al volo
-                const labelSpan = document.createElement('span');
-                labelSpan.className = 'cell-label-placeholder';
-                labelSpan.textContent = selectedItem.label;
-                wrapper.appendChild(labelSpan);
-            } else {
-                // Ultima spiaggia: se la cella è vuota, ricostruiamo la struttura completa
-                clickedCell.innerHTML = `
-                    <div class="cell-content-wrapper">
-                        <img src="${selectedItem.image}" alt="${selectedItem.label}" class="cell-target-img">
-                        <span class="cell-label-placeholder">${selectedItem.label}</span>
-                    </div>
-                `;
+            if (showHeaders) {
+                colRight1Title.textContent = rightHeaders[0] || '';
+                colRight2Title.textContent = rightHeaders[1] || '';
+                colLeft1Title.textContent = leftHeaders[0] || '';
+                colLeft2Title.textContent = leftHeaders[1] || '';
             }
-        }
 
-        // Disabilita il pulsante sorgente a sinistra
-        selectedItem.placed = true;
-        selectedItem.button.classList.remove('is-selected');
-        selectedItem.button.classList.add('placed');
-        selectedItem.button.setAttribute('aria-pressed', 'false');
-        selectedItem.button.disabled = true;
+            sourceCol1.innerHTML = '';
+            sourceCol2.innerHTML = '';
+            rightDropGrid.innerHTML = '';
+            currentRoundItems = [];
 
-        deselectAllItems();
+            const shuffledItems = shuffleArray(category.items);
+            totalCorrectItems = shuffledItems.length;
 
-        // Registra il successo e controlla se il round è finito
-        registerCorrect(clickedCell);
-    }
+            // Colonna/e di sinistra: un pulsante per elemento, alternati tra le due colonne
+            shuffledItems.forEach((data, index) => {
+                const button = document.createElement('button');
+                button.type = 'button';
+                button.className = 'list-btn';
+                button.textContent = data.label.trim();
+                button.setAttribute('aria-pressed', 'false');
 
-    function isCategoryEmpty(category) {
-        return !category || !Array.isArray(category.items) || category.items.length === 0;
-    }
+                const itemObj = {
+                    label: data.label.trim(),
+                    column: data.column,
+                    position: data.position,
+                    image: data.image,
+                    button,
+                    placed: false
+                };
+                
+                currentRoundItems.push(itemObj);
 
-    /* =========================================================
-    POPOLAMENTO DELLA UI (Sostituisci interamente renderRound)
-    ========================================================= */
-    function renderRound(category) {
-        currentCategory = category;
-        isGameCompleted = false;
-        selectedItem = null;
-        moveCount = 0;
-        revealCount = 0;
-        foundCorrectCount = 0;
+                button.addEventListener('click', () => selectItem(itemObj));
 
-        // Aggiorna la barra di progresso generale
-        setOverallProgress();
+                if (index % 2 === 0) {
+                    sourceCol1.appendChild(button);
+                } else {
+                    sourceCol2.appendChild(button);
+                }
+            });
 
-        if (instructionBanner) instructionBanner.textContent = category.instruction || '';
-        
-        // se non ci sono headers nel json file non li disegna
-        const rightHeaders = category.headers;
-        const leftHeaders = ['Gruppo 1', 'Gruppo 2'];
+            // Griglia di destra: tante righe quante servono a questo round
+            const rows = Math.max(...category.items.map(it => it.position));
 
-        if ( rightHeaders.length!==0 )
-        {
-            colRight1Title.textContent = rightHeaders[0];
-            colRight2Title.textContent = rightHeaders[1];
-            colLeft1Title.textContent = leftHeaders[0];
-            colLeft2Title.textContent = leftHeaders[1];
-        }
-        else
-        {
-            colRight1Title.style.display='none';
-            colRight2Title.style.display='none';
-            colLeft1Title.style.display='none';
-            colLeft2Title.style.display='none';
-        }
+            for (let i = 0; i < rows * 2; i++) {
+                const colIndex = i % 2;
+                const rowIndex = Math.floor(i / 2);
+                const cellCol = colIndex + 1;
+                const cellPos = rowIndex + 1;
 
-        sourceCol1.innerHTML = '';
-        sourceCol2.innerHTML = '';
-        rightDropGrid.innerHTML = '';
-        currentRoundItems = []; // Reset dell'array del round
+                const cell = document.createElement('button');
+                cell.type = 'button';
+                cell.className = 'drop-cell';
+                cell.dataset.column = cellCol;
+                cell.dataset.position = cellPos;
 
-        const shuffledItems = shuffleArray(category.items);
-        totalCorrectItems = shuffledItems.length;
+                // Elemento del JSON che appartiene a questa cella (se c'è)
+                const targetItem = category.items.find(it => it.column === cellCol && it.position === cellPos);
 
-        shuffledItems.forEach((data ,index) => {
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'list-btn';
-            button.textContent = data.label.trim();
-            button.setAttribute('aria-pressed', 'false');
+                if (!targetItem) {
+                    // Nessun elemento in questa posizione: la cella non si vede e non si clicca
+                    cell.classList.add('empty-slot');
+                    cell.disabled = true;
+                    cell.tabIndex = -1;
+                    cell.setAttribute('aria-hidden', 'true');
+                    rightDropGrid.appendChild(cell);
+                    continue;
+                }
 
-            const itemObj = { label: data.label.trim(), 
-                              column: data.column, 
-                              position: data.position, // <-- Aggiunto qui
-                              button, 
-                              placed: false };
-            
-            currentRoundItems.push(itemObj); // <--- Registriamo l'oggetto nel round
-            
-            button.addEventListener('click', () => selectItem(itemObj));
+                cell.setAttribute('aria-label', `Colonna ${cellCol}, posizione ${cellPos}`);
 
-            // Distribuzione alternata tra le due colonne di sinistra
-            if (index % 2 === 0) {
-                sourceCol1.appendChild(button);
-            } else {
-                sourceCol2.appendChild(button);
-            }
-        });
-
-        // Pulisci la griglia di destra prima di popolarla
-        rightDropGrid.innerHTML = '';
-
-        for (let i = 0; i < ROWS * 2; i++) {
-            const colIndex = i % 2;
-            const rowIndex = Math.floor(i / 2);
-            const cellCol = colIndex + 1;
-            const cellPos = rowIndex + 1;
-
-            const cell = document.createElement('button');
-            cell.type = 'button';
-            cell.className = 'drop-cell';
-            cell.dataset.column = cellCol;
-            cell.dataset.position = cellPos;
-            cell.setAttribute('aria-label', `Colonna ${cellCol}, posizione ${cellPos}`);
-
-            // Cerca l'elemento corrispondente nel JSON della categoria corrente
-            const targetItem = category.items.find(it => it.column === cellCol && it.position === cellPos);
-
-            if (targetItem && targetItem.image) {
-                // Contenitore interno per disporre immagine ed eventuale testo in modo ordinato
+                // Contenitore interno: immagine (se presente) + etichetta (vuota finché non è corretta)
                 const contentWrapper = document.createElement('div');
                 contentWrapper.className = 'cell-content-wrapper';
 
-                // Creazione dell'elemento immagine
-                const img = document.createElement('img');
-                img.src = targetItem.image;
-                img.alt = targetItem.label || "Target";
-                img.className = 'cell-target-img';
-                
-                // Span per l'etichetta (inizialmente vuoto, mostrerà il testo quando corretto)
+                if (typeof targetItem.image === 'string' && targetItem.image.trim() !== '') {
+                    const img = document.createElement('img');
+                    img.src = targetItem.image;
+                    img.alt = targetItem.label || 'Target';
+                    img.className = 'cell-target-img';
+                    contentWrapper.appendChild(img);
+                }
+
                 const labelSpan = document.createElement('span');
                 labelSpan.className = 'cell-label-placeholder';
-
-                contentWrapper.appendChild(img);
                 contentWrapper.appendChild(labelSpan);
+
                 cell.appendChild(contentWrapper);
+                cell.addEventListener('click', () => chooseCell(cellCol, cellPos, cell));
+
+                rightDropGrid.appendChild(cell);
             }
 
-            // Evento di click sulla cella
-            cell.addEventListener('click', () => chooseCell(cellCol, cellPos, cell));
-            
-            rightDropGrid.appendChild(cell);
+            if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${categories.length}`;
+            if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+            if (movesValueEl) movesValueEl.textContent = moveCount;
+            if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+            setButtonState('help');
+            startElapsedTimer();
+            isGameReady = true;
         }
 
-        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${categories.length}`;
-        if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
-        if (movesValueEl) movesValueEl.textContent = moveCount;
-        if (revealsValueEl) revealsValueEl.textContent = revealCount;
-
-        setButtonState('help');
-        startElapsedTimer();
-        isGameReady = true;
-    }
-        
         /* =========================================================
-        PULSANTE AIUTO (REVEAL / HINT) - CORRETTO
+        PULSANTE AIUTO (REVEAL / HINT)
         ========================================================= */
-        
-        let isPreviewActive = false;
 
-        function startHelpReveal(e) {
-            if (isGameCompleted || !isGameReady || currentButtonMode !== 'help' || isPreviewActive) return;
-            
-            isPreviewActive = true;
+        // Attiva l'aiuto alla pressione: mostra le etichette giuste nelle celle ancora vuote
+        function startHelpReveal() {
+            // isHoldingHelp evita di contare più aiuti con più dita / tasti contemporanei
+            if (isHoldingHelp || isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
+
+            playSound('help');
+
             revealCount++;
             if (revealsValueEl) revealsValueEl.textContent = revealCount;
 
             const unplacedItems = currentRoundItems.filter(item => !item.placed);
-            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
+            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled):not(.empty-slot)'));
 
             emptyCells.forEach(cell => {
                 const cellCol = parseInt(cell.dataset.column, 10);
                 const cellPos = parseInt(cell.dataset.position, 10);
-                
+
                 // Match rigoroso per colonna e posizione esatta della cella
-                const matchingItem = unplacedItems.find(item => 
+                const matchingItem = unplacedItems.find(item =>
                     item.column === cellCol && item.position === cellPos && !item._previewed
                 );
-                
+
                 if (matchingItem) {
                     matchingItem._previewed = true;
-                    
+
                     const placeholder = cell.querySelector('.cell-label-placeholder');
-                    if (placeholder) {
-                        placeholder.textContent = matchingItem.label;
-                    }
-                    
+                    if (placeholder) placeholder.textContent = matchingItem.label;
+
                     cell.classList.add('help-preview');
                     helpPreviewElements.push({ cell, item: matchingItem });
                 }
@@ -921,13 +950,15 @@ button:disabled {
             isHoldingHelp = true;
         }
 
-        function stopHelpReveal(e) {
+        // Disattiva l'aiuto al rilascio: ripulisce le etichette di anteprima
+        function stopHelpReveal() {
             if (!isHoldingHelp) return;
 
             helpPreviewElements.forEach(({ cell, item }) => {
-                const placeholder = cell.querySelector('.cell-label-placeholder');
-                if (placeholder) {
-                    placeholder.textContent = ''; 
+                // Non cancella l'etichetta di una cella che nel frattempo è stata riempita davvero
+                if (!cell.classList.contains('filled')) {
+                    const placeholder = cell.querySelector('.cell-label-placeholder');
+                    if (placeholder) placeholder.textContent = '';
                 }
                 cell.classList.remove('help-preview');
                 delete item._previewed;
@@ -935,19 +966,20 @@ button:disabled {
             helpPreviewElements = [];
 
             isHoldingHelp = false;
-
-            // Piccolo timeout per ripulire lo stato ed evitare conflitti con il click event successivo
-            setTimeout(() => {
-                isPreviewActive = false;
-            }, 50);
         }
 
-        // Gestisce il clic normale solo per 'next' o 'done'
-        function handleActionButtonClick(e) {
-            if (currentButtonMode === 'help') {
-                return; // Ignora i click spuri in modalità aiuto
-            }
+        // Segna come inizia la pressione: se parte come "aiuto", il click finale non deve far avanzare
+        // il round (succede se il round si completa mentre il tasto è ancora premuto)
+        function markPressStart() {
+            pressStartedInHelpMode = (currentButtonMode === 'help');
+        }
 
+        // Il click normale serve solo per 'next' e 'done'
+        function handleActionButtonClick() {
+            if (pressStartedInHelpMode) {
+                pressStartedInHelpMode = false;
+                return;
+            }
             if (currentButtonMode === 'next') {
                 saveRoundResult();
                 roundIndex++;
@@ -964,107 +996,118 @@ button:disabled {
        SALVATAGGIO RISULTATI E RIEPILOGO FINALE
        ========================================================= */
 
-        // Salva le metriche del round corrente nell'array results
         function saveRoundResult() {
+            // Mosse sbagliate = mosse totali (ogni click su una cella) - elementi piazzati correttamente
+            const wrongMoves = Math.max(0, moveCount - totalCorrectItems);
+            const metric = Math.max(0, 100 - (wrongMoves * WRONG_PENALTY) - (revealCount * HELP_PENALTY));
+
             results.push({
                 roundNum: roundIndex + 1,
                 instruction: currentCategory ? (currentCategory.instruction || `Round ${roundIndex + 1}`) : `Round ${roundIndex + 1}`,
                 moves: moveCount,
                 reveals: revealCount,
-                time: elapsedSeconds
+                time: elapsedSeconds,
+                metric
             });
         }
 
-        // Mostra la schermata finale di riepilogo usando l'HTML esistente
         function showFinalSummary() {
             setGameVisible(false);
             isGameCompleted = true;
             stopElapsedTimer();
 
-            // 1. Popola la tabella dei risultati
+            if (progressBarFill) progressBarFill.style.width = '100%';
+
             const tbody = document.getElementById('summary-tbody');
             if (tbody) {
                 tbody.innerHTML = '';
                 results.forEach(res => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${res.instruction}</td>
-                        <td>${res.time}s</td>
-                        <td>${res.moves}</td>
-                        <td>${res.reveals}</td>
-                        <td>-</td>
-                    `;
+                    const values = [res.instruction, res.time + 's', res.moves, res.reveals, res.metric.toFixed(2)];
+                    values.forEach((value, i) => {
+                        const td = document.createElement('td');
+                        td.textContent = value; // textContent: niente HTML iniettato dal JSON
+                        if (i === 4) td.style.fontWeight = '700';
+                        row.appendChild(td);
+                    });
                     tbody.appendChild(row);
                 });
             }
 
-            // 2. Calcola i totali e popola il blocco dedicato
             const totalMoves = results.reduce((acc, curr) => acc + curr.moves, 0);
             const totalReveals = results.reduce((acc, curr) => acc + curr.reveals, 0);
             const totalTime = results.reduce((acc, curr) => acc + curr.time, 0);
+            const averageMetric = results.length > 0
+                ? results.reduce((acc, curr) => acc + curr.metric, 0) / results.length
+                : 0;
+            const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
 
             const totalsContainer = document.getElementById('summary-totals');
             if (totalsContainer) {
                 totalsContainer.innerHTML = `
-                    <p><strong>Tempo Totale:</strong> ${totalTime}s | <strong>Mosse Totali:</strong> ${totalMoves} | <strong>Aiuti Totali:</strong> ${totalReveals}</p>
+                    <div>Tempo Totale: <strong>${totalTime}s</strong> | Mosse Totali: <strong>${totalMoves}</strong> | Aiuti Totali: <strong>${totalReveals}</strong></div>
+                    <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+                    <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>
                 `;
             }
         }
 
         // ==========================================
-        // COLLEGAMENTO EVENTO PULSANTE AIUTO (REVEAL)
+        // COLLEGAMENTO EVENTI PULSANTE AIUTO / AZIONE
         // ==========================================
-        
         if (revealBtn) {
-            revealBtn.addEventListener('pointerdown', startHelpReveal);
+            revealBtn.addEventListener('pointerdown', () => { markPressStart(); startHelpReveal(); });
             revealBtn.addEventListener('pointerup', stopHelpReveal);
             revealBtn.addEventListener('pointerleave', stopHelpReveal);
             revealBtn.addEventListener('pointercancel', stopHelpReveal);
+            revealBtn.addEventListener('click', handleActionButtonClick);
 
-            // Scherma il click standard quando siamo in modalità aiuto per evitare doppi trigger
-            revealBtn.addEventListener('click', (e) => {
-                if (currentButtonMode === 'help') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    return;
+            // Tocco lungo su mobile: niente menu contestuale (che annullerebbe l'aiuto)
+            revealBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Tastiera: Spazio / Invio tenuti premuti mostrano l'aiuto
+            revealBtn.addEventListener('keydown', e => {
+                if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) {
+                    markPressStart();
+                    startHelpReveal();
                 }
-                handleActionButtonClick(e);
             });
+            revealBtn.addEventListener('keyup', e => {
+                if (e.key === ' ' || e.key === 'Enter') stopHelpReveal();
+            });
+            revealBtn.addEventListener('blur', stopHelpReveal);
         }
-   
+
         /* =========================================================
         AVVIO DEL GIOCO
         ========================================================= */
+
+        // Accetta solo file .json relativi (niente URL esterni, niente "..")
+        function getSafeJsonFile() {
+            const params = new URLSearchParams(window.location.search);
+            const requested = params.get('json');
+            if (!requested) return DEFAULT_DATA_URL;
+
+            const isSafe = /^[\w\-./]+\.json$/.test(requested)
+                && !requested.startsWith('/')
+                && !requested.includes('..');
+            if (!isSafe) {
+                console.warn('Parametro "json" non valido, uso il file di default:', requested);
+                return DEFAULT_DATA_URL;
+            }
+            return requested;
+        }
 
         async function initGame() {
             try {
                 isGameReady = false;
                 stopElapsedTimer();
 
-                const params = new URLSearchParams(window.location.search);
-                const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
-
-                const response = await fetch(jsonFile);
+                const response = await fetch(getSafeJsonFile());
                 if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-                
+
                 const data = await response.json();
                 const allCategories = Array.isArray(data.categories) ? data.categories : [];
-
-                // CALCOLO DINAMICO DI ROWS IN BASE AL JSON CARICATO
-                if (allCategories.length > 0) {
-                    let maxRowsFound = 0;
-                    allCategories.forEach(cat => {
-                        if (cat && Array.isArray(cat.items)) {
-                            const col1 = cat.items.filter(it => it.column === 1).length;
-                            const col2 = cat.items.filter(it => it.column === 2).length;
-                            maxRowsFound = Math.max(maxRowsFound, col1, col2);
-                        }
-                    });
-                    if (maxRowsFound > 0) {
-                        ROWS = maxRowsFound;
-                    }
-                }
-
                 categories = allCategories.filter(isValidRound);
 
                 if (categories.length === 0) {
@@ -1091,7 +1134,7 @@ button:disabled {
                 document.body.classList.add('loaded');
             }
         }
-        
+
         initGame();
     });
 

@@ -207,6 +207,64 @@
 
     </style>
 
+    <style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+       #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+    </style>
+
 </head>
 
 <body>
@@ -228,9 +286,16 @@
     <h3 id="instruction-banner" class="stats-style">Osserva l'immagine e scegli, tra le opzioni, quella giusta.</h3>
 
     <!-- HELP BUTTON -->
-    <div class="controls" id="action-controls">
+    <!--<div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
             <span>💡 Help!</span>
+        </button>
+    </div>-->
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
 
@@ -280,7 +345,6 @@
             const timeValueEl = document.getElementById('time-value');
             const movesValueEl = document.getElementById('moves-value');
             const revealsValueEl = document.getElementById('reveals-value');
-            const revealBtn = document.getElementById('reveal-btn');
             const progressBarFill = document.getElementById('progress-bar-fill');
             const instructionBanner = document.getElementById('instruction-banner');
             const gameTitle = document.getElementById('game-title');
@@ -288,6 +352,9 @@
             const actionControls = document.getElementById('action-controls');
             const progressTitle = document.getElementById('progress-title');
             const progressContainer = document.querySelector('.progress-bar-container');
+
+            const revealBtn = document.getElementById('reveal-btn');
+            const btnIcon = document.getElementById('btn-icon');
 
             let elapsedSeconds = 0;
             let moveCount = 0;
@@ -361,7 +428,7 @@
             }
 
             // help = in gioco, next = round completato, done = ultimo round completato
-            function setButtonMode(mode) {
+            /*function setButtonMode(mode) {
                 buttonMode = mode;
                 const labels = {
                     help: '💡 Help!',
@@ -370,6 +437,26 @@
                 };
                 const textEl = revealBtn.querySelector('span');
                 if (textEl) textEl.textContent = labels[mode];
+            }
+            */
+            const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+            function setButtonIcon(iconClass) {
+                if (!btnIcon) return;
+                btnIcon.classList.remove(...BUTTON_ICONS);
+                btnIcon.classList.add(iconClass);
+            }
+
+            function setButtonMode(mode) {
+                buttonMode = mode;
+                const states = {
+                    help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+                    next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+                    done: { icon: 'fa-check',       text: 'Fatto' }
+                };
+                setButtonIcon(states[mode].icon);
+                const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+                if (textEl) textEl.textContent = states[mode].text;
             }
 
             function loadRound(index) {

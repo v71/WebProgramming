@@ -407,9 +407,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const TOKEN_RE = /[\p{L}\p{N}]+/gu;
 
     // --- Stato ---
-    let exercises = [];        // tutti i round (solo quelli validi)
-    let roundIndex = 0;        // round corrente
-    let results = [];          // risultato di ogni round completato
+    let exercises = [];         // tutti i round (solo quelli validi)
+    let roundIndex = 0;         // round corrente
+    let results = [];           // risultato di ogni round completato
     let elapsedSeconds = 0;
     let elapsedTimerInterval = null;
     let isGameCompleted = false;   // true = round corrente completato
@@ -428,6 +428,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let presentSolutions = new Set(); // soluzioni presenti ORA nel testo
     let totalCorrectItems = 0;
     let foundCorrectCount = 0;
+    let helpActive = false;
+    let isAnimatingCheckmark = false;
 
     // --- Elementi (letti una sola volta) ---
     const gameTitle = document.getElementById('game-title');
@@ -439,7 +441,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const wordCountEl = document.getElementById('word-count');
-    const roundValueEl = document.getElementById('round-value'); // può essere null
+    const roundValueEl = document.getElementById('round-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
     const timeValueEl = document.getElementById('time-value');
@@ -451,7 +453,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBarTitle = document.getElementById('progress-title');
     const btnIcon = document.getElementById('btn-icon');
 
-    // Testo dell'esercizio (nell'HTML l'id è "debug-text-area"): è contenuto di gioco, non debug
     const passageArea = document.getElementById('debug-text-area');
     if (passageArea) passageArea.readOnly = true;
 
@@ -474,8 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
         btnIcon.classList.add(iconClass);
     }
   
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
     function setButtonState(mode) {
         const texts = {
             help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
@@ -487,21 +486,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (textEl) textEl.textContent = texts[mode].text;
     }
 
-    /*
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
-    function setButtonState(mode) {
-        const texts = {
-            help: 'Help!',
-            next: '➜ Prossimo round',
-            done: '✓ Fatto'
-        };
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
-        if (textEl) textEl.textContent = texts[mode];
-    }
-    */
-    // --- Analisi del testo ---
-    // Ignora maiuscole, accenti, punteggiatura e spazi multipli; confronta parola per parola.
     function foldToken(token) {
         return token.toLowerCase().normalize('NFD').replace(/\p{M}/gu, '');
     }
@@ -522,23 +506,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function analyzeText(raw) {
         const text = String(raw).normalize('NFC');
         const all = (text.match(TOKEN_RE) || []).map(foldToken);
-        // L'ultima parola è "in corso" se il testo non finisce con un separatore
         const hasPendingTail = all.length > 0 && /[\p{L}\p{N}]$/u.test(text);
 
         const words = all
             .map((w, i) => ({ w, pending: hasPendingTail && i === all.length - 1 }))
-            .filter(t => expectedSet.has(t.w) || !fillerSet.has(t.w)); // le parole tollerate non contano
+            .filter(t => expectedSet.has(t.w) || !fillerSet.has(t.w));
 
         const wordList = words.map(t => t.w);
-
-        // 1. CONTROLLO DEL NUMERO DI PAROLE: il testo non può avere più parole di quelle che servono
-        //    (es. 3). Se ne ha di più (ad esempio un testo lungo incollato) non si controlla nessuna
-        //    parola e il progresso resta a zero. Con 3 parole o meno si controlla subito.
         const withinWordLimit = wordList.length <= expectedWords.length;
 
-        // 2. CONTROLLO DI OGNI PAROLA: appena una parola coincide, il progresso sale.
-        //    Ogni parola scritta può "consumare" una parola attesa
-        //    (una parola scritta una volta sola non vale per due soluzioni).
         const present = new Set();
         if (withinWordLimit) {
             const counts = new Map();
@@ -557,14 +533,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return {
             present,
-            // Tutte le soluzioni trovate, senza parole in più = risposta esatta
             isExact: withinWordLimit && present.size === solutionTokens.length,
-            // Parole già "chiuse" da un separatore (l'ultima ancora in corso non conta)
             completeCount: words.filter(t => !t.pending).length
         };
     }
 
-    // --- Punteggio e riepilogo ---
     function computeScore() {
         const raw = 100 - mistakeCount * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
         return Math.max(0, raw);
@@ -608,7 +581,6 @@ document.addEventListener('DOMContentLoaded', () => {
         summaryScreen.style.display = 'block';
     }
 
-    // --- Timer ---
     function stopElapsedTimer() {
         if (elapsedTimerInterval) {
             clearInterval(elapsedTimerInterval);
@@ -630,12 +602,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // --- UI ---
     function updateWordCountDisplay() {
         if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
     }
 
-    // Barra generale: round completati / round totali
     function setOverallProgress(done) {
         const total = exercises.length;
         if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
@@ -669,21 +639,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLoadError(message) {
-        isGameReady = false; // il gioco resta disabilitato
+        isGameReady = false;
         stopElapsedTimer();
-        document.body.classList.add('loaded'); // senza questa classe la pagina resta invisibile e l'errore non si vede
+        document.body.classList.add('loaded');
         if (instructionBanner) instructionBanner.textContent = message;
         if (textArea) textArea.disabled = true;
     }
 
     function shakeTextArea() {
         textArea.classList.remove('error');
-        void textArea.offsetWidth; // riavvia l'animazione
+        void textArea.offsetWidth;
         textArea.classList.add('error');
         setTimeout(() => textArea.classList.remove('error'), 450);
     }
 
-    // --- Help (mostra le soluzioni sui pulsanti) ---
     function showHelp() {
         if (isGameCompleted || !isGameReady) return;
         revealCount++;
@@ -710,13 +679,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Animazioni (non bloccano mai lo stato di gioco) ---
     async function playAnimations(showCheckmark, isFinal) {
-        if (showCheckmark && typeof Checkmark !== 'undefined') {
+        if (showCheckmark && typeof Checkmark !== 'undefined' && !isAnimatingCheckmark) {
+            isAnimatingCheckmark = true;
             try {
                 await Checkmark.show({ element: textArea, size: 48, rise: 70, duration: 1600 });
             } catch (err) {
                 console.warn('Checkmark animation failed:', err);
+            } finally {
+                isAnimatingCheckmark = false;
             }
         }
 
@@ -731,7 +702,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Round ---
     function loadRound(index) {
         roundIndex = index;
         currentExercise = exercises[roundIndex];
@@ -745,34 +715,28 @@ document.addEventListener('DOMContentLoaded', () => {
         presentSolutions = new Set();
         foundCorrectCount = 0;
 
-        if (helpButtons.length < solutions.length) {
-            console.warn(`Ci sono ${helpButtons.length} pulsanti di aiuto per ${solutions.length} soluzioni: alcuni indizi non saranno visibili.`);
-        }
-
         isGameCompleted = false;
         moveCount = 0;
         mistakeCount = 0;
         wasSettledWrong = false;
         revealCount = 0;
 
-        hideHelp(); // ripristina i testi originali dei pulsanti
+        hideHelp();
         showPassage(currentExercise.text);
         updateRoundDisplay();
         updateMovesDisplay();
         updateRevealDisplay();
         updateWordCountDisplay();
-        setOverallProgress(roundIndex);   // la barra mostra i round già completati
+        setOverallProgress(roundIndex);
         resetTextArea(currentCategoryTitle);
         setButtonState('help');
         startElapsedTimer();
 
         revealBtn.classList.remove('smooth-hidden');
         revealBtn.disabled = false;
-
         isGameReady = true;
     }
 
-    // --- Inizializzazione ---
     async function initGame() {
         try {
             isGameReady = false;
@@ -814,21 +778,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Pulsante Help (tieni premuto) ---
     if (revealBtn) {
-        let helpActive = false;
-        const startHelp = () => {
+        const startHelp = (e) => {
             if (helpActive) return;
             helpActive = true;
+            if (e && e.pointerId) {
+                try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+            }
             showHelp();
         };
-        const endHelp = () => {
+        const endHelp = (e) => {
+            if (!helpActive) return;
             helpActive = false;
+            if (e && e.pointerId) {
+                try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
+            }
             hideHelp();
         };
 
-        // Premere Help non deve togliere il focus alla textarea (su mobile chiuderebbe la tastiera).
-        // Solo a round in corso: a round finito il click deve passare per andare avanti.
         revealBtn.addEventListener('mousedown', (e) => { if (!isGameCompleted) e.preventDefault(); });
         revealBtn.addEventListener('touchstart', (e) => { if (!isGameCompleted) e.preventDefault(); }, { passive: false });
 
@@ -836,18 +803,16 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.addEventListener('pointerup', endHelp);
         revealBtn.addEventListener('pointerleave', endHelp);
         revealBtn.addEventListener('pointercancel', endHelp);
-        revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-        // Tastiera (Spazio / Invio)
         revealBtn.addEventListener('keydown', (e) => {
-            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp();
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp(e);
         });
         revealBtn.addEventListener('keyup', (e) => {
-            if (e.key === ' ' || e.key === 'Enter') endHelp();
+            if (e.key === ' ' || e.key === 'Enter') endHelp(e);
         });
-        revealBtn.addEventListener('blur', endHelp);
+        revealBtn.addEventListener('blur', (e) => endHelp(e));
 
-        // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
         revealBtn.addEventListener('click', () => {
             if (!isGameCompleted) return;
             if (roundIndex < exercises.length - 1) loadRound(roundIndex + 1);
@@ -855,7 +820,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Validazione in tempo reale ---
     if (textArea) {
         if (BLOCK_PASTE) {
             textArea.addEventListener('paste', e => e.preventDefault());
@@ -866,7 +830,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const analysis = analyzeText(textArea.value);
 
-            // 1. Elementi chiave trovati ORA nel testo (subito, parola per parola, finché il testo non supera il numero di parole attese)
             let newlyFound = 0;
             analysis.present.forEach(idx => {
                 if (!presentSolutions.has(idx)) newlyFound++;
@@ -874,8 +837,6 @@ document.addEventListener('DOMContentLoaded', () => {
             presentSolutions = analysis.present;
             foundCorrectCount = presentSolutions.size;
 
-            // 2. Tentativo errato (strict): il testo ha già tutte le parole "chiuse" che dovrebbe avere
-            //    (o più) ma non coincide con la risposta. Si conta una volta sola finché resta in questo stato.
             let newMistake = false;
             if (STRICT_MODE) {
                 const settledWrong = !analysis.isExact && analysis.completeCount >= expectedWords.length;
@@ -889,18 +850,16 @@ document.addEventListener('DOMContentLoaded', () => {
             if (newlyFound > 0) moveCount++;
             if (newMistake) moveCount++;
 
-            // Aggiorna TUTTO lo stato in modo sincrono, prima delle animazioni
             updateMovesDisplay();
             updateWordCountDisplay();
 
-            // Strict: numero di parole giusto e stesse parole. Non strict: bastano tutte le soluzioni.
             const allPresent = totalCorrectItems > 0 && foundCorrectCount === totalCorrectItems;
             const justCompleted = STRICT_MODE ? analysis.isExact : allPresent;
             const isLastRound = roundIndex >= exercises.length - 1;
 
             if (justCompleted) {
                 isGameCompleted = true;
-                stopElapsedTimer(); // il tempo si ferma all'ultimo controllo valido, non dopo le animazioni
+                stopElapsedTimer();
                 textArea.disabled = true;
 
                 results.push({
@@ -912,13 +871,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     score: computeScore()
                 });
 
-                setOverallProgress(roundIndex + 1);          // la barra avanza di un round
+                setOverallProgress(roundIndex + 1);
                 setButtonState(isLastRound ? 'done' : 'next');
             }
 
             if (newMistake) shakeTextArea();
-            // Coriandoli solo alla fine del gioco (per averli a ogni round usa "justCompleted" al posto di "justCompleted && isLastRound")
-            if (newlyFound > 0 || justCompleted) playAnimations(newlyFound > 0, justCompleted && isLastRound);
+            if (newlyFound > 0 || justCompleted) {
+                playAnimations(newlyFound > 0, justCompleted && isLastRound);
+            }
         });
     }
 

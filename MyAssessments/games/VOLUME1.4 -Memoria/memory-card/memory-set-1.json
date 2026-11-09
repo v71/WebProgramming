@@ -1,0 +1,19 @@
+{
+  "title": "Memory: Gli animali",
+  "categories": [
+    {
+      "instruction": "Trova le coppie di immagini uguali! (4x4)",
+      "cardBack": "../../images/shapes/psi-back.png",
+      "images": [
+        "../../images/animali/da-cortile/cat.png",
+        "../../images/animali/da-cortile/dog.png",
+        "../../images/animali/da-cortile/cow.png",
+        "../../images/animali/da-cortile/goat.png",
+        "../../images/animali/da-cortile/hamster.png",
+        "../../images/animali/da-cortile/horse.png",
+        "../../images/animali/da-cortile/lamb.png",
+        "../../images/animali/da-cortile/pig.png"
+      ]
+    }
+  ]
+}

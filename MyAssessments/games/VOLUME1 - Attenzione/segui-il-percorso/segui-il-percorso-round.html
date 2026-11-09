@@ -525,26 +525,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const SHUFFLE_ROUNDS = true;   // false = round nell'ordine del file
     const PLACEHOLDERS = ['Prima tappa...', 'Seconda tappa...', 'Terza tappa...', 'Quarta tappa...'];
 
-    // --- Stato ---
-    let exercises = [];          // tutti i round (solo quelli validi)
-    let roundIndex = 0;          // round corrente
-    let results = [];            // risultato di ogni round completato
+    /* =========================================================
+       DOM REFERENCES & STATE
+       ========================================================= */
+
+    let exercises = [];            // tutti i round (solo quelli validi)
+    let roundIndex = 0;            // round corrente
+    let results = [];              // risultato di ogni round completato
     let buttons = [];
-    let expectedLabels = [];     // risposta attesa per ogni casella (per posizione), null se non usata
-    let checkedKeys = [];        // ultimo testo controllato per ogni casella (evita doppi conteggi)
+    let expectedLabels = [];       // risposta attesa per ogni casella (per posizione), null se non usata
+    let checkedKeys = [];          // ultimo testo controllato per ogni casella (evita doppi conteggi)
     let selectFoundState = [];
     let elapsedSeconds = 0;
     let elapsedTimerInterval = null;
     let totalCorrectItems = 0;
     let foundCorrectCount = 0;
-    let isGameCompleted = false; // true = round corrente completato
-    let isGameReady = false;     // true solo dopo il caricamento dei dati
+    let isGameCompleted = false;   // true = round corrente completato
+    let isGameReady = false;       // true solo dopo il caricamento dei dati
     let moveCount = 0;
     let revealCount = 0;
     let currentCategoryTitle = '';
     let originalButtonTexts = [];
+    let isPeeking = false;
 
-    // --- Elementi (letti una sola volta) ---
     const gameTitle = document.getElementById('game-title');
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
@@ -553,7 +556,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const helpButtons = document.querySelectorAll('.cool-btn-2');
     const movesValueEl = document.getElementById('moves-value');
     const wordCountEl = document.getElementById('word-count');
-    const roundValueEl = document.getElementById('round-value'); // può essere null
+    const roundValueEl = document.getElementById('round-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
@@ -566,7 +569,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBarTitle = document.getElementById('progress-title');
     const btnIcon = document.getElementById('btn-icon');
 
-    // Testo dell'esercizio (nell'HTML l'id è "debug-text-area"): è contenuto di gioco, non debug
     const passageArea = document.getElementById('debug-text-area');
     if (passageArea) passageArea.readOnly = true;
 
@@ -575,14 +577,14 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBarTitle, gameTitle, actionControls
     ];
 
-    originalButtonTexts = Array.from(helpButtons).map(btn => btn.textContent);
+    if (helpButtons.length > 0) {
+        originalButtonTexts = Array.from(helpButtons).map(btn => btn.textContent);
+    }
 
     function showPassage(text) {
         if (passageArea) passageArea.value = typeof text === 'string' ? text : '';
     }
 
-    // --- Confronto delle risposte ---
-    // Ignora maiuscole, accenti, apostrofi tipografici e spazi multipli
     function normalizeAnswer(s) {
         return String(s)
             .toLowerCase()
@@ -593,7 +595,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .trim();
     }
 
-    // Una casella N si aspetta il pulsante con value = N (la prima casella aspetta value 1, ecc.)
     function buildExpectedLabels(exerciseButtons) {
         return Array.from(gameSelects, (_, i) => {
             const match = exerciseButtons.find(b => b && b.value === i + 1 && typeof b.label === 'string' && b.label.trim() !== '');
@@ -607,26 +608,6 @@ document.addEventListener('DOMContentLoaded', () => {
             && buildExpectedLabels(exercise.buttons).some(label => label !== null);
     }
 
-    /*
-    // --- Pulsante Help: help = in gioco, next = round completato, done = ultimo round completato ---
-    function setRevealButton(mode) {
-        if (!revealBtn) return;
-        let textEl = revealBtn.querySelector('.btn-text');
-        if (!textEl) { // markup con un <span> semplice
-            revealBtn.textContent = '';
-            textEl = document.createElement('span');
-            textEl.className = 'btn-text';
-            revealBtn.appendChild(textEl);
-        }
-        const texts = {
-            help: 'Help!',
-            next: '➜ Prossimo round',
-            done: '✓ Fatto!'
-        };
-        textEl.textContent = texts[mode];
-    }
-            */
-
     const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
 
     function setButtonIcon(iconClass) {
@@ -634,9 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnIcon.classList.remove(...BUTTON_ICONS);
         btnIcon.classList.add(iconClass);
     }
-  
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
+
     function setRevealButton(mode) {
         const texts = {
             help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
@@ -648,7 +627,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (textEl) textEl.textContent = texts[mode].text;
     }
 
-    // --- Punteggio e riepilogo ---
     function computeScore() {
         const mistakes = Math.max(0, moveCount - totalCorrectItems);
         const raw = 100 - mistakes * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
@@ -672,28 +650,31 @@ document.addEventListener('DOMContentLoaded', () => {
         hideHelp();
         hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
 
-        summaryTbody.innerHTML = '';
-        results.forEach(r => {
-            const row = document.createElement('tr');
-            addCell(row, r.title, true);
-            addCell(row, `${r.seconds}s`);
-            addCell(row, String(r.moves));
-            addCell(row, String(r.reveals));
-            addCell(row, String(r.score), true);
-            summaryTbody.appendChild(row);
-        });
+        if (summaryTbody) {
+            summaryTbody.innerHTML = '';
+            results.forEach(r => {
+                const row = document.createElement('tr');
+                addCell(row, r.title, true);
+                addCell(row, `${r.seconds}s`);
+                addCell(row, String(r.moves));
+                addCell(row, String(r.reveals));
+                addCell(row, String(r.score), true);
+                summaryTbody.appendChild(row);
+            });
+        }
 
-        const sum = key => results.reduce((t, r) => t + r[key], 0);
-        summaryTotals.innerHTML = `
-            <div>Tempo Totale: <strong>${sum('seconds')}s</strong></div>
-            <div>Mosse Totali: <strong>${sum('moves')}</strong></div>
-            <div>Aiuti Totali: <strong>${sum('reveals')}</strong></div>
-            <div>Punti: <strong>${sum('score')}</strong></div>
-        `;
-        summaryScreen.style.display = 'block';
+        if (summaryTotals) {
+            const sum = key => results.reduce((t, r) => t + r[key], 0);
+            summaryTotals.innerHTML = `
+                <div>Tempo Totale: <strong>${sum('seconds')}s</strong></div>
+                <div>Mosse Totali: <strong>${sum('moves')}</strong></div>
+                <div>Aiuti Totali: <strong>${sum('reveals')}</strong></div>
+                <div>Punti: <strong>${sum('score')}</strong></div>
+            `;
+        }
+        if (summaryScreen) summaryScreen.style.display = 'block';
     }
 
-    // --- Timer ---
     function stopElapsedTimer() {
         if (elapsedTimerInterval) {
             clearInterval(elapsedTimerInterval);
@@ -715,12 +696,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // --- UI ---
     function updateWordCountDisplay() {
         if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
     }
 
-    // Barra generale: round completati / round totali
     function setOverallProgress(done) {
         const total = exercises.length;
         if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
@@ -750,26 +729,27 @@ document.addEventListener('DOMContentLoaded', () => {
             input.style.backgroundColor = '';
             input.style.color = '';
             input.style.borderColor = '';
-            // Le caselle senza risposta in questo esercizio vengono nascoste e disabilitate
             input.style.display = used ? '' : 'none';
             input.disabled = !used;
         });
     }
 
     function showLoadError(message) {
-        isGameReady = false; // il gioco resta disabilitato
+        isGameReady = false;
         stopElapsedTimer();
-        document.body.classList.add('loaded'); // senza questa classe la pagina resta invisibile e l'errore non si vede
+        document.body.classList.add('loaded');
         if (instructionBanner) instructionBanner.textContent = message;
         gameSelects.forEach(input => { input.disabled = true; });
     }
 
-    // --- Help (mostra le soluzioni sui pulsanti) ---
-    let isPeeking = false;
-
-    function showHelp() {
+    function showHelp(e) {
         if (isGameCompleted || !isGameReady || isPeeking) return;
         isPeeking = true;
+
+        if (e && e.pointerId && revealBtn) {
+            try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+
         revealCount++;
         updateRevealDisplay();
 
@@ -783,8 +763,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function hideHelp() {
+    function hideHelp(e) {
+        if (!isPeeking) return;
         isPeeking = false;
+
+        if (e && e.pointerId && revealBtn) {
+            try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+
         helpButtons.forEach((btn, index) => {
             if (originalButtonTexts[index] !== undefined) {
                 btn.textContent = originalButtonTexts[index];
@@ -795,7 +781,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Animazioni (non bloccano mai lo stato di gioco) ---
     async function playAnimations(element, isFinal) {
         if (typeof Checkmark !== 'undefined') {
             try {
@@ -816,7 +801,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Round ---
     function loadRound(index) {
         roundIndex = index;
         const exercise = exercises[roundIndex];
@@ -834,13 +818,13 @@ document.addEventListener('DOMContentLoaded', () => {
         revealCount = 0;
         foundCorrectCount = 0;
 
-        hideHelp(); // ripristina i testi originali dei pulsanti
+        hideHelp();
         showPassage(exercise.text);
         updateRoundDisplay();
         updateMovesDisplay();
         updateRevealDisplay();
         updateWordCountDisplay();
-        setOverallProgress(roundIndex);   // la barra mostra i round già completati
+        setOverallProgress(roundIndex);
         updateGridUI(currentCategoryTitle);
         setRevealButton('help');
         startElapsedTimer();
@@ -848,7 +832,6 @@ document.addEventListener('DOMContentLoaded', () => {
         isGameReady = true;
     }
 
-    // --- Inizializzazione ---
     async function initGame() {
         try {
             isGameReady = false;
@@ -891,30 +874,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Pulsante Help (tieni premuto) ---
     if (revealBtn) {
-        // Premere Help non deve togliere il focus alla casella (altrimenti il testo a metà verrebbe
-        // controllato come risposta sbagliata e su mobile si chiuderebbe la tastiera).
-        // Solo a round in corso: a round finito il click deve passare per andare avanti.
         revealBtn.addEventListener('mousedown', (e) => { if (!isGameCompleted) e.preventDefault(); });
         revealBtn.addEventListener('touchstart', (e) => { if (!isGameCompleted) e.preventDefault(); }, { passive: false });
 
-        revealBtn.addEventListener('pointerdown', showHelp);
-        revealBtn.addEventListener('pointerup', hideHelp);
-        revealBtn.addEventListener('pointerleave', hideHelp);
-        revealBtn.addEventListener('pointercancel', hideHelp);
-        revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+        revealBtn.addEventListener('pointerdown', (e) => showHelp(e));
+        revealBtn.addEventListener('pointerup', (e) => hideHelp(e));
+        revealBtn.addEventListener('pointerleave', (e) => hideHelp(e));
+        revealBtn.addEventListener('pointercancel', (e) => hideHelp(e));
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-        // Tastiera (Spazio / Invio)
         revealBtn.addEventListener('keydown', (e) => {
-            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showHelp();
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showHelp(e);
         });
         revealBtn.addEventListener('keyup', (e) => {
-            if (e.key === ' ' || e.key === 'Enter') hideHelp();
+            if (e.key === ' ' || e.key === 'Enter') hideHelp(e);
         });
-        revealBtn.addEventListener('blur', hideHelp);
+        revealBtn.addEventListener('blur', (e) => hideHelp(e));
 
-        // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
         revealBtn.addEventListener('click', () => {
             if (!isGameCompleted) return;
             if (roundIndex < exercises.length - 1) loadRound(roundIndex + 1);
@@ -922,14 +899,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Validazione delle caselle (Invio o uscita dalla casella) ---
     function validateInput(input, inputIndex) {
         if (isGameCompleted || !isGameReady || selectFoundState[inputIndex]) return;
 
         const userText = input.value.trim();
         if (!userText) return;
 
-        // Stesso testo già controllato (es. Invio seguito dall'uscita dalla casella): non si ricontrolla
         const key = normalizeAnswer(userText);
         if (key === checkedKeys[inputIndex]) return;
         checkedKeys[inputIndex] = key;
@@ -942,13 +917,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!isCorrect) {
             input.classList.remove('error');
-            void input.offsetWidth; // riavvia l'animazione di shake
+            void input.offsetWidth;
             input.classList.add('error');
             setTimeout(() => input.classList.remove('error'), 400);
             return;
         }
 
-        // Risposta corretta: aggiorna TUTTO lo stato in modo sincrono, prima delle animazioni
         selectFoundState[inputIndex] = true;
         input.disabled = true;
         input.classList.add('selected');
@@ -963,7 +937,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (justCompleted) {
             isGameCompleted = true;
-            stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
+            stopElapsedTimer();
             hideHelp();
             gameSelects.forEach(el => { el.disabled = true; });
 
@@ -975,11 +949,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 score: computeScore()
             });
 
-            setOverallProgress(roundIndex + 1);          // la barra avanza di un round
+            setOverallProgress(roundIndex + 1);
             setRevealButton(isLastRound ? 'done' : 'next');
         }
 
-        // Coriandoli solo alla fine del gioco (per averli a ogni round passa solo "justCompleted")
         playAnimations(input, justCompleted && isLastRound);
     }
 
@@ -991,14 +964,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 validateInput(input, inputIndex);
-                input.blur(); // chiude la tastiera su mobile; il blur non ricontrolla lo stesso testo
+                input.blur();
             }
         });
     });
 
     initGame();
 });
-
 
 </script>
 

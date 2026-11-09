@@ -1,0 +1,21 @@
+{
+  "title": "Completa la Frase",
+  "categories": [
+    {
+      "instruction": "Clicca sulla parola mancante per completare la frase.",
+      "sentences": [
+        {
+          "sentence": "LA {SCUOLA} CI ALLENNA ALLA VITA",
+          "distractors": ["CASA", "PALESTRA", "LIBRERIA"],
+          "image": "../../images/famiglia/scuola.png"
+        },
+        {
+          "sentence": "LA {TECNOLOGIA} A VOLTE CI DISTRAE",
+          "distractors": ["CASA", "FAMIGLIA", "SCUOLA"],
+          "image": "../../images/famiglia/tecnologia.png"
+        }
+      ]
+    }
+  ]
+}
+

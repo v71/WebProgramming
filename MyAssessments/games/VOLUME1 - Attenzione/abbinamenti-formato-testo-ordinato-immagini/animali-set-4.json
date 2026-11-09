@@ -1,0 +1,58 @@
+ {
+         "title": "Scegli l'immagine giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+              { "label": "Agnello" , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/lamb.png"},
+              { "label": "Mucca"   , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/cow.png"},
+              { "label": "Maiale"  , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/pig.png"},
+    
+              { "label": "Gatto"    , "column": 2 ,"position": 1 , "image": "../../images/animali/da-cortile/cat.png"},
+              { "label": "Criceto"  , "column": 2 ,"position": 2 , "image": "../../images/animali/da-cortile/hamster.png"},
+              { "label": "Coniglio" , "column": 2 ,"position": 3 , "image": "../../images/animali/da-cortile/rabbit.png"}
+            ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+              { "label": "Volpe"    , "column": 1 ,"position": 1 , "image": "../../images/animali/bosco/fox-1.png"},
+              { "label": "Puzzola"  , "column": 1 ,"position": 2 , "image": "../../images/animali/bosco/skunk.png"},
+              { "label": "Giaguaro" , "column": 1 ,"position": 3 , "image": "../../images/animali/foresta/jaguar.png"},
+    
+              { "label": "Lupo"        , "column": 2 ,"position": 1 , "image": "../../images/animali/bosco/wolf-1.png" },
+              { "label": "Coccodrillo" , "column": 2 ,"position": 2 , "image": "../../images/animali/savana/croc.png"},
+              { "label": "Iena"        , "column": 2 ,"position": 3 , "image": "../../images/animali/savana/hyena.png" }
+            ]
+           },
+           {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Serpente a sonagli" , "column": 1 ,"position": 1 , "image": "../../images/animali/deserto/rattlesnake.png"},
+               { "label": "Ippopotamo"         , "column": 1 ,"position": 2 , "image": "../../images/animali/savana/hyppo.png"},
+               { "label": "Locusta"            , "column": 1 ,"position": 3 , "image": "../../images/animali/insetti/grasshopper.png"},
+  
+               { "label": "Tartaruga marina" , "column": 2 ,"position": 1 ,"image": "../../images/animali/mare/turtle.png"},
+               { "label": "Coleottero"       , "column": 2 ,"position": 2 ,"image": "../../images/animali/insetti/beetle.png"},
+               { "label": "Struzzo"          , "column": 2 ,"position": 3 , "image": "../../images/animali/savana/ostrich.png"}
+            ]
+           },
+            {
+             "instruction": "Metti ogni animale nella colonna giusta.",
+             "headers": [],
+             "items": [
+                  { "label": "Fennec"            , "column": 1 ,"position": 1 , "image": "../../images/animali/deserto/fennec.png"},
+                  { "label": "Lucertola di gila" , "column": 1 ,"position": 2 , "image": "../../images/animali/deserto/lizard2.png"},
+                  { "label": "Pecora"            , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/sheep.png"},
+
+                  { "label": "Libellula"          , "column": 2 ,"position": 1 , "image": "../../images/animali/insetti/dragonfly.png"},
+                  { "label": "Ippopotamo"         , "column": 2 ,"position": 2 , "image": "../../images/animali/savana/hyppo.png"},
+                  { "label": "Tucano"             , "column": 2 ,"position": 3 , "image": "../../images/animali/foresta/tucan.png"}
+
+            ]
+           }
+         ]
+}

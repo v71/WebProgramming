@@ -13,6 +13,19 @@
                { "label": "Giacca"   , "column": 2 ,"position": 2 ,"image": "../../images/oggetti/moderni/coat.png"},
                { "label": "Scarpe"   , "column": 2 ,"position": 3 ,"image": "../../images/oggetti/moderni/shoes.png" }
               ]
+           },
+           {
+             "instruction": "Metti ogni ogetto nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Bussola"  , "column": 1 ,"position": 1 , "image": "../../images/oggetti/avventura/compass.png"},
+               { "label": "Cappello" , "column": 1 ,"position": 2 , "image": "../../images/oggetti/avventura/hat-and-scarf.png"},
+               { "label": "Mappa"    , "column": 1 ,"position": 3 , "image": "../../images/oggetti/avventura/map.png"},
+
+               { "label": "Denaro"   , "column": 2 ,"position": 1 ,"image": "../../images/oggetti/avventura/money.png"},
+               { "label": "Libri"    , "column": 2 ,"position": 2 ,"image": "../../images/oggetti/avventura/old-books.png"},
+               { "label": "Forziere" , "column": 2 ,"position": 3 ,"image": "../../images/oggetti/avventura/throve.png" }
+              ]
            }
 
          ]
