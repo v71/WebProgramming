@@ -7,7 +7,7 @@
           { "label": "Gallina", "value": false },
           { "label": "Ombrello", "value": true },
           { "label": "Marmotta", "value": true },
-          { "label": "Cappello", "value": false },
+          { "label": "Cappello", "value": true },
           { "label": "Gatto", "value": false },
           { "label": "Coniglio", "value": true },
           { "label": "Olive", "value": false },

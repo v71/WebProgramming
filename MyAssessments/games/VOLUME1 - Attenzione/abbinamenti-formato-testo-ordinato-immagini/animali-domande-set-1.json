@@ -5,38 +5,38 @@
              "instruction": "Metti ogni animale nella colonna giusta.",
              "headers": [],
              "items": [
-               { "label": "Sono morbido e bianco come una nuvola" , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/lamb.png"},
-               { "label": "Ho baffi lunghi e zampe vellutate"   , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/cat.png"},
-               { "label": "Quando canto sveglio il villaggio intero"   , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/rooster.png"},
+               { "label": "Sono morbido e bianco come una nuvola"    , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/lamb.png"},
+               { "label": "Ho baffi lunghi e zampe vellutate"        , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/cat.png"},
+               { "label": "Quando canto sveglio il villaggio intero" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/rooster.png"},
 
-               { "label": "Attraverso sabbie immense con passo lento" , "column": 2 ,"position": 1 ,"image": "../../images/animali/deserto/camel.png"},
-               { "label": "Ho orecchie giganti per captare ogni movimento"   , "column": 2 ,"position": 2 ,"image": "../../images/animali/deserto/fennec.png"},
-               { "label": "Sono sempre vigile e attento" , "column": 2 ,"position": 3 ,"image": "../../images/animali/deserto/merkat.png" }
+               { "label": "Attraverso sabbie immense con passo lento"      , "column": 2 ,"position": 1 ,"image": "../../images/animali/deserto/camel.png"},
+               { "label": "Ho orecchie giganti per captare ogni movimento" , "column": 2 ,"position": 2 ,"image": "../../images/animali/deserto/fennec.png"},
+               { "label": "Sono sempre vigile e attento"                   , "column": 2 ,"position": 3 ,"image": "../../images/animali/deserto/merkat.png" }
               ]
            },
             {
              "instruction": "Metti ogni animale nella colonna giusta.",
              "headers": [],
              "items": [
-               { "label": "Mangio erba tutto il giorno per regalarti del buon latte"   , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/cow.png"},
-               { "label": "Salgo ripide montagne dove nessuno si avventura"   , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/goat.png"},
-               { "label": "Scaldo un piccolo tesoro con le mie piume" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/hen.png"},
+               { "label": "Mangio erba tutto il giorno per regalarti del buon latte" , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/cow.png"},
+               { "label": "Salgo ripide montagne dove nessuno si avventura"          , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/goat.png"},
+               { "label": "Scaldo un piccolo tesoro con le mie piume"                , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/hen.png"},
 
-               { "label": "Ho elegnati corna a spirale sul capo" , "column": 2 ,"position": 1 ,"image": "../../images/animali/deserto/addax.png"},
-               { "label": "Danzo sulla sabbia cocente sollevando due zampe alla volta" , "column": 2 ,"position": 2 ,"image": "../../images/animali/deserto/lizard.png"},
-               { "label": "Ho una coda armata di veleno che porto ricurva sulla schiena"           , "column": 2 ,"position": 3 ,"image": "../../images/animali/deserto/scorpion.png" }
+               { "label": "Ho elegnati corna a spirale sul capo"                         , "column": 2 ,"position": 1 ,"image": "../../images/animali/deserto/addax.png"},
+               { "label": "Danzo sulla sabbia cocente sollevando due zampe alla volta"   , "column": 2 ,"position": 2 ,"image": "../../images/animali/deserto/lizard.png"},
+               { "label": "Ho una coda armata di veleno che porto ricurva sulla schiena" , "column": 2 ,"position": 3 ,"image": "../../images/animali/deserto/scorpion.png" }
               ]
            },
            {
              "instruction": "Metti ogni animale nella colonna giusta.",
              "headers": [],
              "items": [
-               { "label": "Ti aspetto dietro la porta per darti tutto il mio affetto"    , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/dog.png"},
+               { "label": "Ti aspetto dietro la porta per darti tutto il mio affetto"       , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/dog.png"},
                { "label": "Ho due tasche segrete ai lati della bocca dove nascondo il cibo" , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/hamster.png"},
-               { "label": "Corro veloce come il vento e dormo in piedi" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/horse.png"},
+               { "label": "Corro veloce come il vento e dormo in piedi"                     , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/horse.png"},
 
-               { "label": "Indosso una mascherina bianca e nera sul muso"     , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/badger.png"},
-               { "label": "Vivo tra i boschi e le montagne e amo il miele"      , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/bear-1.png"},
+               { "label": "Indosso una mascherina bianca e nera sul muso"                          , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/badger.png"},
+               { "label": "Vivo tra i boschi e le montagne e amo il miele"                         , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/bear-1.png"},
                { "label": "Indosso un fitto mantello di setole scure e sfoggio due zanne affilate" , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/boar-1.png" }
               ]
            },
@@ -44,13 +44,13 @@
              "instruction": "Metti ogni animale nella colonna giusta.",
              "headers": [],
              "items": [
-               { "label": "Ho una pelle rosa e il mio saluto è un allegro grugnito"    , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/pig.png"},
-               { "label": "Ho lunghe orecchie per ascoltare ogni fruscio"  , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/rabbit.png"},
-               { "label": "Porto un soffice cappotto di lana che regalo ogni primavera"    , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/sheep.png"},
+               { "label": "Ho una pelle rosa e il mio saluto è un allegro grugnito"     , "column": 1 ,"position": 1 , "image": "../../images/animali/da-cortile/pig.png"},
+               { "label": "Ho lunghe orecchie per ascoltare ogni fruscio"               , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/rabbit.png"},
+               { "label": "Porto un soffice cappotto di lana che regalo ogni primavera" , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/sheep.png"},
 
-               { "label": "Porto una corona di rami sul capo e con un fiero bramito annuncio la mia presenza"     , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/deer-1.png"},
-               { "label": "Scruto la terra con uno sguardo infallibile e piompo sulla preda con ali possenti"    , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/eagle-1.png"},
-               { "label": "Ho un mantello pieno di macchie bianche per nascondermi meglio" , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/fawn-1.png" }
+               { "label": "Porto una corona di rami sul capo e con un fiero bramito annuncio la mia presenza" , "column": 2 ,"position": 1 ,"image": "../../images/animali/bosco/deer-1.png"},
+               { "label": "Scruto la terra con uno sguardo infallibile e piompo sulla preda con ali possenti" , "column": 2 ,"position": 2 ,"image": "../../images/animali/bosco/eagle-1.png"},
+               { "label": "Ho un mantello pieno di macchie bianche per nascondermi meglio"                    , "column": 2 ,"position": 3 ,"image": "../../images/animali/bosco/fawn-1.png" }
               ]
            }
 

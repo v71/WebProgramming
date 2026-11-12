@@ -3,76 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leggi prima di agire</title>
+    <title>Proprio quella parola</title>
 
-     <!-- 1. Includi qui il file esterno condiviso -->
+    <!-- File esterni condivisi -->
     <script src="../../js/checkmark.js"></script>
+    <!-- Verifica il nome: nel codice originale era "celebrazion.js" (forse "celebrazione.js"?) -->
     <script src="../../js/celebrazion.js"></script>
-    
-    <link href="../stylesheet.css" rel="stylesheet">
 
+    <link href="../stylesheet.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-
-        .grid-button {
-            min-height: 50px;
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            background: var(--default-btn);
-            color: var(--text);
-            font-family: Arial, sans-serif;
-            font-size: 1.4rem;
-            font-weight: 400;
-            cursor: pointer;
-            /* Aggiungi opacity e background alla transizione generale */
-            transition:
-                background 0.3s ease,
-                border-color 0.3s ease,
-                transform 0.3s ease,
-                opacity 0.4s ease; 
-            text-shadow:
-            -1px -1px 0 #000,
-             1px -1px 0 #000,
-            -1px  1px 0 #000,
-             1px  1px 0 #000;
-        }
-
         .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(5, 1fr);
+            gap: 14px;
         }
 
-    </style>
-
-    <style>
-
-        #game-area {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 16px;
-        }
-
-        .button-divider {
-            border: none;
-            border-top: 2px solid var(--border); /* Adjust color to fit your theme */
-            margin: 5px 0;                      /* Adjust spacing above and below */
-        }
-
-        /* Target only the buttons inside the first button-grid */
-        .button-grid:first-of-type .grid-button {
-            pointer-events: none; /* Completely disables clicks, hovers, and touches */
-            cursor: default;     /* Changes the cursor to a standard arrow */
-            background-color: #4f46e5; /* Blue for interactive buttons */
-        }
-
-    </style>
-
-    <style>
+        /* Il riepilogo è nascosto all'avvio, senza dipendere dal CSS esterno */
+        #summary-screen { display: none; }
 
         .cool-btn {
             display: inline-flex;
@@ -82,7 +33,7 @@
             padding: 12px 28px;
             font-size: 1.5rem;
             font-weight: 400;
-            color: var(--text);
+            color: #ffffff; /* testo leggibile sullo sfondo fisso #4f46e5 */
             background-color: #4f46e5;
             border: 2px solid var(--border);
             border-radius: 99px;
@@ -95,13 +46,19 @@
             text-decoration: none;
         }
 
-        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+        .cool-btn:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
 
+        #restart-btn { margin-top: 20px; }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
         #reveal-btn .fa {
             font-size: 25px;
             line-height: 1;
             color: #ffffff;
-            --w: 1px; /* spessore del bordo */
+            --w: 1px;
             text-shadow:
                 calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
                 0 calc(var(--w) * -1) 0 #000,
@@ -115,7 +72,7 @@
             filter: none !important;
         }
 
-        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        /* L'icona resta ferma in hover, focus o quando il pulsante è premuto */
         #reveal-btn .fa,
         #reveal-btn:hover .fa,
         #reveal-btn:focus .fa,
@@ -127,38 +84,25 @@
             animation: none !important;
             transition: none !important;
         }
-
-</style>
-
+    </style>
 </head>
 
 <body>
 
     <!-- TITLE -->
-    <h1 id="game-title">
-        Leggi prima di agire
-    </h1>
+    <h1 id="game-title">Proprio quella parola</h1>
 
     <!-- COUNTERS -->
     <div id="game-stats">
         <span>Round: <strong id="round-value">1 / 1</strong></span>
-        <span>Parole Trovate: <strong id="word-count">0</strong></span>
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
     </div>
 
-    <!-- INFORMATION / INSTRUCTION BOX -->
-
-    <div id="instruction-banner">
-        Instruzion banner.
-    </div>
-
-    <!--<div class="controls" id="action-controls">
-        <button id="reveal-btn" class="cool-btn">
-            <span class="btn-text">Help!</span>
-        </button>
-    </div>-->
+    <!-- INSTRUCTION BOX -->
+    <div id="instruction-banner">Caricamento…</div>
 
     <div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
@@ -167,23 +111,8 @@
         </button>
     </div>
 
-    <!-- EMPTY GAME AREA -->
+    <!-- GAME AREA -->
     <div id="game-area">
-        <!-- Read-only debug text area placed above the buttons -->
-        
-        <!-- NEW: Inserted buttons container -->
-        <div class="button-grid">
-            <button class="grid-button">Action 1</button>
-            <button class="grid-button">Action 2</button>
-            <button class="grid-button">Action 3</button>
-            <button class="grid-button">Action 4</button>
-            <button class="grid-button">Action 5</button>
-            <button class="grid-button">Action 6</button>
-        </div>
-        
-        <!-- Divider between the two button groups -->
-        <hr class="button-divider">
-
         <div class="button-grid">
             <button class="grid-button" data-index="0"></button>
             <button class="grid-button" data-index="1"></button>
@@ -191,16 +120,23 @@
             <button class="grid-button" data-index="3"></button>
             <button class="grid-button" data-index="4"></button>
             <button class="grid-button" data-index="5"></button>
+            <button class="grid-button" data-index="6"></button>
+            <button class="grid-button" data-index="7"></button>
+            <button class="grid-button" data-index="8"></button>
+            <button class="grid-button" data-index="9"></button>
+            <button class="grid-button" data-index="10"></button>
+            <button class="grid-button" data-index="11"></button>
+            <button class="grid-button" data-index="12"></button>
+            <button class="grid-button" data-index="13"></button>
+            <button class="grid-button" data-index="14"></button>
         </div>
     </div>
 
-    <!-- PROGRESS -->
-    <h1 id="progress-title">
-        Progresso
-    </h1>
+    <!-- PROGRESS (h2: la pagina ha un solo h1) -->
+    <h2 id="progress-title">Progresso</h2>
 
     <div class="progress-bar-container">
-        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"> </div>
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
     </div>
 
     <div id="summary-screen">
@@ -209,48 +145,53 @@
         <table class="summary-table">
             <thead>
                 <tr>
-                    <th>Frase</th>
+                    <th>Istruzione</th>
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
-                    <th>Metric</th>
+                    <th>Punti</th>
                 </tr>
             </thead>
-            <tbody id="summary-tbody">
-            </tbody>
+            <tbody id="summary-tbody"></tbody>
         </table>
-        <div class="summary-totals" id="summary-totals">
-        </div>
+        <div class="summary-totals" id="summary-totals"></div>
+        <button id="restart-btn" class="cool-btn">
+            <i class="fa fa-repeat"></i>
+            <span class="btn-text">Rigioca</span>
+        </button>
     </div>
 
 <script>
 
 document.addEventListener('DOMContentLoaded', () => {
-    const DATA_URL = 'leggi-prima-di-agire.json';
+    const DATA_URL = 'proprio-quella-parola.json';
     const SHUFFLE_ROUNDS = true; // false = round nell'ordine del file
+    const MAX_BUTTONS = 15;      // deve coincidere con i .grid-button nell'HTML
 
     // --- Stato ---
-    let categories = [];          // tutti i round (solo quelli validi)
-    let roundIndex = 0;           // round corrente
-    let results = [];             // risultato di ogni round completato
+    let categories = [];
+    let roundIndex = 0;
+    let results = [];
     let buttons = [];
-    let descriptions = [];
     let elapsedSeconds = 0;
+    let elapsedStart = 0;
     let elapsedTimerInterval = null;
     let totalCorrectItems = 0;
     let foundCorrectCount = 0;
-    let isGameCompleted = false;  // true = round corrente completato
-    let isGameReady = false;      // true solo dopo il caricamento dei dati
+    let isGameCompleted = false;
+    let isGameLoading = true;
     let moveCount = 0;
     let revealCount = 0;
     let currentCategoryTitle = '';
     let helpActive = false;
 
-    // --- Elementi (letti una sola volta) ---
+    // --- Elementi ---
     const gameTitle = document.getElementById('game-title');
     const gameArea = document.getElementById('game-area');
     const actionControls = document.getElementById('action-controls');
     const revealBtn = document.getElementById('reveal-btn');
+    const restartBtn = document.getElementById('restart-btn');
+    const gridButtons = document.querySelectorAll('.grid-button');
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const wordCountEl = document.getElementById('word-count');
@@ -266,27 +207,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBarTitle = document.getElementById('progress-title');
     const btnIcon = document.getElementById('btn-icon');
 
-    const topGrid = document.getElementById('top-grid')
-        || document.querySelector('.button-grid:first-of-type');
-    const bottomGrid = document.getElementById('bottom-grid')
-        || document.querySelector('.button-grid:last-of-type');
-    const topGridButtons = (topGrid && topGrid !== bottomGrid)
-        ? topGrid.querySelectorAll('.grid-button') : [];
-    const gridButtons = bottomGrid ? bottomGrid.querySelectorAll('.grid-button') : [];
-    
-    if (gridButtons.length === 0) {
-        console.warn('Nessun pulsante .grid-button trovato: controlla gli id #top-grid / #bottom-grid o la struttura HTML.');
-    }
-
-    const hiddenOnSummary = [
+    const gameElements = [
         gameArea, gameStats, instructionBanner, progressBar,
         progressBarTitle, gameTitle, actionControls
     ];
-
-    topGridButtons.forEach(button => {
-        button.tabIndex = -1;
-        button.setAttribute('aria-disabled', 'true');
-    });
 
     const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
 
@@ -295,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnIcon.classList.remove(...BUTTON_ICONS);
         btnIcon.classList.add(iconClass);
     }
-   
+
     function setButtonState(mode) {
         const texts = {
             help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
@@ -305,6 +229,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setButtonIcon(texts[mode].icon);
         const textEl = revealBtn && revealBtn.querySelector('.btn-text');
         if (textEl) textEl.textContent = texts[mode].text;
+    }
+
+    function setGameVisible(visible) {
+        gameElements.forEach(el => {
+            if (el) el.style.display = visible ? '' : 'none';
+        });
+        if (summaryScreen) summaryScreen.style.display = visible ? 'none' : 'block';
     }
 
     function computeScore() {
@@ -327,9 +258,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showSummaryScreen() {
         stopElapsedTimer();
-        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
-
+        setGameVisible(false);
         summaryTbody.innerHTML = '';
+
         results.forEach(r => {
             const row = document.createElement('tr');
             addCell(row, r.title, true);
@@ -347,11 +278,17 @@ document.addEventListener('DOMContentLoaded', () => {
             <div>Aiuti Totali: <strong>${sum('reveals')}</strong></div>
             <div>Punti: <strong>${sum('score')}</strong></div>
         `;
-        summaryScreen.style.display = 'block';
+    }
+
+    // --- Timer basato su Date.now(): resta corretto anche con la scheda in background ---
+    function tickTimer() {
+        elapsedSeconds = Math.floor((Date.now() - elapsedStart) / 1000);
+        updateTimerDisplay();
     }
 
     function stopElapsedTimer() {
         if (elapsedTimerInterval) {
+            tickTimer(); // ultimo aggiornamento preciso
             clearInterval(elapsedTimerInterval);
             elapsedTimerInterval = null;
         }
@@ -362,13 +299,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function startElapsedTimer() {
-        stopElapsedTimer();
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+        elapsedStart = Date.now();
         elapsedSeconds = 0;
         updateTimerDisplay();
-        elapsedTimerInterval = setInterval(() => {
-            elapsedSeconds++;
-            updateTimerDisplay();
-        }, 1000);
+        elapsedTimerInterval = setInterval(tickTimer, 500);
+    }
+
+    function updateGridUI(title) {
+        if (instructionBanner) instructionBanner.textContent = title;
+        gridButtons.forEach(button => {
+            const index = Number(button.dataset.index);
+            button.classList.remove('selected', 'error', 'help-correct');
+            if (buttons[index]) {
+                button.textContent = buttons[index].label;
+                button.disabled = false;
+                button.style.visibility = '';
+            } else {
+                button.textContent = '';
+                button.disabled = true;
+                button.style.visibility = 'hidden';
+            }
+        });
     }
 
     function updateWordCountDisplay() {
@@ -393,38 +348,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showLoadError(message) {
-        isGameReady = false;
-        stopElapsedTimer();
+        isGameLoading = false;
         document.body.classList.add('loaded');
         if (instructionBanner) instructionBanner.textContent = message;
     }
 
-    function updateGridUI(title) {
-        if (instructionBanner) instructionBanner.textContent = title;
+    const DEFAULT_INSTRUCTION = 'Segna solo le parole scritte esattamente come «». Le forme simili non valgono.';
 
-        topGridButtons.forEach((button, index) => {
-            const item = descriptions[index];
-            if (item && typeof item.label === 'string') {
-                button.textContent = item.label;
-                button.style.display = '';
-            } else {
-                button.style.display = 'none';
-            }
-        });
+    function buildInstruction(category) {
+        const target = String(category.target || category.word || '').trim();
+        const base = (typeof category.instruction === 'string' && category.instruction.trim())
+            ? category.instruction
+            : DEFAULT_INSTRUCTION;
 
-        gridButtons.forEach(button => {
-            const index = Number(button.dataset.index);
-            const item = buttons[index];
-            button.classList.remove('selected', 'error', 'help-correct');
-            if (item) {
-                button.textContent = item.label;
-                button.style.display = '';
-                button.disabled = false;
-            } else {
-                button.style.display = 'none';
-                button.disabled = true;
-            }
-        });
+        if (!base.includes('«»')) return base;
+        return target ? base.split('«»').join(`«${target}»`) : null;
+    }
+
+    function isValidCategory(category) {
+        return !!category
+            && Array.isArray(category.buttons)
+            && category.buttons.length > 0
+            && category.buttons.length <= MAX_BUTTONS          // evita round impossibili da finire
+            && category.buttons.every(b => b && typeof b.label === 'string') // niente null / label mancanti
+            && category.buttons.some(b => b.value === true)
+            && buildInstruction(category) !== null;
     }
 
     function loadRound(index) {
@@ -432,8 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const category = categories[roundIndex];
 
         buttons = [...category.buttons];
-        descriptions = Array.isArray(category.descriptions) ? [...category.descriptions] : [];
-        currentCategoryTitle = category.instruction;
+        currentCategoryTitle = buildInstruction(category);
         totalCorrectItems = buttons.filter(b => b.value === true).length;
 
         isGameCompleted = false;
@@ -452,24 +399,22 @@ document.addEventListener('DOMContentLoaded', () => {
         updateGridUI(currentCategoryTitle);
         setButtonState('help');
         startElapsedTimer();
-        isGameReady = true;
     }
 
     async function initGame() {
         try {
-            isGameReady = false;
+            isGameLoading = true;
             stopElapsedTimer();
 
             const response = await fetch(DATA_URL);
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
-
             const data = await response.json();
+
             if (!Array.isArray(data.categories) || data.categories.length === 0) {
                 showLoadError('Nessuna categoria disponibile.');
                 return;
             }
 
-            const isValidCategory = c => c && Array.isArray(c.buttons) && c.buttons.some(b => b && b.value === true);
             categories = data.categories.filter(isValidCategory);
             if (categories.length < data.categories.length) {
                 console.warn(`${data.categories.length - categories.length} categorie scartate perché non valide.`);
@@ -487,10 +432,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             results = [];
+            setGameVisible(true); // mostra il gioco, nasconde il riepilogo
             if (gameTitle && data.title) gameTitle.textContent = data.title;
             loadRound(0);
 
             document.body.classList.add('loaded');
+            isGameLoading = false;
         } catch (err) {
             console.error(`Could not load ${DATA_URL}:`, err);
             showLoadError('Errore nel caricamento del gioco.');
@@ -499,10 +446,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (revealBtn) {
         const showHelp = (e) => {
-            if (isGameCompleted || !isGameReady || helpActive) return;
+            if (isGameCompleted || isGameLoading || helpActive) return;
             helpActive = true;
 
-            if (e && e.pointerId) {
+            if (e && e.pointerId !== undefined) {
                 try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
             }
 
@@ -520,7 +467,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!helpActive) return;
             helpActive = false;
 
-            if (e && e.pointerId) {
+            if (e && e.pointerId !== undefined) {
                 try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
             }
 
@@ -542,18 +489,24 @@ document.addEventListener('DOMContentLoaded', () => {
         revealBtn.addEventListener('blur', hideHelp);
 
         revealBtn.addEventListener('click', () => {
-            if (!isGameCompleted) return;
+            if (!isGameCompleted || revealBtn.disabled) return;
             if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
             else showSummaryScreen();
         });
     }
 
+    if (restartBtn) {
+        restartBtn.addEventListener('click', () => {
+            initGame();
+        });
+    }
+
     gridButtons.forEach(button => {
         button.addEventListener('click', async () => {
-            if (isGameCompleted || !isGameReady || button.disabled) return;
+            if (isGameCompleted || isGameLoading) return;
 
             const index = Number(button.dataset.index);
-            if (!buttons[index]) return;
+            if (!buttons[index] || button.disabled) return;
 
             moveCount++;
             updateMovesDisplay();
@@ -573,6 +526,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const justCompleted = foundCorrectCount === totalCorrectItems;
             const isLastRound = roundIndex >= categories.length - 1;
+            const roundAtClick = roundIndex;
 
             if (justCompleted) {
                 isGameCompleted = true;
@@ -588,7 +542,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
 
                 setOverallProgress(roundIndex + 1);
-                setButtonState(isLastRound ? 'done' : 'next');
+
+                // Il pulsante "Prossimo round" si abilita solo a fine animazione,
+                // così il segno di spunta non finisce sul round successivo.
+                revealBtn.disabled = true;
             }
 
             if (typeof Checkmark !== 'undefined') {
@@ -597,6 +554,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 } catch (err) {
                     console.warn('Checkmark animation failed:', err);
                 }
+            }
+
+            if (justCompleted && roundIndex === roundAtClick) {
+                setButtonState(isLastRound ? 'done' : 'next');
+                revealBtn.disabled = false;
             }
 
             if (justCompleted && isLastRound && typeof Confetti !== 'undefined') {

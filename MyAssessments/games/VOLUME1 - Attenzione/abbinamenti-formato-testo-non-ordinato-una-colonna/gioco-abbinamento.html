@@ -352,6 +352,29 @@
 
     <script>
 
+    // --- Gestione Audio ---
+    const sounds = {
+        correct: new Audio('../../sounds/check-correct.mp3'),
+        next_round: new Audio('../../sounds/next-round.mp3'),
+        error: new Audio('../../sounds/error.mp3'),
+        help: new Audio('../../sounds/help.mp3'),
+        click: new Audio('../../sounds/click.mp3'),
+        wow: new Audio('../../sounds/wow.mp3')
+    };
+
+    // Imposta il volume (da 0.0 a 1.0)
+    Object.values(sounds).forEach(sound => {
+        sound.volume = 0.4;
+    });
+
+    // Funzione helper per riprodurre i suoni in modo sicuro
+    function playSound(key) {
+        if (sounds[key]) {
+            sounds[key].currentTime = 0;
+            sounds[key].play().catch(err => console.log("Audio play prevented:", err));
+        }
+    }
+    
     document.addEventListener('DOMContentLoaded', () => {
 
         const DATA_URL = 'set-1.json';
@@ -532,6 +555,7 @@
 
         function registerWrong(element) {
             if (isGameCompleted || !isGameReady || !element) return;
+            playSound('error');
             element.classList.remove('error');
             void element.offsetWidth;
             element.classList.add('error');
@@ -549,6 +573,16 @@
 
             if (typeof Checkmark !== 'undefined' && element) {
                 try {
+                    const isLastRound = roundIndex >= categories.length - 1;
+                    if (totalCorrectItems-foundCorrectCount !== 0) {
+                            playSound('correct');
+                        }
+                        else{
+                            if ( isLastRound===false){
+                                playSound('next_round');
+                            }
+                        }
+
                     Checkmark.show({ element, size: 48, rise: 70, duration: 1600 });
                 } catch (err) {
                     console.warn('Checkmark error:', err);
@@ -572,6 +606,7 @@
 
             if (isLastRound && typeof Confetti !== 'undefined') {
                 try {
+                    playSound('wow');
                     await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
                     await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
                     await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
@@ -594,6 +629,8 @@
                 selectedItem = null;
                 return;
             }
+
+            playSound('click');
 
             selectedItem = itemObj;
             itemObj.button.classList.add('is-selected');
@@ -721,7 +758,8 @@
         /* =========================================================
         PULSANTE AIUTO (REVEAL / PREVIEW)
         ========================================================= */
-
+        
+        /*
         // Attiva l'aiuto alla pressione (evidenzia le celle corrette rimaste)
         function startHelpReveal() {
             // isHoldingHelp evita di contare più aiuti con più dita / tasti contemporanei
@@ -740,6 +778,9 @@
 
                 if (matchingItem) {
                     cell.classList.add('help-preview');
+                    
+                    cell.textContent="cell.dataset.answer";
+
                     helpPreviewElements.push({ cell });
                 }
             });
@@ -752,7 +793,53 @@
             if (!isHoldingHelp) return;
             helpPreviewElements.forEach(({ cell }) => {
                 cell.classList.remove('help-preview');
+
+                cell.textContent=cell.dataset.answer;
+
             });
+            helpPreviewElements = [];
+            isHoldingHelp = false;
+        }
+        */
+
+        // Attiva l'aiuto alla pressione (mostra la label associata nelle celle vuote rimaste)
+        function startHelpReveal() {
+            if (isHoldingHelp || isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
+
+            playSound('help');
+
+            revealCount++;
+            if (revealsValueEl) revealsValueEl.textContent = revealCount;
+
+            const unplacedItems = currentRoundItems.filter(item => !item.placed);
+            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
+
+            // Mostra temporaneamente la domanda/etichetta della colonna di sinistra nelle celle corrispondenti
+            emptyCells.forEach(cell => {
+                const targetAns = cell.dataset.answer;
+                const matchingItem = unplacedItems.find(item => item.answer === targetAns);
+
+                if (matchingItem) {
+                    cell.classList.add('help-preview');
+                    // Sostituisce il testo della cella con la label associata della colonna di sinistra
+                    cell.textContent = matchingItem.label;
+                    helpPreviewElements.push({ cell });
+                }
+            });
+
+            isHoldingHelp = true;
+        }
+
+        // Disattiva l'aiuto al rilascio (ripristina il testo originale delle risposte)
+        function stopHelpReveal() {
+            if (!isHoldingHelp) return;
+            
+            helpPreviewElements.forEach(({ cell }) => {
+                cell.classList.remove('help-preview');
+                // Ripristina il testo originale della risposta salvato nel dataset
+                cell.textContent = cell.dataset.answer;
+            });
+            
             helpPreviewElements = [];
             isHoldingHelp = false;
         }

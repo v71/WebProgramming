@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solo se la regola lo permette</title>
+
+    <!-- Script condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <link href="../stylesheet.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .button-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-auto-rows: 1fr;
+            gap: 14px;
+        }
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona del pulsante Help: contorno sottile, ferma in hover/focus/active */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px;
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TITLE -->
+    <h1 id="game-title">Applica la regola</h1>
+
+    <!-- COUNTERS -->
+    <div id="game-stats" aria-live="polite">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <!-- INSTRUCTION BOX -->
+    <div id="instruction-banner" aria-live="polite">
+        Caricamento...
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <!-- GAME AREA (i bottoni sono generati da JS) -->
+    <div id="game-area">
+        <div class="button-grid" id="button-grid"></div>
+    </div>
+
+    <!-- PROGRESS -->
+    <h1 id="progress-title">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="summary-screen" style="display: none;">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Frase</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Punti</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const DATA_URL = 'solo-se-la-regola-lo-permette.json';
+    const SHUFFLE_ROUNDS = true;   // false = round nell'ordine del file
+
+    // Parametri del punteggio
+    const SCORING = {
+        start: 100,
+        mistakePenalty: 5,       // per ogni errore
+        revealPenalty: 10,       // per ogni aiuto
+        secondsPerPoint: 2       // ogni N secondi = -1 punto
+    };
+
+    // --- Stato ---
+    let categories = [];
+    let roundIndex = 0;
+    let results = [];
+    let buttons = [];
+    let gridButtons = [];
+    let startTime = 0;
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let totalCorrectItems = 0;
+    let foundCorrectCount = 0;
+    let isGameCompleted = false;
+    let isGameLoading = true;
+    let moveCount = 0;
+    let revealCount = 0;
+    let currentCategoryTitle = '';
+
+    // --- Elementi ---
+    const gameTitle = document.getElementById('game-title');
+    const gameArea = document.getElementById('game-area');
+    const gridEl = document.getElementById('button-grid');
+    const actionControls = document.getElementById('action-controls');
+    const revealBtn = document.getElementById('reveal-btn');
+    const btnIcon = document.getElementById('btn-icon');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
+    const roundValueEl = document.getElementById('round-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const timeValueEl = document.getElementById('time-value');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameStats = document.getElementById('game-stats');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = document.getElementById('progress-title');
+
+    const gameElements = [
+        gameArea, gameStats, instructionBanner, progressBar,
+        progressBarTitle, gameTitle, actionControls
+    ];
+
+    // --- Pulsante principale (aiuto / prossimo / fatto) ---
+    const BUTTON_STATES = {
+        help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+        next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+        done: { icon: 'fa-check',       text: 'Fatto' }
+    };
+    const BUTTON_ICONS = Object.values(BUTTON_STATES).map(s => s.icon);
+
+    function setButtonState(mode) {
+        const state = BUTTON_STATES[mode];
+        if (btnIcon) {
+            btnIcon.classList.remove(...BUTTON_ICONS);
+            btnIcon.classList.add(state.icon);
+        }
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = state.text;
+    }
+
+    function setGameVisible(visible) {
+        gameElements.forEach(el => {
+            if (el) el.style.display = visible ? '' : 'none';
+        });
+        if (summaryScreen) summaryScreen.style.display = visible ? 'none' : 'block';
+    }
+
+    // --- Timer (basato su Date.now: preciso anche con tab in background) ---
+    function syncElapsed() {
+        elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        startTime = Date.now();
+        syncElapsed();
+        elapsedTimerInterval = setInterval(syncElapsed, 500);
+    }
+
+    // --- Punteggio ---
+    function computeScore() {
+        const mistakes = Math.max(0, moveCount - totalCorrectItems);
+        const raw = SCORING.start
+            - mistakes * SCORING.mistakePenalty
+            - revealCount * SCORING.revealPenalty
+            - Math.floor(elapsedSeconds / SCORING.secondsPerPoint);
+        return Math.max(0, raw);
+    }
+
+    // --- Riepilogo ---
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        setGameVisible(false);
+
+        if (summaryTbody) {
+            summaryTbody.innerHTML = '';
+            results.forEach(r => {
+                const row = document.createElement('tr');
+                addCell(row, r.title, true);
+                addCell(row, `${r.seconds}s`);
+                addCell(row, String(r.moves));
+                addCell(row, String(r.reveals));
+                addCell(row, String(r.score), true);
+                summaryTbody.appendChild(row);
+            });
+        }
+
+        if (summaryTotals) {
+            const sum = key => results.reduce((t, r) => t + r[key], 0);
+            summaryTotals.innerHTML = `
+                <div>Tempo Totale: <strong>${sum('seconds')}s</strong></div>
+                <div>Mosse Totali: <strong>${sum('moves')}</strong></div>
+                <div>Aiuti Totali: <strong>${sum('reveals')}</strong></div>
+                <div>Punti: <strong>${sum('score')}</strong></div>
+            `;
+        }
+    }
+
+    // --- Aggiornamento interfaccia ---
+    function updateCounters() {
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+        if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${categories.length}`;
+    }
+
+    function setOverallProgress(done) {
+        const total = categories.length;
+        if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    }
+
+    function renderGrid() {
+        gridEl.innerHTML = '';
+        gridButtons = buttons.map((item, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'grid-button';
+            btn.dataset.index = index;
+            btn.textContent = item.label;
+            btn.setAttribute('aria-pressed', 'false');
+            btn.addEventListener('click', () => handleGridClick(btn));
+            gridEl.appendChild(btn);
+            return btn;
+        });
+    }
+
+    function showLoadError(message) {
+        isGameLoading = false;
+        document.body.classList.add('loaded');
+        if (instructionBanner) instructionBanner.textContent = message;
+    }
+
+    // --- Round ---
+    function loadRound(index) {
+        roundIndex = index;
+        const category = categories[roundIndex];
+
+        buttons = [...category.buttons];
+        currentCategoryTitle = category.instruction;
+        totalCorrectItems = buttons.filter(b => b.value === true).length;
+
+        isGameCompleted = false;
+        moveCount = 0;
+        revealCount = 0;
+        foundCorrectCount = 0;
+
+        if (instructionBanner) instructionBanner.textContent = currentCategoryTitle;
+        renderGrid();
+        updateCounters();
+        setOverallProgress(roundIndex);
+        setButtonState('help');
+        startElapsedTimer();
+    }
+
+    async function initGame() {
+        try {
+            isGameLoading = true;
+            stopElapsedTimer();
+            setButtonState('help');
+
+            const response = await fetch(DATA_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+            const data = await response.json();
+
+            if (!Array.isArray(data.categories) || data.categories.length === 0) {
+                showLoadError('Nessuna categoria disponibile.');
+                return;
+            }
+
+            const isValidCategory = c =>
+                c &&
+                typeof c.instruction === 'string' && c.instruction.trim() !== '' &&
+                Array.isArray(c.buttons) && c.buttons.length > 0 &&
+                c.buttons.every(b => b && typeof b.label === 'string') &&
+                c.buttons.some(b => b.value === true);
+
+            categories = data.categories.filter(isValidCategory);
+            if (categories.length < data.categories.length) {
+                console.warn(`${data.categories.length - categories.length} categorie scartate perché non valide.`);
+            }
+            if (categories.length === 0) {
+                showLoadError('Nessuna categoria valida.');
+                return;
+            }
+
+            if (SHUFFLE_ROUNDS) {
+                for (let i = categories.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [categories[i], categories[j]] = [categories[j], categories[i]];
+                }
+            }
+
+            results = [];
+            if (gameTitle && data.title) gameTitle.textContent = data.title;
+            loadRound(0);
+
+            document.body.classList.add('loaded');
+            isGameLoading = false;
+        } catch (err) {
+            console.error(`Could not load ${DATA_URL}:`, err);
+            showLoadError('Errore nel caricamento del gioco.');
+        }
+    }
+
+    // --- Aiuto (tieni premuto per vedere le risposte) ---
+    if (revealBtn) {
+        const showHelp = (e) => {
+            if (isGameCompleted || isGameLoading) return;
+
+            if (e && e.pointerId !== undefined) {
+                try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+            }
+
+            revealCount++;
+            updateCounters();
+            gridButtons.forEach((button, index) => {
+                if (buttons[index] && buttons[index].value === true) {
+                    button.classList.add('help-correct');
+                }
+            });
+        };
+
+        const hideHelp = (e) => {
+            if (e && e.pointerId !== undefined) {
+                try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
+            }
+            gridButtons.forEach(button => button.classList.remove('help-correct'));
+        };
+
+        let helpActive = false;
+        const startHelp = (e) => {
+            // Solo tasto sinistro del mouse (ignora destro e centrale)
+            if (e && e.pointerType === 'mouse' && e.button !== 0) return;
+            if (helpActive) return;
+            helpActive = true;
+            showHelp(e);
+        };
+        const endHelp = (e) => {
+            helpActive = false;
+            hideHelp(e);
+        };
+
+        revealBtn.addEventListener('pointerdown', startHelp);
+        revealBtn.addEventListener('pointerup', endHelp);
+        revealBtn.addEventListener('pointerleave', endHelp);
+        revealBtn.addEventListener('pointercancel', endHelp);
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp(e);
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') endHelp(e);
+        });
+        revealBtn.addEventListener('blur', endHelp);
+
+        revealBtn.addEventListener('click', () => {
+            if (!isGameCompleted) return;
+            if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
+            else showSummaryScreen();
+        });
+    }
+
+    // --- Click su una parola ---
+    async function handleGridClick(button) {
+        if (isGameCompleted || isGameLoading || button.disabled) return;
+
+        const index = Number(button.dataset.index);
+        if (!buttons[index]) return;
+
+        moveCount++;
+        updateCounters();
+
+        if (buttons[index].value !== true) {
+            button.classList.remove('error');
+            void button.offsetWidth;
+            button.classList.add('error');
+            setTimeout(() => button.classList.remove('error'), 400);
+            return;
+        }
+
+        button.disabled = true;
+        button.classList.add('selected');
+        button.setAttribute('aria-pressed', 'true');
+        foundCorrectCount++;
+        updateCounters();
+
+        const justCompleted = foundCorrectCount === totalCorrectItems;
+        const isLastRound = roundIndex >= categories.length - 1;
+
+        if (justCompleted) {
+            isGameCompleted = true;
+            stopElapsedTimer();
+            syncElapsed();   // tempo finale esatto
+            gridButtons.forEach(btn => {
+                btn.disabled = true;
+                btn.style.pointerEvents = 'none';
+            });
+
+            results.push({
+                title: currentCategoryTitle,
+                seconds: elapsedSeconds,
+                moves: moveCount,
+                reveals: revealCount,
+                score: computeScore()
+            });
+
+            setOverallProgress(roundIndex + 1);
+            setButtonState(isLastRound ? 'done' : 'next');
+        }
+
+        if (typeof Checkmark !== 'undefined') {
+            try {
+                await Checkmark.show({ element: button, size: 48, rise: 70, duration: 1600 });
+            } catch (err) {
+                console.warn('Checkmark animation failed:', err);
+            }
+        }
+
+        if (justCompleted && isLastRound && typeof Confetti !== 'undefined') {
+            try {
+                await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+            } catch (err) {
+                console.warn('Confetti animation failed:', err);
+            }
+        }
+    }
+
+    initGame();
+});
+</script>
+
+</body>
+</html>

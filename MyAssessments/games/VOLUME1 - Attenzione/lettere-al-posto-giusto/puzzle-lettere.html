@@ -123,15 +123,6 @@
             box-shadow: none;
         }
 
-        /* Letters placed in the target container: "selected" state (green), not hoverable.
-           When the whole word is wrong the red .error-slot style below takes over. */
-        .slot.filled:not(.error-slot) .card {
-            background-color: #10b981;
-            border-color: #ffffff;
-            color: #ffffff;
-            box-shadow: none;
-        }
-
         /* Once the word is completed the slots are locked: no pointer cursor */
         .slot.locked {
             cursor: default;
@@ -191,7 +182,7 @@
         #reveal-overlay.visible {
             opacity: 1;
         }
- 
+
         /* Stile specifico per le lettere rivelate con il tasto Help */
         .card.reveal-letter {
             border-color: #ffffff !important;
@@ -233,7 +224,7 @@
             border-radius: 0 0 6px 6px;
             opacity: 0.85;
         }
-        
+
         .slot .card {
             transform: none !important;
             background: #5d258a;
@@ -318,6 +309,10 @@
             color: var(--accent);
         }
 
+        #restart-btn {
+            margin-top: 24px;
+        }
+
         button:hover {
             filter: brightness(1.05);
         }
@@ -357,6 +352,11 @@
             transform: translateY(0);
             transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
+            /* Evita selezione testo e menu contestuale con la pressione prolungata su mobile */
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
         }
 
         /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
@@ -406,15 +406,9 @@
 
     /* Wrong letter in its slot: red */
     .slot.filled .card.wrong-letter {
-        /*
-        background-color: var(--wrong, #ef4444);
-        border-color: #ffffff;
-        color: #ffffff;
-        box-shadow: none;
-        */
         border-color: var(--grid-btn-wrong-border-color);
-        background-color:var(--grid-btn-wrong);
-        color: var(--grid-btn-wrong-text );
+        background-color: var(--grid-btn-wrong);
+        color: var(--grid-btn-wrong-text);
         box-shadow: none;
     }
 
@@ -426,7 +420,7 @@
     <h1 id="game-title">Puzzle di Lettere</h1>
 
     <div id="game-stats">
-        <span>Lettere Corrette: <strong id="progress-value">1 / 4</strong></span>
+        <span>Lettere Corrette: <strong id="progress-value">0 / 0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -474,7 +468,7 @@
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
-                    <th>Metric</th>
+                    <th>Punti</th>
                 </tr>
             </thead>
             <tbody id="summary-tbody">
@@ -482,6 +476,10 @@
         </table>
         <div class="summary-totals" id="summary-totals">
         </div>
+        <button id="restart-btn" class="cool-btn">
+            <i class="fa fa-refresh"></i>
+            <span class="btn-text">Gioca ancora</span>
+        </button>
     </div>
 
     <script>
@@ -503,6 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryScreen = document.getElementById('summary-screen');
     const summaryTbody = document.getElementById('summary-tbody');
     const summaryTotals = document.getElementById('summary-totals');
+    const restartBtn = document.getElementById('restart-btn');
     const gameTitle = document.getElementById('game-title');
     const gameStats = document.getElementById('game-stats');
     const actionControls = document.getElementById('action-controls');
@@ -510,6 +509,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressContainer = document.querySelector('.progress-bar-container');
     const hintEl = document.getElementById('hint-style');
     const btnIcon = document.getElementById('btn-icon');
+
+    const DEFAULT_LABEL = 'Riordina le lettere per formare la parola';
 
     const hiddenOnSummary = [
         puzzleWorkspace, instructionBanner, gameStats, gameTitle,
@@ -519,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let roundValueEl = document.getElementById('round-value');
     if (!roundValueEl && gameStats) {
         const roundStat = document.createElement('span');
-        roundStat.innerHTML = 'Round: <strong id="round-value">1 / 1</strong>';
+        roundStat.innerHTML = 'Turno: <strong id="round-value">1 / 1</strong>';
         gameStats.insertBefore(roundStat, gameStats.firstChild);
         roundValueEl = roundStat.querySelector('strong');
     }
@@ -570,7 +571,7 @@ document.addEventListener('DOMContentLoaded', () => {
             elapsedTimerInterval = null;
         }
     }
-    
+
     function updateTimerDisplay() {
         if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
     }
@@ -621,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
         updateSlotHighlights();
         updateProgressDisplay();
     }
-    
+
     function shuffleArray(array) {
         const arr = [...array];
         for (let i = arr.length - 1; i > 0; i--) {
@@ -629,6 +630,18 @@ document.addEventListener('DOMContentLoaded', () => {
             [arr[i], arr[j]] = [arr[j], arr[i]];
         }
         return arr;
+    }
+
+    // Come shuffleArray, ma evita (quando possibile) di restituire l'ordine già corretto
+    function shuffleDifferent(chars) {
+        const original = chars.join('');
+        const canDiffer = new Set(chars).size > 1;
+        let result = shuffleArray(chars);
+        let tries = 0;
+        while (canDiffer && result.join('') === original && tries++ < 20) {
+            result = shuffleArray(chars);
+        }
+        return result;
     }
 
     function makeCard(char) {
@@ -716,6 +729,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const char = card.dataset.char;
         const slot = emptyMeta.element;
+        const hadFocus = document.activeElement === card;
 
         setCardDisabled(card, true);
 
@@ -732,9 +746,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const isCorrect = char === emptyMeta.expected;
         slotCard.classList.add(isCorrect ? 'correct' : 'wrong-letter');
+        slotCard.setAttribute(
+            'aria-label',
+            `${char === ' ' ? 'spazio' : char}, ${isCorrect ? 'corretta' : 'sbagliata'}`
+        );
 
         slot.appendChild(slotCard);
         slot.classList.add('filled');
+
+        // Con la tastiera, il focus passa alla lettera appena posizionata
+        if (hadFocus) slotCard.focus();
 
         registerMove();
         if (isCorrect) playCheckmark(slot);
@@ -745,9 +766,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const slotCard = slot.querySelector('.card');
         if (!slotCard) return;
 
-        if (slotCard.sourceCard) setCardDisabled(slotCard.sourceCard, false);
+        const hadFocus = document.activeElement === slotCard;
+        const source = slotCard.sourceCard;
+
+        if (source) setCardDisabled(source, false);
         slot.innerHTML = '';
         slot.classList.remove('filled');
+
+        // Evita di perdere il focus quando la carta nello slot viene rimossa
+        if (hadFocus && source) source.focus();
 
         registerMove();
     }
@@ -779,10 +806,13 @@ document.addEventListener('DOMContentLoaded', () => {
             reveals: revealCount,
             score: finalScore
         });
+
+        // La barra avanza subito a ogni parola completata
+        setOverallProgress(roundIndex + 1);
+
         const isLastRound = roundIndex >= words.length - 1;
         setButtonMode(isLastRound ? 'done' : 'next');
         if (isLastRound) {
-            setOverallProgress(words.length);
             waitForProgressBar().then(() => playConfetti());
         }
     }
@@ -838,7 +868,7 @@ document.addEventListener('DOMContentLoaded', () => {
             slotsMeta.push({ element: slot, expected: char });
         });
 
-        shuffleArray(Array.from(originalTextString)).forEach(char => {
+        shuffleDifferent(Array.from(originalTextString)).forEach(char => {
             const card = makeCard(char);
             makeActivatable(card, () => placeChar(card));
             if (sourceContainer) sourceContainer.appendChild(card);
@@ -884,7 +914,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (revealBtn) {
-        revealBtn.addEventListener('pointerdown', (e) => showReveal(e));
+        revealBtn.addEventListener('pointerdown', (e) => {
+            // Solo il tasto principale (o il tocco): niente aiuti con clic destro/centrale
+            if (e.button !== 0) return;
+            showReveal(e);
+        });
         revealBtn.addEventListener('pointerup', (e) => hideReveal(e));
         revealBtn.addEventListener('pointerleave', (e) => hideReveal(e));
         revealBtn.addEventListener('pointercancel', (e) => hideReveal(e));
@@ -938,7 +972,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const sum = key => results.reduce((t, r) => t + r[key], 0);
             summaryTotals.innerHTML = `
                 <div>Tempo: <strong>${sum('seconds')}s</strong></div>
-                <div>Tentativi: <strong>${sum('moves')}</strong></div>
+                <div>Mosse: <strong>${sum('moves')}</strong></div>
                 <div>Aiuti: <strong>${sum('reveals')}</strong></div>
                 <div>Punti: <strong>${sum('score')}</strong></div>
             `;
@@ -947,40 +981,68 @@ document.addEventListener('DOMContentLoaded', () => {
         if (summaryScreen) summaryScreen.style.display = 'block';
     }
 
+    function restartGame() {
+        if (summaryScreen) summaryScreen.style.display = 'none';
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = ''; });
+        results = [];
+        words = shuffleArray(words);
+        loadRound(0); // updateHint() gestisce di nuovo la visibilità del suggerimento
+    }
+
+    if (restartBtn) restartBtn.addEventListener('click', restartGame);
+
+    function showLoadError() {
+        stopElapsedTimer();
+        [puzzleWorkspace, gameStats, actionControls, progressTitle, progressContainer, hintEl]
+            .forEach(el => { if (el) el.style.display = 'none'; });
+        if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le parole.';
+    }
+
+    async function loadWords() {
+        const param = new URLSearchParams(window.location.search).get('json');
+        const isSafe = param
+            && /^[\w\-./]+\.json$/i.test(param)
+            && !param.includes('..')
+            && !param.includes('//')
+            && !param.startsWith('/');
+        const jsonFile = isSafe ? param : 'set-1.json';
+
+        const response = await fetch(jsonFile);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        // normalize('NFC') evita che lettere accentate scomposte (e + accento) diventino due carte
+        const clean = s => String(s ?? '').trim().normalize('NFC');
+
+        const list = (Array.isArray(data.words) ? data.words.flat(Infinity) : [])
+            .map(w => (w && typeof w === 'object')
+                ? { text: clean(w.word ?? w.text), hint: clean(w.hint) }
+                : { text: clean(w), hint: '' })
+            .filter(w => w.text);
+        if (!list.length) throw new Error('Nessuna parola valida nel file');
+
+        if (data.title && gameTitle) {
+            gameTitle.textContent = data.title;
+            document.title = data.title;
+        }
+        if (instructionBanner) instructionBanner.textContent = data.label || DEFAULT_LABEL;
+
+        return list;
+    }
+
     async function initGame() {
         try {
-            const param = new URLSearchParams(window.location.search).get('json');
-            const isSafe = param
-                && /^[\w\-./]+\.json$/i.test(param)
-                && !param.includes('..')
-                && !param.includes('//')
-                && !param.startsWith('/');
-            const jsonFile = isSafe ? param : 'set-1.json';
-
-            const response = await fetch(jsonFile);
-            if (!response.ok) throw new Error(`HTTP ${response.status}`);
-            const data = await response.json();
-
-            words = (Array.isArray(data.words) ? data.words.flat(Infinity) : [])
-                .map(w => (w && typeof w === 'object')
-                    ? { text: String(w.word ?? w.text ?? '').trim(), hint: String(w.hint ?? '').trim() }
-                    : { text: String(w).trim(), hint: '' })
-                .filter(w => w.text);
-            if (!words.length) throw new Error('Nessuna parola valida nel file');
-
-            if (data.title && gameTitle) {
-                gameTitle.textContent = data.title;
-                document.title = data.title;
-            }
-            if (data.label && instructionBanner) instructionBanner.textContent = data.label;
-
-            words = shuffleArray(words);
-            results = [];
-            loadRound(0);
+            words = shuffleArray(await loadWords());
         } catch (err) {
             console.error('Could not load words:', err);
-            if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le parole.';
+            showLoadError();
+            document.body.classList.add('loaded');
+            return;
         }
+
+        // Gli errori di rendering restano visibili in console e non vengono scambiati per errori di caricamento
+        results = [];
+        loadRound(0);
         document.body.classList.add('loaded');
     }
 

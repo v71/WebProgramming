@@ -3,28 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La riga fuoriposto</title>
+    <title>Proprio quella parola</title>
 
-     <!-- 1. Includi qui il file esterno condiviso -->
+    <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
-    
+
     <link href="../stylesheet.css" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
+    
     <style>
 
         .button-grid {
             width: 100%;
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Changed from 3 to 2 */
-            grid-template-rows: repeat(3, 1fr);    /* Changed from 5 to 3 */
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(5, 1fr);
             gap: 14px;
         }
 
     </style>
-
 <style>
 
         .cool-btn {
@@ -88,15 +87,14 @@
 <body>
 
     <!-- TITLE -->
-
     <h1 id="game-title">
-        La riga fuoriposto
+        Proprio quella parola
     </h1>
 
     <!-- COUNTERS -->
     <div id="game-stats">
         <span>Round: <strong id="round-value">1 / 1</strong></span>
-        <span>Parole Trovate: <strong id="word-count">0</strong></span>
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
         <span>Tempo: <strong id="time-value">0s</strong></span>
         <span>Mosse: <strong id="moves-value">0</strong></span>
         <span>Aiuti: <strong id="reveals-value">0</strong></span>
@@ -108,13 +106,13 @@
        Instruzion banner.
     </div>
 
-    <div class="controls" id="action-controls">
+     <div class="controls" id="action-controls">
         <button id="reveal-btn" class="cool-btn">
             <i id="btn-icon" class="fa fa-lightbulb-o"></i>
             <span class="btn-text">Clicca qui per avere un aiuto!</span>
         </button>
     </div>
-    
+
     <!-- EMPTY GAME AREA -->
     <div id="game-area">
         <div class="button-grid">
@@ -124,6 +122,15 @@
             <button class="grid-button" data-index="3"></button>
             <button class="grid-button" data-index="4"></button>
             <button class="grid-button" data-index="5"></button>
+            <button class="grid-button" data-index="6"></button>
+            <button class="grid-button" data-index="7"></button>
+            <button class="grid-button" data-index="8"></button>
+            <button class="grid-button" data-index="9"></button>
+            <button class="grid-button" data-index="10"></button>
+            <button class="grid-button" data-index="11"></button>
+            <button class="grid-button" data-index="12"></button>
+            <button class="grid-button" data-index="13"></button>
+            <button class="grid-button" data-index="14"></button>
         </div>
     </div>
 
@@ -159,23 +166,24 @@
 <script>
 
 document.addEventListener('DOMContentLoaded', () => {
-    const DATA_URL = 'la-riga-fuoriposto.json';
-    const SHUFFLE_ROUNDS = true;   // false = round nell'ordine del file
+    const DATA_URL = 'proprio-quella-parola.json';
+    const SHUFFLE_ROUNDS = true; // false = round nell'ordine del file
 
     // --- Stato ---
-    let categories = [];           // tutti i round
-    let roundIndex = 0;            // round corrente
-    let results = [];              // risultato di ogni round completato
+    let categories = [];          // tutti i round (solo quelli validi)
+    let roundIndex = 0;           // round corrente
+    let results = [];             // risultato di ogni round completato
     let buttons = [];
     let elapsedSeconds = 0;
     let elapsedTimerInterval = null;
     let totalCorrectItems = 0;
     let foundCorrectCount = 0;
-    let isGameCompleted = false;   // true = round corrente completato
+    let isGameCompleted = false;  // true = round corrente completato
     let isGameLoading = true;
     let moveCount = 0;
     let revealCount = 0;
     let currentCategoryTitle = '';
+    let helpActive = false;
 
     // --- Elementi ---
     const gameTitle = document.getElementById('game-title');
@@ -186,7 +194,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const movesValueEl = document.getElementById('moves-value');
     const revealsValueEl = document.getElementById('reveals-value');
     const wordCountEl = document.getElementById('word-count');
-    const roundValueEl = document.getElementById('round-value'); // può essere null
+    const roundValueEl = document.getElementById('round-value');
     const progressBarFill = document.getElementById('progress-bar-fill');
     const instructionBanner = document.getElementById('instruction-banner');
     const timeValueEl = document.getElementById('time-value');
@@ -198,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressBarTitle = document.getElementById('progress-title');
     const btnIcon = document.getElementById('btn-icon');
 
-    // Elementi nascosti durante il riepilogo
     const gameElements = [
         gameArea, gameStats, instructionBanner, progressBar,
         progressBarTitle, gameTitle, actionControls
@@ -211,33 +218,18 @@ document.addEventListener('DOMContentLoaded', () => {
         btnIcon.classList.remove(...BUTTON_ICONS);
         btnIcon.classList.add(iconClass);
     }
-  
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
+   
     function setButtonState(mode) {
         const texts = {
             help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
             next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
-            done: { icon: 'fa-check',       text: 'Fatto' }
+            done: { icon: 'fa-check', text: 'Fatto' }
         };
         setButtonIcon(texts[mode].icon);
         const textEl = revealBtn && revealBtn.querySelector('.btn-text');
         if (textEl) textEl.textContent = texts[mode].text;
     }
-    
-    /*
-    // --- Pulsante: testo ---
-    // help = in gioco, next = round completato, done = ultimo round completato
-    function setButtonState(mode) {
-        const texts = {
-            help: 'Help!',
-            next: '➜ Prossimo round',
-            done: '✓ Fatto'
-        };
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
-        if (textEl) textEl.textContent = texts[mode];
-    }
-    */
+
     function setGameVisible(visible) {
         gameElements.forEach(el => {
             if (el) el.style.display = visible ? '' : 'none';
@@ -245,7 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (summaryScreen) summaryScreen.style.display = visible ? 'none' : 'block';
     }
 
-    // --- Riepilogo ---
     function computeScore() {
         const mistakes = Math.max(0, moveCount - totalCorrectItems);
         const raw = 100 - mistakes * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
@@ -288,7 +279,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // --- Timer ---
     function stopElapsedTimer() {
         if (elapsedTimerInterval) {
             clearInterval(elapsedTimerInterval);
@@ -310,7 +300,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
-    // --- UI ---
     function updateGridUI(title) {
         if (instructionBanner) instructionBanner.textContent = title;
         gridButtons.forEach(button => {
@@ -321,7 +310,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 button.disabled = false;
                 button.style.visibility = '';
             } else {
-                // round con meno bottoni del precedente: i bottoni in più spariscono
                 button.textContent = '';
                 button.disabled = true;
                 button.style.visibility = 'hidden';
@@ -333,7 +321,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
     }
 
-    // Barra generale: round completati / round totali
     function setOverallProgress(done) {
         const total = categories.length;
         if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
@@ -353,17 +340,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showLoadError(message) {
         isGameLoading = false;
-        document.body.classList.add('loaded'); // senza questa classe la pagina resta invisibile e l'errore non si vede
+        document.body.classList.add('loaded');
         if (instructionBanner) instructionBanner.textContent = message;
     }
 
-    // --- Round ---
+    const DEFAULT_INSTRUCTION = 'Segna solo le parole scritte esattamente come «». Le forme simili non valgono.';
+
+    function buildInstruction(category) {
+        const target = String(category.target || category.word || '').trim();
+        const base = (typeof category.instruction === 'string' && category.instruction.trim())
+            ? category.instruction
+            : DEFAULT_INSTRUCTION;
+
+        if (!base.includes('«»')) return base;
+        return target ? base.split('«»').join(`«${target}»`) : null;
+    }
+
+    function isValidCategory(category) {
+        return !!category
+            && Array.isArray(category.buttons)
+            && category.buttons.some(b => b && b.value === true)
+            && buildInstruction(category) !== null;
+    }
+
     function loadRound(index) {
         roundIndex = index;
         const category = categories[roundIndex];
 
         buttons = [...category.buttons];
-        currentCategoryTitle = category.instruction;
+        currentCategoryTitle = buildInstruction(category);
         totalCorrectItems = buttons.filter(b => b.value === true).length;
 
         isGameCompleted = false;
@@ -378,13 +383,12 @@ document.addEventListener('DOMContentLoaded', () => {
         updateMovesDisplay();
         updateRevealDisplay();
         updateWordCountDisplay();
-        setOverallProgress(roundIndex);   // la barra mostra i round già completati
+        setOverallProgress(roundIndex);
         updateGridUI(currentCategoryTitle);
         setButtonState('help');
         startElapsedTimer();
     }
 
-    // --- Inizializzazione ---
     async function initGame() {
         try {
             isGameLoading = true;
@@ -394,12 +398,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
             const data = await response.json();
 
-            // Solo round con bottoni e almeno una risposta corretta (altrimenti non si completerebbero mai)
-            categories = (Array.isArray(data.categories) ? data.categories : [])
-                .filter(c => c && Array.isArray(c.buttons) && c.buttons.some(b => b.value === true));
-
-            if (categories.length === 0) {
+            if (!Array.isArray(data.categories) || data.categories.length === 0) {
                 showLoadError('Nessuna categoria disponibile.');
+                return;
+            }
+
+            categories = data.categories.filter(isValidCategory);
+            if (categories.length < data.categories.length) {
+                console.warn(`${data.categories.length - categories.length} categorie scartate perché non valide.`);
+            }
+            if (categories.length === 0) {
+                showLoadError('Nessuna categoria valida.');
                 return;
             }
 
@@ -422,10 +431,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // --- Pulsante Help (tieni premuto) ---
     if (revealBtn) {
-        const showHelp = () => {
-            if (isGameCompleted || isGameLoading) return;
+        const showHelp = (e) => {
+            if (isGameCompleted || isGameLoading || helpActive) return;
+            helpActive = true;
+
+            if (e && e.pointerId) {
+                try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+            }
+
             revealCount++;
             updateRevealDisplay();
             gridButtons.forEach(button => {
@@ -436,38 +450,31 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
-        const hideHelp = () => {
+        const hideHelp = (e) => {
+            if (!helpActive) return;
+            helpActive = false;
+
+            if (e && e.pointerId) {
+                try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
+            }
+
             gridButtons.forEach(button => button.classList.remove('help-correct'));
         };
 
-        // Pointer events: gestiscono mouse, touch e penna senza doppi conteggi
-        let helpActive = false;
-        const startHelp = () => {
-            if (helpActive) return;
-            helpActive = true;
-            showHelp();
-        };
-        const endHelp = () => {
-            helpActive = false;
-            hideHelp();
-        };
+        revealBtn.addEventListener('pointerdown', showHelp);
+        revealBtn.addEventListener('pointerup', hideHelp);
+        revealBtn.addEventListener('pointerleave', hideHelp);
+        revealBtn.addEventListener('pointercancel', hideHelp);
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault());
 
-        revealBtn.addEventListener('pointerdown', startHelp);
-        revealBtn.addEventListener('pointerup', endHelp);
-        revealBtn.addEventListener('pointerleave', endHelp);
-        revealBtn.addEventListener('pointercancel', endHelp);
-        revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
-
-        // Tastiera (Spazio / Invio)
         revealBtn.addEventListener('keydown', (e) => {
-            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp();
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showHelp(e);
         });
         revealBtn.addEventListener('keyup', (e) => {
-            if (e.key === ' ' || e.key === 'Enter') endHelp();
+            if (e.key === ' ' || e.key === 'Enter') hideHelp(e);
         });
-        revealBtn.addEventListener('blur', endHelp);
+        revealBtn.addEventListener('blur', hideHelp);
 
-        // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
         revealBtn.addEventListener('click', () => {
             if (!isGameCompleted) return;
             if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
@@ -475,7 +482,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Click sulla griglia ---
     gridButtons.forEach(button => {
         button.addEventListener('click', async () => {
             if (isGameCompleted || isGameLoading) return;
@@ -488,13 +494,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (buttons[index].value !== true) {
                 button.classList.remove('error');
-                void button.offsetWidth; // riavvia l'animazione di shake
+                void button.offsetWidth;
                 button.classList.add('error');
                 setTimeout(() => button.classList.remove('error'), 400);
                 return;
             }
 
-            // --- Risposta corretta: aggiorna TUTTO lo stato in modo sincrono ---
             button.disabled = true;
             button.classList.add('selected');
             foundCorrectCount++;
@@ -505,7 +510,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (justCompleted) {
                 isGameCompleted = true;
-                stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
+                stopElapsedTimer();
                 gridButtons.forEach(btn => { btn.disabled = true; });
 
                 results.push({
@@ -516,11 +521,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     score: computeScore()
                 });
 
-                setOverallProgress(roundIndex + 1);          // la barra avanza di un round
+                setOverallProgress(roundIndex + 1);
                 setButtonState(isLastRound ? 'done' : 'next');
             }
 
-            // --- Solo dopo: animazioni ---
             if (typeof Checkmark !== 'undefined') {
                 try {
                     await Checkmark.show({ element: button, size: 48, rise: 70, duration: 1600 });
@@ -529,7 +533,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // Coriandoli solo alla fine del gioco (per averli a ogni round togli "isLastRound &&")
             if (justCompleted && isLastRound && typeof Confetti !== 'undefined') {
                 try {
                     await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
@@ -544,7 +547,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initGame();
 });
-
 
 </script>
 

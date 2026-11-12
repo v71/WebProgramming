@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+
+    <title>Riempi i vuoti</title>
+
+    <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <!-- NB: verifica il nome del file (celebrazion.js vs celebrazione.js) nel tab Network -->
+    <script src="../../js/celebrazion.js"></script>
+
+    <link href="../stylesheet.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(99, 102, 241, 0.06), transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(6, 182, 212, 0.06), transparent 40%),
+                var(--body-background);
+            color: var(--text);
+            margin: 0;
+            padding: 20px 20px calc(40px + env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            height: 100dvh;
+            min-height: 0;              /* FIX: non annulla più 100dvh su mobile */
+            overflow: hidden;
+        }
+
+        .dd-wrap {
+            width: 100%;
+            max-width: 1050px;
+            max-height: 100%;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .dd-tray {
+            background: var(--game-area-background);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            min-height: 64px;
+            margin-bottom: 12px;
+            flex: 0 0 auto;
+        }
+
+        .dd-chip {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1;
+            background: #7931b4;
+            color: #fff;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 11px 18px;
+            margin: 0;
+            cursor: pointer;
+            touch-action: manipulation;
+            user-select: none;
+            -webkit-user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        /* FIX: hover solo su dispositivi con puntatore reale (niente hover "appiccicoso" su touch) */
+        @media (hover: hover) {
+            .dd-chip:hover:not(:disabled) {
+                border-color: var(--grid-btn-hovered-border-color);
+                background: var(--grid-btn-hovered);
+                color: var(--grid-btn-hovered-text);
+                transform: translateY(-4px);
+                box-shadow: var(--shadow-md);
+                z-index: 5;
+            }
+        }
+
+        .dd-chip.dd-wrong,
+        .dd-chip.dd-wrong:hover {
+            border-color: #ef4444;
+            background: #40285c;
+            color: #ef4444;
+            transform: none;
+        }
+
+        .dd-chip:focus-visible {
+            outline: 3px solid var(--accent-2);
+            outline-offset: 2px;
+        }
+
+        .dd-text {
+            background: #37275e;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: clamp(14px, 2.5vw, 28px);
+            padding-bottom: 20px;
+            font-size: 20px;
+            line-height: 2.3;
+            flex: 0 1 auto;
+            min-height: 0;
+            overflow-y: auto;
+            transition:
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease,
+                color 0.25s ease;
+        }
+
+        .dd-blank {
+            display: inline-block;
+            position: relative;
+            height: 1.7em;
+            margin: 0 2px;
+            padding: 0 14px;
+            white-space: nowrap;
+            text-align: center;
+            font-family: inherit;
+            font-size: 0.88em;
+            font-weight: 600;
+            line-height: calc(1.7em - 4px);
+            color: var(--text);
+            background: #553d94;
+            border: 2px solid #000000;
+            border-radius: 6px;
+            vertical-align: middle;
+            cursor: default;
+            transition:
+                transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.25s ease,
+                box-shadow 0.25s ease,
+                background-color 0.25s ease,
+                color 0.25s ease;
+        }
+
+        .dd-blank.dd-current {
+            border-style: solid;
+            border-color: #ffffff;
+            background: #544b7a;
+            border-radius: 6px;
+        }
+
+        .dd-blank.dd-error {
+            border-color: #ef4444;
+            background: #5c2635;
+            color: #ff6b6b;
+        }
+
+        .dd-sizer {
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .dd-blank.dd-filled {
+            background: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
+            transform: none !important;
+            box-shadow: var(--shadow-sm) !important;
+            opacity: 1 !important;
+            cursor: default !important;
+        }
+
+        .dd-blank.dd-filled .dd-sizer {
+            visibility: visible;
+        }
+
+        .dd-text.dd-peeking {
+            border-color: #ffffff !important;
+            transition: none !important;
+        }
+
+        .dd-text.dd-peeking .dd-blank:not(.dd-filled) {
+            border-style: solid !important;
+            border-color: #ffffff !important;
+            background: #10b981 !important;
+            color: #ffffff !important;
+            transition: none !important;
+        }
+
+        .dd-text.dd-peeking .dd-blank:not(.dd-filled) .dd-sizer {
+            visibility: visible !important;
+        }
+
+        .dd-shake {
+            animation: dd-shake 0.12s;
+        }
+
+        @keyframes dd-shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .dd-shake { animation: none; }
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+    </style>
+
+    <style>
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* FIX: evita che un leggero trascinamento del dito annulli il "peek" (pointercancel) */
+        #reveal-btn {
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px;
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="game-title">Il ciclo dell'acqua</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Tentativi: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style" aria-live="polite">
+        Tocca la parola giusta per lo spazio evidenziato
+    </h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o" aria-hidden="true"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <div id="game-area">
+        <div class="dd-wrap">
+            <div class="dd-tray" id="dd-tray" role="group" aria-label="Parole da inserire"></div>
+            <div class="dd-text" id="dd-text"></div>
+        </div>
+    </div>
+
+    <!-- FINAL REPORT WINDOW -->
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Round</th>
+                    <th>Tentativi</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+    <h1 id="progress-title">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const DD_FONT_SCALE = 0.85;
+    const SHAKE_MS = 200;
+    const NEXT_LOCKOUT_MS = 400;   // evita che il doppio tap su "Prossimo round" attivi un aiuto
+    const SHUFFLE_ROUNDS = true;   // false = round nell'ordine in cui sono scritti
+    const INSTRUCTION_DEFAULT = 'Tocca la parola giusta per lo spazio evidenziato';
+
+    /* =========================================================
+       DOM REFERENCES
+       ========================================================= */
+
+    const roundValueEl = document.getElementById('round-value');
+    const timeValueEl = document.getElementById('time-value');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const wordCountEl = document.getElementById('word-count');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const revealBtn = document.getElementById('reveal-btn');
+    const ddText = document.getElementById('dd-text');
+    const ddTray = document.getElementById('dd-tray');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const gameTitle = document.getElementById('game-title');
+    const gameStats = document.getElementById('game-stats');
+    const actionControls = document.getElementById('action-controls');
+    const gameArea = document.getElementById('game-area');
+    const progressTitle = document.getElementById('progress-title');
+    const progressContainer = document.querySelector('.progress-bar-container');
+    const btnIcon = document.getElementById('btn-icon');
+
+    const hiddenOnSummary = [
+        gameTitle, gameStats, instructionBanner, actionControls,
+        gameArea, progressTitle, progressContainer
+    ];
+
+    (function injectChipStyles() {
+        const style = document.createElement('style');
+        style.textContent = `
+            button.dd-chip.dd-selected,
+            button.dd-chip.dd-selected:disabled,
+            button.dd-chip.dd-selected:hover {
+                background: #10b981 !important;
+                border-color: #ffffff !important;
+                color: #ffffff !important;
+                opacity: 1 !important;
+                filter: none !important;
+                cursor: default;
+            }
+        `;
+        document.head.prepend(style);
+    })();
+
+    /* =========================================================
+       GAME STATE
+       ========================================================= */
+
+    let rounds = [];
+    let roundIndex = 0;
+    let results = [];
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let moveCount = 0;
+    let revealCount = 0;
+    let isPeeking = false;
+    let ddPlaced = 0;
+    let ddTotal = 0;
+    let ddMisses = 0;
+    let ddCurrent = null;
+    let currentRound = null;
+    let roundCompleted = false;
+    let finalScore = 0;
+    let buttonMode = 'help'; // 'help' | 'next' | 'done'
+    let lockUntil = 0;
+
+    /* =========================================================
+       GAME DATA
+       ========================================================= */
+
+    const GAME_ROUNDS = [
+        {
+            title: "Il ciclo dell'acqua",
+            text:
+                "L'acqua si muove di continuo intorno al nostro pianeta in un percorso chiamato {ciclo dell'acqua}. " +
+                "Il calore del {sole} scalda oceani e laghi e trasforma l'acqua liquida in vapore invisibile: questo processo si chiama {evaporazione}. " +
+                "Salendo, il vapore incontra aria più fredda e si trasforma di nuovo in minuscole goccioline che si riuniscono a formare le {nuvole}. " +
+                "Questo passaggio si chiama {condensazione}. " +
+                "Quando le goccioline diventano troppo pesanti, cadono al suolo come {precipitazioni}, ad esempio pioggia, neve o grandine. " +
+                "Una parte dell'acqua scorre sul terreno come {ruscellamento} e confluisce nei fiumi, che la riportano al {mare}, dove il ciclo ricomincia.",
+
+            distractors: [
+                "erosione",
+                "ghiacciaio"
+            ]
+        },
+
+        {
+            title: "La fotosintesi clorofilliana",
+            text:
+                "Le piante producono il proprio nutrimento attraverso un processo chiamato {fotosintesi}. " +
+                "Le foglie catturano la luce del {sole} grazie alla clorofilla. " +
+                "Dalle radici assorbono l'acqua, mentre dall'aria prendono l'anidride {carbonica}. " +
+                "Come risultato, rilasciano nell'atmosfera l'ossigeno che tutti noi {respiriamo}.",
+
+            distractors: [
+                "azoto",
+                "radice"
+            ]
+        }
+    ];
+
+    function parseRound(round) {
+        if (!round || typeof round.text !== 'string') return null;
+
+        const parts = round.text.split(/(\{[^}]+\})/).map(part => {
+            const match = part.match(/^\{([\s\S]+)\}$/);   // FIX: accetta anche a-capo dentro le graffe
+            return match ? { blank: match[1].trim() } : { text: part };
+        });
+
+        const answers = parts.filter(p => p.blank !== undefined).map(p => p.blank);
+        if (answers.length === 0 || answers.some(a => a === '')) return null;
+
+        // FIX: scarta i distrattori che coincidono con una risposta (o sono duplicati)
+        const answerSet = new Set(answers.map(a => a.toLowerCase()));
+        const seen = new Set();
+        const distractors = (Array.isArray(round.distractors) ? round.distractors : [])
+            .filter(d => typeof d === 'string' && d.trim() !== '')
+            .map(d => d.trim())
+            .filter(d => {
+                const k = d.toLowerCase();
+                if (answerSet.has(k) || seen.has(k)) return false;
+                seen.add(k);
+                return true;
+            });
+
+        return { title: round.title || '', parts, answers, distractors };
+    }
+
+    /* =========================================================
+       TIMER
+       ========================================================= */
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    /* =========================================================
+       STATS
+       ========================================================= */
+
+    function updateWordCountDisplay() {
+        if (wordCountEl) wordCountEl.textContent = `${ddPlaced} / ${ddTotal}`;
+    }
+
+    function updateRoundDisplay() {
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${rounds.length}`;
+    }
+
+    function updateMovesDisplay() {
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealsDisplay() {
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+    }
+
+    function addMove() {
+        moveCount++;
+        updateMovesDisplay();
+    }
+
+    function resetStats() {
+        moveCount = 0;
+        revealCount = 0;
+        updateMovesDisplay();
+        updateRevealsDisplay();
+    }
+
+    function computeScore() {
+        const raw = 100 - ddMisses * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    /* =========================================================
+       UI HELPERS
+       ========================================================= */
+
+    function setInstruction(text) {
+        if (instructionBanner) instructionBanner.textContent = text;
+    }
+
+    function setOverallProgress(done) {
+        const total = rounds.length;
+        if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    }
+
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
+    }
+
+    /* =========================================================
+       HELP / PEEK
+       ========================================================= */
+
+    function showPeek(e) {
+        if (performance.now() < lockUntil) return;   // FIX: anti doppio tap
+        if (buttonMode !== 'help' || isPeeking || roundCompleted || (revealBtn && revealBtn.disabled)) return;
+        isPeeking = true;
+
+        if (e && e.pointerId && revealBtn) {
+            try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+
+        revealCount++;
+        updateRevealsDisplay();
+        if (ddText) ddText.classList.add('dd-peeking');
+    }
+
+    function hidePeek(e) {
+        if (!isPeeking) return;
+        isPeeking = false;
+
+        if (e && e.pointerId && revealBtn) {
+            try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+
+        if (ddText) ddText.classList.remove('dd-peeking');
+    }
+
+    /* =========================================================
+       DATA HELPERS
+       ========================================================= */
+
+    function ddShuffle(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    /* =========================================================
+       BUILD CURRENT ROUND
+       ========================================================= */
+
+    function ddBuild(round) {
+        if (ddTray) ddTray.innerHTML = '';
+        if (ddText) ddText.innerHTML = '';
+        ddPlaced = 0;
+        ddMisses = 0;
+        ddCurrent = null;
+        roundCompleted = false;
+        currentRound = round;
+
+        if (gameTitle) gameTitle.textContent = round.title;
+
+        round.parts.forEach(part => {
+            if (part.blank === undefined) {
+                if (ddText) ddText.appendChild(document.createTextNode(part.text));
+                return;
+            }
+
+            const blank = document.createElement('span');
+            blank.className = 'dd-blank';
+            blank.dataset.answer = part.blank;
+            blank.setAttribute('aria-label', 'spazio vuoto');
+            const sizer = document.createElement('span');
+            sizer.className = 'dd-sizer';
+            sizer.textContent = part.blank;
+            blank.appendChild(sizer);
+            if (ddText) ddText.appendChild(blank);
+        });
+
+        ddTotal = round.answers.length;
+        updateWordCountDisplay();
+
+        ddShuffle(round.answers.concat(round.distractors)).forEach(word => {
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'dd-chip';
+            chip.textContent = word;
+            chip.dataset.word = word;
+            chip.addEventListener('click', () => ddChoose(chip));
+            if (ddTray) ddTray.appendChild(chip);
+        });
+
+        ddNextBlank(false);
+    }
+
+    // FIX: scrolla solo il riquadro del testo, non gli antenati (body overflow:hidden)
+    function scrollBlankIntoView(blank) {
+        if (!ddText || !blank) return;
+        const b = blank.getBoundingClientRect();
+        const c = ddText.getBoundingClientRect();
+        if (b.top < c.top) ddText.scrollTop -= (c.top - b.top) + 8;
+        else if (b.bottom > c.bottom) ddText.scrollTop += (b.bottom - c.bottom) + 8;
+    }
+
+    function ddNextBlank(scroll = true) {
+        if (ddCurrent) ddCurrent.classList.remove('dd-current');
+
+        if (ddText) {
+            ddCurrent = ddText.querySelector('.dd-blank:not(.dd-filled)');
+        }
+
+        if (ddCurrent) {
+            ddCurrent.classList.add('dd-current');
+            if (scroll) scrollBlankIntoView(ddCurrent);
+        }
+    }
+
+    /* =========================================================
+       ANIMATIONS
+       ========================================================= */
+
+    function playCheckmark(element) {
+        if (typeof Checkmark === 'undefined' || typeof Checkmark.show !== 'function') return;
+        try {
+            Promise.resolve(Checkmark.show({ element, size: 48, rise: 70, duration: 1600 }))
+                .catch(err => console.warn('Checkmark animation failed:', err));
+        } catch (err) {
+            console.warn('Checkmark animation failed:', err);
+        }
+    }
+
+    // Resolves when the progress bar's width transition has finished
+    // (falls back to a timeout derived from the CSS transition, or resolves
+    // immediately if the bar has no transition).
+    function waitForProgressBar() {
+        return new Promise(resolve => {
+            if (!progressBarFill) return resolve();
+
+            const cs = getComputedStyle(progressBarFill);
+            const toMs = str => str.split(',').map(v => {
+                const n = parseFloat(v) || 0;
+                return /ms\s*$/.test(v) ? n : n * 1000;
+            });
+            const durations = toMs(cs.transitionDuration);
+            const delays = toMs(cs.transitionDelay);
+            const total = Math.max(...durations.map((d, i) => d + (delays[i % delays.length] || 0)));
+            if (!total) return resolve();
+
+            let done = false;
+            let timer = null;
+            const finish = () => {
+                if (done) return;
+                done = true;
+                clearTimeout(timer);
+                progressBarFill.removeEventListener('transitionend', onEnd);
+                resolve();
+            };
+            const onEnd = e => {
+                if (e.target === progressBarFill && e.propertyName === 'width') finish();
+            };
+            progressBarFill.addEventListener('transitionend', onEnd);
+            timer = setTimeout(finish, total + 100);
+        });
+    }
+
+    async function playConfetti() {
+        if (typeof Confetti === 'undefined') return;
+        try {
+            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+        } catch (err) {
+            console.warn('Confetti animation failed:', err);
+        }
+    }
+
+    /* =========================================================
+       WORD SELECTION
+       ========================================================= */
+
+    function ddChoose(chip) {
+        if (roundCompleted || !ddCurrent || isPeeking || chip.disabled) return;
+
+        const targetBlank = ddCurrent;
+        const isCorrect = chip.dataset.word === targetBlank.dataset.answer;
+
+        addMove();
+
+        if (!isCorrect) {
+            ddMisses++;
+            targetBlank.classList.remove('dd-shake', 'dd-error');
+            targetBlank.classList.add('dd-error');
+            chip.classList.add('dd-wrong');   // FIX: ora anche il chip sbagliato lampeggia
+            void targetBlank.offsetWidth;
+            targetBlank.classList.add('dd-shake');
+            setTimeout(() => {
+                targetBlank.classList.remove('dd-shake', 'dd-error');
+                chip.classList.remove('dd-wrong');
+            }, SHAKE_MS);
+            return;
+        }
+
+        targetBlank.classList.add('dd-filled');
+        targetBlank.setAttribute('aria-label', targetBlank.dataset.answer);
+        chip.classList.add('dd-selected');
+        chip.disabled = true;
+
+        ddPlaced++;
+        updateWordCountDisplay();
+
+        const completed = ddPlaced === ddTotal;
+        if (completed) {
+            if (ddCurrent) ddCurrent.classList.remove('dd-current');
+            ddCurrent = null;
+            ddFinish();
+        } else {
+            ddNextBlank();
+        }
+
+        playCheckmark(targetBlank);
+
+        const isLastRound = roundIndex >= rounds.length - 1;
+        if (completed && isLastRound) waitForProgressBar().then(playConfetti);
+    }
+
+    /* =========================================================
+       ROUND FINISH
+       ========================================================= */
+
+    function ddFinish() {
+        roundCompleted = true;
+        stopElapsedTimer();
+        hidePeek();
+
+        if (ddTray) {
+            ddTray.querySelectorAll('.dd-chip:not(.dd-selected)').forEach(chip => {
+                chip.disabled = true;
+            });
+        }
+
+        finalScore = computeScore();
+        results.push({
+            title: currentRound && currentRound.title ? currentRound.title : 'Paragrafo',
+            seconds: elapsedSeconds,
+            moves: moveCount,
+            mistakes: ddMisses,
+            reveals: revealCount,
+            score: finalScore
+        });
+
+        const isLastRound = roundIndex >= rounds.length - 1;
+        setOverallProgress(roundIndex + 1);
+        setInstruction(isLastRound
+            ? 'Paragrafo completato! Clicca Fatto per vedere il riepilogo.'
+            : 'Paragrafo completato! Clicca per passare al prossimo.');
+        if (revealBtn) revealBtn.disabled = false;
+        setButtonMode(isLastRound ? 'done' : 'next');
+    }
+
+    /* =========================================================
+       BUTTON EVENTS
+       ========================================================= */
+
+    if (revealBtn) {
+        revealBtn.addEventListener('pointerdown', (e) => showPeek(e));
+        revealBtn.addEventListener('pointerup', (e) => hidePeek(e));
+        revealBtn.addEventListener('pointerleave', (e) => hidePeek(e));
+        revealBtn.addEventListener('pointercancel', (e) => hidePeek(e));
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showPeek(e);
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hidePeek(e);
+        });
+        revealBtn.addEventListener('blur', (e) => hidePeek(e));
+
+        revealBtn.addEventListener('click', () => {
+            if (buttonMode === 'next') {
+                lockUntil = performance.now() + NEXT_LOCKOUT_MS;
+                loadRound(roundIndex + 1);
+            } else if (buttonMode === 'done') {
+                showSummaryScreen();
+            }
+        });
+    }
+
+    /* =========================================================
+       FINAL REPORT
+       ========================================================= */
+
+    function summaryKeyFor(headerText) {
+        const t = headerText.trim().toLowerCase();
+        if (/temp/.test(t)) return 'time';
+        if (/error/.test(t)) return 'errors';
+        if (/mosse|tentativ/.test(t)) return 'moves';
+        if (/aiut/.test(t)) return 'hints';
+        if (/metric|punteggio|score/.test(t)) return 'score';
+        return '';
+    }
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        hidePeek();
+
+        const table = summaryTbody ? summaryTbody.closest('table') : null;
+        const headers = table ? Array.from(table.querySelectorAll('thead th')) : [];
+        const keys = headers.length
+            ? headers.map((th, i) => (i === 0 ? 'title' : summaryKeyFor(th.textContent)))
+            : ['title', 'time', 'moves', 'hints', 'score'];
+
+        if (summaryTbody) {
+            summaryTbody.innerHTML = '';
+            results.forEach(r => {
+                const values = {
+                    title: r.title,
+                    time: `${r.seconds}s`,
+                    moves: String(r.moves),
+                    errors: String(r.mistakes),
+                    hints: String(r.reveals),
+                    score: String(r.score)
+                };
+
+                const row = document.createElement('tr');
+                keys.forEach((key, i) => {
+                    const td = document.createElement('td');
+                    td.textContent = values[key] !== undefined ? values[key] : '';
+                    if (i === 0 || key === 'score') td.style.fontWeight = '700';
+                    row.appendChild(td);
+                });
+                summaryTbody.appendChild(row);
+            });
+        }
+
+        if (summaryTotals) {
+            const sum = key => results.reduce((t, r) => t + r[key], 0);
+            summaryTotals.innerHTML = `
+                <div>Tempo: <strong>${sum('seconds')}s</strong></div>
+                <div>Tentativi: <strong>${sum('moves')}</strong></div>
+                <div>Errori: <strong>${sum('mistakes')}</strong></div>
+                <div>Aiuti: <strong>${sum('reveals')}</strong></div>
+                <div>Punteggio: <strong>${sum('score')}</strong></div>
+            `;
+            summaryTotals.style.flexWrap = 'wrap';
+            summaryTotals.style.gap = '8px 24px';
+        }
+
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+        if (summaryScreen) summaryScreen.style.display = 'block';
+    }
+
+    /* =========================================================
+       TEXT FITTING
+       ========================================================= */
+
+    function ddFitText() {
+        if (!ddText || !ddText.clientHeight) return;
+
+        let lo = 12;
+        let hi = 44;
+
+        while (hi - lo > 0.5) {
+            const mid = (lo + hi) / 2;
+            ddText.style.fontSize = mid + 'px';
+            if (ddText.scrollHeight <= ddText.clientHeight + 1) {
+                lo = mid;
+            } else {
+                hi = mid;
+            }
+        }
+
+        ddText.style.fontSize = Math.max(12, lo * DD_FONT_SCALE) + 'px';
+    }
+
+    let ddResizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(ddResizeTimer);
+        ddResizeTimer = setTimeout(ddFitText, 100);
+    });
+
+    /* =========================================================
+       ROUNDS
+       ========================================================= */
+
+    function loadRound(index) {
+        roundIndex = index;
+
+        hidePeek();
+        resetStats();
+        updateRoundDisplay();
+        setOverallProgress(roundIndex);
+        setInstruction(INSTRUCTION_DEFAULT);
+        setButtonMode('help');
+        if (revealBtn) revealBtn.disabled = false;
+
+        ddBuild(rounds[roundIndex]);
+        ddFitText();
+        startElapsedTimer();
+    }
+
+    /* =========================================================
+       INITIALIZATION
+       ========================================================= */
+
+    function initGame() {
+        if (summaryScreen) summaryScreen.style.display = 'none';
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = ''; });
+
+        const playable = GAME_ROUNDS.map(parseRound).filter(Boolean);
+        if (playable.length < GAME_ROUNDS.length) {
+            console.warn(`${GAME_ROUNDS.length - playable.length} round scartati: servono un testo e almeno una parola tra {graffe}.`);
+        }
+
+        if (playable.length === 0) {
+            setInstruction('Nessun paragrafo disponibile.');
+            if (revealBtn) revealBtn.disabled = true;
+            document.body.classList.add('loaded');
+            return;
+        }
+
+        rounds = SHUFFLE_ROUNDS ? ddShuffle(playable) : playable;
+        results = [];
+
+        document.body.classList.add('loaded');
+        loadRound(0);
+
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(ddFitText);
+        }
+    }
+
+    initGame();
+});
+
+</script>
+
+</body>
+</html>

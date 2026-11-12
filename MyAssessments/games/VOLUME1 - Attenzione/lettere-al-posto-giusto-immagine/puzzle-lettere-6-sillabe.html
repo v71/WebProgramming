@@ -5,35 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Puzzle di Lettere</title>
 
-     <!-- 1. Includi qui il file esterno condiviso -->
+    <!-- Controlla il nome reale del file: "celebrazion.js" potrebbe essere "celebrazione.js" -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
     <link href="../stylesheet.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-   
     <style>
-
-        /* Tutte le modifiche di questa pagina stanno qui: stylesheet.css (condiviso) non viene toccato.
-           Questo blocco viene dopo il <link>, quindi a parità di specificità vince. */
+        /* Tutte le modifiche di questa pagina stanno qui: stylesheet.css (condiviso) non viene toccato. */
 
         :root {
-            /* Dimensione di tutte le card (sorgente, slot e overlay Help).
-               Il valore reale viene calcolato da fitCards() in base a lunghezza della frase e larghezza dello schermo;
-               questo è solo il valore di partenza. */
-            --card-w: 44px;
+            --card-w: 44px;                      /* ricalcolato da fitCards() */
             --card-h: calc(var(--card-w) * 1.3);
-            --card-gap: 6px;   /* tenere allineato con CARD_GAP nello script */
+            --card-gap: 6px;                     /* tenere allineato con CARD_GAP nello script */
+            --group-gap: 14px;                   /* tenere allineato con GROUP_GAP nello script */
             --box-pad: 10px;
         }
 
-        /* =========================================
-           LAYOUT A ALTEZZA SCHERMO (niente scroll)
-           Il body occupa esattamente lo schermo; l'immagine prende
-           tutto lo spazio che resta e si rimpicciolisce da sola.
-        ========================================= */
-
+        /* Layout ad altezza schermo (niente scroll) */
         body {
             height: 100vh;
             height: 100dvh;
@@ -41,43 +31,24 @@
             padding: 8px 12px 10px;
             justify-content: flex-start;
         }
+        body > * { flex-shrink: 0; }
 
-        body > * {
-            flex-shrink: 0;
-        }
+        .controls { margin-bottom: 16px; min-height: 0; }
 
-        .controls {
-            margin-bottom: 16px;
-            min-height: 0;
-        }
+        #summary-screen { margin: auto 0; }
 
-        .cool-btn {
-            padding: 8px 22px;
-        }
-
-        /* Il riepilogo finale resta centrato senza essere tagliato se è più alto dello schermo */
-        #summary-screen {
-            margin: auto 0;
-        }
-
-        /* =========================================
-           IMMAGINE
-        ========================================= */
-
+        /* Immagine */
         #puzzle-image-wrapper {
-            flex: 0 1 30vh;       /* never taller than 30% of the screen, shrinks if needed */
+            flex: 0 1 30vh;
             min-height: 56px;
             width: 100%;
             max-width: 1100px;
             display: flex;
-            align-items: flex-start;   /* era center */
+            align-items: flex-start;
             justify-content: center;
             margin-bottom: 16px;
         }
-
-        #puzzle-image-wrapper[hidden] {
-            display: none;
-        }
+        #puzzle-image-wrapper[hidden] { display: none; }
 
         #puzzle-image {
             height: 100%;
@@ -86,15 +57,13 @@
             object-fit: contain;
             border-radius: 14px;
             box-shadow: var(--shadow-md);
-            /* ...resto invariato... */
-            border: 2px solid #000000;   /* spessore e colore a piacere */
-
+            border: 2px solid #000000;
+            opacity: 0;
+            transition: opacity 0.35s ease;
         }
+        #puzzle-image.visible { opacity: 1; }
 
-        /* =========================================
-           AREA DI GIOCO
-        ========================================= */
-
+        /* Area di gioco */
         .section-wrapper {
             width: 100%;
             max-width: 1100px;
@@ -104,17 +73,6 @@
             align-items: center;
         }
 
-        .section-title {
-            font-size: 1.05rem;
-            margin-bottom: 6px;
-            color: var(--text-dim);
-            font-weight: 700;
-            letter-spacing: 0.2px;
-            text-align: center;
-            width: 100%;
-        }
-
-        /* Container sizes dynamically and stays centered */
         .card-container {
             display: flex;
             flex-wrap: wrap;
@@ -140,9 +98,7 @@
             filter: grayscale(100%);
         }
 
-        #source-container {
-            border-color: var(--border);
-        }
+        #source-container { border-color: var(--border); }
 
         #source-container .card:hover {
             border-color: var(--grid-btn-hovered-border-color);
@@ -157,9 +113,17 @@
             border: 2px solid #000000;
             background-color: #37275e;
             padding: var(--box-pad);
+            gap: var(--group-gap);
         }
 
-        /* Slot styles for the drop zone: same size as a card */
+        .syllable-group {
+            display: flex;
+            gap: var(--card-gap);
+            padding: 4px 6px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+        }
+
         .slot {
             position: relative;
             flex-shrink: 0;
@@ -176,46 +140,23 @@
             cursor: pointer;
         }
 
-        /* Highlight for the current active slot */
         .slot.active-slot {
             border-color: #ffffff;
             border-style: solid;
             background-color: #544b7a;
         }
 
-        /* Filled slot becomes an invisible wrapper */
         .slot.filled,
         .slot.revealed {
-
             border: none;
             background: transparent;
             box-shadow: none;
         }
 
-        /* Filled slot: no hover effect (the card is already in its "selected" state) */
-        .slot.filled:hover {
-            transform: none;
-            box-shadow: none;
-        }
+        .slot.filled:hover { transform: none; box-shadow: none; }
+        .slot.locked { cursor: default; }
 
-        /* Letters placed in the target container: "selected" state (green), not hoverable.
-           When the whole word is wrong the red .error-slot style below takes over. */
-        .slot.filled:not(.error-slot) .card {
-            background-color: #10b981;
-            border-color: #ffffff;
-            color: #ffffff;
-            box-shadow: none;
-        }
-
-        /* Once the word is completed the slots are locked: no pointer cursor */
-        .slot.locked {
-            cursor: default;
-        }
-
-        /* Error state for incorrect slots */
-        .slot.error-slot {
-            animation: shake 0.4s ease;
-        }
+        .slot.error-slot { animation: shake 0.4s ease; }
 
         .slot.error-slot .card {
             border-color: var(--wrong);
@@ -230,6 +171,22 @@
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
 
+        /* Lettera giusta (con tutto il prefisso giusto): verde */
+        .slot.filled .card.correct {
+            background-color: #10b981;
+            border-color: #ffffff;
+            color: #ffffff;
+            box-shadow: none;
+        }
+
+        /* Lettera sbagliata o dopo una sbagliata: rossa */
+        .slot.filled .card.wrong-letter {
+            border-color: var(--grid-btn-wrong-border-color);
+            background-color: var(--grid-btn-wrong);
+            color: var(--grid-btn-wrong-text);
+            box-shadow: none;
+        }
+
         .target-wrapper {
             position: relative;
             width: fit-content;
@@ -237,6 +194,7 @@
             margin: 0 auto;
         }
 
+        /* Overlay Help: stessa struttura (gruppi di sillabe) e stessi gap del target */
         #reveal-overlay {
             position: absolute;
             top: 0;
@@ -251,7 +209,7 @@
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: var(--card-gap);
+            gap: var(--group-gap);
             padding: var(--box-pad);
             border-radius: 14px;
             background-color: #37275e;
@@ -263,24 +221,20 @@
             z-index: 10;
             box-sizing: border-box;
         }
+        #reveal-overlay.visible { opacity: 1; }
 
-        #reveal-overlay.visible {
-            opacity: 1;
-        }
- 
-        /* Stile specifico per le lettere rivelate con il tasto Help */
         .card.reveal-letter {
             border-color: #ffffff !important;
-            background-color: #10b981 !important; /* Verde brillante e ben visibile */
+            background-color: #10b981 !important;
             color: #ffffff !important;
             cursor: default;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
             transform: none !important;
         }
 
-        /* Letter cards: il font segue la dimensione della card */
         .card {
             flex-shrink: 0;
+            box-sizing: border-box;
             width: var(--card-w);
             height: var(--card-h);
             padding: 0;
@@ -299,7 +253,6 @@
             transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
         }
 
-        /* Simbolo dello spazio, in proporzione alla card */
         .card.space::after {
             content: '';
             width: calc(var(--card-w) * 0.4);
@@ -310,7 +263,7 @@
             border-radius: 0 0 5px 5px;
             opacity: 0.85;
         }
-        
+
         .slot .card {
             transform: none !important;
             background: #5d258a;
@@ -318,12 +271,94 @@
             height: 100%;
         }
 
-        #game-stats strong {
+        #game-stats strong { color: var(--text); font-weight: 700; }
+
+        /* Hint */
+        #hint-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.5rem;
+            font-weight: 500;
             color: var(--text);
-            font-weight: 700;
+            background: var(--game-area-background);
+            padding: 10px 40px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 2px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+            flex-wrap: wrap;
+        }
+        #hint-style[hidden] { display: none !important; }
+
+        /* Pulsante */
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 8px 22px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
         }
 
-        /* Results Summary Screen */
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px;
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+        button:hover { filter: brightness(1.05); }
+
+        /* Il pulsante in modalità "wrong" usa aria-disabled (non disabled) per non far perdere il focus */
+        button:disabled,
+        button[aria-disabled="true"] {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        /* Riepilogo */
         #summary-screen {
             display: none;
             width: 100%;
@@ -336,17 +371,9 @@
             box-shadow: var(--shadow-lg);
         }
 
-        #summary-screen h2 {
-            margin-top: 0;
-            color: var(--correct);
-            font-size: 2rem;
-        }
+        #summary-screen h2 { margin-top: 0; color: var(--correct); font-size: 2rem; }
 
-        .summary-table {
-            width: 100%;
-            margin: 24px 0;
-            border-collapse: collapse;
-        }
+        .summary-table { width: 100%; margin: 24px 0; border-collapse: collapse; }
 
         .summary-table th, .summary-table td {
             padding: 12px;
@@ -373,167 +400,8 @@
             font-weight: 600;
         }
 
-        .summary-totals strong {
-            color: var(--accent);
-        }
-
-        button:hover {
-            filter: brightness(1.05);
-        }
-
-        button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            filter: none;
-            box-shadow: none !important;
-            transform: none !important;
-        }
-
+        .summary-totals strong { color: var(--accent); }
     </style>
-
-    <style>
-
-        #hint-style {
-            margin: 0 0 14px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 24px;
-            font-size: 1.5rem;
-            font-weight: 500;
-            color: var(--text);
-            background: var(--game-area-background);
-            padding: 10px 40px;
-            border-radius: 99px;
-            box-shadow: var(--shadow-sm);
-            border: 2px solid var(--border);
-            font-variant-numeric: tabular-nums;
-            text-align: center;
-            flex-wrap: wrap;
-        }
-
-        #hint-style[hidden] { display: none !important; }
-
-    </style>
-
-<style>
-
-    #target-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 14px;               /* spazio tra una sillaba e l'altra */
-    }
-
-    .syllable-group {
-        display: flex;
-        gap: var(--card-gap, 6px);
-        padding: 4px 6px;
-        border: 2px solid var(--border);
-        border-radius: 10px;
-    }
-
-</style>
-
-<style>
-
-        .cool-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px 28px;
-            font-size: 1.5rem;
-            font-weight: 400;
-            color: var(--text);
-            background-color: #4f46e5;
-            border: 2px solid var(--border);
-            border-radius: 99px;
-            cursor: pointer;
-            box-shadow: var(--shadow-lg);
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            text-decoration: none;
-        }
-
-        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
-
-        #reveal-btn .fa {
-            font-size: 25px;
-            line-height: 1;
-            color: #ffffff;
-            --w: 1px; /* spessore del bordo */
-            text-shadow:
-                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
-                0 calc(var(--w) * -1) 0 #000,
-                var(--w) calc(var(--w) * -1) 0 #000,
-                calc(var(--w) * -1) 0 0 #000,
-                var(--w) 0 0 #000,
-                calc(var(--w) * -1) var(--w) 0 #000,
-                0 var(--w) 0 #000,
-                var(--w) var(--w) 0 #000 !important;
-            -webkit-text-stroke: 0 !important;
-            filter: none !important;
-        }
-
-        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
-        #reveal-btn .fa,
-        #reveal-btn:hover .fa,
-        #reveal-btn:focus .fa,
-        #reveal-btn:active .fa,
-        #reveal-btn:hover #btn-icon,
-        #reveal-btn:hover .btn-icon,
-        #reveal-btn:hover i {
-            transform: none !important;
-            animation: none !important;
-            transition: none !important;
-        }
-
-</style>
-
-<style>
-
-    #puzzle-image {
-        height: 100%;
-        width: auto;
-        max-width: 100%;
-        object-fit: contain;
-        border-radius: 14px;
-        box-shadow: var(--shadow-md);
-        border: 2px solid #000000;
-        opacity: 0;                      /* new */
-        transition: opacity 0.35s ease;  /* new */
-    }
-
-    #puzzle-image.visible {
-        opacity: 1;
-    }
-
-    /* Lettera giusta nel suo slot: verde */
-    .slot.filled .card.correct {
-        background-color: #10b981;
-        border-color: #ffffff;
-        color: #ffffff;
-        box-shadow: none;
-    }
-
-    /* Lettera sbagliata nel suo slot: rossa */
-    .slot.filled .card.wrong-letter {
-        /*
-        background-color: var(--wrong, #ef4444);
-        border-color: #ffffff;
-        color: #ffffff;
-        */
-        border-color: var(--grid-btn-wrong-border-color);
-        background-color:var(--grid-btn-wrong);
-        color: var(--grid-btn-wrong-text );
-        box-shadow: none;
-    }
-
-</style>
-
 </head>
 <body>
 
@@ -556,9 +424,8 @@
         </button>
     </div>
 
-    <h2 id="hint-style"></h2>
+    <h2 id="hint-style" hidden></h2>
 
-    <!-- Immagine: occupa lo spazio rimasto, senza mai far scorrere la pagina -->
     <div id="puzzle-image-wrapper" hidden>
         <img id="puzzle-image" alt="Immagine indizio">
     </div>
@@ -576,9 +443,7 @@
         </div>
     </div>
 
-    <h1 id="progress-title">
-        Progresso
-    </h1>
+    <h1 id="progress-title">Progresso</h1>
 
     <div class="progress-bar-container">
         <div id="progress-bar-fill" class="progress-bar-fill"></div>
@@ -594,38 +459,34 @@
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
-                    <th>Metric</th>
+                    <th>Punti</th>
                 </tr>
             </thead>
-            <tbody id="summary-tbody">
-            </tbody>
+            <tbody id="summary-tbody"></tbody>
         </table>
-        <div class="summary-totals" id="summary-totals">
-        </div>
+        <div class="summary-totals" id="summary-totals"></div>
     </div>
 
 <script>
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // File JSON con titolo, testo e voci (percorso relativo alla pagina HTML).
-    // Formato: { "title": "...", "label": "...", "words": [ { "text": "ZAINO", "image": "images/backpack.png" }, ... ] }
-    // Le voci vengono mostrate una alla volta, in ordine casuale.
+    // File JSON di default (si può cambiare con ?json=nomefile.json).
+    // Formato: { "title": "...", "label": "...", "words": [ { "text": "ZA-INO", "syllables": [...], "image": "...", "hint": "..." }, ... ] }
     const PUZZLE_URL = 'set-1.json';
 
-    const IMAGE_FADE_MS = 350;   // keep in sync with the CSS transition
-    let imageToken = 0;          // ignores older loads if the round changes quickly
+    const IMAGE_FADE_MS = 350;   // come la transizione CSS
+    let imageToken = 0;
 
-    // Dimensioni card: devono restare coerenti con il CSS (--card-gap, --box-pad, bordo 2px dei container)
+    // Devono restare coerenti con il CSS (--card-gap, --group-gap, --box-pad, bordi)
     const CARD_MIN = 24;
     const CARD_MAX = 52;
     const CARD_GAP = 6;
-    const BOX_EXTRA = 2 * 10 + 2 * 2; // padding + bordo di un container
-    const PAGE_SIDE_PADDING = 24;     // padding laterale del body
+    const BOX_EXTRA = 2 * 10 + 2 * 2;
+    const PAGE_SIDE_PADDING = 24;
     const MAX_CONTENT_WIDTH = 1100;
-
-    const GROUP_GAP = 14;                 // come il gap di #target-container
-    const GROUP_EXTRA = 2 * 6 + 2 * 2;    // padding + bordo di un gruppo
+    const GROUP_GAP = 14;
+    const GROUP_EXTRA = 2 * 6 + 2 * 2;
     let currentSyllables = [];
 
     // --- Elementi ---
@@ -651,17 +512,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const progressContainer = document.querySelector('.progress-bar-container');
     const imageWrapper = document.getElementById('puzzle-image-wrapper');
     const puzzleImage = document.getElementById('puzzle-image');
-    const hintEl = document.getElementById('hint-style');   // NEW
+    const hintEl = document.getElementById('hint-style');
     const btnIcon = document.getElementById('btn-icon');
 
     const hiddenOnSummary = [
         puzzleWorkspace, instructionBanner, gameStats, gameTitle,
-        progressTitle, progressContainer, actionControls, imageWrapper,hintEl   // hintEl added
+        progressTitle, progressContainer, actionControls, imageWrapper, hintEl
     ];
 
     // --- Stato ---
     let originalTextString = '';
     let elapsedSeconds = 0;
+    let startTime = 0;
     let elapsedTimerInterval = null;
     let moveCount = 0;
     let revealCount = 0;
@@ -670,14 +532,11 @@ document.addEventListener('DOMContentLoaded', () => {
     let isRevealing = false;
     let slotsMeta = [];
     let buttonMode = 'help'; // 'help' | 'wrong' | 'next' | 'done'
-    let items = [];          // [ { text, image }, ... ]
-    let itemIndex = 0;       // voce corrente
-    let results = [];        // risultato di ogni voce completata
+    let items = [];
+    let itemIndex = 0;
+    let results = [];
 
     // --- Dimensione card ---
-    // Cerca di tenere l'intera frase su una sola riga (meno altezza);
-    // se non basta, scende fino a CARD_MIN e poi va a capo.
-
     function fitCards() {
         const len = originalTextString.length;
         if (!len) return;
@@ -691,15 +550,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.addEventListener('resize', fitCards);
 
+    // --- Immagine ---
     function setPuzzleImage(src) {
         const token = ++imageToken;
         const wasVisible = !imageWrapper.hidden && puzzleImage.classList.contains('visible');
 
-        // 1. Fade the old image out
         puzzleImage.classList.remove('visible');
 
         if (!src) {
-            // No image for this round: hide the container once the fade-out is done
             setTimeout(() => {
                 if (token !== imageToken) return;
                 imageWrapper.hidden = true;
@@ -708,7 +566,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // 2. Preload the new image while the old one fades out
         const preload = new Promise(resolve => {
             const loader = new Image();
             loader.onload = () => resolve(true);
@@ -717,30 +574,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const fadeOut = new Promise(resolve => setTimeout(resolve, wasVisible ? IMAGE_FADE_MS : 0));
 
-        // 3. When both are done, swap the source and fade the new image in
         Promise.all([preload, fadeOut]).then(([loaded]) => {
-            if (token !== imageToken) return; // another round started in the meantime
-
+            if (token !== imageToken) return;
             if (!loaded) {
                 imageWrapper.hidden = true;
                 return;
             }
-
             puzzleImage.src = src;
             imageWrapper.hidden = false;
-            // Two frames so the browser registers opacity 0 before animating to 1
             requestAnimationFrame(() => requestAnimationFrame(() => {
                 if (token === imageToken) puzzleImage.classList.add('visible');
             }));
         });
     }
 
-    // Se il file non esiste, l'area sparisce e lo spazio torna al gioco
     puzzleImage.addEventListener('error', () => {
         imageWrapper.hidden = true;
     });
 
-    // --- Timer ---
+    // --- Timer (basato su Date.now: niente deriva, regge le tab in background) ---
+    function updateElapsed() {
+        elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
     function stopElapsedTimer() {
         if (elapsedTimerInterval) {
             clearInterval(elapsedTimerInterval);
@@ -748,42 +605,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function updateTimerDisplay() {
-        timeValueEl.textContent = elapsedSeconds + 's';
-    }
-
     function startElapsedTimer() {
         stopElapsedTimer();
-        elapsedSeconds = 0;
-        updateTimerDisplay();
-        elapsedTimerInterval = setInterval(() => {
-            elapsedSeconds++;
-            updateTimerDisplay();
-        }, 1000);
+        startTime = Date.now();
+        updateElapsed();
+        elapsedTimerInterval = setInterval(updateElapsed, 500);
     }
 
     // --- Display ---
-    function updateMovesDisplay() {
-        movesValueEl.textContent = moveCount;
-    }
+    function updateMovesDisplay() { movesValueEl.textContent = moveCount; }
+    function updateRevealsDisplay() { revealsValueEl.textContent = revealCount; }
+    function updateItemDisplay() { wordValueEl.textContent = `${itemIndex + 1} / ${items.length}`; }
 
-    function updateRevealsDisplay() {
-        revealsValueEl.textContent = revealCount;
-    }
-
-    function updateItemDisplay() {
-        wordValueEl.textContent = `${itemIndex + 1} / ${items.length}`;
-    }
-
+    // Lettere corrette = stesse lettere che sono verdi sulla scacchiera
     function updateProgressDisplay() {
-        const correct = slotsMeta.filter(m => {
-            const card = m.element.querySelector('.card');
-            return card && card.dataset.char === m.expected;
-        }).length;
+        const correct = slotsMeta.filter(m => m.element.querySelector('.card.correct')).length;
         progressValueEl.textContent = `${correct} / ${originalTextString.length}`;
     }
 
-    // Barra di progresso generale: parole completate / parole totali
+    // Colori calcolati dallo stato attuale: una lettera è verde solo se lo è anche tutto ciò che la precede
+    function updateLetterStates() {
+        let prefixOk = true;
+        slotsMeta.forEach(m => {
+            const card = m.element.querySelector('.card');
+            if (!card) { prefixOk = false; return; }
+            const ok = card.dataset.char === m.expected;
+            card.classList.toggle('correct', ok && prefixOk);
+            card.classList.toggle('wrong-letter', !(ok && prefixOk));
+            if (!ok) prefixOk = false;
+        });
+    }
+
     function setOverallProgress(done) {
         const total = items.length;
         progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
@@ -797,6 +649,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function refreshBoard() {
         updateSlotHighlights();
+        updateLetterStates();
         updateProgressDisplay();
     }
 
@@ -808,12 +661,12 @@ document.addEventListener('DOMContentLoaded', () => {
         btnIcon.classList.add(iconClass);
     }
 
-    // --- Stato del pulsante ---
+    // aria-disabled invece di disabled: il pulsante non è attivo ma non fa perdere il focus
     function setButtonMode(mode) {
         buttonMode = mode;
-        if (mode === 'wrong') hideReveal(); // evita overlay bloccato su un pulsante disabilitato
+        if (mode === 'wrong') hideReveal();
         revealBtn.classList.toggle('wrong-btn', mode === 'wrong');
-        revealBtn.disabled = (mode === 'wrong');
+        revealBtn.setAttribute('aria-disabled', String(mode === 'wrong'));
 
         const texts = {
             help:  { icon: 'fa-lightbulb-o',          text: 'Clicca qui per avere un aiuto!' },
@@ -822,7 +675,7 @@ document.addEventListener('DOMContentLoaded', () => {
             done:  { icon: 'fa-check',                text: 'Fatto' }
         };
         setButtonIcon(texts[mode].icon);
-        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        const textEl = revealBtn.querySelector('.btn-text');
         if (textEl) textEl.textContent = texts[mode].text;
     }
 
@@ -849,10 +702,16 @@ document.addEventListener('DOMContentLoaded', () => {
         return card;
     }
 
+    // Se la card disabilitata aveva il focus, lo passa alla prossima card attiva (o al pulsante)
     function setCardDisabled(card, disabled) {
+        const hadFocus = disabled && document.activeElement === card;
         card.classList.toggle('disabled', disabled);
         card.setAttribute('aria-disabled', String(disabled));
         card.tabIndex = disabled ? -1 : 0;
+        if (hadFocus) {
+            const next = sourceContainer.querySelector('.card:not(.disabled)');
+            (next || revealBtn).focus();
+        }
     }
 
     function makeActivatable(el, handler) {
@@ -862,6 +721,7 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
+                if (e.repeat) return;
                 handler(e);
             }
         });
@@ -878,7 +738,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Aspetta che la barra di progresso finisca di riempirsi (con un limite di sicurezza)
     function waitForProgressBar() {
         return new Promise(resolve => {
             const finish = () => {
@@ -887,7 +746,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 resolve();
             };
             const onEnd = (e) => { if (e.propertyName === 'width') finish(); };
-            const fallback = setTimeout(finish, 700); // se la transizione non parte, non resta bloccato
+            const fallback = setTimeout(finish, 700);
             progressBarFill.addEventListener('transitionend', onEnd);
         });
     }
@@ -921,8 +780,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const char = card.dataset.char;
         const slot = emptyMeta.element;
 
-        setCardDisabled(card, true);
-
         const slotCard = makeCard(char);
         slotCard.sourceCard = card;
         slotCard.setAttribute('role', 'button');
@@ -930,41 +787,34 @@ document.addEventListener('DOMContentLoaded', () => {
         slotCard.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
+                if (e.repeat) return;
                 removeFromSlot(slot);
             }
         });
 
-     //   slot.appendChild(slotCard);
-     //   slot.classList.add('filled');
-
-        const idx = slotsMeta.indexOf(emptyMeta);
-        const isCorrect = char === emptyMeta.expected &&
-            slotsMeta.slice(0, idx).every(m => {
-                const c = m.element.querySelector('.card');
-                return c && c.dataset.char === m.expected;
-            });
-            
-        slotCard.classList.add(isCorrect ? 'correct' : 'wrong-letter');
         slot.appendChild(slotCard);
         slot.classList.add('filled');
+        setCardDisabled(card, true);
 
-        // Prima lo stato (completamento, timer, pulsante), poi l'animazione
+        // registerMove -> refreshBoard assegna correct / wrong-letter in base allo stato attuale
         registerMove();
-        if (isCorrect) playCheckmark(slot);
+        if (slotCard.classList.contains('correct')) playCheckmark(slot);
     }
 
     function removeFromSlot(slot) {
         if (wordCompleted) return;
         const slotCard = slot.querySelector('.card');
         if (!slotCard) return;
-        if (slotCard.sourceCard) setCardDisabled(slotCard.sourceCard, false);
+        const source = slotCard.sourceCard;
+        const hadFocus = document.activeElement === slotCard;
+        if (source) setCardDisabled(source, false);
         slot.innerHTML = '';
         slot.classList.remove('filled');
-        registerMove(); // checkWordAutomatic ripristina errori e pulsante
+        if (hadFocus && source) source.focus();
+        registerMove();
     }
 
     function computeScore() {
-        // Ogni lettera richiede almeno un posizionamento: il resto sono mosse in più
         const extraMoves = Math.max(0, moveCount - originalTextString.length);
         const raw = 100 - extraMoves * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
         return Math.max(0, raw);
@@ -972,6 +822,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function completeWord() {
         wordCompleted = true;
+        updateElapsed();          // tempo esatto al momento del completamento
         stopElapsedTimer();
         hideReveal();
         refreshBoard();
@@ -990,10 +841,9 @@ document.addEventListener('DOMContentLoaded', () => {
             score: finalScore
         });
         const isLast = itemIndex >= items.length - 1;
-        setButtonMode(isLast ? 'done' : 'next'); // subito, senza aspettare i coriandoli
+        setButtonMode(isLast ? 'done' : 'next');
         if (isLast) {
-              setOverallProgress(items.length);
-            // i coriandoli partono solo a barra completamente riempita
+            setOverallProgress(items.length);
             waitForProgressBar().then(() => playConfetti());
         }
     }
@@ -1018,43 +868,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Le sillabe NON vengono trimmate: gli spazi dentro una sillaba restano carte "spazio".
+    // Si trimma solo il testo grezzo quando va diviso con i trattini.
     function normalizeEntries(list) {
         return (Array.isArray(list) ? list : [])
             .map(w => {
                 if (typeof w === 'string') w = { text: w };
                 const raw = String((w && w.text) || '').trim();
                 const syllables = (w && Array.isArray(w.syllables) && w.syllables.length)
-                    ? w.syllables.map(s => String(s).trim()).filter(Boolean)
-                    : raw.split('-').map(s => s.trim()).filter(Boolean);
+                    ? w.syllables.map(s => String(s)).filter(s => s.length)
+                    : raw.split('-').filter(s => s.length);
                 return {
-                    text: syllables.join(''),   // the full word, without hyphens
+                    text: syllables.join(''),
                     syllables,
                     image: (w && w.image) || '',
                     hint: (w && w.hint) || ''
                 };
             })
-            .filter(e => e.text);
+            .filter(e => e.text.trim());
     }
 
-    // Una sola lista di voci (eventuali array annidati vengono appiattiti)
     function buildItems(list) {
         return normalizeEntries(Array.isArray(list) ? list.flat(Infinity) : []);
     }
 
     function updateHint(hint) {
         hintEl.textContent = hint || '';
-        hintEl.style.display = hint ? '' : 'none';   // no hint -> hide the line
+        hintEl.hidden = !hint;
     }
 
     function loadPuzzle(index) {
         itemIndex = index;
         const entry = items[itemIndex];
         originalTextString = entry.text;
-        
         currentSyllables = entry.syllables;
 
-        hintTextString=entry.hint;
-        updateHint(hintTextString);
+        updateHint(entry.hint);
 
         hideReveal();
         sourceContainer.innerHTML = '';
@@ -1085,22 +934,14 @@ document.addEventListener('DOMContentLoaded', () => {
             targetContainer.appendChild(group);
         });
 
-        // 2. Carte sorgente (restano al loro posto e si disabilitano quando usate)
+        // 2. Carte sorgente mescolate (si disabilitano quando usate)
         shuffleArray(Array.from(originalTextString)).forEach(char => {
             const card = makeCard(char);
             makeActivatable(card, () => placeChar(card));
             sourceContainer.appendChild(card);
         });
-        
-        /*
-        // 2. Carte sorgente: la parola nell'ordine corretto, cliccabile
-        Array.from(originalTextString).forEach(char => {
-            const card = makeCard(char);
-            makeActivatable(card, () => placeChar(card));
-            sourceContainer.appendChild(card);
-        });
-        */
-        setOverallProgress(itemIndex); // a ogni nuova parola la barra avanza
+
+        setOverallProgress(itemIndex);
         refreshBoard();
         startElapsedTimer();
     }
@@ -1113,11 +954,17 @@ document.addEventListener('DOMContentLoaded', () => {
         revealCount++;
         updateRevealsDisplay();
 
+        // Stessa struttura del target: un gruppo per sillaba
         revealOverlay.innerHTML = '';
-        Array.from(originalTextString).forEach(char => {
-            const card = makeCard(char);
-            card.classList.add('reveal-letter');
-            revealOverlay.appendChild(card);
+        currentSyllables.forEach(syl => {
+            const group = document.createElement('div');
+            group.classList.add('syllable-group');
+            Array.from(syl).forEach(char => {
+                const card = makeCard(char);
+                card.classList.add('reveal-letter');
+                group.appendChild(card);
+            });
+            revealOverlay.appendChild(group);
         });
         revealOverlay.classList.add('visible');
     }
@@ -1131,17 +978,21 @@ document.addEventListener('DOMContentLoaded', () => {
     revealBtn.addEventListener('pointerup', hideReveal);
     revealBtn.addEventListener('pointerleave', hideReveal);
     revealBtn.addEventListener('pointercancel', hideReveal);
-    revealBtn.addEventListener('contextmenu', e => e.preventDefault()); // long-press su mobile
+    revealBtn.addEventListener('contextmenu', e => e.preventDefault());
 
     revealBtn.addEventListener('keydown', (e) => {
-        if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showReveal();
+        if (e.key !== ' ' && e.key !== 'Enter') return;
+        if (e.repeat) {
+            e.preventDefault();   // tenere premuto Invio non genera click ripetuti
+            return;
+        }
+        showReveal();
     });
     revealBtn.addEventListener('keyup', (e) => {
         if (e.key === ' ' || e.key === 'Enter') hideReveal();
     });
     revealBtn.addEventListener('blur', hideReveal);
 
-    // A parola completata il tasto diventa "Avanti" (voce successiva) o "Fatto" (riepilogo finale)
     revealBtn.addEventListener('click', () => {
         if (buttonMode === 'next') loadPuzzle(itemIndex + 1);
         else if (buttonMode === 'done') showSummaryScreen();
@@ -1182,7 +1033,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const sum = key => results.reduce((t, r) => t + r[key], 0);
             summaryTotals.innerHTML = `
                 <div>Tempo: <strong>${sum('seconds')}s</strong></div>
-                <div>Tentativi: <strong>${sum('moves')}</strong></div>
+                <div>Mosse: <strong>${sum('moves')}</strong></div>
                 <div>Aiuti: <strong>${sum('reveals')}</strong></div>
                 <div>Punti: <strong>${sum('score')}</strong></div>
             `;
@@ -1190,8 +1041,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (summaryScreen) summaryScreen.style.display = 'block';
     }
-   
-        async function initGame() {
+
+    async function initGame() {
         try {
             // Il file JSON può essere passato nell'URL con ?json=nomefile.json
             const param = new URLSearchParams(window.location.search).get('json');
@@ -1200,17 +1051,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 && !param.includes('..')
                 && !param.includes('//')
                 && !param.startsWith('/');
-            const jsonFile = isSafe ? param : 'set-1.json';
+            const jsonFile = isSafe ? param : PUZZLE_URL;
 
             const response = await fetch(jsonFile);
             if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
 
-            // Una voce { text, image } per parola (eventuali array annidati vengono appiattiti)
             items = buildItems(Array.isArray(data) ? data : data.words);
             if (!items.length) throw new Error('Nessuna voce valida nel file');
 
-            // Testi facoltativi: se mancano nel JSON restano quelli dell'HTML
             if (!Array.isArray(data)) {
                 if (data.title) {
                     gameTitle.textContent = data.title;
@@ -1219,7 +1068,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.label) instructionBanner.textContent = data.label;
             }
 
-            items = shuffleArray(items); // ordine casuale a ogni partita
+            items = shuffleArray(items);
             results = [];
             loadPuzzle(0);
         } catch (err) {
