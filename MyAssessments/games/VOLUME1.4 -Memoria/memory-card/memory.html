@@ -929,11 +929,9 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameReady = false;
             stopElapsedTimer();
 
-            
             const params = new URLSearchParams(window.location.search);
             const jsonFile = params.get('json') || 'riconosci-emozioni-1.json';
             const response = await fetch(jsonFile);
-
 
 //            const response = await fetch(DATA_URL);
             if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);

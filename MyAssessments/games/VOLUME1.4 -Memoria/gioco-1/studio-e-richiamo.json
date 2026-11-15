@@ -1,0 +1,17 @@
+[
+  {
+    "id": "001",
+    "title": "Frutta e animali",
+    "words": ["uva", "cavallo", "mucca", "mela", "banana", "gatto", "pecora", "pera"]
+  },
+  {
+    "id": "017",
+    "title": "Mestieri e attrezzi",
+    "words": ["medico", "martello", "cuoco", "cacciavite", "pilota", "sega", "maestro", "pennello"]
+  },
+  {
+    "id": "033",
+    "title": "Colori e città",
+    "words": ["rosso", "Roma", "blu", "Milano", "verde", "Napoli", "giallo", "Torino"]
+  }
+]

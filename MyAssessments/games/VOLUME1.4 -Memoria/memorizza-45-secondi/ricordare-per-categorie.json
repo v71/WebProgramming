@@ -1,0 +1,58 @@
+[
+  {
+    "label": "Adolescente / Adulto - Base",
+    "words": [
+      "Uva",
+      "Cavallo",
+      "Mucca",
+      "Mela",
+      "Banana",
+      "Gatto",
+      "Pecora",
+      "Pera"
+    ],
+    "groups": {
+      "Animali": [
+        "Cavallo",
+        "Gatto",
+        "Mucca",
+        "Pecora"
+      ],
+      "Frutta": [
+        "Mela",
+        "Pera",
+        "Uva",
+        "Banana"
+      ]
+    }
+  },
+  {
+    "label": "Adulto - Intermedio",
+    "words": [
+      "Calcio",
+      "Giallo",
+      "Margherita",
+      "Nuoto",
+      "Verde",
+      "Garofano",
+      "Tulipano",
+      "Tennis"
+    ],
+    "groups": {
+      "Fiori": [
+        "Tulipano",
+        "Margherita",
+        "Garofano"
+      ],
+      "Sport": [
+        "Calcio",
+        "Nuoto",
+        "Tennis"
+      ],
+      "Colori": [
+        "Giallo",
+        "Verde"
+      ]
+    }
+  }
+]

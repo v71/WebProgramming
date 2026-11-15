@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Template Gioco</title>
 
-    <!-- 1. Includi qui il file esterno condiviso -->
+    <!-- File esterni condivisi (verifica il nome: "celebrazion.js" potrebbe essere un refuso di "celebrazione.js") -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
     <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-
     <style>
-
+        /* =========================================
+           PULSANTE AIUTO / AZIONE
+           ========================================= */
         .cool-btn {
             display: inline-flex;
             align-items: center;
@@ -38,7 +38,7 @@
             text-decoration: none;
         }
 
-        /* Il tasto Help si tiene premuto: evita menu contestuale, selezione e zoom al tocco lungo */
+        /* Il tasto si tiene premuto: evita menu contestuale, selezione e zoom al tocco lungo */
         #reveal-btn {
             touch-action: manipulation;
             user-select: none;
@@ -46,13 +46,12 @@
             -webkit-touch-callout: none;
         }
 
-        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
-
-       #reveal-btn .fa {
+        /* Icona: bianca con contorno nero sottile */
+        #reveal-btn .fa {
             font-size: 25px;
             line-height: 1;
             color: #ffffff;
-            --w: 1px; /* spessore del bordo */
+            --w: 1px;
             text-shadow:
                 calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
                 0 calc(var(--w) * -1) 0 #000,
@@ -66,7 +65,7 @@
             filter: none !important;
         }
 
-        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        /* L'icona resta ferma in hover, focus e pressione */
         #reveal-btn .fa,
         #reveal-btn:hover .fa,
         #reveal-btn:focus .fa,
@@ -78,338 +77,295 @@
             animation: none !important;
             transition: none !important;
         }
-
     </style>
 
-<style>
+    <style>
+        /* =========================================
+           CONTENITORE PRINCIPALE E LAYOUT
+           ========================================= */
+        #game-area {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            gap: 20px;
+            box-sizing: border-box;
+            padding: 10px 16px 16px 16px;
+            margin: 0;
+            overflow-y: visible;
+        }
 
-/* =========================================
-   CONTENITORE PRINCIPALE E LAYOUT
-   ========================================= */
-#game-area {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 20px;
-    padding-bottom: 20px;
-    overflow-y: visible;
-}
+        .split-side {
+            flex: 1 1 0;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
 
-.split-side {
-    flex: 1 1 0;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+        .col-heads,
+        .source-grid,
+        .drop-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            width: 100%;
+        }
 
-/* ---------- GRIGLIE E COLONNE ---------- */
-.col-heads,
-.source-grid,
-.drop-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    width: 100%;
-}
+        .col-heads { margin: 0; padding: 0; }
+        .source-grid { align-items: start; }
 
-.source-grid {
-    align-items: start;
-}
+        .source-col {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-width: 0;
+        }
 
-.source-col {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    min-width: 0;
-}
+        /* ---------- INTESTAZIONI DI COLONNA ---------- */
+        .col-head {
+            margin: 0;
+            padding: 0 8px;
+            height: auto;
+            min-height: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            box-sizing: border-box;
+            text-shadow:
+                -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000;
+        }
 
-/* ---------- BOTTONI DI SINISTRA (SORGENTE) ---------- */
+        /* ---------- BOTTONI DI SINISTRA (SORGENTE) ---------- */
+        .list-btn {
+            font-family: inherit;
+            font-size: 1.25rem;
+            font-weight: 500;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            color: var(--text);
+            cursor: pointer;
+            min-height: 138px;
+            padding: 10px 20px;
+            background: var(--default-btn);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, opacity 0.3s ease;
+            text-shadow:
+                -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000;
+        }
 
-.list-btn {
-    font-family: inherit;
-    font-size: 1.25rem;
-    font-weight: 500;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    color: var(--text);
-    cursor: pointer;
-    min-height: 138px;                  /* stessa altezza delle celle di destra */
-    padding: 10px 20px;
-    background: var(--default-btn);
-    text-align: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    box-sizing: border-box;
-    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, opacity 0.3s ease;
-    text-shadow:
-        -1px -1px 0 #000,
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000;
-}
+        /* Hover solo su dispositivi con puntatore reale (evita l'hover "appiccicoso" su touch) */
+        @media (hover: hover) {
+            .list-btn:hover:not(:disabled):not(.placed) {
+                border-color: var(--grid-btn-hovered-border-color);
+                background: var(--grid-btn-hovered);
+                color: var(--grid-btn-hovered-text);
+                transform: translateY(-2px);
+            }
+            .drop-cell:hover:not(.filled):not(.empty-slot):not(.help-preview) {
+                border-color: var(--grid-btn-hovered-border-color);
+            }
+        }
 
-.list-btn:hover:not(:disabled):not(.placed) {
-    border-color: var(--grid-btn-hovered-border-color);
-    background: var(--grid-btn-hovered);
-    color: var(--grid-btn-hovered-text);
-    transform: translateY(-2px);
-}
+        .list-btn.is-selected {
+            border-color: #ffffff;
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+        }
 
-.list-btn.is-selected {
-    border-color: #ffffff;
-    background: var(--grid-btn-hovered);
-    color: var(--grid-btn-hovered-text);
-}
+        .list-btn.placed {
+            opacity: 0.35;
+            cursor: default;
+            transform: none;
+        }
 
-.list-btn.placed {
-    opacity: 0.35;
-    cursor: default;
-    transform: none;
-}
+        /* ---------- CELLE DI DESTRA (DESTINAZIONE 128x128) ---------- */
+        .drop-cell {
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 5px 3px;
+            gap: 20px;
+            height: 138px;
+            min-height: 138px;
+            max-height: 138px;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: var(--summary-background);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            color: var(--text);
+            transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+        }
 
-/* ---------- INTESTAZIONI DI COLONNA ---------- */
-.col-head {
-    margin: 0;
-    padding: 6px 12px;
-    min-height: 52px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--accent);
-    box-sizing: border-box;
-    text-shadow:
-        -1px -1px 0 #000,
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000;
-}
+        .drop-cell:focus-visible {
+            outline: 3px solid #ffffff;
+            outline-offset: 2px;
+        }
 
-/* ---------- CELLE DI DESTRA (DESTINAZIONE 128x128) ---------- */
-.drop-cell {
-    font-family: inherit;
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 5px 3px;
-    gap: 20px;
-    height: 138px;
-    min-height: 138px;
-    max-height: 138px;
-    width: 100%;
-    box-sizing: border-box;
-    background-color: var(--summary-background);
-    border: 2px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    text-align: left;
-    color: var(--text);
-    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
-}
+        .drop-cell.filled,
+        .drop-cell.help-preview {
+            background: var(--grid-btn-selected);
+            color: var(--grid-btn-selected-color);
+            border-color: var(--grid-btn-selected-border-color);
+            cursor: default;
+        }
 
-.drop-cell:hover:not(:disabled):not(.filled) {
-    border-color: var(--grid-btn-hovered-border-color);
-}
+        .drop-cell.filled {
+            transform: none !important;
+            box-shadow: var(--shadow-sm) !important;
+            opacity: 1 !important;
+        }
 
-.drop-cell.filled,
-.drop-cell.help-preview {
-    background: var(--grid-btn-selected);
-    color: var(--grid-btn-selected-color);
-    border-color: var(--grid-btn-selected-border-color);
-    cursor: default;
-}
+        /* Posizione senza elemento in questo round: occupa lo spazio ma non si vede né si clicca */
+        .drop-cell.empty-slot {
+            visibility: hidden;
+            pointer-events: none;
+        }
 
-/* Quando la cella è correttamente riempita */
-.drop-cell.filled {
-    background: var(--grid-btn-selected) !important;
-    color: var(--grid-btn-selected-color) !important;
-    border-color: var(--grid-btn-selected-border-color) !important;
-    transform: none !important;
-    box-shadow: var(--shadow-sm) !important;
-    opacity: 1 !important;
-    cursor: default !important;
-}
+        .drop-cell.help-preview .cell-label-placeholder,
+        .drop-cell.filled .cell-label-placeholder {
+            color: #ffffff !important;
+            text-shadow:
+                -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000 !important;
+        }
 
-/* Posizione della griglia senza elemento in questo round: occupa lo spazio ma non si vede né si clicca */
-.drop-cell.empty-slot {
-    visibility: hidden;
-    pointer-events: none;
-}
+        .cell-content-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+            height: 100%;
+        }
 
-/* Testo bianco con contorno nero quando l'aiuto è attivo o la cella è completata */
-.drop-cell.help-preview .cell-label-placeholder,
-.drop-cell.filled .cell-label-placeholder {
-    color: #ffffff !important;
-    text-shadow:
-        -1px -1px 0 #000,
-         1px -1px 0 #000,
-        -1px  1px 0 #000,
-         1px  1px 0 #000 !important;
-}
+        .cell-target-img {
+            width: 128px;
+            height: 128px;
+            min-width: 128px;
+            min-height: 128px;
+            max-width: 128px;
+            max-height: 128px;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+        }
 
-/* Contenuto interno immagine + testo */
-.cell-content-wrapper {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-    height: 100%;
-}
+        .cell-label-placeholder {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #333;
+            flex-grow: 1;
+            word-break: break-word;
+        }
 
-.cell-target-img {
-    width: 128px;
-    height: 128px;
-    min-width: 128px;
-    min-height: 128px;
-    max-width: 128px;
-    max-height: 128px;
-    object-fit: contain;
-    border-radius: 6px;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
-}
+        /* ---------- STATI D'ERRORE ED EFFETTI ---------- */
+        .drop-cell.error {
+            animation: gameShake 0.4s ease;
+            border-color: var(--grid-btn-wrong-border-color);
+            background-color: var(--grid-btn-wrong);
+            color: var(--grid-btn-wrong-text);
+        }
 
-.cell-label-placeholder {
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: #333;
-    flex-grow: 1;
-    word-break: break-word;
-}
+        @keyframes gameShake {
+            0%   { transform: translateX(0); }
+            20%  { transform: translateX(-8px); }
+            40%  { transform: translateX(8px); }
+            60%  { transform: translateX(-6px); }
+            80%  { transform: translateX(6px); }
+            100% { transform: translateX(0); }
+        }
 
-/* ---------- STATI D'ERRORE ED EFFETTI ---------- */
-.drop-cell.error {
-    animation: gameShake 0.4s ease;
-    border-color: var(--grid-btn-wrong-border-color);
-    background-color: var(--grid-btn-wrong);
-    color: var(--grid-btn-wrong-text);
-}
+        button:disabled {
+            cursor: default;
+        }
 
-@keyframes gameShake {
-    0%   { transform: translateX(0); }
-    20%  { transform: translateX(-8px); }
-    40%  { transform: translateX(8px); }
-    60%  { transform: translateX(-6px); }
-    80%  { transform: translateX(6px); }
-    100% { transform: translateX(0); }
-}
-
-button:disabled {
-    cursor: default;
-}
-
-/* Responsiveness per schermi piccoli */
-@media (max-width: 700px) {
-    #game-area {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    .list-btn, .drop-cell {
-        font-size: 1rem;
-    }
-}
-
-</style>
-
-<style>
-
-    #game-area {
-        box-sizing: border-box;
-        padding: 10px 16px 16px 16px !important;   /* same top and bottom */
-        margin: 0 !important;
-        align-items: flex-start;
-    }
-
-    .split-side {
-        gap: 6px !important;
-    }
-
-    .col-heads {
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .col-head,
-    #game-area h2 {
-        margin: 0 !important;
-        padding: 0 8px !important;
-        min-height: 0 !important;
-        height: auto !important;
-        line-height: 1 !important;
-    }
-
-</style>
-
+        @media (max-width: 700px) {
+            #game-area {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .list-btn, .drop-cell {
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-        <!-- TITLE -->
-        <h1 id="game-title">
-        Titolo Gioco
-        </h1>
+    <!-- TITLE -->
+    <h1 id="game-title">Titolo Gioco</h1>
 
-        <!-- COUNTERS -->
-        <div id="game-stats">
-            <span>Round: <strong id="round-value">1 / 1</strong></span>
-            <span>Parole Corrette: <strong id="word-count">0</strong></span>
-            <span>Tempo: <strong id="time-value">0s</strong></span>
-            <span>Mosse: <strong id="moves-value">0</strong></span>
-            <span>Aiuti: <strong id="reveals-value">0</strong></span>
-        </div>
+    <!-- COUNTERS -->
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span>Parole Corrette: <strong id="word-count">0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
 
-        <!-- INFORMATION / INSTRUCTION BOX -->
-        <div id="instruction-banner">
-            Instruzion banner
-        </div>
+    <!-- INFORMATION / INSTRUCTION BOX -->
+    <div id="instruction-banner">Istruzioni</div>
 
-        <div class="controls" id="action-controls">
-            <button id="reveal-btn" class="cool-btn">
-                <i id="btn-icon" class="fa fa-lightbulb-o"></i>
-                <span class="btn-text">Clicca qui per avere un aiuto!</span>
-            </button>
-        </div>
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
+        </button>
+    </div>
 
-   <div id="game-area">
-        <!-- Contenitore di Sinistra (Sorgente: 2 colonne di pulsanti) -->
+    <div id="game-area">
+        <!-- Sinistra (sorgente: 2 colonne di pulsanti) -->
         <div class="split-side" id="left-side-container">
             <div class="col-heads">
                 <h2 class="col-head" id="col-left-1-title">Colonna 1</h2>
                 <h2 class="col-head" id="col-left-2-title">Colonna 2</h2>
             </div>
-            <!-- Area pulsanti di sinistra divisa in 2 colonne -->
             <div class="source-grid" id="left-source-grid">
                 <div class="source-col" id="source-col-1"></div>
                 <div class="source-col" id="source-col-2"></div>
             </div>
         </div>
 
-        <!-- Contenitore di Destra (Destinazione: griglia di celle con immagine) -->
+        <!-- Destra (destinazione: griglia di celle con immagine) -->
         <div class="split-side" id="right-side-container">
             <div class="col-heads">
                 <h2 class="col-head" id="col-right-1-title">Colonna 1</h2>
                 <h2 class="col-head" id="col-right-2-title">Colonna 2</h2>
             </div>
-            <!-- Griglia di arrivo (2 colonne, righe in base al round) -->
-            <div class="drop-grid" id="right-drop-grid">
-                <!-- Le celle di destinazione vengono create da JS -->
-            </div>
+            <div class="drop-grid" id="right-drop-grid"></div>
         </div>
     </div>
 
     <!-- PROGRESS -->
-    <h1 id="progress-title">
-        Progresso
-    </h1>
+    <h1 id="progress-title">Progresso</h1>
     <div class="progress-bar-container">
-        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"> </div>
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
     </div>
 
     <div id="summary-screen">
@@ -418,20 +374,18 @@ button:disabled {
         <table class="summary-table">
             <thead>
                 <tr>
-                    <th>Frase</th>
+                    <th>Round</th>
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
-                    <th>Metric</th>
+                    <th>Punteggio</th>
                 </tr>
             </thead>
-            <tbody id="summary-tbody">
-            </tbody>
+            <tbody id="summary-tbody"></tbody>
         </table>
-        <div class="summary-totals" id="summary-totals">
-        </div>
+        <div class="summary-totals" id="summary-totals"></div>
     </div>
-    
+
 <script>
 
     // --- Gestione Audio ---
@@ -444,12 +398,8 @@ button:disabled {
         wow: new Audio('../../sounds/wow.mp3')
     };
 
-    // Imposta il volume (da 0.0 a 1.0)
-    Object.values(sounds).forEach(sound => {
-        sound.volume = 0.4;
-    });
+    Object.values(sounds).forEach(sound => { sound.volume = 0.4; });
 
-    // Funzione helper per riprodurre i suoni in modo sicuro
     function playSound(key) {
         if (sounds[key]) {
             sounds[key].currentTime = 0;
@@ -463,10 +413,13 @@ button:disabled {
         const DEFAULT_DATA_URL = 'riconosci-emozioni-1.json';
         const SHUFFLE_ROUNDS = true;
 
-        // Punteggio per round: ogni click su una cella è una mossa;
-        // le mosse sbagliate = mosse totali - elementi da piazzare
+        // Punteggio per round
         const WRONG_PENALTY = 10;   // punti persi per ogni mossa sbagliata
         const HELP_PENALTY = 20;    // punti persi per ogni aiuto
+
+        // Dopo un cambio round il tasto aiuto resta bloccato per un attimo,
+        // così un doppio tap su "Prossimo round" non consuma un aiuto nel round successivo
+        const HELP_LOCK_MS = 500;
 
         /* =========================================================
         STATO DEL GIOCO
@@ -476,12 +429,13 @@ button:disabled {
         let currentCategory = null;
         let isGameReady = false;
         let isGameCompleted = false;
-        let selectedItem = null; // Pulsante selezionato a sinistra
+        let selectedItem = null;
         let currentRoundItems = [];
         let isHoldingHelp = false;
         let currentButtonMode = 'help';
-        let helpPreviewElements = []; // Celle riempite temporaneamente dall'aiuto
-        let pressStartedInHelpMode = false; // la pressione sul tasto è iniziata come "aiuto"?
+        let helpPreviewElements = [];
+        let pressStartedInHelpMode = false;
+        let helpLockedUntil = 0;
 
         // Statistiche e metriche
         let moveCount = 0;
@@ -510,14 +464,12 @@ button:disabled {
         const progressBarTitle = document.getElementById('progress-title');
         const summaryScreen = document.getElementById('summary-screen');
 
-        // Titoli delle colonne (Sinistra e Destra) e loro contenitori
         const colLeft1Title = document.getElementById('col-left-1-title');
         const colLeft2Title = document.getElementById('col-left-2-title');
         const colRight1Title = document.getElementById('col-right-1-title');
         const colRight2Title = document.getElementById('col-right-2-title');
         const colHeadsContainers = document.querySelectorAll('.col-heads');
 
-        // Colonne di sinistra (Sorgente) e griglia di destra (Destinazione)
         const sourceCol1 = document.getElementById('source-col-1');
         const sourceCol2 = document.getElementById('source-col-2');
         const rightDropGrid = document.getElementById('right-drop-grid');
@@ -531,9 +483,8 @@ button:disabled {
             progressBarTitle, gameTitle, actionControls
         ];
 
-
         /* =========================================================
-        UTILITY: UTILS & VALIDAZIONE
+        UTILITY
         ========================================================= */
         function shuffleArray(array) {
             const arr = [...array];
@@ -544,9 +495,8 @@ button:disabled {
             return arr;
         }
 
-        // Un round è valido se ogni elemento ha: label, colonna (1 o 2), posizione (intero >= 1),
-        // e se non ci sono due elementi sulla stessa cella (colonna + posizione).
-        // L'immagine è facoltativa.
+        // Un round è valido se ogni elemento ha: label, colonna (1 o 2), posizione (intero >= 1)
+        // e se non ci sono due elementi sulla stessa cella. L'immagine e l'alt sono facoltativi.
         function isValidRound(category) {
             if (!category || !Array.isArray(category.items) || category.items.length === 0) {
                 console.warn('Round scartato: nessun elemento in "items".', category);
@@ -559,7 +509,7 @@ button:disabled {
                 Number.isInteger(it.position) && it.position >= 1
             );
             if (!wellFormed) {
-                console.warn('Round scartato: ogni elemento deve avere "label" (testo), "column" (1 o 2) e "position" (intero >= 1).', category);
+                console.warn('Round scartato: ogni elemento deve avere "label", "column" (1 o 2) e "position" (intero >= 1).', category);
                 return false;
             }
             const cells = new Set(category.items.map(it => `${it.column}-${it.position}`));
@@ -570,7 +520,6 @@ button:disabled {
             return true;
         }
 
-        // Barra generale: round completati / round totali
         function setOverallProgress(completedRounds) {
             const total = categories.length;
             if (progressBarFill && total > 0) {
@@ -578,10 +527,9 @@ button:disabled {
             }
         }
 
-       /* =========================================================
-       TIMER
-       ========================================================= */
-
+        /* =========================================================
+        TIMER
+        ========================================================= */
         function stopElapsedTimer() {
             if (elapsedTimerInterval) {
                 clearInterval(elapsedTimerInterval);
@@ -606,7 +554,6 @@ button:disabled {
         /* =========================================================
         PULSANTE: ICONA E TESTO
         ========================================================= */
-
         const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
 
         function setButtonIcon(iconClass) {
@@ -636,17 +583,14 @@ button:disabled {
         }
 
         /* =========================================================
-        LOGICA DI TRACCIAMENTO ED ERRORI (REGISTER FUNCTIONS)
+        TRACCIAMENTO MOSSE ED ERRORI
         ========================================================= */
-
-        // Ogni click su una cella di destra (giusto o sbagliato) è una mossa
         function registerMove() {
             if (isGameCompleted || !isGameReady) return;
             moveCount++;
             if (movesValueEl) movesValueEl.textContent = moveCount;
         }
 
-        // Risposta sbagliata: animazione di shake sulla cella
         function registerWrong(element) {
             if (isGameCompleted || !isGameReady || !element) return;
             playSound('error');
@@ -656,31 +600,26 @@ button:disabled {
             setTimeout(() => element.classList.remove('error'), 400);
         }
 
-        // Risposta corretta: aggiorna il contatore ed eventualmente chiude il round
         function registerCorrect(element) {
             if (isGameCompleted || !isGameReady) return;
             foundCorrectCount++;
             if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
 
-            if (foundCorrectCount >= totalCorrectItems) {
-                completeRound();
+            const roundDone = foundCorrectCount >= totalCorrectItems;
+            const isLastRound = roundIndex >= categories.length - 1;
+
+            // I suoni non dipendono più dal caricamento di checkmark.js
+            if (!roundDone) {
+                playSound('correct');
+            } else if (!isLastRound) {
+                playSound('next_round');
             }
+
+            if (roundDone) completeRound();
 
             if (typeof Checkmark !== 'undefined' && element) {
                 try {
                     Checkmark.show({ element, size: 48, rise: 70, duration: 1600 });
-
-                    const isLastRound = roundIndex >= categories.length - 1;
-
-                    if (totalCorrectItems-foundCorrectCount !== 0) {
-                            playSound('correct');
-                        }
-                        else{
-                            if ( isLastRound===false){
-                                playSound('next_round');
-                            }
-                        }
-
                 } catch (err) {
                     console.warn('Checkmark error:', err);
                 }
@@ -691,16 +630,15 @@ button:disabled {
             isGameCompleted = true;
             stopElapsedTimer();
 
-            document.querySelectorAll('.list-btn, .drop-cell').forEach(btn => {
-                btn.disabled = true;
-            });
+            // Solo i pulsanti reali hanno "disabled"; le celle di destra sono bloccate da isGameCompleted
+            document.querySelectorAll('.list-btn').forEach(btn => { btn.disabled = true; });
+            document.querySelectorAll('.drop-cell').forEach(cell => cell.setAttribute('aria-disabled', 'true'));
 
             const isLastRound = roundIndex >= categories.length - 1;
             setButtonState(isLastRound ? 'done' : 'next');
-            
-            // La barra avanza subito al completamento del round (round completati / totali)
+
             setOverallProgress(roundIndex + 1);
-                   
+
             if (isLastRound && typeof Confetti !== 'undefined') {
                 try {
                     playSound('wow');
@@ -714,10 +652,8 @@ button:disabled {
         }
 
         /* =========================================================
-        LOGICA DI SELEZIONE E SPOSTAMENTO (Scegli elemento -> Clicca cella)
+        SELEZIONE E SPOSTAMENTO (scegli elemento -> clicca cella)
         ========================================================= */
-
-        // 1. Clic su un elemento a sinistra (Seleziona / Deseleziona)
         function selectItem(itemObj) {
             if (isGameCompleted || !isGameReady || itemObj.placed) return;
 
@@ -737,33 +673,27 @@ button:disabled {
         }
 
         function deselectAllItems() {
-            const allButtons = document.querySelectorAll('.list-btn');
-            allButtons.forEach(btn => {
+            document.querySelectorAll('.list-btn').forEach(btn => {
                 btn.classList.remove('is-selected');
                 btn.setAttribute('aria-pressed', 'false');
             });
         }
 
-        // 2. Clic su una cella della griglia a destra (colonna e posizione devono coincidere)
         function chooseCell(targetColumn, targetPosition, clickedCell) {
             if (isGameCompleted || !isGameReady || !selectedItem) return;
-            // Celle già piene o in anteprima dell'aiuto non sono cliccabili
             if (clickedCell.classList.contains('filled') || clickedCell.classList.contains('help-preview')) return;
 
-            registerMove(); // ogni click su una cella conta come mossa
+            registerMove();
 
-            // ESITO SBAGLIATO: l'elemento non corrisponde a questa cella
             if (selectedItem.column !== targetColumn || selectedItem.position !== targetPosition) {
                 registerWrong(clickedCell);
                 return;
             }
 
-            // ESITO CORRETTO: scrive l'etichetta nella cella, l'immagine resta com'è
             clickedCell.classList.add('filled');
             const placeholder = clickedCell.querySelector('.cell-label-placeholder');
             if (placeholder) placeholder.textContent = selectedItem.label;
 
-            // Disabilita il pulsante sorgente a sinistra
             selectedItem.placed = true;
             selectedItem.button.classList.remove('is-selected');
             selectedItem.button.classList.add('placed');
@@ -773,7 +703,6 @@ button:disabled {
             deselectAllItems();
             selectedItem = null;
 
-            // Registra il successo e controlla se il round è finito
             registerCorrect(clickedCell);
         }
 
@@ -781,10 +710,10 @@ button:disabled {
         POPOLAMENTO DELLA UI
         ========================================================= */
         function renderRound(category) {
-            // Pulisce eventuali anteprime dell'aiuto rimaste dal round precedente
             stopHelpReveal();
             helpPreviewElements = [];
             isHoldingHelp = false;
+            helpLockedUntil = Date.now() + HELP_LOCK_MS;
 
             currentCategory = category;
             isGameCompleted = false;
@@ -793,15 +722,17 @@ button:disabled {
             revealCount = 0;
             foundCorrectCount = 0;
 
-            // Barra di progresso: round già completati
             setOverallProgress(roundIndex);
 
             if (instructionBanner) instructionBanner.textContent = category.instruction || '';
 
-            // Intestazioni: se il round non ne ha, vengono nascoste (e rimostrate nei round che le hanno)
+            // Intestazioni: visibili se il round ha intestazioni di destra O di sinistra
             const rightHeaders = Array.isArray(category.headers) ? category.headers : [];
-            const leftHeaders = Array.isArray(category.leftHeaders) ? category.leftHeaders : ['Gruppo 1', 'Gruppo 2'];
-            const showHeaders = rightHeaders.length > 0;
+            let leftHeaders = Array.isArray(category.leftHeaders) ? category.leftHeaders : [];
+            if (leftHeaders.length === 0 && rightHeaders.length > 0) {
+                leftHeaders = ['Gruppo 1', 'Gruppo 2'];
+            }
+            const showHeaders = rightHeaders.length > 0 || leftHeaders.length > 0;
 
             colHeadsContainers.forEach(el => { el.style.display = showHeaders ? '' : 'none'; });
 
@@ -820,7 +751,7 @@ button:disabled {
             const shuffledItems = shuffleArray(category.items);
             totalCorrectItems = shuffledItems.length;
 
-            // Colonna/e di sinistra: un pulsante per elemento, alternati tra le due colonne
+            // Sinistra: un pulsante per elemento, alternati tra le due colonne
             shuffledItems.forEach((data, index) => {
                 const button = document.createElement('button');
                 button.type = 'button';
@@ -836,56 +767,49 @@ button:disabled {
                     button,
                     placed: false
                 };
-                
-                currentRoundItems.push(itemObj);
 
+                currentRoundItems.push(itemObj);
                 button.addEventListener('click', () => selectItem(itemObj));
 
-                if (index % 2 === 0) {
-                    sourceCol1.appendChild(button);
-                } else {
-                    sourceCol2.appendChild(button);
-                }
+                (index % 2 === 0 ? sourceCol1 : sourceCol2).appendChild(button);
             });
 
-            // Griglia di destra: tante righe quante servono a questo round
+            // Destra: tante righe quante servono a questo round
             const rows = Math.max(...category.items.map(it => it.position));
 
             for (let i = 0; i < rows * 2; i++) {
-                const colIndex = i % 2;
-                const rowIndex = Math.floor(i / 2);
-                const cellCol = colIndex + 1;
-                const cellPos = rowIndex + 1;
+                const cellCol = (i % 2) + 1;
+                const cellPos = Math.floor(i / 2) + 1;
 
-                const cell = document.createElement('button');
-                cell.type = 'button';
+                // div con role="button": un <div> dentro un <button> non è HTML valido
+                const cell = document.createElement('div');
                 cell.className = 'drop-cell';
                 cell.dataset.column = cellCol;
                 cell.dataset.position = cellPos;
 
-                // Elemento del JSON che appartiene a questa cella (se c'è)
                 const targetItem = category.items.find(it => it.column === cellCol && it.position === cellPos);
 
                 if (!targetItem) {
-                    // Nessun elemento in questa posizione: la cella non si vede e non si clicca
                     cell.classList.add('empty-slot');
-                    cell.disabled = true;
-                    cell.tabIndex = -1;
                     cell.setAttribute('aria-hidden', 'true');
                     rightDropGrid.appendChild(cell);
                     continue;
                 }
 
+                cell.setAttribute('role', 'button');
+                cell.tabIndex = 0;
                 cell.setAttribute('aria-label', `Colonna ${cellCol}, posizione ${cellPos}`);
 
-                // Contenitore interno: immagine (se presente) + etichetta (vuota finché non è corretta)
                 const contentWrapper = document.createElement('div');
                 contentWrapper.className = 'cell-content-wrapper';
 
                 if (typeof targetItem.image === 'string' && targetItem.image.trim() !== '') {
                     const img = document.createElement('img');
                     img.src = targetItem.image;
-                    img.alt = targetItem.label || 'Target';
+                    // Mai la label (è la risposta!): alt neutro, oppure "alt" facoltativo dal JSON
+                    img.alt = (typeof targetItem.alt === 'string' && targetItem.alt.trim() !== '')
+                        ? targetItem.alt.trim()
+                        : 'Immagine';
                     img.className = 'cell-target-img';
                     contentWrapper.appendChild(img);
                 }
@@ -896,6 +820,12 @@ button:disabled {
 
                 cell.appendChild(contentWrapper);
                 cell.addEventListener('click', () => chooseCell(cellCol, cellPos, cell));
+                cell.addEventListener('keydown', e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        chooseCell(cellCol, cellPos, cell);
+                    }
+                });
 
                 rightDropGrid.appendChild(cell);
             }
@@ -913,11 +843,9 @@ button:disabled {
         /* =========================================================
         PULSANTE AIUTO (REVEAL / HINT)
         ========================================================= */
-
-        // Attiva l'aiuto alla pressione: mostra le etichette giuste nelle celle ancora vuote
         function startHelpReveal() {
-            // isHoldingHelp evita di contare più aiuti con più dita / tasti contemporanei
             if (isHoldingHelp || isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
+            if (Date.now() < helpLockedUntil) return;
 
             playSound('help');
 
@@ -925,56 +853,49 @@ button:disabled {
             if (revealsValueEl) revealsValueEl.textContent = revealCount;
 
             const unplacedItems = currentRoundItems.filter(item => !item.placed);
-            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled):not(.empty-slot)'));
+            const emptyCells = rightDropGrid.querySelectorAll('.drop-cell:not(.filled):not(.empty-slot)');
 
             emptyCells.forEach(cell => {
                 const cellCol = parseInt(cell.dataset.column, 10);
                 const cellPos = parseInt(cell.dataset.position, 10);
 
-                // Match rigoroso per colonna e posizione esatta della cella
                 const matchingItem = unplacedItems.find(item =>
-                    item.column === cellCol && item.position === cellPos && !item._previewed
+                    item.column === cellCol && item.position === cellPos
                 );
 
                 if (matchingItem) {
-                    matchingItem._previewed = true;
-
                     const placeholder = cell.querySelector('.cell-label-placeholder');
                     if (placeholder) placeholder.textContent = matchingItem.label;
 
                     cell.classList.add('help-preview');
-                    helpPreviewElements.push({ cell, item: matchingItem });
+                    helpPreviewElements.push(cell);
                 }
             });
 
             isHoldingHelp = true;
         }
 
-        // Disattiva l'aiuto al rilascio: ripulisce le etichette di anteprima
         function stopHelpReveal() {
             if (!isHoldingHelp) return;
 
-            helpPreviewElements.forEach(({ cell, item }) => {
-                // Non cancella l'etichetta di una cella che nel frattempo è stata riempita davvero
+            helpPreviewElements.forEach(cell => {
+                // Non cancella l'etichetta di una cella riempita davvero nel frattempo
                 if (!cell.classList.contains('filled')) {
                     const placeholder = cell.querySelector('.cell-label-placeholder');
                     if (placeholder) placeholder.textContent = '';
                 }
                 cell.classList.remove('help-preview');
-                delete item._previewed;
             });
             helpPreviewElements = [];
 
             isHoldingHelp = false;
         }
 
-        // Segna come inizia la pressione: se parte come "aiuto", il click finale non deve far avanzare
-        // il round (succede se il round si completa mentre il tasto è ancora premuto)
+        // Se la pressione parte come "aiuto", il click finale non deve far avanzare il round
         function markPressStart() {
             pressStartedInHelpMode = (currentButtonMode === 'help');
         }
 
-        // Il click normale serve solo per 'next' e 'done'
         function handleActionButtonClick() {
             if (pressStartedInHelpMode) {
                 pressStartedInHelpMode = false;
@@ -992,12 +913,10 @@ button:disabled {
             }
         }
 
-       /* =========================================================
-       SALVATAGGIO RISULTATI E RIEPILOGO FINALE
-       ========================================================= */
-
+        /* =========================================================
+        SALVATAGGIO RISULTATI E RIEPILOGO FINALE
+        ========================================================= */
         function saveRoundResult() {
-            // Mosse sbagliate = mosse totali (ogni click su una cella) - elementi piazzati correttamente
             const wrongMoves = Math.max(0, moveCount - totalCorrectItems);
             const metric = Math.max(0, 100 - (wrongMoves * WRONG_PENALTY) - (revealCount * HELP_PENALTY));
 
@@ -1014,6 +933,7 @@ button:disabled {
         function showFinalSummary() {
             setGameVisible(false);
             isGameCompleted = true;
+            isGameReady = false;
             stopElapsedTimer();
 
             if (progressBarFill) progressBarFill.style.width = '100%';
@@ -1052,17 +972,22 @@ button:disabled {
             }
         }
 
-        // ==========================================
-        // COLLEGAMENTO EVENTI PULSANTE AIUTO / AZIONE
-        // ==========================================
+        /* =========================================================
+        EVENTI DEL PULSANTE AIUTO / AZIONE
+        ========================================================= */
         if (revealBtn) {
-            revealBtn.addEventListener('pointerdown', () => { markPressStart(); startHelpReveal(); });
+            revealBtn.addEventListener('pointerdown', e => {
+                // Solo il tasto principale del mouse: clic destro/centrale non devono attivare l'aiuto
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                markPressStart();
+                startHelpReveal();
+            });
             revealBtn.addEventListener('pointerup', stopHelpReveal);
             revealBtn.addEventListener('pointerleave', stopHelpReveal);
             revealBtn.addEventListener('pointercancel', stopHelpReveal);
             revealBtn.addEventListener('click', handleActionButtonClick);
 
-            // Tocco lungo su mobile: niente menu contestuale (che annullerebbe l'aiuto)
+            // Tocco lungo su mobile: niente menu contestuale (annullerebbe l'aiuto)
             revealBtn.addEventListener('contextmenu', e => e.preventDefault());
 
             // Tastiera: Spazio / Invio tenuti premuti mostrano l'aiuto

@@ -7,6 +7,7 @@
 
     <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
+    <!-- VERIFICA: il nome "celebrazion.js" sembra un refuso di "celebration.js" -->
     <script src="../../js/celebrazion.js"></script>
 
     <!-- Main CSS File -->
@@ -169,11 +170,18 @@
             box-sizing: border-box;
         }
 
-        .list-btn:hover:not(:disabled):not(.placed) {
-            border-color: var(--grid-btn-hovered-border-color);
-            background: var(--grid-btn-hovered);
-            color: var(--grid-btn-hovered-text);
-            transform: translateY(-2px);
+        /* Hover solo su dispositivi con vero puntatore: su touch resterebbe "appiccicato" dopo il tap */
+        @media (hover: hover) {
+            .list-btn:hover:not(:disabled):not(.placed) {
+                border-color: var(--grid-btn-hovered-border-color);
+                background: var(--grid-btn-hovered);
+                color: var(--grid-btn-hovered-text);
+                transform: translateY(-2px);
+            }
+
+            .drop-cell:hover:not(:disabled):not(.filled) {
+                border-color: var(--grid-btn-hovered-border-color);
+            }
         }
 
         /* Elemento scelto, in attesa di essere messo nella colonna */
@@ -217,11 +225,8 @@
             height: var(--cell-h);
             box-sizing: border-box;
             overflow: hidden;      /* un'etichetta lunga non esce dalla cella */
+            overflow-wrap: anywhere; /* le parole molto lunghe vanno a capo invece di essere tagliate */
             line-height: 1.15;
-        }
-
-        .drop-cell:hover:not(:disabled):not(.filled) {
-            border-color: var(--grid-btn-hovered-border-color);
         }
 
         /* Cella riempita con l'elemento giusto */
@@ -355,7 +360,7 @@
         </div>
     </div>
 
-    
+
 <script>
 
     // --- Gestione Audio ---
@@ -374,10 +379,14 @@
     });
 
     // Funzione helper per riprodurre i suoni in modo sicuro
+    // (i browser molto vecchi restituiscono undefined da play(): niente .catch in quel caso)
     function playSound(key) {
         if (sounds[key]) {
             sounds[key].currentTime = 0;
-            sounds[key].play().catch(err => console.log("Audio play prevented:", err));
+            const p = sounds[key].play();
+            if (p && typeof p.catch === 'function') {
+                p.catch(err => console.log("Audio play prevented:", err));
+            }
         }
     }
 
@@ -413,6 +422,7 @@
         let totalCorrectItems = 0;
         let elapsedSeconds = 0;
         let elapsedTimerInterval = null;
+        let timerStartMs = 0;
         let results = [];
 
         /* =========================================================
@@ -485,29 +495,44 @@
             return true;
         }
 
-       /* =========================================================
-       TIMER
-       ========================================================= */
-
-        function stopElapsedTimer() {
-            if (elapsedTimerInterval) {
-                clearInterval(elapsedTimerInterval);
-                elapsedTimerInterval = null;
+        // Restituisce il testo di un'intestazione, con valore di riserva per ogni singolo indice
+        function pickHeader(arr, index, fallback) {
+            if (Array.isArray(arr) && typeof arr[index] === 'string' && arr[index].trim() !== '') {
+                return arr[index];
             }
+            return fallback;
         }
+
+       /* =========================================================
+       TIMER (calcolato da Date.now(): niente deriva né rallentamenti in background)
+       ========================================================= */
 
         function updateTimerDisplay() {
             if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
         }
 
+        function syncElapsed() {
+            elapsedSeconds = Math.floor((Date.now() - timerStartMs) / 1000);
+            updateTimerDisplay();
+        }
+
+        function stopElapsedTimer() {
+            if (elapsedTimerInterval) {
+                syncElapsed(); // valore finale esatto
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+        }
+
         function startElapsedTimer() {
-            stopElapsedTimer();
+            if (elapsedTimerInterval) {
+                clearInterval(elapsedTimerInterval);
+                elapsedTimerInterval = null;
+            }
+            timerStartMs = Date.now();
             elapsedSeconds = 0;
             updateTimerDisplay();
-            elapsedTimerInterval = setInterval(() => {
-                elapsedSeconds++;
-                updateTimerDisplay();
-            }, 1000);
+            elapsedTimerInterval = setInterval(syncElapsed, 250);
         }
 
         // Barra generale: round completati / round totali
@@ -574,23 +599,22 @@
             foundCorrectCount++;
             if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
 
-            if (foundCorrectCount >= totalCorrectItems) {
+            const roundDone = foundCorrectCount >= totalCorrectItems;
+            const isLastRound = roundIndex >= categories.length - 1;
+
+            // I suoni NON dipendono dalla libreria Checkmark
+            if (!roundDone) {
+                playSound('correct');
+            } else if (!isLastRound) {
+                playSound('next_round');
+            }
+
+            if (roundDone) {
                 completeRound();
             }
 
             if (typeof Checkmark !== 'undefined' && element) {
                 try {
-
-                    const isLastRound = roundIndex >= categories.length - 1;
-                    if (totalCorrectItems-foundCorrectCount !== 0) {
-                            playSound('correct');
-                        }
-                        else{
-                            if ( isLastRound===false){
-                                playSound('next_round');
-                            }
-                        }
-
                     Checkmark.show({ element, size: 48, rise: 70, duration: 1600 });
                 } catch (err) {
                     console.warn('Checkmark error:', err);
@@ -704,13 +728,16 @@
 
             if (instructionBanner) instructionBanner.textContent = category.instruction || '';
 
-            const headers = Array.isArray(category.headers) ? category.headers : ['Colonna 1', 'Colonna 2'];
+            // Intestazioni con valore di riserva per ogni indice (niente "undefined")
+            const headers = [
+                pickHeader(category.headers, 0, 'Colonna 1'),
+                pickHeader(category.headers, 1, 'Colonna 2')
+            ];
             colRight1Title.textContent = headers[0];
             colRight2Title.textContent = headers[1];
 
-            const leftHeaders = Array.isArray(category.leftHeaders) ? category.leftHeaders : ['Gruppo 1', 'Gruppo 2'];
-            colLeft1Title.textContent = leftHeaders[0];
-            colLeft2Title.textContent = leftHeaders[1];
+            colLeft1Title.textContent = pickHeader(category.leftHeaders, 0, 'Gruppo 1');
+            colLeft2Title.textContent = pickHeader(category.leftHeaders, 1, 'Gruppo 2');
 
             sourceCol1.innerHTML = '';
             sourceCol2.innerHTML = '';
@@ -783,11 +810,6 @@
             // isHoldingHelp evita di contare più aiuti con più dita / tasti contemporanei
             if (isHoldingHelp || isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
 
-            playSound('help');
-
-            revealCount++;
-            if (revealsValueEl) revealsValueEl.textContent = revealCount;
-
             const unplacedItems = currentRoundItems.filter(item => !item.placed);
             const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
 
@@ -802,6 +824,13 @@
                     helpPreviewElements.push({ cell, item: matchingItem });
                 }
             });
+
+            // Se non c'era nulla da mostrare, l'aiuto non viene contato (né suona)
+            if (helpPreviewElements.length === 0) return;
+
+            playSound('help');
+            revealCount++;
+            if (revealsValueEl) revealsValueEl.textContent = revealCount;
 
             isHoldingHelp = true;
         }
@@ -884,7 +913,11 @@
         }
 
         if (revealBtn) {
-            revealBtn.addEventListener('pointerdown', startHelpReveal);
+            revealBtn.addEventListener('pointerdown', e => {
+                // Solo il tasto sinistro del mouse (o tocco/penna): il tasto destro/centrale non conta come aiuto
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                startHelpReveal();
+            });
             revealBtn.addEventListener('pointerup', stopHelpReveal);
             revealBtn.addEventListener('pointerleave', stopHelpReveal);
             revealBtn.addEventListener('pointercancel', stopHelpReveal);
@@ -902,6 +935,13 @@
             });
             revealBtn.addEventListener('blur', stopHelpReveal);
         }
+
+        // Se la finestra perde il focus o la scheda va in background mentre si tiene premuto,
+        // pointerup potrebbe non arrivare mai: l'anteprima va tolta comunque
+        window.addEventListener('blur', stopHelpReveal);
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) stopHelpReveal();
+        });
 
         /* =========================================================
         AVVIO DEL GIOCO

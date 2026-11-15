@@ -412,11 +412,11 @@
         .cool-btn:active {
             transform: translateY(1px);
         }
-  
+
         .cool-btn:disabled {
             pointer-events: none;
         }
-
+        
         .cool-btn.wrong-btn {
             background-color: var(--wrong);
             cursor: default;

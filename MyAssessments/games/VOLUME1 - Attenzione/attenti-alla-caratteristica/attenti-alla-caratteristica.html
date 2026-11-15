@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attenti alla caratteristica</title>
 
-    <!-- 1. Includi qui il file esterno condiviso -->
+    <!-- File esterni condivisi -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
 
@@ -15,7 +15,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <style>
-
         .button-grid {
             width: 100%;
             display: grid;
@@ -23,17 +22,14 @@
             grid-template-rows: repeat(5, 1fr);
             gap: 14px;
         }
-       
-        @media (max-width: 700px) { .button-grid { gap: 10px; }
+
+        @media (max-width: 700px) {
+            .button-grid { gap: 10px; }
             .grid-button {
                 min-height: 60px;
                 font-size: 1rem;
             }
         }
-
-    </style>
-
-    <style>
 
         .cool-btn {
             display: inline-flex;
@@ -65,8 +61,7 @@
         }
 
         /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
-
-       #reveal-btn .fa {
+        #reveal-btn .fa {
             font-size: 25px;
             line-height: 1;
             color: #ffffff;
@@ -96,9 +91,7 @@
             animation: none !important;
             transition: none !important;
         }
-
     </style>
-
 </head>
 
 <body>
@@ -119,7 +112,7 @@
 
     <!-- INFORMATION / INSTRUCTION BOX -->
     <div id="instruction-banner">
-       Instruzion banner
+       Istruzioni
     </div>
 
     <div class="controls" id="action-controls">
@@ -169,7 +162,7 @@
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
-                    <th>Metric</th>
+                    <th>Punti</th>
                 </tr>
             </thead>
             <tbody id="summary-tbody">
@@ -181,10 +174,57 @@
 
 <script>
 
-    
+    // --- Gestione Audio ---
+    const sounds = {
+        correct: new Audio('../../sounds/check-correct.mp3'),
+        next_round: new Audio('../../sounds/next-round.mp3'),
+        error: new Audio('../../sounds/error.mp3'),
+        help: new Audio('../../sounds/help.mp3'),
+        click: new Audio('../../sounds/click.mp3'),
+        wow: new Audio('../../sounds/wow.mp3')
+    };
+
+    Object.values(sounds).forEach(sound => {
+        sound.volume = 0.4;
+        sound.preload = 'auto';
+    });
+
+    function playSound(key) {
+        if (sounds[key]) {
+            sounds[key].currentTime = 0;
+            sounds[key].play().catch(err => console.log("Audio play prevented:", err));
+        }
+    }
+
+    // Safari/iOS: i suoni vanno "sbloccati" durante un vero gesto dell'utente.
+    // Al primo tocco li facciamo partire in muto e li fermiamo subito, così dopo possono
+    // essere riprodotti anche da codice asincrono (es. "wow" dopo l'animazione).
+    let audioUnlocked = false;
+    function unlockAudio() {
+        if (audioUnlocked) return;
+        audioUnlocked = true;
+        Object.values(sounds).forEach(s => {
+            s.muted = true;
+            const p = s.play();
+            if (p && typeof p.then === 'function') {
+                p.then(() => { s.pause(); s.currentTime = 0; s.muted = false; })
+                 .catch(() => { s.muted = false; });
+            } else {
+                s.muted = false;
+            }
+        });
+    }
+    ['pointerup', 'touchend', 'click', 'keydown'].forEach(evt =>
+        document.addEventListener(evt, unlockAudio, { once: true, passive: true })
+    );
+
 document.addEventListener('DOMContentLoaded', () => {
     const DATA_URL = 'attenti-alla-caratteristica.json';
-    const SHUFFLE_ROUNDS = true;   // false = round nell'ordine del file
+    const SHUFFLE_ROUNDS = true;    // false = round nell'ordine del file
+    const SHUFFLE_BUTTONS = true;   // false = bottoni nell'ordine del file dentro ogni round
+
+    // Rete di sicurezza: se qualcosa va storto prima di initGame, la pagina non resta invisibile
+    setTimeout(() => document.body.classList.add('loaded'), 5000);
 
     // --- Stato ---
     let categories = [];           // tutti i round
@@ -192,6 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let results = [];              // risultato di ogni round completato
     let buttons = [];
     let elapsedSeconds = 0;
+    let startTime = 0;
     let elapsedTimerInterval = null;
     let totalCorrectItems = 0;
     let foundCorrectCount = 0;
@@ -201,6 +242,9 @@ document.addEventListener('DOMContentLoaded', () => {
     let revealCount = 0;
     let currentCategoryTitle = '';
     let pressStartedInHelpMode = false; // la pressione sul tasto è iniziata come "aiuto"?
+    let pressResetTimeout = null;
+    let roundToken = 0;            // cambia a ogni round: serve a interrompere le animazioni "vecchie"
+    let summaryShown = false;
 
     // --- Elementi ---
     const gameTitle = document.getElementById('game-title');
@@ -228,6 +272,14 @@ document.addEventListener('DOMContentLoaded', () => {
         gameArea, gameStats, instructionBanner, progressBar,
         progressBarTitle, gameTitle, actionControls
     ];
+
+    function shuffleInPlace(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
 
     // --- Validazione dei round ---
     // Un round è valido se ha da 1 a (numero di bottoni della griglia) bottoni, ognuno con
@@ -299,6 +351,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showSummaryScreen() {
+        summaryShown = true;
+        roundToken++; // interrompe eventuali animazioni ancora in corso
         setGameVisible(false);
         summaryTbody.innerHTML = '';
 
@@ -321,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 
-    // --- Timer ---
+    // --- Timer (basato su timestamp: non "deriva" nei tab in background) ---
     function stopElapsedTimer() {
         if (elapsedTimerInterval) {
             clearInterval(elapsedTimerInterval);
@@ -335,12 +389,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function startElapsedTimer() {
         stopElapsedTimer();
+        startTime = Date.now();
         elapsedSeconds = 0;
         updateTimerDisplay();
         elapsedTimerInterval = setInterval(() => {
-            elapsedSeconds++;
+            elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
             updateTimerDisplay();
-        }, 1000);
+        }, 250);
+    }
+
+    // Ricalcolo preciso al momento dello stop (es. ultima risposta)
+    function syncElapsedSeconds() {
+        elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        updateTimerDisplay();
     }
 
     // --- UI ---
@@ -387,15 +448,24 @@ document.addEventListener('DOMContentLoaded', () => {
     function showLoadError(message) {
         isGameLoading = false;
         document.body.classList.add('loaded'); // senza questa classe la pagina resta invisibile e l'errore non si vede
-        if (instructionBanner) instructionBanner.textContent = message;
+        // Nascondi tutto tranne il banner, che mostra il messaggio
+        gameElements.forEach(el => {
+            if (el && el !== instructionBanner) el.style.display = 'none';
+        });
+        if (instructionBanner) {
+            instructionBanner.style.display = '';
+            instructionBanner.textContent = message;
+        }
     }
 
     // --- Round ---
     function loadRound(index) {
         roundIndex = index;
+        roundToken++;
         const category = categories[roundIndex];
 
         buttons = [...category.buttons];
+        if (SHUFFLE_BUTTONS) shuffleInPlace(buttons);
         currentCategoryTitle = category.instruction || `Round ${roundIndex + 1}`;
         totalCorrectItems = buttons.filter(b => b.value === true).length;
 
@@ -431,12 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            if (SHUFFLE_ROUNDS) {
-                for (let i = categories.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [categories[i], categories[j]] = [categories[j], categories[i]];
-                }
-            }
+            if (SHUFFLE_ROUNDS) shuffleInPlace(categories);
 
             results = [];
             if (gameTitle && data.title) gameTitle.textContent = data.title;
@@ -446,7 +511,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isGameLoading = false;
         } catch (err) {
             console.error(`Could not load ${DATA_URL}:`, err);
-            showLoadError('Errore nel caricamento del gioco.');
+            showLoadError('Errore nel caricamento del gioco. Se apri il file direttamente (file://), usa un server locale.');
         }
     }
 
@@ -454,6 +519,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (revealBtn) {
         const showHelp = () => {
             if (isGameCompleted || isGameLoading) return;
+            playSound('help');
             revealCount++;
             updateRevealDisplay();
             gridButtons.forEach(button => {
@@ -477,6 +543,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Se la pressione parte come "aiuto", il click finale non deve far avanzare il round
             // (succede se il round si completa mentre il tasto è ancora premuto)
+            clearTimeout(pressResetTimeout);
             pressStartedInHelpMode = !isGameCompleted;
 
             if (helpActive) return;
@@ -486,6 +553,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const endHelp = () => {
             helpActive = false;
             hideHelp();
+            // Il click arriva subito dopo il rilascio: lo lasciamo "consumare" il flag.
+            // Se non arriva (trascinato fuori dal bottone, tocco annullato), il flag si azzera da solo.
+            clearTimeout(pressResetTimeout);
+            pressResetTimeout = setTimeout(() => { pressStartedInHelpMode = false; }, 400);
         };
 
         revealBtn.addEventListener('pointerdown', startHelp);
@@ -503,16 +574,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         revealBtn.addEventListener('blur', endHelp);
 
-        // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo
+        // A round completato il tasto porta al round successivo, o al riepilogo se era l'ultimo.
+        // Un click "puro" (senza pointer/keyboard, es. lettore di schermo) in gioco mostra l'aiuto per un attimo.
         revealBtn.addEventListener('click', () => {
             if (pressStartedInHelpMode) {
                 pressStartedInHelpMode = false;
                 return;
             }
-            if (!isGameCompleted) return;
+            if (isLoadingOrBusy()) return;
+            if (!isGameCompleted) {
+                // click sintetico: aiuto temporaneo
+                showHelp();
+                setTimeout(hideHelp, 1500);
+                return;
+            }
             if (roundIndex < categories.length - 1) loadRound(roundIndex + 1);
             else showSummaryScreen();
         });
+
+        function isLoadingOrBusy() {
+            return isGameLoading || summaryShown;
+        }
     }
 
     // --- Click sulla griglia ---
@@ -527,6 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateMovesDisplay();
 
             if (buttons[index].value !== true) {
+                playSound('error');
                 button.classList.remove('error');
                 void button.offsetWidth; // riavvia l'animazione di shake
                 button.classList.add('error');
@@ -535,6 +618,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // --- Risposta corretta: aggiorna TUTTO lo stato in modo sincrono ---
+            const token = roundToken;
             button.disabled = true;
             button.classList.add('selected');
             foundCorrectCount++;
@@ -546,6 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (justCompleted) {
                 isGameCompleted = true;
                 stopElapsedTimer(); // il tempo si ferma all'ultima risposta, non dopo le animazioni
+                syncElapsedSeconds();
                 gridButtons.forEach(btn => { btn.disabled = true; });
 
                 results.push({
@@ -556,20 +641,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     score: computeScore()
                 });
 
+                playSound('next_round');
                 setOverallProgress(roundIndex + 1);   // la barra avanza di un round
                 setButtonState(isLastRound ? 'done' : 'next');
+            } else {
+                playSound('correct');
             }
 
             // --- Solo dopo: animazioni (non bloccano lo stato di gioco) ---
+            // Se nel frattempo il round è cambiato (o è comparso il riepilogo), si interrompono.
             try {
                 if (typeof Checkmark !== 'undefined') {
                     await Checkmark.show({ element: button, size: 48, rise: 70, duration: 1600 });
                 }
+                if (token !== roundToken) return;
 
                 // Coriandoli solo alla fine del gioco (per averli a ogni round togli "isLastRound &&")
                 if (justCompleted && isLastRound && typeof Confetti !== 'undefined') {
+                    playSound('wow');
                     await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                    if (token !== roundToken) return;
                     await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                    if (token !== roundToken) return;
                     await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
                 }
             } catch (err) {

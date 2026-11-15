@@ -193,6 +193,12 @@
                  1px  1px 0 #000;
         }
 
+        /* FIX 3: le colonne di sinistra sono mescolate, quindi le intestazioni a sinistra
+           non hanno significato. Restano invisibili solo per mantenere l'allineamento verticale. */
+        #left-side-container .col-heads {
+            visibility: hidden;
+        }
+
         /* ---------- CELLE DI DESTRA (DESTINAZIONE 128x128) ---------- */
         .drop-cell {
             font-family: inherit;
@@ -426,10 +432,34 @@
 
 <script>
 
+    // --- Gestione Audio ---
+    const sounds = {
+        correct: new Audio('../../sounds/check-correct.mp3'),
+        next_round: new Audio('../../sounds/next-round.mp3'),
+        error: new Audio('../../sounds/error.mp3'),
+        help: new Audio('../../sounds/help.mp3'),
+        click: new Audio('../../sounds/click.mp3'),
+        wow: new Audio('../../sounds/wow.mp3')
+    };
+
+    Object.values(sounds).forEach(sound => { sound.volume = 0.4; });
+
+    function playSound(key) {
+        if (sounds[key]) {
+            sounds[key].currentTime = 0;
+            sounds[key].play().catch(err => console.log("Audio play prevented:", err));
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
 
         const DEFAULT_JSON = 'animali-set-1.json';   // oppure apri la pagina con ?json=nomefile.json
         const SHUFFLE_ROUNDS = true;
+
+        // Dopo un cambio round il tasto aiuto resta bloccato per un attimo,
+        // così un doppio tap su "Prossimo round" non consuma un aiuto nel round successivo
+        const HELP_LOCK_MS = 500;
+
 
         // Punteggio per round: ogni click su una cella è una mossa;
         // le mosse sbagliate = mosse totali - elementi da piazzare
@@ -444,12 +474,14 @@
         let currentCategory = null;
         let isGameReady = false;
         let isGameCompleted = false;
+        let isCelebrating = false;        // FIX 4: true mentre i coriandoli sono in corso
         let selectedItem = null;          // Pulsante selezionato a sinistra
         let currentRoundItems = [];
         let isHoldingHelp = false;
         let currentButtonMode = 'help';   // 'help' | 'next' | 'done'
         let helpPreviewElements = [];     // Celle riempite temporaneamente dall'aiuto
         let pressStartedInHelpMode = false; // la pressione sul tasto è iniziata come "aiuto"?
+        let helpLockedUntil = 0;
 
         // Statistiche e metriche
         let moveCount = 0;
@@ -612,6 +644,7 @@
         // Risposta sbagliata: shake sulla cella
         function registerWrong(element) {
             if (isGameCompleted || !isGameReady || !element) return;
+            playSound('error');
             element.classList.remove('error');
             void element.offsetWidth; // riavvia l'animazione CSS
             element.classList.add('error');
@@ -624,9 +657,17 @@
             foundCorrectCount++;
             if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
 
-            if (foundCorrectCount >= totalCorrectItems) {
-                completeRound();
+            const roundDone = foundCorrectCount >= totalCorrectItems;
+            const isLastRound = roundIndex >= categories.length - 1;
+
+            // I suoni non dipendono dal caricamento di checkmark.js / celebrazion.js
+            if (!roundDone) {
+                playSound('correct');
+            } else if (!isLastRound) {
+                playSound('next_round');
             }
+
+            if (roundDone) completeRound();
 
             if (typeof Checkmark !== 'undefined' && element) {
                 try {
@@ -652,13 +693,26 @@
             // La barra avanza subito al completamento del round (round completati / totali)
             setOverallProgress(roundIndex + 1);
 
-            if (isLastRound && typeof Confetti !== 'undefined') {
-                try {
-                    await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
-                    await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
-                    await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
-                } catch (err) {
-                    console.warn('Confetti error:', err);
+            if (isLastRound) {
+                // FIX 2: il suono "wow" parte anche se celebrazion.js non è stato caricato
+                playSound('wow');
+
+                if (typeof Confetti !== 'undefined') {
+                    // FIX 4: il tasto "Fatto" non fa nulla finché i coriandoli non finiscono,
+                    // e i tre lanci partono insieme invece che uno dopo l'altro
+                    isCelebrating = true;
+                    const roundAtStart = roundIndex;
+                    try {
+                        await Promise.all([
+                            Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60,  spread: 60, count: 90 }),
+                            Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 }),
+                            Confetti.burst({ origin: { x: 0.5,  y: 0.5 }, angle: 90,  spread: 60, count: 90 })
+                        ]);
+                    } catch (err) {
+                        console.warn('Confetti error:', err);
+                    } finally {
+                        if (roundAtStart === roundIndex) isCelebrating = false;
+                    }
                 }
             }
         }
@@ -698,6 +752,8 @@
                 selectedItem = null;
                 return;
             }
+
+            playSound('click');
 
             selectedItem = itemObj;
             itemObj.button.classList.add('is-selected');
@@ -750,9 +806,11 @@
             stopHelpReveal();
             helpPreviewElements = [];
             isHoldingHelp = false;
+            helpLockedUntil = Date.now() + HELP_LOCK_MS;
 
             currentCategory = category;
             isGameCompleted = false;
+            isCelebrating = false;
             selectedItem = null;
             moveCount = 0;
             revealCount = 0;
@@ -764,8 +822,8 @@
             if (instructionBanner) instructionBanner.textContent = category.instruction || '';
 
             // Intestazioni: se mancano o sono vuote nel JSON, non vengono mostrate (e rimostrate nei round che le hanno)
+            // FIX 3: le intestazioni di sinistra non vengono più riempite (la colonna di sinistra è mescolata)
             const rightHeaders = Array.isArray(category.headers) ? category.headers : [];
-            const leftHeaders = Array.isArray(category.leftHeaders) ? category.leftHeaders : ['Gruppo 1', 'Gruppo 2'];
             const showHeaders = rightHeaders.length >= 2;
 
             colHeadsContainers.forEach(el => { el.style.display = showHeaders ? '' : 'none'; });
@@ -773,8 +831,8 @@
             if (showHeaders) {
                 colRight1Title.textContent = rightHeaders[0];
                 colRight2Title.textContent = rightHeaders[1];
-                colLeft1Title.textContent = leftHeaders[0] || '';
-                colLeft2Title.textContent = leftHeaders[1] || '';
+                colLeft1Title.textContent = '';
+                colLeft2Title.textContent = '';
             }
 
             sourceCol1.innerHTML = '';
@@ -890,6 +948,9 @@
         function startHelpReveal() {
             // isHoldingHelp evita di contare più aiuti con più dita / tasti contemporanei
             if (isHoldingHelp || isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
+            if (Date.now() < helpLockedUntil) return;
+
+            playSound('help');
 
             revealCount++;
             if (revealsValueEl) revealsValueEl.textContent = revealCount;
@@ -945,6 +1006,9 @@
                 pressStartedInHelpMode = false;
                 return;
             }
+            // FIX 4: nessun avanzamento mentre i coriandoli sono in corso
+            if (isCelebrating) return;
+
             if (currentButtonMode === 'next') {
                 saveRoundResult();
                 roundIndex++;
@@ -1020,7 +1084,12 @@
         EVENTI DEL PULSANTE
         ========================================================= */
         if (revealBtn) {
-            revealBtn.addEventListener('pointerdown', () => { markPressStart(); startHelpReveal(); });
+            revealBtn.addEventListener('pointerdown', e => {
+                // FIX 1: solo il tasto principale del mouse (o tocco/penna) attiva l'aiuto
+                if (e.pointerType === 'mouse' && e.button !== 0) return;
+                markPressStart();
+                startHelpReveal();
+            });
             revealBtn.addEventListener('pointerup', stopHelpReveal);
             revealBtn.addEventListener('pointerleave', stopHelpReveal);
             revealBtn.addEventListener('pointercancel', stopHelpReveal);

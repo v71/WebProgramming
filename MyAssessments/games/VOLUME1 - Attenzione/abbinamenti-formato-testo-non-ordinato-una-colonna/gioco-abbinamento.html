@@ -7,6 +7,7 @@
 
     <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
+    <!-- ATTENZIONE: verifica il nome del file (celebrazion.js o celebrazione.js?) -->
     <script src="../../js/celebrazion.js"></script>
 
     <!-- Main CSS File -->
@@ -121,9 +122,9 @@
             width: 100%;
         }
 
-        /* La griglia di destra (destinazione) ha le righe ad altezza fissa */
+        /* La griglia di destra (destinazione): righe ad altezza fissa, qualunque sia il numero di elementi */
         .drop-grid {
-            grid-template-rows: repeat(5, var(--cell-h));
+            grid-auto-rows: var(--cell-h);
         }
 
         .source-grid {
@@ -155,10 +156,10 @@
                  1px  1px 0 #000;
         }
 
-        /* Pulsanti sorgente (testo centrato in orizzontale e verticale) */
+        /* Pulsanti sorgente (testo centrato; altezza fissa come le celle di destra, così le colonne restano allineate) */
         .list-btn {
-            min-height: var(--cell-h);
-            padding: 6px 16px;
+            height: var(--cell-h);
+            padding: 0 16px;
             background: var(--default-btn);
             text-align: center;
             display: flex;
@@ -166,6 +167,9 @@
             justify-content: center;
             width: 100%;
             box-sizing: border-box;
+            overflow: hidden;
+            line-height: 1.15;
+            flex-shrink: 0;
         }
 
         .list-btn:hover:not(:disabled):not(.placed) {
@@ -260,6 +264,14 @@
             cursor: default;
         }
 
+        /* Messaggi di errore / stato (es. JSON non caricato) */
+        #game-message {
+            display: none;
+            text-align: center;
+            font-size: 1.3rem;
+            padding: 24px 12px;
+        }
+
         @media (max-width: 700px) {
             #game-area { flex-direction: column; align-items: stretch; }
             .list-btn, .drop-cell { font-size: 1rem; }
@@ -276,6 +288,9 @@
     <h1 id="game-title">
        Titolo Gioco
     </h1>
+
+    <!-- MESSAGGI DI STATO / ERRORE -->
+    <div id="game-message" role="alert"></div>
 
     <!-- COUNTERS -->
     <div id="game-stats">
@@ -339,7 +354,7 @@
                     <th>Tempo</th>
                     <th>Mosse</th>
                     <th>Aiuti</th>
-                    <th>Metric</th>
+                    <th>Punteggio</th>
                 </tr>
             </thead>
             <tbody id="summary-tbody">
@@ -374,7 +389,7 @@
             sounds[key].play().catch(err => console.log("Audio play prevented:", err));
         }
     }
-    
+
     document.addEventListener('DOMContentLoaded', () => {
 
         const DATA_URL = 'set-1.json';
@@ -384,6 +399,7 @@
         // le mosse sbagliate = mosse totali - elementi da abbinare
         const WRONG_PENALTY = 10;   // punti persi per ogni mossa sbagliata
         const HELP_PENALTY = 20;    // punti persi per ogni aiuto
+        const DOUBLE_CLICK_GUARD_MS = 400; // dopo l'inizio di un round, ignora pressioni dell'aiuto troppo ravvicinate
 
         /* =========================================================
         STATO DEL GIOCO
@@ -399,6 +415,7 @@
         let currentButtonMode = 'help';
         let helpPreviewElements = []; // Celle evidenziate temporaneamente dall'aiuto
         let pressStartedInHelpMode = false; // la pressione sul tasto è iniziata come "aiuto"?
+        let roundStartedAt = 0; // timestamp di inizio round (per evitare aiuti accidentali da doppio click)
 
         // Statistiche e metriche
         let moveCount = 0;
@@ -414,6 +431,7 @@
         ========================================================= */
         const gameTitle = document.getElementById('game-title');
         const gameArea = document.getElementById('game-area');
+        const gameMessage = document.getElementById('game-message');
         const actionControls = document.getElementById('action-controls');
         const instructionBanner = document.getElementById('instruction-banner'); // può essere null (banner commentato)
         const roundValueEl = document.getElementById('round-value');
@@ -436,6 +454,7 @@
         const revealBtn = document.getElementById('reveal-btn');
         const btnIcon = document.getElementById('btn-icon');
 
+        // Elementi che compongono la schermata di gioco (il titolo resta sempre visibile durante i messaggi)
         const gameElements = [
             gameArea, gameStats, instructionBanner, progressBar,
             progressBarTitle, gameTitle, actionControls
@@ -453,12 +472,26 @@
             return arr;
         }
 
-        // Mostra un messaggio all'utente: nel banner se esiste, altrimenti al posto dell'area di gioco
+        // Mescola `array` evitando (se possibile) lo stesso ordine di `reference`
+        function shuffleDifferent(array, reference) {
+            let arr = shuffleArray(array);
+            if (array.length < 2) return arr;
+            for (let tries = 0; tries < 10; tries++) {
+                if (arr.some((item, i) => item !== reference[i])) break;
+                arr = shuffleArray(array);
+            }
+            return arr;
+        }
+
+        // Mostra un messaggio all'utente: nasconde il gioco e usa l'elemento dedicato
         function showMessage(text) {
-            if (instructionBanner) {
-                instructionBanner.textContent = text;
-            } else if (gameArea) {
-                gameArea.textContent = text;
+            gameElements.forEach(el => {
+                if (el && el !== gameTitle) el.style.display = 'none';
+            });
+            if (summaryScreen) summaryScreen.style.display = 'none';
+            if (gameMessage) {
+                gameMessage.textContent = text;
+                gameMessage.style.display = 'block';
             }
         }
 
@@ -567,22 +600,22 @@
             foundCorrectCount++;
             if (wordCountEl) wordCountEl.textContent = `${foundCorrectCount} / ${totalCorrectItems}`;
 
-            if (foundCorrectCount >= totalCorrectItems) {
+            const isLastRound = roundIndex >= categories.length - 1;
+            const roundDone = foundCorrectCount >= totalCorrectItems;
+
+            // I suoni NON dipendono più dal caricamento di checkmark.js
+            if (!roundDone) {
+                playSound('correct');
+            } else if (!isLastRound) {
+                playSound('next_round');
+            }
+
+            if (roundDone) {
                 completeRound();
             }
 
             if (typeof Checkmark !== 'undefined' && element) {
                 try {
-                    const isLastRound = roundIndex >= categories.length - 1;
-                    if (totalCorrectItems-foundCorrectCount !== 0) {
-                            playSound('correct');
-                        }
-                        else{
-                            if ( isLastRound===false){
-                                playSound('next_round');
-                            }
-                        }
-
                     Checkmark.show({ element, size: 48, rise: 70, duration: 1600 });
                 } catch (err) {
                     console.warn('Checkmark error:', err);
@@ -604,14 +637,17 @@
             // La barra avanza subito al completamento del round (round completati / totali)
             setOverallProgress(roundIndex + 1);
 
-            if (isLastRound && typeof Confetti !== 'undefined') {
-                try {
-                    playSound('wow');
-                    await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
-                    await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
-                    await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
-                } catch (err) {
-                    console.warn('Confetti error:', err);
+            if (isLastRound) {
+                // Il suono "wow" non dipende più dalla libreria Confetti
+                playSound('wow');
+                if (typeof Confetti !== 'undefined') {
+                    try {
+                        await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+                        await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+                        await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+                    } catch (err) {
+                        console.warn('Confetti error:', err);
+                    }
                 }
             }
         }
@@ -688,13 +724,14 @@
             moveCount = 0;
             revealCount = 0;
             foundCorrectCount = 0;
+            roundStartedAt = Date.now();
 
             // Barra di progresso: round già completati
             setOverallProgress(roundIndex);
 
             if (instructionBanner) instructionBanner.textContent = category.instruction || '';
 
-            // headers[0] = titolo colonna di destra (risposte), headers[1] = titolo colonna di sinistra (domande)
+            // NOTA: headers[0] = titolo colonna di DESTRA (risposte), headers[1] = titolo colonna di SINISTRA (domande)
             const headers = Array.isArray(category.headers) ? category.headers : [];
             if (colRightTitle) colRightTitle.textContent = headers[0] || 'Risposte';
             if (colLeftTitle) colLeftTitle.textContent = headers[1] || 'Domande';
@@ -714,8 +751,9 @@
             totalCorrectItems = itemsWithData.length;
 
             // Mescoliamo separatamente le domande a sinistra e le risposte a destra
+            // (evitando che i due ordini coincidano, il che renderebbe il round banale)
             const shuffledSource = shuffleArray(itemsWithData);
-            const shuffledTargets = shuffleArray(itemsWithData);
+            const shuffledTargets = shuffleDifferent(itemsWithData, shuffledSource);
 
             // 1. Colonna di sinistra (domande)
             shuffledSource.forEach((itemObj) => {
@@ -758,73 +796,37 @@
         /* =========================================================
         PULSANTE AIUTO (REVEAL / PREVIEW)
         ========================================================= */
-        
-        /*
-        // Attiva l'aiuto alla pressione (evidenzia le celle corrette rimaste)
-        function startHelpReveal() {
-            // isHoldingHelp evita di contare più aiuti con più dita / tasti contemporanei
-            if (isHoldingHelp || isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
-
-            revealCount++;
-            if (revealsValueEl) revealsValueEl.textContent = revealCount;
-
-            const unplacedItems = currentRoundItems.filter(item => !item.placed);
-            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
-
-            // Evidenzia le celle corrette corrispondenti agli elementi non ancora abbinati
-            emptyCells.forEach(cell => {
-                const targetAns = cell.dataset.answer;
-                const matchingItem = unplacedItems.find(item => item.answer === targetAns);
-
-                if (matchingItem) {
-                    cell.classList.add('help-preview');
-                    
-                    cell.textContent="cell.dataset.answer";
-
-                    helpPreviewElements.push({ cell });
-                }
-            });
-
-            isHoldingHelp = true;
-        }
-
-        // Disattiva l'aiuto al rilascio (rimuove solo l'evidenziazione, le risposte restano visibili)
-        function stopHelpReveal() {
-            if (!isHoldingHelp) return;
-            helpPreviewElements.forEach(({ cell }) => {
-                cell.classList.remove('help-preview');
-
-                cell.textContent=cell.dataset.answer;
-
-            });
-            helpPreviewElements = [];
-            isHoldingHelp = false;
-        }
-        */
 
         // Attiva l'aiuto alla pressione (mostra la label associata nelle celle vuote rimaste)
         function startHelpReveal() {
             if (isHoldingHelp || isGameCompleted || !isGameReady || currentButtonMode !== 'help') return;
 
-            playSound('help');
+            // Ignora pressioni subito dopo l'inizio del round (es. secondo click di un doppio click su "Prossimo round")
+            if (Date.now() - roundStartedAt < DOUBLE_CLICK_GUARD_MS) return;
 
+            const available = currentRoundItems.filter(item => !item.placed);
+            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
+            const previews = [];
+
+            // Ogni etichetta viene usata una sola volta, anche se ci sono risposte duplicate
+            emptyCells.forEach(cell => {
+                const idx = available.findIndex(item => item.answer === cell.dataset.answer);
+                if (idx === -1) return;
+                const [matchingItem] = available.splice(idx, 1);
+                previews.push({ cell, label: matchingItem.label });
+            });
+
+            // Niente da mostrare: nessun suono, nessun aiuto contato, nessuna penalità
+            if (previews.length === 0) return;
+
+            playSound('help');
             revealCount++;
             if (revealsValueEl) revealsValueEl.textContent = revealCount;
 
-            const unplacedItems = currentRoundItems.filter(item => !item.placed);
-            const emptyCells = Array.from(rightDropGrid.querySelectorAll('.drop-cell:not(.filled)'));
-
-            // Mostra temporaneamente la domanda/etichetta della colonna di sinistra nelle celle corrispondenti
-            emptyCells.forEach(cell => {
-                const targetAns = cell.dataset.answer;
-                const matchingItem = unplacedItems.find(item => item.answer === targetAns);
-
-                if (matchingItem) {
-                    cell.classList.add('help-preview');
-                    // Sostituisce il testo della cella con la label associata della colonna di sinistra
-                    cell.textContent = matchingItem.label;
-                    helpPreviewElements.push({ cell });
-                }
+            previews.forEach(({ cell, label }) => {
+                cell.classList.add('help-preview');
+                cell.textContent = label; // mostra temporaneamente la label della colonna di sinistra
+                helpPreviewElements.push({ cell });
             });
 
             isHoldingHelp = true;
@@ -833,13 +835,13 @@
         // Disattiva l'aiuto al rilascio (ripristina il testo originale delle risposte)
         function stopHelpReveal() {
             if (!isHoldingHelp) return;
-            
+
             helpPreviewElements.forEach(({ cell }) => {
                 cell.classList.remove('help-preview');
                 // Ripristina il testo originale della risposta salvato nel dataset
                 cell.textContent = cell.dataset.answer;
             });
-            
+
             helpPreviewElements = [];
             isHoldingHelp = false;
         }
@@ -930,7 +932,11 @@
         // COLLEGAMENTO EVENTI PULSANTE AIUTO / AZIONE
         // ==========================================
         if (revealBtn) {
-            revealBtn.addEventListener('pointerdown', () => { markPressStart(); startHelpReveal(); });
+            revealBtn.addEventListener('pointerdown', (e) => {
+                if (e.button !== 0) return; // solo tasto sinistro / tocco: ignora click destro e centrale
+                markPressStart();
+                startHelpReveal();
+            });
             revealBtn.addEventListener('pointerup', stopHelpReveal);
             revealBtn.addEventListener('pointerleave', stopHelpReveal);
             revealBtn.addEventListener('pointercancel', stopHelpReveal);
@@ -965,6 +971,10 @@
                 const allCategories = Array.isArray(data.categories) ? data.categories : [];
                 categories = allCategories.filter(isValidRound);
 
+                if (gameTitle && data.title) {
+                    gameTitle.textContent = data.title;
+                }
+
                 if (categories.length === 0) {
                     showMessage('Nessuna categoria valida trovata nel JSON.');
                     document.body.classList.add('loaded');
@@ -975,17 +985,13 @@
                     categories = shuffleArray(categories);
                 }
 
-                if (gameTitle && data.title) {
-                    gameTitle.textContent = data.title;
-                }
-
                 roundIndex = 0;
                 renderRound(categories[roundIndex]);
                 document.body.classList.add('loaded');
 
             } catch (err) {
                 console.error('Errore nel caricamento del file JSON:', err);
-                showMessage('Errore nel caricamento del gioco.');
+                showMessage('Errore nel caricamento del gioco. (Se hai aperto il file direttamente dal disco, usa un server locale.)');
                 document.body.classList.add('loaded');
             }
         }
