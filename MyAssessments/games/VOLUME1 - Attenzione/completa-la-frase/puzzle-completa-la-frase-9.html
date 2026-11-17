@@ -8,6 +8,8 @@
      <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
+    <!-- SOUNDS -->
+    <script src="../../js/sound.js"></script>
 
     <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
@@ -454,6 +456,11 @@
             color: var(--grid-btn-wrong-text, #721c24) !important;
         }
 
+        /* Shake when a card is placed in the wrong slot */
+        .slot .card.wrong.shake {
+            animation: shake 0.4s ease;
+        }
+
     </style>
 
 </head>
@@ -824,6 +831,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function playFinalConfetti() {
         if (typeof Confetti === 'undefined') return;
         try {
+            playSound('wow');
             await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
             await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
             await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
@@ -872,10 +880,20 @@ document.addEventListener('DOMContentLoaded', () => {
         // Parola giusta o sbagliata per questa posizione
         const isWordCorrect = word === emptyMeta.expected;
         slotCard.classList.add(isWordCorrect ? 'correct' : 'wrong');
+        
+        if (!isWordCorrect){
+            playSound('error');
+        }
 
         // Prima lo stato (timer, completamento, pulsante), poi l'animazione
         registerMove();
-        if (isWordCorrect) playCheckmark(slot);
+
+        if (isWordCorrect) 
+        {
+            playCheckmark(slot);
+            const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+            if ( !allSlotsFilled) playSound('correct');      
+        }
     }
 
     function checkSentenceAutomatic() {
@@ -887,6 +905,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (isCorrect) {
             completeRound();
+            playSound('next_round');
         } else if (allSlotsFilled) {
             slotsMeta.forEach(m => m.element.classList.add('error-slot'));
             setButtonMode('wrong');
@@ -900,7 +919,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (roundCompleted || slot.classList.contains('given')) return;
         const slotCard = slot.querySelector('.card');
         if (!slotCard) return;
-
+        playSound('click');
         if (slotCard.sourceCard) setCardDisabled(slotCard.sourceCard, false);
         slot.innerHTML = '';
         slot.classList.remove('filled');
@@ -1019,7 +1038,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function showReveal() {
         if (buttonMode !== 'help' || isRevealing || roundCompleted) return;
         isRevealing = true;
-
+        playSound('help');
         revealCount++;
         updateRevealsDisplay();
 

@@ -9,6 +9,8 @@
     <script src="../../js/checkmark.js"></script>
     <!-- VERIFICA: il nome "celebrazion.js" sembra un refuso di "celebration.js" -->
     <script src="../../js/celebrazion.js"></script>
+    <!-- SOUNDS -->
+    <script src="../../js/sound.js"></script>
 
     <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
@@ -362,33 +364,7 @@
 
 
 <script>
-
-    // --- Gestione Audio ---
-    const sounds = {
-        correct: new Audio('../../sounds/check-correct.mp3'),
-        next_round: new Audio('../../sounds/next-round.mp3'),
-        error: new Audio('../../sounds/error.mp3'),
-        help: new Audio('../../sounds/help.mp3'),
-        click: new Audio('../../sounds/click.mp3'),
-        wow: new Audio('../../sounds/wow.mp3')
-    };
-
-    // Imposta il volume (da 0.0 a 1.0)
-    Object.values(sounds).forEach(sound => {
-        sound.volume = 0.4;
-    });
-
-    // Funzione helper per riprodurre i suoni in modo sicuro
-    // (i browser molto vecchi restituiscono undefined da play(): niente .catch in quel caso)
-    function playSound(key) {
-        if (sounds[key]) {
-            sounds[key].currentTime = 0;
-            const p = sounds[key].play();
-            if (p && typeof p.catch === 'function') {
-                p.catch(err => console.log("Audio play prevented:", err));
-            }
-        }
-    }
+    
 
     document.addEventListener('DOMContentLoaded', () => {
 

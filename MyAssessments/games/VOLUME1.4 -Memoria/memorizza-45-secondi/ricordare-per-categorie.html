@@ -27,6 +27,22 @@
         }
 
         h1 {
+            margin: 0 0 10px;
+            font-size: 2.3rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000,
+                 0px 4px 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /*
+        h1 {
             margin: 0 0 16px;
             font-size: clamp(1.25rem, 4vh, 2.3rem);
             line-height: 1.1;
@@ -36,7 +52,7 @@
             text-align: center;
             text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,.5);
         }
-
+        */
         /* L'area di gioco ha SEMPRE le stesse dimensioni, in tutte le fasi */
         #game-area {
             flex: 1 1 0;
@@ -314,9 +330,6 @@
         }
 
         @media (max-width: 700px) {
-            :root { --fs-ui: .78rem; --fs-word: .82rem; }
-            body { padding: 8px 10px; }
-            h1, #progress-title { font-size: min(clamp(1.1rem, 4vh, 2.3rem), 6vw); }
             #game-area { padding: 8px; border-radius: 16px; }
             .pool .wgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
             .boxes, .groups { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -643,12 +656,14 @@
             const { names, assign } = assignCategories();
             area.querySelector('.boxes').innerHTML = names.map((_, b) => {
                 const nm = names[assign[b]];
-               return `<div class="zone box" style="--c:${COLORS[b % COLORS.length]}">
+                const btns = R.groups[nm].map(w => `<span class="wbtn ok">${w}</span>`).join('');
+                return `<div class="zone box" style="--c:${COLORS[b % COLORS.length]}">
                             <p class="zone-label">Gruppo ${b + 1}</p>
-                            <div class="wgrid">${btns || '<span class="big-msg">Vuoto</span>'}</div>
+                            <div class="wgrid">${btns}</div>
                         </div>`;
             }).join('');
         };
+
         const hide = () => {
             if (!held) return;
             held = false;

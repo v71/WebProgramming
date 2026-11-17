@@ -1,0 +1,16 @@
+{
+    "title": "Scegli la colonna giusta",
+    "categories": [
+        {
+            "label": "Luoghi e oggetti",
+                "pairs": [
+                ["stazione", "biglietto"],
+                ["biblioteca", "libro"],
+                ["giardino", "panchina"],
+                ["cucina", "pentola"],
+                ["ufficio", "scrivania"],
+                ["cinema", "popcorn"]
+                ]
+        }
+    ]
+}

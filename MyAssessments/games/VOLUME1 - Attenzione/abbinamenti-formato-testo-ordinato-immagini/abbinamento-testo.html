@@ -7,7 +7,10 @@
 
     <!-- File esterni condivisi (verifica il nome: "celebrazion.js" potrebbe essere un refuso di "celebrazione.js") -->
     <script src="../../js/checkmark.js"></script>
+    <!-- ATTENZIONE: verifica il nome del file (celebrazion.js o celebrazione.js?) -->
     <script src="../../js/celebrazion.js"></script>
+     <!-- SOUNDS -->
+    <script src="../../js/sound.js"></script>
 
     <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
@@ -387,25 +390,6 @@
     </div>
 
 <script>
-
-    // --- Gestione Audio ---
-    const sounds = {
-        correct: new Audio('../../sounds/check-correct.mp3'),
-        next_round: new Audio('../../sounds/next-round.mp3'),
-        error: new Audio('../../sounds/error.mp3'),
-        help: new Audio('../../sounds/help.mp3'),
-        click: new Audio('../../sounds/click.mp3'),
-        wow: new Audio('../../sounds/wow.mp3')
-    };
-
-    Object.values(sounds).forEach(sound => { sound.volume = 0.4; });
-
-    function playSound(key) {
-        if (sounds[key]) {
-            sounds[key].currentTime = 0;
-            sounds[key].play().catch(err => console.log("Audio play prevented:", err));
-        }
-    }
 
     document.addEventListener('DOMContentLoaded', () => {
 

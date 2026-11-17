@@ -8,6 +8,8 @@
     <!-- 1. Includi qui il file esterno condiviso -->
     <script src="../../js/checkmark.js"></script>
     <script src="../../js/celebrazion.js"></script>
+    <!-- SOUNDS -->
+    <script src="../../js/sound.js"></script>
 
     <!-- Main CSS File -->
     <link href="../stylesheet.css" rel="stylesheet">
@@ -470,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (revealBtn) {
         const showHelp = () => {
             if (isGameCompleted || isGameLoading) return;
+            playSound('help');
             revealCount++;
             updateRevealDisplay();
             gridButtons.forEach(button => {
@@ -543,6 +546,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateMovesDisplay();
 
             if (buttons[index].value !== true) {
+                playSound('error');
                 button.classList.remove('error');
                 void button.offsetWidth; // riavvia l'animazione di shake
                 button.classList.add('error');
@@ -572,8 +576,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     score: computeScore()
                 });
 
+                playSound('next_round');
                 setOverallProgress(roundIndex + 1);          // la barra avanza di un round
                 setButtonState(isLastRound ? 'done' : 'next');
+            }
+             else {
+                playSound('correct');
             }
 
             // --- Solo dopo: animazioni (non bloccano lo stato di gioco) ---
@@ -588,6 +596,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Coriandoli solo alla fine del gioco (per averli a ogni round togli "isLastRound &&")
             if (justCompleted && isLastRound && typeof Confetti !== 'undefined') {
                 try {
+                    playSound('wow');
                     await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
                     await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
                     await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });

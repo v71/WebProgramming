@@ -1,0 +1,25 @@
+{
+    "title": "Leggi, copri e ricorda",
+    "categories": [
+        {
+            "label": "Il dottor Bianchi e Clara",
+            "text": "Il dottor Bianchi aspettava un'amica d'infanzia, Clara, davanti al bar di piazza Maggiore. Prima di partire aveva preparato due regali: una sciarpa di lana e un libro di poesie. Per la fretta ha dimenticato il libro sul tavolo e se n'è accorto solo quando Clara è arrivata con un mazzo di tulipani gialli. Le ha promesso di portarglielo giovedì.",
+            "questions": [
+                { "q": "Chi aspettava il dottor Bianchi e dove?", "parts": [["clara"], ["bar", "piazza maggiore"]] },
+                { "q": "Quali due regali aveva preparato?", "parts": [["sciarpa"], ["libro", "poesie"]] },
+                { "q": "Quale regalo ha dimenticato?", "parts": [["libro", "poesie"]] },
+                { "q": "Che cosa ha promesso a Clara, e per quando?", "parts": [["libro", "poesie", "portarglielo"], ["giovedi"]] }
+            ]
+        },
+        {
+            "label": "La signora Rosa al mercato",
+            "text": "Sabato mattina la signora Rosa è andata al mercato del paese con la nipote Giulia. Ha comprato un chilo di pomodori, due melanzane e un mazzo di basilico. Alla bancarella del formaggio ha incontrato il vicino Marco, che le ha consigliato una ricotta fresca. Prima di tornare a casa si sono fermate a bere un caffè.",
+            "questions": [
+                { "q": "Con chi è andata al mercato la signora Rosa?", "parts": [["giulia", "nipote"]] },
+                { "q": "Quali verdure ha comprato?", "parts": [["pomodori"], ["melanzane"], ["basilico"]] },
+                { "q": "Chi ha incontrato alla bancarella del formaggio?", "parts": [["marco", "vicino"]] },
+                { "q": "Che cosa ha comprato lì, consigliata dal vicino?", "parts": [["ricotta"]] }
+            ]
+        }
+    ]
+}

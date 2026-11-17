@@ -497,21 +497,3 @@
             #instruction-banner { border-radius: 18px; font-size: 0.95rem; padding: 12px 16px; }
             #game-area { min-height: 260px; padding: 16px; }
         }
-
-        /* il titolo "Progresso" si riduce con la dimensione dello schermo */
-
-        @media (max-height: 700px) {
-            #progress-title {
-                font-size: 1rem;
-                margin: 4px 0;
-            }
-        }
-
-        #progress-title {
-            font-size: clamp(1.25rem, 4vh, 2.3rem);   /* same as the h1 */
-            line-height: 1.1;
-        }
-
-        .progress-bar-container {
-            margin-top: 12px;
-        }

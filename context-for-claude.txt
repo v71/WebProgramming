@@ -1,0 +1,57 @@
+CONTEXT: I'm building small browser games (single HTML file each) for the
+"Metodo Scintilla" series. UI text is in Italian. Games are served over HTTP
+(Live Server), not file://. Each game loads its data from an external JSON file.
+
+SHARED FILES (already exist, don't rewrite)
+- ../stylesheet.css  -> global theme, CSS variables (--body-background,
+  --game-area-background, --summary-background, --accent, --text, --border,
+  --grid-btn-*, --shadow-*), styles for #game-stats, #instruction-banner,
+  .controls, #game-area, #progress-title, .progress-bar-*, .cool-btn,
+  .grid-button, and #summary-screen / .summary-table / .summary-totals
+  (hidden by default with display:none)
+- ../../js/checkmark.js and ../../js/celebrazion.js
+- Font Awesome 4.7 from cdnjs
+
+PAGE STRUCTURE (same in every game)
+- h1#game-title
+- #game-stats: Round / Tempo / Mosse / Aiuti
+- #instruction-banner (one line of instructions, updated with banner(txt))
+- .controls#action-controls with button#reveal-btn: lightbulb icon + .btn-text.
+  It has 3 modes via setButtonState('help' | 'next' | 'done'):
+  help = hold to peek at answers (disabled outside the sort phase),
+  next = "Prossimo round", done = "Fatto" (opens the summary)
+- #game-area: fixed size (max-height 450px), contents drawn by frame()
+- h2#progress-title + .progress-bar-container > #progress-bar-fill
+  (advances once per round)
+- #summary-screen: separate element, shown at the end; the game elements are
+  hidden with style.display='none' and the summary is shown in their place
+
+JS CONVENTIONS
+- frame({top, a, b, main, bottom}) renders [top row][zone A][zone B][bottom row],
+  or a single centred "main" block. Classes: .frame .toprow .bottomrow .main
+  .slotA (33%) .slotB (rest) .zone .panel .big-msg .zone-label
+- transitionTo(fn): 250 ms fade-out, swap, 350 ms fade-in (CSS .fade-out/.fade-in)
+- Data: fetch JSON once, shuffle() the array, play rounds in order without
+  repeats; results[] stores {label, score, total, seconds, moves, helps, metric}
+- Per-round stats (time, moves, helps) reset each round; the summary sums them
+- Summary rows use textContent (never innerHTML) for data from the JSON
+- Metric = % correct per round; final score = average, clamped 0-100
+- Phases per round: intro -> study (timer, 45 s) -> play -> result -> next/done
+- Screen-specific tweaks are done with .frame:has(#btn-xxx) selectors
+
+STYLE PREFERENCES
+- Answer in English, UI text in Italian
+- Small, targeted changes; tell me exactly where each snippet goes
+- I send screenshots when something looks wrong
+- No patch-on-patch: if a fix doesn't work, ask for a screenshot or the
+  computed CSS instead of guessing
+- Words in report screens are green (correct) / red (wrong) and never reveal
+  the answers, to avoid memorisation
+- Don't use <br> for multi-line messages; use separate <p class="big-msg">
+
+GAME GENERATION DETAILS
+I will paste an image containing the instruction on how to generate the game code.
+game mechanics and behaviour are expressed in italian.
+
+I will paste: (1) the finished game template file, (2) stylesheet.css,
+(3) the description and JSON format of the new game.

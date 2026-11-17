@@ -22,7 +22,7 @@
                { "label": "Salgo ripide montagne dove nessuno si avventura"          , "column": 1 ,"position": 2 , "image": "../../images/animali/da-cortile/goat.png"},
                { "label": "Scaldo un piccolo tesoro con le mie piume"                , "column": 1 ,"position": 3 , "image": "../../images/animali/da-cortile/hen.png"},
 
-               { "label": "Ho elegnati corna a spirale sul capo"                         , "column": 2 ,"position": 1 ,"image": "../../images/animali/deserto/addax.png"},
+               { "label": "Ho eleganti corna a spirale sul capo"                         , "column": 2 ,"position": 1 ,"image": "../../images/animali/deserto/addax.png"},
                { "label": "Danzo sulla sabbia cocente sollevando due zampe alla volta"   , "column": 2 ,"position": 2 ,"image": "../../images/animali/deserto/lizard.png"},
                { "label": "Ho una coda armata di veleno che porto ricurva sulla schiena" , "column": 2 ,"position": 3 ,"image": "../../images/animali/deserto/scorpion.png" }
               ]
