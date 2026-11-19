@@ -1,0 +1,8 @@
+{
+    "title": "Griglia visuospaziale",
+    "categories": [
+        { "label": "Griglia 1", "cols": 3, "words": ["forbici", "orologio", "ombrello", "chiave", "libro", "tazza"] },
+        { "label": "Griglia 2", "cols": 3, "words": ["candela", "martello", "scarpa", "pettine", "cappello", "bottiglia"] },
+        { "label": "Griglia 3", "cols": 3, "words": ["lampada", "penna", "borsa", "forchetta", "occhiali", "palla"] }
+    ]
+}

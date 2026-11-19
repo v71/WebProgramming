@@ -1,0 +1,23 @@
+{
+    "title": "Aggiornamento",
+    "categories": [
+        {
+            "label": "Mezzi e natura",
+            "words": ["barca", "pioggia", "telefono", "viaggio"],
+            "remove": "pioggia",
+            "add": "libro"
+        },
+        {
+            "label": "Casa e orto",
+            "words": ["mela", "sedia", "fiume", "orologio"],
+            "remove": "sedia",
+            "add": "ponte"
+        },
+        {
+            "label": "Oggetti e animali",
+            "words": ["cappello", "strada", "candela", "pesce"],
+            "remove": "candela",
+            "add": "nuvola"
+        }
+    ]
+}

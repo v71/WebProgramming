@@ -1,0 +1,21 @@
+{
+    "title": "Osserva, copri e riscrivi",
+    "categories": [
+        {
+            "label": "Sequenza 1",
+            "words": ["porta", "spiaggia", "scatola", "caffè", "foresta", "quaderno", "stazione"]
+        },
+        {
+            "label": "Sequenza 2",
+            "words": ["finestra", "montagna", "orologio", "pane", "giardino", "lettera"]
+        },
+        {
+            "label": "Sequenza 3",
+            "words": ["ombrello", "fiume", "chiave", "panchina", "limone", "campana", "lampada"]
+        },
+        {
+            "label": "Sequenza 4",
+            "words": ["barca", "tavolo", "nuvola", "specchio", "tulipano", "ponte"]
+        }
+    ]
+}

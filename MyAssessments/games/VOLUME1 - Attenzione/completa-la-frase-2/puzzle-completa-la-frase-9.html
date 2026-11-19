@@ -652,7 +652,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function buildRoundSentences() {
         return shuffleArray(sentencePool);
     }
-  
+
+    function playWrongShake(el) {
+        if (!el || typeof el.animate !== 'function') return;
+
+        // Cancel a shake still in progress on this element
+        if (el._shakeAnim) el._shakeAnim.cancel();
+
+        el._shakeAnim = el.animate(
+            [
+                { transform: 'translateX(0)' },
+                { transform: 'translateX(-8px)' },
+                { transform: 'translateX(8px)' },
+                { transform: 'translateX(-8px)' },
+                { transform: 'translateX(8px)' },
+                { transform: 'translateX(-4px)' },
+                { transform: 'translateX(0)' }
+            ],
+            { duration: 450, easing: 'ease-in-out' }
+        );
+    }
+
     // ---------- Timer ----------
     function stopElapsedTimer() {
         if (elapsedTimerInterval) {
@@ -804,6 +824,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function playFinalConfetti() {
         if (typeof Confetti === 'undefined') return;
         try {
+            playSound('wow');
             await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
             await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
             await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
@@ -820,7 +841,7 @@ document.addEventListener('DOMContentLoaded', () => {
         refreshBoard();
         checkSentenceAutomatic();
     }
-
+/*
     function placeWord(card) {
         if (roundCompleted || card.classList.contains('disabled')) return;
 
@@ -855,18 +876,88 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Prima lo stato (timer, completamento, pulsante), poi l'animazione
         registerMove();
-        if (isWordCorrect) playCheckmark(slot);
+        if (isWordCorrect) {
+            
+           const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+           const isCorrect = slotsMeta.every( m => m.element.querySelector('.card')?.dataset.word === m.expected );
+
+        //    console.log("all slots filled: ",allSlotsFilled);
+        //    console.log("is correct: ",isCorrect);
+
+            if (!allSlotsFilled){            
+                playSound('correct');}
+            else{
+              console.log("all slots not filled");                 
+            }
+            playCheckmark(slot);
+        }
+        else{
+            console.log("word incorrect");
+             playSound('error');
+        }
+    }
+*/
+
+    function placeWord(card) {
+        if (roundCompleted || card.classList.contains('disabled')) return;
+
+        const emptyMeta = slotsMeta.find(m => !m.element.querySelector('.card'));
+        if (!emptyMeta) return;
+
+        const word = card.dataset.word;
+        const slot = emptyMeta.element;
+
+        setCardDisabled(card, true);
+
+        const slotCard = document.createElement('div');
+        slotCard.classList.add('card');
+        slotCard.dataset.word = word;
+        slotCard.textContent = word;
+        slotCard.sourceCard = card;
+        slotCard.setAttribute('role', 'button');
+        slotCard.tabIndex = 0;
+        slotCard.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                removeFromSlot(slot);
+            }
+        });
+
+        slot.appendChild(slotCard);
+        slot.classList.add('filled');
+
+        const isWordCorrect = word === emptyMeta.expected;
+        slotCard.classList.add(isWordCorrect ? 'correct' : 'wrong');
+
+        registerMove();
+
+        if (isWordCorrect) {
+            const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+            const isCorrect = slotsMeta.every( m => m.element.querySelector('.card')?.dataset.word === m.expected );
+            if (!allSlotsFilled) playSound('correct');
+            if (!allSlotsFilled){            
+                playSound('correct');}
+            else{
+                if (isCorrect){
+                    playSound('next_round');
+                }
+            }
+            playCheckmark(slot);
+        } 
+        else {
+            playWrongShake(slot);
+            playSound('error');
+        }
     }
 
     function removeFromSlot(slot) {
         if (roundCompleted) return;
         const slotCard = slot.querySelector('.card');
         if (!slotCard) return;
-
         if (slotCard.sourceCard) setCardDisabled(slotCard.sourceCard, false);
         slot.innerHTML = '';
-        slot.classList.remove('filled');
-
+        slot.classList.remove('filled', 'shake');
+        playSound('click');
         registerMove(); // checkSentenceAutomatic ripristina errori e pulsante
     }
 
@@ -876,7 +967,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
         const isCorrect = allSlotsFilled &&
             slotsMeta.every(m => m.element.querySelector('.card').dataset.word === m.expected);
-
         if (isCorrect) {
             completeRound();
         } else if (allSlotsFilled) {
@@ -987,6 +1077,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function showReveal() {
         if (buttonMode !== 'help' || isRevealing || roundCompleted) return;
         isRevealing = true;
+
+         playSound('help'); 
 
         revealCount++;
         updateRevealsDisplay();

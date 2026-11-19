@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Griglia visuospaziale</title>
+
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    <link href="../stylesheet.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        /* =========================================================
+           TEMPLATE: parte comune a tutti i giochi (non toccare)
+           ========================================================= */
+        :root {
+            --gap: clamp(6px, 1.7vh, 16px);
+            --maxw: 1100px;
+            --fs-word: clamp(.8rem, 2.2vh, 1.25rem);
+            --fs-ui: clamp(.75rem, 1.85vh, 1.05rem);
+        }
+
+        #game-area {
+            flex: 1 1 0; min-height: 0; max-height: 380px; width: 100%; max-width: var(--maxw);
+            margin: 16px 0 10px 0; padding: clamp(8px, 2.2vh, 22px);
+            border-radius: 20px; background: var(--game-area-background);
+            border: 2px solid var(--border); box-shadow: var(--shadow-md); overflow: hidden;
+        }
+        .frame { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; gap: clamp(5px, 1.2vh, 12px); }
+        .toprow, .bottomrow { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .toprow { height: clamp(20px, 3.4vh, 32px); }
+        .bottomrow { height: clamp(30px, 4.8vh, 46px); }
+        .main { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--gap); text-align: center; }
+        .main:has(> p + p) { gap: 2px; }
+
+        .big-msg {
+            font-size: 1.5rem; font-weight: 400; margin: 0; line-height: 1.4;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+        .timer {
+            font-size: var(--fs-word); line-height: 1; font-weight: 400; color: var(--accent);
+            font-variant-numeric: tabular-nums; min-width: 3.2ch; text-align: right;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+        .timer-bar { flex: 1; max-width: 500px; height: clamp(8px, 1.3vh, 12px); background: var(--body-background); border-radius: 99px; overflow: hidden; border: 2px solid var(--border); }
+        .timer-bar > div { height: 100%; width: 100%; background: var(--accent); }
+
+        button.cool-btn:disabled, button.cool-btn[disabled] {
+            opacity: .5 !important; cursor: not-allowed !important; transform: none !important;
+            box-shadow: none !important; pointer-events: none !important;
+        }
+        .cool-btn-2 {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px 28px; font-size: 1.5rem; font-weight: 400; color: var(--text); background-color: #4f46e5;
+            border: 2px solid var(--border); border-radius: 99px; cursor: pointer; box-shadow: var(--shadow-lg);
+            transition: all .35s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+        #reveal-btn { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; margin-bottom: 0 !important; }
+        #reveal-btn:disabled { opacity: .4; cursor: not-allowed; }
+        #reveal-btn.held {
+            background: var(--grid-btn-selected) !important; color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important; transform: none !important;
+            box-shadow: var(--shadow-sm) !important; opacity: 1 !important; cursor: default !important;
+        }
+        #reveal-btn .fa {
+            font-size: 25px; line-height: 1; color: #fff; --w: 1px;
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000, 0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000, calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000, calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000, var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important; filter: none !important;
+        }
+        #reveal-btn .fa, #reveal-btn:hover .fa, #reveal-btn:focus .fa, #reveal-btn:active .fa, #reveal-btn:hover i {
+            transform: none !important; animation: none !important; transition: none !important;
+        }
+        #action-controls { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+
+        .intro-start { margin-top: 24px; }
+        .frame:has(#btn-start) .toprow, .frame:has(#btn-start) .bottomrow { display: none; }
+
+        .frame.fade-out { animation: frameOut .25s ease forwards; pointer-events: none; }
+        .frame.fade-in { animation: frameIn .35s ease both; }
+        @keyframes frameOut { to { opacity: 0; transform: translateY(6px); } }
+        @keyframes frameIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .frame.fade-out, .frame.fade-in { animation: none; } }
+        @media (max-width: 980px) {
+            #instruction-banner { height: calc(var(--fs-ui) * 3.9 + 12px); padding: 0 16px; border-radius: 18px; }
+        }
+
+        /* =========================================================
+           BLOCCO SPECIFICO DEL GIOCO: griglia visuospaziale
+           ========================================================= */
+        .pair { display: flex; align-items: stretch; justify-content: center; gap: clamp(12px, 3vw, 40px); width: 100%; height: 100%; min-height: 0; }
+        .zone { flex: 1 1 0; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: clamp(4px, 1vh, 10px); }
+        .zone-label {
+            flex: 0 0 auto; margin: 0; text-align: center; font-size: 1.5rem; font-weight: 400; color: var(--text);
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        .grid {
+            flex: 1 1 0; min-height: 0; width: 100%; overflow-y: auto; padding: 3px;
+            display: grid; grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+            grid-auto-rows: minmax(40px, 1fr); gap: clamp(6px, 1.4vh, 12px);
+        }
+        .grid.single { max-width: 640px; }
+
+        .cell {
+            min-height: 40px; max-height: 84px; display: flex; align-items: center; justify-content: center;
+            padding: 4px 6px; font-size: clamp(.9rem, 2.3vh, 1.25rem); text-align: center; overflow-wrap: anywhere;
+            color: var(--text); background: var(--summary-background);
+            border: 2px solid var(--border); border-radius: 14px;
+        }
+        .cell.empty, .cell.covered { background: transparent; border-style: dashed; border-color: var(--text); color: var(--text); }
+        .cell.covered .fa { font-size: 1.2em; }
+
+        .ans {
+            font: inherit; width: 100%; min-width: 0; color: var(--text); text-align: center;
+            background: transparent; border: 0; outline: none; padding: 4px 0;
+        }
+        label.cell { cursor: text; }
+        label.cell:focus-within { border-color: var(--text); }
+        .cell.locked { opacity: .95; border-color: var(--text); cursor: default; }
+        .cell.locked .ans { cursor: default; }
+
+        /* verde = parola giusta nella casella giusta, rosso = sbagliata (la risposta esatta non viene mai mostrata) */
+        .cell.ok { background: var(--grid-btn-selected-hovered); border-color: var(--text); opacity: 1; }
+        .cell.ko, .cell.wrong { background: var(--grid-btn-wrong); border-color: var(--grid-btn-wrong-border-color); opacity: 1; }
+        .cell.wrong .ans { color: var(--grid-btn-wrong-text); }
+        .cell.ko { color: var(--grid-btn-wrong-text); }
+        .cell.shake { animation: buttonErrorShake .45s ease; }
+
+        @media (max-width: 700px) {
+            #game-area { padding: 8px; border-radius: 16px; }
+            .pair { gap: 8px; }
+            .cell { padding: 2px 3px; font-size: clamp(.75rem, 2.2vh, 1rem); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="game-title">Griglia visuospaziale</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">-</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <div id="instruction-banner" aria-live="polite">
+        Premi Inizia: osserverai dove si trova ogni oggetto nella griglia, poi la riscriverai a memoria.
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn-2" disabled>
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Tieni premuto per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <div id="game-area"></div>
+
+    <h2 id="progress-title">Progresso</h2>
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr><th>Round</th><th>Tempo</th><th>Mosse</th><th>Aiuti</th><th>Metric</th></tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+    <script>
+    /* Formato JSON: ogni elemento di "categories" è un round = una griglia di parole.
+       {
+         "title": "...",
+         "categories": [
+           { "label": "Griglia 1", "cols": 3, "words": ["forbici", "orologio", "ombrello", "chiave", "libro", "tazza"] }
+         ]
+       }
+       "words": le parole in ordine di lettura (riga per riga, da sinistra a destra, dall'alto in basso).
+       "cols": numero di colonne (facoltativo, default 3, da 1 a 6); le righe si calcolano da sole. */
+
+    const DATA_URL = 'set-1.json';
+    const STUDY_SECONDS = 45;
+
+    let rounds = [], roundIndex = 0, results = [], R = null;
+    let moves = 0, helps = 0, seconds = 0;
+    let clock = null, studyTimer = null;
+    let answers = [], committed = [];
+    let helpEnabled = false, isGameReady = false, currentButtonMode = 'help';
+
+    const $ = id => document.getElementById(id);
+    const area = $('game-area');
+    const revealBtn = $('reveal-btn');
+    const btnIcon = $('btn-icon');
+    const gameTitle = $('game-title');
+    const gameStats = $('game-stats');
+    const gameArea = $('game-area');
+    const instructionBanner = $('instruction-banner');
+    const actionControls = $('action-controls');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = $('progress-title');
+
+    /* =========================================================
+       TEMPLATE: scheletro comune (non toccare)
+       ========================================================= */
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonState(mode) {
+        currentButtonMode = mode;
+        const states = {
+            help: { icon: 'fa-lightbulb-o', text: 'Tieni premuto per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(states[mode].icon);
+        const textEl = revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = states[mode].text;
+    }
+
+    function transitionTo(next) {
+        const old = area.querySelector('.frame');
+        if (!old) { next(); return; }
+        old.classList.add('fade-out');
+        setTimeout(() => {
+            next();
+            const fresh = area.querySelector('.frame');
+            if (fresh) fresh.classList.add('fade-in');
+        }, 250);
+    }
+
+    // minuscolo, senza accenti né punteggiatura: serve a confrontare le risposte
+    function norm(s) {
+        return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+            .replace(/[^a-z0-9\s]/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+    function esc(s) {
+        return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+    function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+    function startClock() {
+        if (clock) return;
+        clock = setInterval(() => { seconds++; $('time-value').textContent = seconds + 's'; }, 1000);
+    }
+    function stopClock() { clearInterval(clock); clock = null; }
+    function updateStats() { $('moves-value').textContent = moves; $('reveals-value').textContent = helps; }
+    function resetRoundStats() { moves = 0; helps = 0; seconds = 0; $('time-value').textContent = '0s'; updateStats(); }
+    function setProgress(pct) { $('progress-bar-fill').style.width = pct + '%'; }
+    function banner(txt) { $('instruction-banner').textContent = txt; }
+    function enableHelp(on) { helpEnabled = on; revealBtn.disabled = !on; }
+
+    function frame({ top = '', a = '', b = '', main = null, bottom = '' }) {
+        area.innerHTML = `<div class="frame">
+            <div class="toprow">${top}</div>
+            ${main !== null ? `<div class="main">${main}</div>` : a + b}
+            <div class="bottomrow">${bottom}</div>
+        </div>`;
+    }
+
+    /* =========================================================
+       BLOCCO SPECIFICO DEL GIOCO: griglia visuospaziale
+       ========================================================= */
+    const grid = (cells, id = '', cls = '') =>
+        `<div class="grid ${cls}" ${id ? `id="${id}"` : ''} style="--cols:${R.cols}">${cells}</div>`;
+
+    // griglia modello: visibile in studio e durante l'aiuto (verde)
+    const modelCells = (help = false) => R.words.map(w => `<div class="cell${help ? ' ok' : ''}">${esc(w)}</div>`).join('');
+    // griglia modello coperta
+    const coveredCells = () => R.words.map(() => '<div class="cell covered"><i class="fa fa-question"></i></div>').join('');
+    // caselle vuote non modificabili (fase di studio)
+    const emptyCells = () => R.words.map(() => '<div class="cell empty"></div>').join('');
+    // caselle di risposta: le parole confermate sono bloccate e non si possono più cambiare
+    const inputCells = () => R.words.map((_, i) => {
+        const done = committed[i];
+        const state = done ? (norm(answers[i]) === norm(R.words[i]) ? ' ok' : ' wrong') : '';
+        return `<label class="cell${done ? ' locked' : ''}${state}">
+            <input class="ans" type="text" data-i="${i}" value="${esc(answers[i])}" ${done ? 'readonly tabindex="-1"' : ''}
+                   autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Casella ${i + 1}"></label>`;
+    }).join('');
+
+    const pairHtml = (leftCells, rightCells, leftId = '') => `<div class="pair">
+        <div class="zone"><p class="zone-label">Modello · Studia</p>${grid(leftCells, leftId)}</div>
+        <div class="zone"><p class="zone-label">Ricostruzione · Scrivi</p>${grid(rightCells, 'answer-grid')}</div>
+    </div>`;
+
+    /* ---------- FASE 0: intro ---------- */
+    function showIntro() {
+        setButtonState('help');
+        enableHelp(false);
+        $('round-value').textContent = `${roundIndex + 1}/${rounds.length}`;
+        banner(`Round ${roundIndex + 1} di ${rounds.length}. Premi Inizia: osserverai la griglia per ${STUDY_SECONDS} secondi.`);
+        frame({
+            main: `<p class="big-msg">Osserverai dove si trova ogni oggetto nella griglia per ${STUDY_SECONDS} secondi.</p>
+                <p class="big-msg">Poi il modello verrà coperto e dovrai scrivere il nome dell'oggetto in ogni posizione.</p>
+                <p class="big-msg">Il tempo parte quando premi il pulsante.</p>
+                <button id="btn-start" class="cool-btn intro-start">Inizia</button>`
+        });
+        $('btn-start').onclick = () => { startClock(); transitionTo(startStudy); };
+    }
+
+    /* ---------- FASE 1: osservazione ---------- */
+    function startStudy() {
+        let left = STUDY_SECONDS;
+        enableHelp(false);
+        banner('Osserva la griglia: ricorda dove si trova ogni oggetto. Tra poco il modello sarà coperto.');
+        frame({
+            top: `<span class="timer" id="study-left">${left}s</span><div class="timer-bar"><div id="study-bar"></div></div>`,
+            main: pairHtml(modelCells(), emptyCells()),
+            bottom: '<button id="btn-done" class="cool-btn">Ho finito di osservare</button>'
+        });
+        const stop = () => { clearInterval(studyTimer); transitionTo(startPlay); };
+        $('btn-done').onclick = stop;
+        const bar = $('study-bar');
+        bar.style.width = '100%';
+        bar.getBoundingClientRect();
+        bar.style.transition = `width ${STUDY_SECONDS}s linear`;
+        requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = '0%'; }));
+        studyTimer = setInterval(() => {
+            left--;
+            const el = $('study-left'); if (el) el.textContent = left + 's';
+            if (left <= 0) stop();
+        }, 1000);
+    }
+
+    /* ---------- FASE 2: riscrittura ---------- */
+    function startPlay() {
+        answers = R.words.map(() => '');
+        committed = R.words.map(() => false);
+        banner('Scrivi ogni oggetto nella sua posizione e premi Invio: una parola confermata non si può più cambiare.');
+        renderPlay();
+        enableHelp(true);
+    }
+
+    function refreshPlay() {
+        const left = committed.filter(c => !c).length;
+        const msg = $('left-msg');
+        if (msg) msg.textContent = left === 0
+            ? 'Tutte le caselle sono scritte: premi Verifica'
+            : left === 1 ? 'Manca ancora 1 casella' : `Mancano ancora ${left} caselle`;
+        const chk = $('btn-check');
+        if (chk) chk.disabled = left > 0;
+    }
+
+    // conferma la casella i: da quel momento è bloccata; una conferma = una mossa
+    function commit(i) {
+        const inp = area.querySelector(`.ans[data-i="${i}"]`);
+        if (!inp || committed[i]) return false;
+        const v = inp.value.trim();
+        if (!v) return false;
+        answers[i] = v;
+        committed[i] = true;
+        inp.readOnly = true;
+        inp.tabIndex = -1;
+        const box = inp.closest('.cell');
+        box.classList.add('locked');
+        if (norm(v) === norm(R.words[i])) box.classList.add('ok');
+        else {
+            box.classList.add('wrong', 'shake');
+            setTimeout(() => box.classList.remove('shake'), 450);
+        }
+        moves++; updateStats();
+        refreshPlay();
+        return true;
+    }
+
+    function renderPlay() {
+        frame({
+            top: `<span class="big-msg" id="left-msg"></span>`,
+            main: pairHtml(coveredCells(), inputCells(), 'model-grid'),
+            bottom: `<button id="btn-check" class="cool-btn" disabled>Verifica</button>`
+        });
+        const fr = area.querySelector('.frame');
+        fr.addEventListener('input', e => {
+            const inp = e.target.closest('.ans');
+            if (inp && !committed[+inp.dataset.i]) answers[+inp.dataset.i] = inp.value;
+        });
+        // uscendo dalla casella la parola viene confermata
+        fr.addEventListener('change', e => {
+            const inp = e.target.closest('.ans');
+            if (inp) commit(+inp.dataset.i);
+        });
+        // Invio: conferma e passa alla prossima casella libera; a fine griglia prova a verificare
+        fr.addEventListener('keydown', e => {
+            const inp = e.target.closest('.ans');
+            if (!inp || e.key !== 'Enter') return;
+            e.preventDefault();
+            const i = +inp.dataset.i;
+            commit(i);
+            if (!committed[i]) return;
+            const all = [...fr.querySelectorAll('.ans')];
+            const next = all.find(el => !committed[+el.dataset.i] && +el.dataset.i > i)
+                      || all.find(el => !committed[+el.dataset.i]);
+            if (next) next.focus();
+            else { inp.blur(); if (!$('btn-check').disabled) $('btn-check').click(); }
+        });
+        $('btn-check').onclick = () => transitionTo(showResult);
+        refreshPlay();
+    }
+
+    /* Aiuto: tenendo premuto si scopre la griglia modello; le caselle di risposta non vengono toccate */
+    (function setupHelp() {
+        const btn = revealBtn;
+        let held = false;
+        const isHelp = () => currentButtonMode === 'help';
+
+        const show = () => {
+            if (held || !helpEnabled || !isHelp()) return;
+            const model = $('model-grid');
+            if (!model) return;
+            held = true; helps++; updateStats();
+            btn.classList.add('held');
+            model.innerHTML = modelCells(true);
+        };
+        const hide = () => {
+            if (!held) return;
+            held = false;
+            btn.classList.remove('held');
+            const model = $('model-grid');
+            if (model) model.innerHTML = coveredCells();
+        };
+
+        btn.addEventListener('pointerdown', e => {
+            if (!isHelp()) return;
+            e.preventDefault();
+            try { btn.setPointerCapture(e.pointerId); } catch (_) {}
+            show();
+        });
+        ['pointerup', 'pointercancel', 'lostpointercapture', 'pointerleave', 'blur'].forEach(ev => btn.addEventListener(ev, hide));
+        btn.addEventListener('keydown', e => {
+            if (!isHelp()) return;
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); show(); }
+        });
+        btn.addEventListener('keyup', e => { if (isHelp() && (e.key === ' ' || e.key === 'Enter')) hide(); });
+        btn.addEventListener('contextmenu', e => e.preventDefault());
+
+        btn.addEventListener('click', () => {
+            if (currentButtonMode === 'next') { btn.disabled = true; transitionTo(nextRound); }
+            else if (currentButtonMode === 'done') { btn.disabled = true; transitionTo(showSummary); }
+        });
+    })();
+
+    /* ---------- FASE 3: risultato ---------- */
+    function showResult() {
+        stopClock();
+        let score = 0;
+        // verde = parola giusta nella casella giusta, rosso = sbagliata: si mostra la parola scritta, mai quella esatta
+        const cells = R.words.map((w, i) => {
+            const good = norm(answers[i]) === norm(w);
+            if (good) score++;
+            return `<div class="cell ${good ? 'ok' : 'ko'}">${esc(answers[i].trim() || '—')}</div>`;
+        }).join('');
+
+        const total = R.words.length;
+
+        results.push({
+            label: R.label || `Round ${roundIndex + 1}`,
+            score, total, seconds, moves, helps,
+            metric: total ? score / total * 100 : 0
+        });
+        setProgress(results.length / rounds.length * 100);
+
+        const isLast = roundIndex >= rounds.length - 1;
+        setButtonState(isLast ? 'done' : 'next');
+        helpEnabled = false;
+        revealBtn.disabled = false;
+
+        banner('Ecco il risultato: verde = oggetto giusto nella posizione giusta, rosso = sbagliato.');
+        const msg = score === total ? 'Perfetto!' : score >= total * 0.6 ? 'Bel lavoro!' : 'Buon tentativo!';
+        frame({
+            top: `<span class="big-msg">Risultato: ${score} / ${total} · ${msg}</span>`,
+            main: grid(cells, '', 'single')
+        });
+    }
+
+    /* =========================================================
+       TEMPLATE: round successivo, riepilogo, caricamento, avvio
+       ========================================================= */
+    function nextRound() {
+        roundIndex++;
+        R = rounds[roundIndex];
+        resetRoundStats();
+        showIntro();
+    }
+
+    function showSummary() {
+        enableHelp(false);
+        stopClock();
+        [gameTitle, gameStats, instructionBanner, actionControls, progressBarTitle, progressBar, gameArea]
+            .forEach(el => el.style.display = 'none');
+
+        const tbody = $('summary-tbody');
+        tbody.innerHTML = '';
+        results.forEach((res, idx) => {
+            const row = document.createElement('tr');
+            [`${idx + 1} · ${res.label}`, res.seconds + 's', res.moves, res.helps, res.metric.toFixed(2)].forEach((value, i) => {
+                const td = document.createElement('td');
+                td.textContent = value;
+                if (i === 4) td.style.fontWeight = '700';
+                row.appendChild(td);
+            });
+            tbody.appendChild(row);
+        });
+
+        const sum = k => results.reduce((a, r) => a + r[k], 0);
+        const averageMetric = results.length ? sum('metric') / results.length : 0;
+        const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
+
+        $('summary-totals').innerHTML = `
+            <div>Tempo Totale: <strong>${sum('seconds')}s</strong> | Mosse Totali: <strong>${sum('moves')}</strong> | Aiuti Totali: <strong>${sum('helps')}</strong></div>
+            <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+            <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>`;
+
+        const screen = $('summary-screen');
+        screen.style.display = 'block';
+        screen.classList.add('show');
+    }
+
+    // un round valido ha almeno 2 parole (stringhe non vuote) e, se presente, "cols" intero da 1 a 6
+    const validRound = r => r && Array.isArray(r.words) && r.words.length >= 2 &&
+        r.words.every(w => typeof w === 'string' && w.trim()) &&
+        (r.cols === undefined || (Number.isInteger(r.cols) && r.cols >= 1 && r.cols <= 6));
+
+    async function loadRound() {
+        isGameReady = false;
+        enableHelp(false);
+        frame({ main: '<p class="big-msg">Caricamento…</p>' });
+        try {
+            const res = await fetch(DATA_URL, { cache: 'no-store' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            const all = Array.isArray(data.categories) ? data.categories.filter(validRound) : [];
+            if (!all.length) throw new Error('JSON vuoto o non valido');
+            if (data.title) { gameTitle.textContent = data.title; document.title = data.title; }
+            rounds = shuffle(all.map(r => ({ ...r, cols: r.cols || 3 })));
+            roundIndex = 0;
+            results = [];
+            R = rounds[0];
+            resetRoundStats();
+            setProgress(0);
+            isGameReady = true;
+            showIntro();
+        } catch (err) {
+            frame({ main: `<p class="big-msg">Impossibile caricare gli esercizi.</p>
+                <p class="big-msg">Controlla che il file <strong>${DATA_URL}</strong> sia nella stessa cartella e che la pagina sia aperta da un server (non da file://).</p>` });
+        }
+    }
+
+    (async function initGame() {
+        await loadRound();
+        document.body.classList.add('loaded');
+    })();
+    </script>
+</body>
+</html>
