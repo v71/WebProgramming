@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memoria della fonte</title>
+
+    <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <!-- Main CSS File -->
+    <link href="../stylesheet.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        :root {
+            --word: #7931b4;
+            --gap: clamp(6px, 1.7vh, 16px);
+            --maxw: 1100px;
+            --fs-word: clamp(.8rem, 2.2vh, 1.25rem);
+            --fs-ui: clamp(.75rem, 1.85vh, 1.05rem);
+        }
+
+        h1 {
+            margin: 0 0 10px; font-size: 2.3rem; font-weight: 800; letter-spacing: -0.5px;
+            color: var(--accent); text-align: center;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        /* UI centrata in verticale (justify-content: center è nello stylesheet condiviso); padding simmetrico */
+        body { padding-block: 20px; }
+
+        #game-area {
+            flex: 1 1 0; min-height: 450px; max-height: 450px; width: 100%; max-width: var(--maxw);
+            margin: 16px 0 10px 0; padding: clamp(8px, 2.2vh, 22px); border-radius: 20px;
+            background: var(--game-area-background); border: 2px solid var(--border);
+            box-shadow: var(--shadow-md); overflow: hidden;
+        }
+
+        .frame { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; gap: clamp(5px, 1.2vh, 12px); }
+        .toprow, .bottomrow { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .toprow { height: clamp(20px, 3.4vh, 32px); }
+        .bottomrow { height: clamp(30px, 4.8vh, 46px); }
+        .main { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--gap); text-align: center; }
+        .main:has(> p + p) { gap: 2px; }
+
+        .big-msg {
+            font-size: 1.8rem; font-weight: 400; margin: 0; line-height: 1.4;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+        /*
+        .zone-label {
+            margin: 0; font-size: 1.5rem; font-weight: 400; color: var(--accent); text-align: center;
+            line-height: 1.25; flex: 0 0 auto;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+        */
+
+        .zone-label {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--accent);
+            text-align: center;
+            line-height: 1.25;
+            flex: 0 0 auto;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        /* timer (riga alta, fase di studio) */
+        .timer {
+            font-size: var(--fs-word); line-height: 1; font-weight: 400; color: var(--accent);
+            font-variant-numeric: tabular-nums; min-width: 3.2ch; text-align: right;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+        .timer-bar { flex: 1; max-width: 500px; height: clamp(8px, 1.3vh, 12px); background: var(--body-background); border-radius: 99px; overflow: hidden; border: 2px solid var(--border); }
+        .timer-bar > div { height: 100%; width: 100%; background: var(--accent); }
+
+        /* blocco centrale */
+        .board {
+            display: flex; flex-direction: column; gap: clamp(6px, 1.4vh, 14px);
+            width: 100%; max-width: 760px; max-height: 100%; overflow-y: auto; padding-inline: 8px;
+            scrollbar-width: thin; scrollbar-color: var(--accent) transparent;
+        }
+
+        /* righe: frasi (studio) e coppie oggetto > risposta (gioco / risultato) */
+        .sent, .item, .slot {
+            display: flex; align-items: center; min-height: clamp(34px, 6vh, 50px); padding: 4px 14px;
+            font-size: 1.3rem; color: #fff; border: 2px solid var(--border); border-radius: 12px;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        .sent { background: var(--word); justify-content: center; text-align: center; }
+        .sent.ok { background: var(--grid-btn-selected-hovered); border-color: var(--text); }
+        .item { background: var(--summary-background); justify-content: flex-start; }
+        .row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: 12px; }
+        .arrow { color: var(--accent); font-size: 1.5rem; font-weight: 700; }
+        .slot { justify-content: center; text-align: center; background: var(--word); }
+        .slot .w { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .slot.play { background: var(--summary-background); color: var(--text); padding: 4px 8px; text-shadow: none; }
+        .slot.play:focus-within { border-color: var(--accent); }
+        .ans {
+            font: inherit; width: 100%; min-width: 0; color: var(--text); background: transparent; border: 0;
+            border-bottom: 2px solid var(--accent); border-radius: 0; padding: 2px 4px; text-align: center; outline: none;
+        }
+        .ans:focus { border-bottom-color: var(--text); }
+        .slot.ok { background: var(--grid-btn-selected-hovered); border-color: var(--text); }
+        .slot.ko { background: var(--grid-btn-wrong); color: var(--text); border-color: var(--grid-btn-wrong-border-color); }
+
+        button.cool-btn:disabled, button.cool-btn[disabled] {
+            opacity: .5 !important; cursor: not-allowed !important; transform: none !important;
+            box-shadow: none !important; pointer-events: none !important;
+        }
+
+        /* pulsante Aiuto / Prossimo round / Fatto */
+        .cool-btn-2 {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px 28px; font-size: 1.5rem; font-weight: 400; color: var(--text); background-color: #4f46e5;
+            border: 2px solid var(--border); border-radius: 99px; cursor: pointer; box-shadow: var(--shadow-lg);
+            transition: all .35s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+        #reveal-btn { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; margin-bottom: 0 !important; }
+        #reveal-btn:disabled { opacity: .4; cursor: not-allowed; }
+        #reveal-btn.held {
+            background: var(--grid-btn-selected) !important; color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important; transform: none !important;
+            box-shadow: var(--shadow-sm) !important; opacity: 1 !important; cursor: default !important;
+        }
+        #reveal-btn .fa {
+            font-size: 25px; line-height: 1; color: #fff; --w: 1px;
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000, 0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000, calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000, calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000, var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important; filter: none !important;
+        }
+        #reveal-btn .fa, #reveal-btn:hover .fa, #reveal-btn:focus .fa, #reveal-btn:active .fa, #reveal-btn:hover i {
+            transform: none !important; animation: none !important; transition: none !important;
+        }
+        #action-controls { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+
+        /* posizioni specifiche per schermata */
+        .frame:has(#btn-start) .toprow,
+        .frame:has(#btn-start) .bottomrow { display: none; }
+        .intro-start { margin-top: 24px; }
+        .frame:has(#btn-check) .bottomrow { position: relative; top: 6px; }
+
+        /* transizione tra le schermate */
+        .frame.fade-out { animation: frameOut .25s ease forwards; pointer-events: none; }
+        .frame.fade-in { animation: frameIn .35s ease both; }
+        @keyframes frameOut { to { opacity: 0; transform: translateY(6px); } }
+        @keyframes frameIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .frame.fade-out, .frame.fade-in { animation: none; } }
+
+        @media (max-width: 980px) {
+            #instruction-banner { height: calc(var(--fs-ui) * 3.9 + 12px); padding: 0 16px; border-radius: 18px; }
+        }
+        @media (max-width: 700px) {
+            #game-area { padding: 8px; border-radius: 16px; }
+            .sent, .item, .slot { font-size: 1.05rem; padding: 4px 8px; }
+            .row { gap: 6px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1 id="game-title">Memoria della fonte</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">-</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <div id="instruction-banner" aria-live="polite">
+        Premi Inizia: vedrai le frasi per un tempo limitato. Prova a memorizzarle.
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn-2" disabled>
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Tieni premuto per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <div id="game-area"></div>
+
+    <h2 id="progress-title">Progresso</h2>
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr><th>Round</th><th>Tempo</th><th>Mosse</th><th>Aiuti</th><th>Metric</th></tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+    <script>
+
+    /* I round sono nel file esterno JSON: vengono mescolati e giocati uno dopo l'altro, senza ripetizioni.
+       Formato: { "title": "...", "categories": [ { "label": "...", "verb": "ha portato" (facoltativo),
+                  "pairs": [ { "who": "Alina", "what": "la torta" }, ... ] }, ... ] }
+       Frase mostrata: "<who> <verb> <what>."  ·  Domanda: "<What>" > chi? (risposta attesa: who) */
+
+    const DATA_URL = 'set-1.json';
+    const STUDY_SECONDS = 45;
+
+    let rounds = [];               // tutti i round, in ordine casuale
+    let roundIndex = 0;
+    let results = [];
+    let R = null;                  // round corrente
+    let N = 0;                     // numero di coppie
+    let order = [];                // ordine (mescolato) in cui compaiono gli oggetti nelle domande
+    let moves = 0, helps = 0, seconds = 0;
+    let clock = null, studyTimer = null;
+    let answers = [];              // una risposta per riga di domanda
+    let committed = [];            // ultima risposta già contata come mossa
+    let helpEnabled = false;
+    let isGameReady = false;
+    let currentButtonMode = 'help';
+
+    const $ = id => document.getElementById(id);
+    const area = $('game-area');
+    const revealBtn = $('reveal-btn');
+    const btnIcon = $('btn-icon');
+
+    const gameTitle = $('game-title');
+    const gameStats = $('game-stats');
+    const gameArea = $('game-area');
+    const instructionBanner = $('instruction-banner');
+    const actionControls = $('action-controls');
+    const progressBarFill = $('progress-bar-fill');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = $('progress-title');
+
+    /* =========================================================
+       PULSANTE: ICONA E TESTO (help / next / done)
+       ========================================================= */
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+
+    function setButtonState(mode) {
+        currentButtonMode = mode;
+        const states = {
+            help: { icon: 'fa-lightbulb-o', text: 'Tieni premuto per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(states[mode].icon);
+        const textEl = revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = states[mode].text;
+    }
+
+    /* Dissolvenza: esce la schermata attuale, poi appare la successiva */
+    function transitionTo(next) {
+        const old = area.querySelector('.frame');
+        if (!old) { next(); return; }
+        old.classList.add('fade-out');
+        setTimeout(() => {
+            next();
+            const fresh = area.querySelector('.frame');
+            if (fresh) fresh.classList.add('fade-in');
+        }, 250);
+    }
+
+    /* =========================================================
+       UTILITÀ
+       ========================================================= */
+    function norm(s) {
+        return String(s).trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+    }
+
+    // le parole arrivano dal JSON e dalle risposte: vanno protette prima di finire in innerHTML
+    function esc(s) {
+        return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function startClock() {
+        if (clock) return;
+        clock = setInterval(() => { seconds++; $('time-value').textContent = seconds + 's'; }, 1000);
+    }
+    function stopClock() { clearInterval(clock); clock = null; }
+
+    function updateStats() {
+        $('moves-value').textContent = moves;
+        $('reveals-value').textContent = helps;
+    }
+
+    function resetRoundStats() {
+        moves = 0; helps = 0; seconds = 0;
+        $('time-value').textContent = '0s';
+        updateStats();
+    }
+
+    function setProgress(pct) { progressBarFill.style.width = pct + '%'; }
+    function banner(txt) { instructionBanner.textContent = txt; }
+
+    function enableHelp(on) {
+        helpEnabled = on;
+        revealBtn.disabled = !on;
+    }
+
+    /* Scheletro unico: riga alta / zona A / zona B / riga bassa (oppure un solo blocco "main") */
+    function frame({ top = '', a = '', b = '', main = null, bottom = '' }) {
+        area.innerHTML = `<div class="frame">
+            <div class="toprow">${top}</div>
+            ${main !== null ? `<div class="main">${main}</div>` : a + b}
+            <div class="bottomrow">${bottom}</div>
+        </div>`;
+    }
+
+    /* Imposta il round corrente: frasi e ordine mescolato delle domande */
+    function setRound(r) {
+        R = r;
+        N = R.pairs.length;
+        order = R.pairs.map((_, i) => i);
+        // l'ordine delle domande deve essere diverso da quello delle frasi
+        for (let k = 0; k < 20; k++) {
+            shuffle(order);
+            if (order.some((v, i) => v !== i)) break;
+        }
+    }
+
+    const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+    const sentence = p => `${p.who} ${R.verb || 'ha portato'} ${p.what}.`;
+    const sentencesHtml = (cls = '') => R.pairs.map(p => `<div class="sent ${cls}">${esc(sentence(p))}</div>`).join('');
+
+    /* ---------- FASE 0: intro ---------- */
+    function showIntro() {
+        setButtonState('help');
+        enableHelp(false);
+        $('round-value').textContent = `${roundIndex + 1}/${rounds.length}`;
+        banner(`Round ${roundIndex + 1} di ${rounds.length}. Premi Inizia: vedrai le frasi per ${STUDY_SECONDS} secondi.`);
+        frame({
+            main: `<p class="big-msg">Leggi ${N} frasi per ${STUDY_SECONDS} secondi.</p>
+                <p class="big-msg">Poi le frasi verranno coperte.</p>
+                <p class="big-msg">Dovrai scrivere chi ha portato ogni cosa.</p>
+                <button id="btn-start" class="cool-btn intro-start">Inizia</button>`
+        });
+        $('btn-start').onclick = () => { startClock(); transitionTo(startStudy); };
+    }
+
+    /* ---------- FASE 1: studio delle frasi ---------- */
+    function startStudy() {
+        let left = STUDY_SECONDS;
+        enableHelp(false);
+        banner('Leggi le frasi: tra poco verranno coperte.');
+        frame({
+            top: `<span class="timer" id="study-left">${left}s</span><div class="timer-bar"><div id="study-bar"></div></div>`,
+            main: `<div class="board"><p class="zone-label">Leggi le frasi</p>${sentencesHtml()}</div>`,
+            bottom: '<button id="btn-done" class="cool-btn">Ho finito di studiare</button>'
+        });
+        const stop = () => { clearInterval(studyTimer); transitionTo(startPlay); };
+        $('btn-done').onclick = stop;
+        const bar = $('study-bar');
+        bar.style.width = '100%';
+        bar.getBoundingClientRect();
+        bar.style.transition = `width ${STUDY_SECONDS}s linear`;
+        requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = '0%'; }));
+        studyTimer = setInterval(() => {
+            left--;
+            const el = $('study-left'); if (el) el.textContent = left + 's';
+            if (left <= 0) stop();
+        }, 1000);
+    }
+
+    /* ---------- FASE 2: risposta scritta (frasi coperte) ---------- */
+    function startPlay() {
+        answers = Array(N).fill('');
+        committed = Array(N).fill('');
+        banner('Le frasi sono coperte: scrivi chi ha portato ogni cosa.');
+        renderPlay();
+        enableHelp(true);
+    }
+
+    const inputHtml = (i, label) =>
+        `<label class="slot play"><input class="ans" type="text" data-i="${i}" value="${esc(answers[i])}"
+            autocomplete="off" autocapitalize="words" spellcheck="false" aria-label="${esc(label)}"></label>`;
+
+    // peek = true (aiuto): al posto dei campi compaiono, in verde, i nomi corretti
+    const boardPlayHtml = (peek = false) =>
+        `<p class="zone-label">Dopo aver coperto, scrivi chi ha portato ogni cosa</p>` +
+        order.map((k, i) => {
+            const label = cap(R.pairs[k].what);
+            const right = peek
+                ? `<div class="slot ok"><span class="w">${esc(R.pairs[k].who)}</span></div>`
+                : inputHtml(i, label);
+            return `<div class="row"><div class="item">${esc(label)}</div><span class="arrow">›</span>${right}</div>`;
+        }).join('');
+
+    // aggiorna messaggio e pulsante Verifica senza ridisegnare i campi (così il cursore resta dov'è)
+    function refreshPlay() {
+        const left = answers.filter(a => !a.trim()).length;
+        const msg = $('left-msg');
+        if (msg) msg.textContent = left === 0
+            ? 'Tutte le risposte sono scritte: premi Verifica'
+            : left === 1 ? 'Manca ancora 1 risposta' : `Mancano ancora ${left} risposte`;
+        const chk = $('btn-check');
+        if (chk) chk.disabled = left > 0;
+    }
+
+    function renderPlay() {
+        frame({
+            top: `<span class="big-msg" id="left-msg"></span>`,
+            main: `<div class="board" id="board">${boardPlayHtml()}</div>`,
+            bottom: `<button id="btn-check" class="cool-btn" disabled>Verifica</button>`
+        });
+        const fr = area.querySelector('.frame');
+        fr.addEventListener('input', e => {
+            const inp = e.target.closest('.ans');
+            if (!inp) return;
+            answers[+inp.dataset.i] = inp.value;
+            refreshPlay();
+        });
+        // una "mossa" = una risposta nuova o modificata, contata quando si lascia il campo
+        fr.addEventListener('change', e => {
+            const inp = e.target.closest('.ans');
+            if (!inp) return;
+            const i = +inp.dataset.i, v = norm(inp.value);
+            if (v && v !== committed[i]) { committed[i] = v; moves++; updateStats(); }
+        });
+        // Invio: passa al campo successivo; dall'ultimo prova a verificare
+        fr.addEventListener('keydown', e => {
+            const inp = e.target.closest('.ans');
+            if (!inp || e.key !== 'Enter') return;
+            e.preventDefault();
+            const next = fr.querySelector(`.ans[data-i="${+inp.dataset.i + 1}"]`);
+            if (next) next.focus();
+            else { inp.blur(); if (!$('btn-check').disabled) $('btn-check').click(); }
+        });
+        $('btn-check').onclick = () => transitionTo(showResult);
+        refreshPlay();
+    }
+
+    /* Pulsante: in modalità "help" si tiene premuto per sbirciare le frasi;
+       in modalità "next" / "done" funziona come un normale click. */
+    (function setupHelp() {
+        const btn = revealBtn;
+        let held = false;
+        const isHelp = () => currentButtonMode === 'help';
+
+        const show = () => {
+            if (held || !helpEnabled || !isHelp()) return;
+            held = true; helps++; updateStats();
+            btn.classList.add('held');
+            if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+            const board = $('board');
+            if (board) board.innerHTML = boardPlayHtml(true);
+        };
+
+        const hide = () => {
+            if (!held) return;
+            held = false;
+            btn.classList.remove('held');
+            const board = $('board');
+            if (board && area.querySelector('#btn-check')) board.innerHTML = boardPlayHtml();
+        };
+
+        btn.addEventListener('pointerdown', e => {
+            if (!isHelp()) return;
+            e.preventDefault();
+            try { btn.setPointerCapture(e.pointerId); } catch (_) {}
+            show();
+        });
+        ['pointerup', 'pointercancel', 'lostpointercapture', 'pointerleave', 'blur'].forEach(ev => btn.addEventListener(ev, hide));
+        btn.addEventListener('keydown', e => {
+            if (!isHelp()) return;
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); show(); }
+        });
+        btn.addEventListener('keyup', e => { if (isHelp() && (e.key === ' ' || e.key === 'Enter')) hide(); });
+        btn.addEventListener('contextmenu', e => e.preventDefault());
+
+        btn.addEventListener('click', () => {
+            if (currentButtonMode === 'next') {
+                btn.disabled = true;
+                transitionTo(nextRound);
+            } else if (currentButtonMode === 'done') {
+                btn.disabled = true;
+                transitionTo(showSummary);
+            }
+        });
+    })();
+
+    /* ---------- FASE 3: risultato ---------- */
+    function showResult() {
+        stopClock();
+        let score = 0;
+        // verde / rosso: mostro la risposta data, mai quella esatta
+        const rows = order.map((k, i) => {
+            const ok = norm(answers[i]) === norm(R.pairs[k].who);
+            if (ok) score++;
+            return `<div class="row"><div class="item">${esc(cap(R.pairs[k].what))}</div><span class="arrow">›</span>
+                <div class="slot ${ok ? 'ok' : 'ko'}"><span class="w">${esc(answers[i].trim() || '—')}</span></div></div>`;
+        }).join('');
+        const total = N;
+
+        results.push({
+            label: R.label || `Round ${roundIndex + 1}`,
+            score, total, seconds, moves, helps,
+            metric: total ? score / total * 100 : 0
+        });
+        setProgress(results.length / rounds.length * 100);
+
+        const isLast = roundIndex >= rounds.length - 1;
+        setButtonState(isLast ? 'done' : 'next');
+        helpEnabled = false;
+        revealBtn.disabled = false;
+
+        banner('Ecco il risultato: verde = risposta giusta, rosso = risposta sbagliata.');
+        const msg = score === total ? 'Perfetto!' : score >= total * 0.6 ? 'Bel lavoro!' : 'Buon tentativo!';
+        frame({
+            top: `<span class="big-msg">Risultato: ${score} / ${total} · ${msg}</span>`,
+            main: `<div class="board"><p class="zone-label">Chi ha portato ogni cosa</p>${rows}</div>`
+        });
+    }
+
+    /* ---------- Prossimo round ---------- */
+    function nextRound() {
+        roundIndex++;
+        setRound(rounds[roundIndex]);
+        resetRoundStats();
+        showIntro();                // showIntro rimette il pulsante in modalità aiuto
+    }
+
+    function showSummary() {
+        enableHelp(false);
+        stopClock();
+
+        [gameTitle, gameStats, instructionBanner, actionControls,
+         progressBarTitle, progressBar, gameArea].forEach(el => el.style.display = 'none');
+
+        const tbody = $('summary-tbody');
+        tbody.innerHTML = '';
+        results.forEach((res, idx) => {
+            const row = document.createElement('tr');
+            const values = [`${idx + 1} · ${res.label}`, res.seconds + 's', res.moves, res.helps, res.metric.toFixed(2)];
+            values.forEach((value, i) => {
+                const td = document.createElement('td');
+                td.textContent = value;              // textContent: niente HTML iniettato dal JSON
+                if (i === 4) td.style.fontWeight = '700';
+                row.appendChild(td);
+            });
+            tbody.appendChild(row);
+        });
+
+        const sum = k => results.reduce((a, r) => a + r[k], 0);
+        const averageMetric = results.length ? sum('metric') / results.length : 0;
+        const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
+
+        $('summary-totals').innerHTML = `
+            <div>Tempo Totale: <strong>${sum('seconds')}s</strong> | Mosse Totali: <strong>${sum('moves')}</strong> | Aiuti Totali: <strong>${sum('helps')}</strong></div>
+            <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+            <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>`;
+
+        const screen = $('summary-screen');
+        screen.style.display = 'block';
+        screen.classList.add('show');
+    }
+
+    /* ---------- Caricamento JSON + mescolamento dei round ---------- */
+    const validRound = r => r && Array.isArray(r.pairs) && r.pairs.length > 1
+        && r.pairs.every(p => p && typeof p.who === 'string' && p.who.trim() && typeof p.what === 'string' && p.what.trim());
+
+    async function loadRound() {
+        isGameReady = false;
+        enableHelp(false);
+        frame({ main: '<p class="big-msg">Caricamento…</p>' });
+
+        try {
+            const res = await fetch(DATA_URL, { cache: 'no-store' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const data = await res.json();
+            const all = Array.isArray(data.categories) ? data.categories.filter(validRound) : [];
+            if (!all.length) throw new Error('JSON vuoto o non valido');
+            if (data.title) { gameTitle.textContent = data.title; document.title = data.title; }
+            rounds = shuffle(all.slice());      // tutti i round, in ordine casuale, senza ripetizioni
+            roundIndex = 0;
+            results = [];
+            setRound(rounds[0]);
+            resetRoundStats();
+            setProgress(0);
+            isGameReady = true;
+            showIntro();
+        } catch (err) {
+            frame({ main: `<p class="big-msg">Impossibile caricare gli esercizi.</p>
+                <p class="big-msg">Controlla che il file <strong>${DATA_URL}</strong> sia nella stessa cartella e che la pagina sia aperta da un server (non da file://).</p>` });
+        }
+    }
+
+    /* =========================================================
+       AVVIO
+       ========================================================= */
+    async function initGame() {
+        await loadRound();
+        document.body.classList.add('loaded');
+    }
+
+    initGame();
+    </script>
+</body>
+</html>

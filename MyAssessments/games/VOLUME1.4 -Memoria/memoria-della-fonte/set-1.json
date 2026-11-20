@@ -1,0 +1,24 @@
+{
+    "title": "Memoria della fonte",
+    "categories": [
+        {
+            "label": "Al picnic",
+            "pairs": [
+                { "who": "Alina", "what": "la torta" },
+                { "who": "Igor", "what": "il formaggio" },
+                { "who": "Carla", "what": "le olive" },
+                { "who": "Fabio", "what": "l'acqua" }
+            ]
+        },
+        {
+            "label": "Alla cena",
+            "verb": "ha portato",
+            "pairs": [
+                { "who": "Marta", "what": "il vino" },
+                { "who": "Luca", "what": "il pane" },
+                { "who": "Sara", "what": "la frutta" },
+                { "who": "Dario", "what": "il gelato" }
+            ]
+        }
+    ]
+}

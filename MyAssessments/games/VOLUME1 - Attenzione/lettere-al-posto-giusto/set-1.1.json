@@ -2,9 +2,15 @@
   "title": "Lettere al posto giusto",
   "label": "Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.",
   "words": [
-    { "word": "HELLO WORLD", "hint": "Il primo programma che si scrive quando si impara a programmare" },
-    { "word": "CODE PUZZLE", "hint": "Un gioco in cui si risolvono enigmi di programmazione" },
-    { "word": "JAVASCRIPT",  "hint": "Il linguaggio che rende interattive le pagine web" },
-    { "word": "UI DESIGN",   "hint": "Progettazione dell'aspetto di un'interfaccia utente" }
+    { "word": "MATITA"     , "hint": "Serve per scrivere e si tempera" },
+    { "word": "FORMICA"    , "hint": "E' un animale molto piccolo" },
+    { "word": "MASCHERINA" , "hint": "La indossiamo per coprirci naso e bocca" },
+    { "word": "REGALI"     , "hint": "Li riceviamo a Natale e al compleanno" },
+    { "word": "COLAZIONE"  , "hint": "Al mattino quando ci alziamo facciamo..." },
+    { "word": "VACANZE"    , "hint": "Arrivano quando finisce la scuola" },
+    { "word": "CARAMELLA"  , "hint": "E' una cosa dolce che piace tanto ai bambini" },
+    { "word": "FORNELLO"   , "hint": "Ci appoggi la pentola per cucinare" },
+    { "word": "SCIARPA"    , "hint": "La usi per tenere caldo il collo" },
+    { "word": "ASTUCCIO"   , "hint": "Contiene penne, matite e gomma" }
   ]
 }
