@@ -2,7 +2,7 @@
          "title": "Scegli l'immagine giusta",
          "categories": [
            {
-             "instruction": "Metti ogni ogetto nella colonna giusta.",
+             "instruction": "Metti ogni oggetto nella colonna giusta.",
              "headers": [],
              "items": [
                { "label": "Zaino"    , "column": 1 ,"position": 1 , "image": "../../images/oggetti/moderni/backpack.png"},
@@ -15,7 +15,7 @@
               ]
            },
            {
-             "instruction": "Metti ogni ogetto nella colonna giusta.",
+             "instruction": "Metti ogni oggetto nella colonna giusta.",
              "headers": [],
              "items": [
                { "label": "Bussola"  , "column": 1 ,"position": 1 , "image": "../../images/oggetti/avventura/compass.png"},

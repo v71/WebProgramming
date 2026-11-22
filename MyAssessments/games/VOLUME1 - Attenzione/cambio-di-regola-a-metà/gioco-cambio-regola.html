@@ -36,11 +36,31 @@
         }
 
         .column-header {
-            margin: 0 0 4px 0;     /* l'h2 ha margini grandi di default: qui vengono azzerati */
+            /*
+            margin: 0 0 4px 0;     
             padding: 8px 4px;
             font-size: 1.1rem;
             text-align: center;
             font-weight: 700;
+            */
+
+            margin: 0;
+            padding: 6px 12px;
+            min-height: var(--cell-h);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--accent);
+            box-sizing: border-box;
+            text-shadow:
+                -1px -1px 0 #000,
+                 1px -1px 0 #000,
+                -1px  1px 0 #000,
+                 1px  1px 0 #000;
+
         }
 
         /* Schermi piccoli: spazio uniforme tra i bottoni */

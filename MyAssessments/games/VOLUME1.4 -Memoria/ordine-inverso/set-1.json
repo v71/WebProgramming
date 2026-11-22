@@ -1,0 +1,8 @@
+{
+    "title": "Ordine inverso",
+    "categories": [
+        { "label": "Sequenza 1", "words": ["faro", "bicicletta", "sentiero", "vento", "storia", "telefono"] },
+        { "label": "Sequenza 2", "words": ["finestra", "mela", "ponte", "lettera", "ombrello"] },
+        { "label": "Sequenza 3", "words": ["chiave", "montagna", "tazza", "giardino", "nuvola", "libro"] }
+    ]
+}

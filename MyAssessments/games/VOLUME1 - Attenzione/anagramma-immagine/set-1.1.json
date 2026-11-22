@@ -1,0 +1,7 @@
+{
+  "title": "Da Stamapto a minuscolo",
+  "label": "Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.",
+  "words": [
+    { "word": "Gatto"     , "hint": "E' morbido e fa le fusa", "image": "../../images/animali/da-cortile/cat.png"}
+  ]
+}

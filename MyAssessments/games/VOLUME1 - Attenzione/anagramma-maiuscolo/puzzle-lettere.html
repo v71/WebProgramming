@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle di Lettere</title>
+
+     <!-- 1. Includi qui il file esterno condiviso -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    <!-- SOUNDS -->
+    <script src="../../js/sound.js"></script>
+    
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        :root {
+            /* One size for every letter card: the cards to move, the slots and the Help overlay.
+               Change these two values to resize all of them together. */
+            --card-w: 72px;
+            --card-h: 94px;
+        }
+
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.05rem;
+            margin-bottom: 6px;
+            color: var(--text-dim);
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Container sizes dynamically and stays centered */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            width: fit-content;
+            max-width: 100%;
+            min-height: clamp(90px, 14vh, 130px);
+            padding: 20px;
+            border-radius: 20px;
+            align-items: center;
+            box-sizing: border-box;
+            background-color: var(--game-area-background);
+            box-shadow: var(--shadow-md);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            margin: 0 auto;
+        }
+
+        .card.disabled {
+            opacity: 0.35;
+            pointer-events: none;
+            cursor: default;
+            filter: grayscale(100%);
+        }
+
+        /* Reference word in uppercase: same card size, not clickable */
+        #reference-container {
+            justify-content: center;
+            border-color: var(--border);
+        }
+
+        .card.reference {
+            background: #f59e0b;
+            color: #ffffff;
+            border-color: #ffffff;
+            cursor: default;
+        }
+
+        /* Sorting container: holds the shuffled lowercase letters */
+        #sort-container {
+            border: 2px solid #000000;
+            background-color: #37275e;
+            padding: 19px;
+            justify-content: center;
+        }
+
+        #sort-container .card {
+            cursor: pointer;
+        }
+
+        #sort-container .card:hover:not(.correct):not(.locked):not(.selected) {
+            border-color: var(--grid-btn-hovered-border-color);
+            background: var(--grid-btn-hovered);
+            color: var(--grid-btn-hovered-text);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+        }
+
+        /* Letter already in the right position: green */
+        #sort-container .card.correct {
+            background-color: #10b981;
+            border-color: #ffffff;
+            color: #ffffff;
+        }
+
+        /* Letter picked with a click/tap, waiting to be swapped */
+        #sort-container .card.selected {
+            border-color: var(--text);
+            background: var(--accent);
+            color: var(--text);
+
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+                /*
+            border-color: var(--accent);
+            background: var(--grid-btn-hovered);
+            outline: 2px solid #f59e0b;
+            outline-offset: 2px;
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+            z-index: 5;
+            */
+        }
+
+        #sort-container .card.swapped {
+            animation: pop 0.3s ease;
+        }
+
+        /* Word completed: cards are locked */
+        #sort-container .card.locked {
+            cursor: default;
+        }
+
+        /* Usa la proprietà `scale` (non `transform`) così non entra in conflitto
+           con il sollevamento al passaggio del mouse o con lo stato selezionato */
+        @keyframes pop {
+            0%   { scale: 0.85; }
+            60%  { scale: 1.08; }
+            100% { scale: 1; }
+        }
+
+        .target-wrapper {
+            position: relative;
+            width: fit-content;
+            margin: 0 auto;
+        }
+
+        #reveal-overlay {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: max-content;
+            max-width: min(92vw, 1060px);
+            min-width: 100%;
+            height: max-content;
+            min-height: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 19px;
+            border-radius: 20px;
+            background-color: #37275e;
+            border: 2px solid var(--correct);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            box-shadow: var(--shadow-lg);
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        #reveal-overlay.visible {
+            opacity: 1;
+        }
+
+        /* Stile specifico per le lettere rivelate con il tasto Help */
+        .card.reveal-letter {
+            border-color: #ffffff !important;
+            background-color: #10b981 !important; /* Verde brillante e ben visibile */
+            color: #ffffff !important;
+            cursor: default;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: none !important;
+        }
+
+        /* Letter cards */
+        .card {
+            flex-shrink: 0;
+            width: var(--card-w);
+            height: var(--card-h);
+            padding: 0;
+            background: #7931b4;
+            color: var(--text);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            cursor: pointer;
+            user-select: none;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease, color 0.25s ease;
+        }
+
+        .card.space::after {
+            content: '';
+            width: 30px;
+            height: 14px;
+            margin-top: 14px;
+            border: 4px solid currentColor;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+            opacity: 0.85;
+        }
+
+        #game-stats, .stats-style {
+            margin: 0 0 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            background: var(--game-area-background);
+            padding: 10px 20px;
+            border-radius: 99px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            font-variant-numeric: tabular-nums;
+            text-align: center;
+        }
+
+        #game-stats strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* Results Summary Screen */
+        #summary-screen {
+            display: none;
+            width: 100%;
+            max-width: 650px;
+            background: var(--game-area-background);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        #summary-screen h2 {
+            margin-top: 0;
+            color: var(--correct);
+            font-size: 2rem;
+        }
+
+        .summary-table {
+            width: 100%;
+            margin: 24px 0;
+            border-collapse: collapse;
+        }
+
+        .summary-table th, .summary-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .summary-table th {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .summary-totals {
+            margin-top: 20px;
+            padding: 18px;
+            background: var(--summary-background);
+            border-radius: 14px;
+            display: flex;
+            justify-content: space-around;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .summary-totals strong {
+            color: var(--accent);
+        }
+
+        #restart-btn {
+            margin-top: 24px;
+        }
+
+        button:hover {
+            filter: brightness(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: none;
+            box-shadow: none !important;
+            transform: none !important;
+        }
+
+        .btn-icon {
+            filter: drop-shadow(0 0 0.25px #000);
+        }
+
+    </style>
+
+<style>
+
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            /* Evita selezione testo e menu contestuale con la pressione prolungata su mobile */
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+
+        /* Icona del pulsante Help: niente contorno ereditato, tratto più sottile */
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px; /* spessore del bordo */
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* L'icona resta ferma quando il pulsante è in hover, in focus o premuto */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover .btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+</style>
+
+    <style>
+
+        #sort-container .card.shake {
+            animation: buttonErrorShake 0.45s ease;
+        }
+
+        /* Red flash for a wrong move. !important is needed to beat the hover rule */
+        #sort-container .card.wrong {
+            background-color: var( --grid-btn-wrong) !important;
+            border-color:var(--grid-btn-wrong-border-color) !important;
+            color: var(--grid-btn-wrong-text) !important;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <h1 id="game-title">Puzzle di Lettere</h1>
+
+    <div id="game-stats">
+        <span>Lettere Corrette: <strong id="progress-value">0 / 0</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner" class="stats-style">Caricamento...</h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <h2 id="hint-style" ></h2>
+
+    <div id="puzzle-workspace" class="section-wrapper" style="align-items: center;">
+        <div class="section-wrapper">
+            <div class="section-title">Parola da formare</div>
+            <div id="reference-container" class="card-container"></div>
+        </div>
+
+        <div class="section-wrapper" style="margin-bottom:0;">
+            <div class="section-title">Riordina le lettere</div>
+            <div class="target-wrapper">
+                <div id="sort-container" class="card-container"></div>
+                <div id="reveal-overlay" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+
+    <h1 id="progress-title">
+        Progresso
+    </h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Parola</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Punti</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody">
+            </tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals">
+        </div>
+    </div>
+
+    <script>
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Elementi ---
+    const revealBtn = document.getElementById('reveal-btn');
+    const revealOverlay = document.getElementById('reveal-overlay');
+    const referenceContainer = document.getElementById('reference-container');
+    const sortContainer = document.getElementById('sort-container');
+    const timeValueEl = document.getElementById('time-value');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressValueEl = document.getElementById('progress-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const puzzleWorkspace = document.getElementById('puzzle-workspace');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameTitle = document.getElementById('game-title');
+    const gameStats = document.getElementById('game-stats');
+    const actionControls = document.getElementById('action-controls');
+    const progressTitle = document.getElementById('progress-title');
+    const progressContainer = document.querySelector('.progress-bar-container');
+    const hintEl = document.getElementById('hint-style');
+    const btnIcon = document.getElementById('btn-icon');
+
+    const DEFAULT_LABEL = 'Scambia le lettere minuscole per formare la parola scritta in maiuscolo';
+
+    const hiddenOnSummary = [
+        puzzleWorkspace, instructionBanner, gameStats, gameTitle,
+        progressTitle, progressContainer, actionControls, hintEl
+    ];
+
+    let roundValueEl = document.getElementById('round-value');
+    if (!roundValueEl && gameStats) {
+        const roundStat = document.createElement('span');
+        roundStat.innerHTML = 'Turno: <strong id="round-value">1 / 1</strong>';
+        gameStats.insertBefore(roundStat, gameStats.firstChild);
+        roundValueEl = roundStat.querySelector('strong');
+    }
+
+    // --- Stato ---
+    let originalTextString = '';
+    let expected = [];          // lettere nell'ordine corretto
+    let current = [];           // lettere nell'ordine attuale nel contenitore
+    let selectedIndex = null;   // carta selezionata (click/tocco) in attesa di uno scambio
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let moveCount = 0;
+    let revealCount = 0;
+    let finalScore = 0;
+    let wordCompleted = false;
+    let isRevealing = false;
+    let buttonMode = 'help'; // 'help' | 'next' | 'done'
+    let words = [];
+    let roundIndex = 0;
+    let results = [];
+
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+
+    function setButtonMode(mode) {
+        buttonMode = mode;
+
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Clicca qui per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
+    }
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function updateMovesDisplay() {
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealsDisplay() {
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+    }
+
+    function updateRoundDisplay() {
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${words.length}`;
+    }
+
+    function updateProgressDisplay() {
+        const correct = current.filter((c, i) => c === expected[i]).length;
+        if (progressValueEl) progressValueEl.textContent = `${correct} / ${expected.length}`;
+    }
+
+    function setOverallProgress(done) {
+        const total = words.length;
+        if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    }
+
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    // Come shuffleArray, ma evita (quando possibile) di restituire l'ordine già corretto
+    function shuffleDifferent(chars) {
+        const original = chars.join('');
+        const canDiffer = new Set(chars).size > 1;
+        let result = shuffleArray(chars);
+        let tries = 0;
+        while (canDiffer && result.join('') === original && tries++ < 20) {
+            result = shuffleArray(chars);
+        }
+        return result;
+    }
+
+    function makeCard(char) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.dataset.char = char;
+        if (char === ' ') {
+            card.classList.add('space');
+            card.setAttribute('aria-label', 'spazio');
+        } else {
+            card.textContent = char;
+        }
+        return card;
+    }
+
+    function makeActivatable(el, handler) {
+        el.setAttribute('role', 'button');
+        el.tabIndex = 0;
+        el.addEventListener('click', handler);
+        el.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handler(e);
+            }
+        });
+    }
+
+    function playCheckmark(element) {
+        if (typeof Checkmark === 'undefined' || !element) return;
+        try {
+            Promise.resolve(Checkmark.show({ element, size: 48, rise: 70, duration: 1600 }))
+                .catch(err => console.warn('Checkmark animation failed:', err));
+        } catch (err) {
+            console.warn('Checkmark animation failed:', err);
+        }
+    }
+
+    function waitForProgressBar() {
+        return new Promise(resolve => {
+            if (!progressBarFill) {
+                resolve();
+                return;
+            }
+            const finish = () => {
+                clearTimeout(fallback);
+                progressBarFill.removeEventListener('transitionend', onEnd);
+                resolve();
+            };
+            const onEnd = (e) => { if (e.propertyName === 'width') finish(); };
+            const fallback = setTimeout(finish, 700);
+            progressBarFill.addEventListener('transitionend', onEnd);
+        });
+    }
+
+    async function playConfetti() {
+        if (typeof Confetti === 'undefined') return;
+        try {
+            playSound('wow');
+            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+        } catch (err) {
+            console.warn('Confetti animation failed:', err);
+        }
+    }
+
+    // --- Contenitore di ordinamento ---
+
+    function updateSelection() {
+        Array.from(sortContainer.children).forEach((card, i) => {
+            card.classList.toggle('selected', i === selectedIndex);
+            card.setAttribute('aria-pressed', String(i === selectedIndex));
+        });
+    }
+
+    // Aggiorna una carta già esistente in base allo stato (senza ricrearla)
+    function applyCardState(card, i) {
+        const char = current[i];
+        const isCorrect = char === expected[i];
+        const name = char === ' ' ? 'spazio' : char;
+
+        card.dataset.char = char;
+        card.classList.toggle('space', char === ' ');
+        card.textContent = char === ' ' ? '' : char;
+        card.classList.toggle('correct', isCorrect);
+        card.classList.toggle('selected', i === selectedIndex);
+        card.setAttribute('aria-label', `${name}, posizione ${i + 1}, ${isCorrect ? 'corretta' : 'da spostare'}`);
+        card.setAttribute('aria-pressed', String(i === selectedIndex));
+    }
+    /*
+    // Crea le carte una sola volta per round
+    function renderSort() {
+        sortContainer.innerHTML = '';
+
+        current.forEach((char, i) => {
+            const card = makeCard(char);
+            applyCardState(card, i);
+            makeActivatable(card, () => onCardActivate(i));
+            card.addEventListener('animationend', () => card.classList.remove('swapped'));
+            sortContainer.appendChild(card);
+        });
+    }
+    */
+     // Crea le carte una sola volta per round
+    function renderSort() {
+        sortContainer.innerHTML = '';
+
+        current.forEach((char, i) => {
+            const card = makeCard(char);
+            applyCardState(card, i);
+            makeActivatable(card, () => onCardActivate(i));
+            card.addEventListener('animationend', (e) => {
+                if (e.target === card) card.classList.remove('swapped', 'shake', 'wrong');
+            });
+            sortContainer.appendChild(card);
+        });
+    }
+
+    // Aggiorna le carte esistenti sul posto: le transizioni CSS restano fluide
+    // anche se il mouse è già sopra una carta.
+    /*
+    function syncSort(pop = []) {
+        Array.from(sortContainer.children).forEach((card, i) => {
+            applyCardState(card, i);
+            if (pop.includes(i)) {
+                card.classList.remove('swapped');
+                void card.offsetWidth; // riavvia l'animazione
+                card.classList.add('swapped');
+            }
+        });
+    }
+    */
+
+    function syncSort(pop = []) {
+        // Wrong move = neither swapped card landed in its correct position
+        const wrongMove = pop.length > 0 && pop.every(i => current[i] !== expected[i]);
+        if (wrongMove) playSound('error');   // <-- add this
+        Array.from(sortContainer.children).forEach((card, i) => {
+            applyCardState(card, i);
+            if (pop.includes(i)) {
+                card.classList.remove('swapped', 'shake', 'wrong');
+                void card.offsetWidth; // restart the animation
+                if (wrongMove) card.classList.add('shake', 'wrong');
+                else card.classList.add('swapped');
+            }
+        });
+    }
+
+    function onCardActivate(i) {
+        if (wordCompleted) return;
+        if (selectedIndex === null) {
+            playSound('click');
+            selectedIndex = i;
+            updateSelection();
+        } else if (selectedIndex === i) {
+            selectedIndex = null;
+            updateSelection();
+        } else {
+            swapCards(selectedIndex, i);
+        }
+    }
+
+    function swapCards(a, b) {
+        if (wordCompleted || a === b) return;
+
+        const wasCorrect = current.map((c, i) => c === expected[i]);
+        [current[a], current[b]] = [current[b], current[a]];
+        selectedIndex = null;
+
+        moveCount++;
+        updateMovesDisplay();
+        syncSort([a, b]);
+        updateProgressDisplay();
+
+        const isWordComplete = current.join('') === originalTextString;
+        let soundPlayed = false;
+
+        // Segno di spunta sulle lettere appena arrivate nella posizione giusta
+        current.forEach((c, i) => {
+            if (c === expected[i] && !wasCorrect[i]) {
+            
+                if (!soundPlayed) {
+                    playSound(isWordComplete ? 'next_round' : 'correct');
+                    soundPlayed = true;
+                }
+
+                playCheckmark(sortContainer.children[i]);
+            }
+        });
+
+        if (current.join('') === originalTextString) completeWord();
+    }
+
+    function computeScore() {
+        const extraMoves = Math.max(0, moveCount - originalTextString.length);
+        const raw = 100 - extraMoves * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    function completeWord() {
+        wordCompleted = true;
+        selectedIndex = null;
+        stopElapsedTimer();
+        hideReveal();
+        updateProgressDisplay();
+
+        sortContainer.querySelectorAll('.card').forEach(card => {
+            card.classList.remove('selected');
+            card.classList.add('locked');
+            card.tabIndex = -1;
+        });
+
+        finalScore = computeScore();
+        results.push({
+            text: originalTextString,
+            seconds: elapsedSeconds,
+            moves: moveCount,
+            reveals: revealCount,
+            score: finalScore
+        });
+
+        // La barra avanza subito a ogni parola completata
+        setOverallProgress(roundIndex + 1);
+
+        const isLastRound = roundIndex >= words.length - 1;
+        setButtonMode(isLastRound ? 'done' : 'next');
+        if (isLastRound) {
+            waitForProgressBar().then(() => playConfetti());
+        }
+    }
+
+    function updateHint(hint) {
+        if (!hintEl) return;
+        hintEl.textContent = hint || '';
+        hintEl.style.display = hint ? '' : 'none';
+    }
+
+    function loadRound(index) {
+        roundIndex = index;
+        originalTextString = words[roundIndex].text;
+        expected = Array.from(originalTextString);
+        updateHint(words[roundIndex].hint);
+
+        hideReveal();
+
+        // Parola di riferimento in maiuscolo
+        if (referenceContainer) {
+            referenceContainer.innerHTML = '';
+            expected.forEach(char => {
+                const card = makeCard(char.toLocaleUpperCase('it'));
+                card.classList.add('reference');
+                referenceContainer.appendChild(card);
+            });
+        }
+
+        wordCompleted = false;
+        moveCount = 0;
+        revealCount = 0;
+        selectedIndex = null;
+        current = shuffleDifferent(expected);
+
+        updateMovesDisplay();
+        updateRevealsDisplay();
+        setButtonMode('help');
+        renderSort();
+
+        updateRoundDisplay();
+        setOverallProgress(roundIndex);
+        updateProgressDisplay();
+        startElapsedTimer();
+    }
+
+    function showReveal(e) {
+        if (buttonMode !== 'help' || isRevealing || wordCompleted) return;
+        isRevealing = true;
+
+        if (e && e.pointerId && revealBtn) {
+            try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+        }
+
+        revealCount++;
+        updateRevealsDisplay();
+
+        if (revealOverlay) {
+            revealOverlay.innerHTML = '';
+            expected.forEach(char => {
+                const card = makeCard(char);
+                card.classList.add('reveal-letter');
+                revealOverlay.appendChild(card);
+            });
+            revealOverlay.classList.add('visible');
+        }
+    }
+
+    function hideReveal(e) {
+        if (!isRevealing) return;
+        isRevealing = false;
+
+        if (e && e.pointerId && revealBtn) {
+            try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
+        }
+
+        if (revealOverlay) revealOverlay.classList.remove('visible');
+    }
+
+    if (revealBtn) {
+        revealBtn.addEventListener('pointerdown', (e) => {
+            // Solo il tasto principale (o il tocco): niente aiuti con clic destro/centrale
+            if (e.button !== 0) return;
+            showReveal(e);
+        });
+        revealBtn.addEventListener('pointerup', (e) => hideReveal(e));
+        revealBtn.addEventListener('pointerleave', (e) => hideReveal(e));
+        revealBtn.addEventListener('pointercancel', (e) => hideReveal(e));
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) showReveal(e);
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') hideReveal(e);
+        });
+        revealBtn.addEventListener('blur', (e) => hideReveal(e));
+
+        revealBtn.addEventListener('click', () => {
+            if (buttonMode === 'next') loadRound(roundIndex + 1);
+            else if (buttonMode === 'done') showSummaryScreen();
+        });
+    }
+
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        hideReveal();
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+
+        if (summaryTbody) {
+            summaryTbody.innerHTML = '';
+            results.forEach(r => {
+                const row = document.createElement('tr');
+                addCell(row, r.text, true);
+                addCell(row, `${r.seconds}s`);
+                addCell(row, String(r.moves));
+                addCell(row, String(r.reveals));
+                addCell(row, String(r.score), true);
+                summaryTbody.appendChild(row);
+            });
+        }
+
+        if (summaryTotals) {
+            const sum = key => results.reduce((t, r) => t + r[key], 0);
+            summaryTotals.innerHTML = `
+                <div>Tempo: <strong>${sum('seconds')}s</strong></div>
+                <div>Mosse: <strong>${sum('moves')}</strong></div>
+                <div>Aiuti: <strong>${sum('reveals')}</strong></div>
+                <div>Punti: <strong>${sum('score')}</strong></div>
+            `;
+        }
+
+        if (summaryScreen) summaryScreen.style.display = 'block';
+    }
+
+    function restartGame() {
+        if (summaryScreen) summaryScreen.style.display = 'none';
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = ''; });
+        results = [];
+        words = shuffleArray(words);
+        loadRound(0); // updateHint() gestisce di nuovo la visibilità del suggerimento
+    }
+
+    function showLoadError() {
+        stopElapsedTimer();
+        [puzzleWorkspace, gameStats, actionControls, progressTitle, progressContainer, hintEl]
+            .forEach(el => { if (el) el.style.display = 'none'; });
+        if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare le parole.';
+    }
+
+    async function loadWords() {
+        const param = new URLSearchParams(window.location.search).get('json');
+        const isSafe = param
+            && /^[\w\-./]+\.json$/i.test(param)
+            && !param.includes('..')
+            && !param.includes('//')
+            && !param.startsWith('/');
+        const jsonFile = isSafe ? param : 'set-1.json';
+
+        const response = await fetch(jsonFile);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        // normalize('NFC') evita che lettere accentate scomposte (e + accento) diventino due carte
+        const clean = s => String(s ?? '').trim().normalize('NFC');
+        // Le carte da riordinare sono sempre minuscole, qualunque sia il caso nel JSON
+        const lower = s => clean(s).toLocaleLowerCase('it');
+
+        const list = (Array.isArray(data.words) ? data.words.flat(Infinity) : [])
+            .map(w => (w && typeof w === 'object')
+                ? { text: lower(w.word ?? w.text), hint: clean(w.hint) }
+                : { text: lower(w), hint: '' })
+            .filter(w => w.text);
+        if (!list.length) throw new Error('Nessuna parola valida nel file');
+
+        if (data.title && gameTitle) {
+            gameTitle.textContent = data.title;
+            document.title = data.title;
+        }
+        if (instructionBanner) instructionBanner.textContent = data.label || DEFAULT_LABEL;
+
+        return list;
+    }
+
+    async function initGame() {
+        try {
+            words = shuffleArray(await loadWords());
+        } catch (err) {
+            console.error('Could not load words:', err);
+            showLoadError();
+            document.body.classList.add('loaded');
+            return;
+        }
+
+        // Gli errori di rendering restano visibili in console e non vengono scambiati per errori di caricamento
+        results = [];
+        loadRound(0);
+        document.body.classList.add('loaded');
+    }
+
+    initGame();
+});
+
+</script>
+
+</body>
+</html>

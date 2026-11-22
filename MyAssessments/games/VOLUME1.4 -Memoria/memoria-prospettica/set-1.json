@@ -1,0 +1,31 @@
+{
+    "title": "Memoria prospettica",
+    "categories": [
+        {
+            "label": "La pioggia",
+            "rule": "Quando leggi la parola «pioggia», toccala.",
+            "cue": "pioggia",
+            "finalAction": { "prompt": "Scrivi la parola che dovevi toccare", "answer": "pioggia" },
+            "lines": [
+                "Sandro porta fuori la spazzatura", 
+                "La sarta accorcia i pantaloni",
+                "La radio trasmette musica leggera", 
+                "La strada è piena di foglie",
+                "Il gatto dorme sul divano", 
+                "Il parco è tranquillo di mattina",
+                "La pioggia batte sui vetri",
+                "Il vicino taglia la siepe", 
+                "Il turista cerca la cattedrale",
+                "La mamma prepara una torta", 
+                "Un aereo passa sopra i tetti",
+                "Maria annaffia le piante del balcone", 
+                "In giardino fioriscono le rose",
+                "Dopo la pioggia c'è l'arcobaleno", 
+                "Sul tavolo c'è una tovaglia a quadri",
+                "Il tecnico controlla la caldaia",
+                "Stasera cuciniamo la pasta al forno", 
+                "Un pacco è arrivato dal corriere"
+            ]
+        }
+    ]
+}

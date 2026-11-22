@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle di Lettere</title>
+
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    <script src="../../js/sound.js"></script>
+
+    <link href="../stylesheet.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .section-wrapper {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* ---- Round layout: options on top, word with the gap below ---- */
+        .round-layout {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .options-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            padding: 16px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.18);
+        }
+
+        .option-btn {
+            min-width: 150px;
+            min-height: 84px;
+            padding: 0 24px;
+            font-size: 2.6rem;
+        }
+
+        .word-line {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            font-size: clamp(2.6rem, 9vw, 4.6rem);
+            font-weight: 600;
+            line-height: 1;
+            color: var(--text);
+            text-shadow:
+                -2px -2px 0 #000,
+                 2px -2px 0 #000,
+                -2px  2px 0 #000,
+                 2px  2px 0 #000;
+        }
+
+        /* Letters sit slightly below the middle of their line box: lift them to match the gap box */
+        .word-part {
+            display: inline-block;
+            transform: translateY(-0.06em);
+        }
+
+        .gap-slot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 150px;
+            height: 1.5em;
+            padding: 0 14px 0.12em; /* bottom padding lifts the chosen text to the visual center */
+            border: 3px solid #ffffff;
+            border-radius: 14px;
+            background: rgba(0, 0, 0, 0.22);
+            transition: background 0.25s ease, border-color 0.25s ease;
+        }
+
+        .gap-slot.correct {
+            border-style: solid;
+            border-color: var(--grid-btn-selected-border-color);
+            background: var(--grid-btn-selected);
+        }
+
+
+        @media (max-width: 700px) {
+            .round-layout { gap: 28px; }
+            .option-btn { min-width: 110px; min-height: 70px; font-size: 2rem; }
+            .gap-slot { min-width: 100px; }
+        }
+
+        /* Original Help button look, kept from the previous version */
+        .cool-btn {
+            font-size: 1.5rem;
+            font-weight: 400;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            touch-action: manipulation;
+        }
+
+        #reveal-btn .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px;
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+
+        /* The icon stays still on hover, focus and press */
+        #reveal-btn .fa,
+        #reveal-btn:hover .fa,
+        #reveal-btn:focus .fa,
+        #reveal-btn:active .fa,
+        #reveal-btn:hover #btn-icon,
+        #reveal-btn:hover i {
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+      .grid-button.no-hover:hover {
+            border-color: var(--border);
+            background: var(--default-btn);
+            color: var(--text);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* While the error is showing, keep the red look even if hovered */
+        .grid-button.no-hover.error,
+        .grid-button.no-hover.error:hover {
+            border-color: var(--grid-btn-wrong-border-color);
+            background: var(--grid-btn-wrong);
+            color: var(--grid-btn-wrong-text);
+        }
+
+</style>
+
+</head>
+<body>
+
+    <h1 id="game-title">Puzzle di Lettere</h1>
+
+    <div id="game-stats">
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <h3 id="instruction-banner">Caricamento...</h3>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Tieni premuto per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <h2 id="hint-style"></h2>
+
+    <!-- GAME AREA: empty on purpose, filled by renderRound() -->
+    <div id="puzzle-workspace" class="section-wrapper">
+        <div id="game-area"></div>
+    </div>
+
+    <h1 id="progress-title">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Round</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Punti</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Elements ---
+    const revealBtn = document.getElementById('reveal-btn');
+    const gameArea = document.getElementById('game-area');
+    const timeValueEl = document.getElementById('time-value');
+    const movesValueEl = document.getElementById('moves-value');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const puzzleWorkspace = document.getElementById('puzzle-workspace');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameTitle = document.getElementById('game-title');
+    const gameStats = document.getElementById('game-stats');
+    const actionControls = document.getElementById('action-controls');
+    const progressTitle = document.getElementById('progress-title');
+    const progressContainer = document.querySelector('.progress-bar-container');
+    const hintEl = document.getElementById('hint-style');
+    const btnIcon = document.getElementById('btn-icon');
+
+    const DEFAULT_LABEL = 'Scegli il pulsante giusto per completare la parola';
+
+    const hiddenOnSummary = [
+        puzzleWorkspace, instructionBanner, gameStats, gameTitle,
+        progressTitle, progressContainer, actionControls, hintEl
+    ];
+
+    let roundValueEl = document.getElementById('round-value');
+    if (!roundValueEl && gameStats) {
+        const roundStat = document.createElement('span');
+        roundStat.innerHTML = 'Turno: <strong id="round-value">1 / 1</strong>';
+        gameStats.insertBefore(roundStat, gameStats.firstChild);
+        roundValueEl = roundStat.querySelector('strong');
+    }
+
+    // --- State ---
+    let currentRound = null;
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let moveCount = 0;
+    let revealCount = 0;
+    let finalScore = 0;
+    let roundCompleted = false;
+    let buttonMode = 'help'; // 'help' | 'next' | 'done'
+    let rounds = [];
+    let roundIndex = 0;
+    let results = [];
+
+    // =====================================================================
+    //  GAME MECHANISM: choose the right option to complete the word
+    // =====================================================================
+
+    // --- Round state ---
+    let helpUsed = false;
+    let gapEl = null;          // the empty box inside the word
+    let optionButtons = [];    // the option buttons of the current round
+
+    function resetRoundState() {
+        helpUsed = false;
+        gapEl = null;
+        optionButtons = [];
+    }
+
+    function makePart(text) {
+        const el = document.createElement('span');
+        el.className = 'word-part';
+        el.textContent = text;
+        return el;
+    }
+
+    // Build the round: option buttons on top, the word with the gap below.
+    function renderRound(round) {
+        gameArea.innerHTML = '';
+
+        const layout = document.createElement('div');
+        layout.className = 'round-layout';
+
+        const optionsRow = document.createElement('div');
+        optionsRow.className = 'options-row';
+        optionsRow.setAttribute('role', 'group');
+        optionsRow.setAttribute('aria-label', 'Opzioni');
+
+        shuffleArray(round.options).forEach(option => {
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'grid-button option-btn';
+            btn.textContent = option;
+            btn.addEventListener('click', () => onOptionPick(btn, option));
+            optionsRow.appendChild(btn);
+            optionButtons.push(btn);
+        });
+
+        const wordLine = document.createElement('div');
+        wordLine.className = 'word-line';
+
+        gapEl = document.createElement('span');
+        gapEl.className = 'gap-slot';
+        gapEl.setAttribute('aria-live', 'polite');
+        gapEl.setAttribute('aria-label', 'spazio da completare');
+
+        if (round.before) wordLine.appendChild(makePart(round.before));
+        wordLine.appendChild(gapEl);
+        if (round.after) wordLine.appendChild(makePart(round.after));
+
+        layout.append(optionsRow, wordLine);
+        gameArea.appendChild(layout);
+    }
+
+    function playCheckmark(element) {
+        if (typeof Checkmark === 'undefined' || !element) return;
+        try {
+            Promise.resolve(Checkmark.show({ element, size: 48, rise: 70, duration: 1600 }))
+                .catch(err => console.warn('Checkmark animation failed:', err));
+        } catch (err) {
+            console.warn('Checkmark animation failed:', err);
+        }
+    }
+
+    function onOptionPick(btn, option) {
+        if (roundCompleted) return;
+
+        registerMove();
+
+        if (option === currentRound.answer) {
+            // Only the correct option ever appears in the gap
+            gapEl.textContent = option;
+            gapEl.classList.add('correct');
+            btn.classList.add('selected');
+            optionButtons.forEach(b => { b.disabled = true; });
+            playSound('next_round');
+            playCheckmark(gapEl);
+            completeRound();
+        } else {
+            /*
+            // Wrong: the gap stays empty, only the button shakes
+            playSound('error');
+            btn.classList.remove('error');
+            void btn.offsetWidth; // restart the shake animation
+            btn.classList.add('error');
+            setTimeout(() => btn.classList.remove('error'), 700);
+            */
+            playSound('error');
+            btn.classList.remove('error');
+            void btn.offsetWidth; // restart the shake animation
+            btn.classList.add('error', 'no-hover');
+            setTimeout(() => {
+                btn.classList.remove('error');
+                // Keep the hover style off until the pointer leaves the card
+                if (btn.matches(':hover')) {
+                    btn.addEventListener('pointerleave', () => btn.classList.remove('no-hover'), { once: true });
+                } else {
+                    btn.classList.remove('no-hover');
+                }
+            }, 700);
+
+        }
+    }
+
+    // Help: shows the correct option only while the help button is held down.
+    // The help is counted (and the sound played) once per round.
+    function showHelp() {
+        if (roundCompleted) return;
+        playSound('help');
+        if (!helpUsed) {
+            helpUsed = true;
+            registerHelp();
+        }
+        const correctBtn = optionButtons.find(b => b.textContent === currentRound.answer);
+        if (correctBtn) correctBtn.classList.add('help-correct');
+    }
+
+    function hideHelp() {
+        optionButtons.forEach(b => b.classList.remove('help-correct'));
+    }
+
+    function registerMove() {
+        moveCount++;
+        updateMovesDisplay();
+    }
+
+    function registerHelp() {
+        revealCount++;
+        updateRevealsDisplay();
+    }
+
+    // Score: 100, minus 5 per wrong attempt, minus 10 for the help, minus 1 per 2 seconds.
+    function computeScore() {
+        const wrongAttempts = Math.max(0, moveCount - 1);
+        const raw = 100 - wrongAttempts * 5 - revealCount * 10 - Math.floor(elapsedSeconds / 2);
+        return Math.max(0, raw);
+    }
+
+    function completeRound() {
+        if (roundCompleted) return;
+        roundCompleted = true;
+        stopElapsedTimer();
+        hideHelp();
+
+        finalScore = computeScore();
+        results.push({
+            text: currentRound.name,
+            seconds: elapsedSeconds,
+            moves: moveCount,
+            reveals: revealCount,
+            score: finalScore
+        });
+
+        setOverallProgress(roundIndex + 1);
+
+        const isLastRound = roundIndex >= rounds.length - 1;
+        setButtonMode(isLastRound ? 'done' : 'next');
+        if (isLastRound) {
+            waitForProgressBar().then(() => playConfetti());
+        }
+    }
+
+    // =====================================================================
+    //  Shared infrastructure (rounds, timer, button, summary, loading)
+    // =====================================================================
+
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+
+    function setButtonMode(mode) {
+        buttonMode = mode;
+        const texts = {
+            help: { icon: 'fa-lightbulb-o', text: 'Tieni premuto per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(texts[mode].icon);
+        const textEl = revealBtn && revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = texts[mode].text;
+    }
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function updateTimerDisplay() {
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        elapsedSeconds = 0;
+        updateTimerDisplay();
+        elapsedTimerInterval = setInterval(() => {
+            elapsedSeconds++;
+            updateTimerDisplay();
+        }, 1000);
+    }
+
+    function updateMovesDisplay() {
+        if (movesValueEl) movesValueEl.textContent = moveCount;
+    }
+
+    function updateRevealsDisplay() {
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+    }
+
+    function updateRoundDisplay() {
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${rounds.length}`;
+    }
+
+    function setOverallProgress(done) {
+        const total = rounds.length;
+        if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    }
+
+    function shuffleArray(array) {
+        const arr = [...array];
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function waitForProgressBar() {
+        return new Promise(resolve => {
+            if (!progressBarFill) {
+                resolve();
+                return;
+            }
+            const finish = () => {
+                clearTimeout(fallback);
+                progressBarFill.removeEventListener('transitionend', onEnd);
+                resolve();
+            };
+            const onEnd = (e) => { if (e.propertyName === 'width') finish(); };
+            const fallback = setTimeout(finish, 700);
+            progressBarFill.addEventListener('transitionend', onEnd);
+        });
+    }
+
+    async function playConfetti() {
+        if (typeof Confetti === 'undefined') return;
+        try {
+            playSound('wow');
+            await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
+            await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
+        } catch (err) {
+            console.warn('Confetti animation failed:', err);
+        }
+    }
+
+    function updateHint(hint) {
+        if (!hintEl) return;
+        hintEl.textContent = hint || '';
+        hintEl.style.display = hint ? '' : 'none';
+    }
+
+    function loadRound(index) {
+        roundIndex = index;
+        currentRound = rounds[roundIndex];
+        updateHint(currentRound.hint);
+
+        roundCompleted = false;
+        moveCount = 0;
+        revealCount = 0;
+
+        updateMovesDisplay();
+        updateRevealsDisplay();
+        setButtonMode('help');
+
+        hideHelp();
+        resetRoundState();
+        renderRound(currentRound);
+
+        updateRoundDisplay();
+        setOverallProgress(roundIndex);
+        startElapsedTimer();
+    }
+
+    // =====================================================================
+    //  Help / Next / Done button
+    //  - help mode: the answer is shown only while the button is held down
+    //  - next / done mode: a normal click
+    // =====================================================================
+    if (revealBtn) {
+        let helpHeld = false;
+
+        const startHold = () => {
+            if (buttonMode !== 'help' || roundCompleted || helpHeld) return;
+            helpHeld = true;
+            showHelp();
+        };
+
+        const endHold = () => {
+            if (!helpHeld) return;
+            helpHeld = false;
+            hideHelp();
+        };
+
+        // Mouse / touch / pen: hold to see the answer
+        revealBtn.addEventListener('pointerdown', (e) => {
+            if (e.pointerType === 'mouse' && e.button !== 0) return;
+            // Keep receiving pointerup even if the finger/cursor slides off the button
+            try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+            startHold();
+        });
+        revealBtn.addEventListener('pointerup', endHold);
+        revealBtn.addEventListener('pointercancel', endHold);
+        revealBtn.addEventListener('lostpointercapture', endHold);
+
+        // Keyboard: hold Space or Enter
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) {
+                if (buttonMode === 'help') {
+                    e.preventDefault();
+                    startHold();
+                }
+            }
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') endHold();
+        });
+        revealBtn.addEventListener('blur', endHold);
+
+        // Avoid the long-press context menu on mobile while holding
+        revealBtn.addEventListener('contextmenu', (e) => e.preventDefault());
+
+        // "Next round" and "Done" still work with a normal click
+        revealBtn.addEventListener('click', () => {
+            if (buttonMode === 'next') {
+                loadRound(roundIndex + 1);
+            } else if (buttonMode === 'done') {
+                showSummaryScreen();
+            }
+        });
+    }
+
+    function addCell(row, text, bold = false) {
+        const td = document.createElement('td');
+        if (bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        hiddenOnSummary.forEach(el => { if (el) el.style.display = 'none'; });
+
+        if (summaryTbody) {
+            summaryTbody.innerHTML = '';
+            results.forEach(r => {
+                const row = document.createElement('tr');
+                addCell(row, r.text, true);
+                addCell(row, `${r.seconds}s`);
+                addCell(row, String(r.moves));
+                addCell(row, String(r.reveals));
+                addCell(row, String(r.score), true);
+                summaryTbody.appendChild(row);
+            });
+        }
+
+        if (summaryTotals) {
+            const sum = key => results.reduce((t, r) => t + r[key], 0);
+            summaryTotals.innerHTML = `
+                <div>Tempo: <strong>${sum('seconds')}s</strong></div>
+                <div>Mosse: <strong>${sum('moves')}</strong></div>
+                <div>Aiuti: <strong>${sum('reveals')}</strong></div>
+                <div>Punti: <strong>${sum('score')}</strong></div>
+            `;
+        }
+
+        if (summaryScreen) summaryScreen.style.display = 'block';
+    }
+
+
+    function showLoadError() {
+        stopElapsedTimer();
+        [puzzleWorkspace, gameStats, actionControls, progressTitle, progressContainer, hintEl]
+            .forEach(el => { if (el) el.style.display = 'none'; });
+        if (instructionBanner) instructionBanner.textContent = 'Impossibile caricare i round.';
+    }
+
+    async function loadRounds() {
+        const param = new URLSearchParams(window.location.search).get('json');
+        const isSafe = param
+            && /^[\w\-./]+\.json$/i.test(param)
+            && !param.includes('..')
+            && !param.includes('//')
+            && !param.startsWith('/');
+        const jsonFile = isSafe ? param : 'set-1.json';
+
+        const response = await fetch(jsonFile);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+
+        const clean = s => String(s ?? '').trim().normalize('NFC');
+
+        // Each entry of "rounds" is one round. Every field in the entry is kept as-is
+        // on the round object, so the new mechanism can read its own data from it.
+        // Round fields: before, after, options (2 or more), answer (text or index), hint (optional), name (optional).
+        const source = Array.isArray(data.rounds) ? data.rounds
+                     : Array.isArray(data.words) ? data.words : [];
+
+        const list = source.flat(Infinity)
+            .map((r, i) => {
+                if (!r || typeof r !== 'object') return null;
+                const options = (Array.isArray(r.options) ? r.options : []).map(clean).filter(Boolean);
+                const answer = typeof r.answer === 'number' ? options[r.answer] : clean(r.answer);
+                if (options.length < 2 || !answer || !options.includes(answer)) {
+                    console.warn(`Round ${i + 1} skipped: it needs "options" (2 or more) and an "answer" that is one of them`, r);
+                    return null;
+                }
+                const before = clean(r.before);
+                const after = clean(r.after);
+                return {
+                    ...r,
+                    before,
+                    after,
+                    options,
+                    answer,
+                    hint: clean(r.hint),
+                    name: clean(r.name ?? r.title) || `${before}${answer}${after}` || `Round ${i + 1}`
+                };
+            })
+            .filter(Boolean);
+        if (!list.length) throw new Error('Nessun round valido nel file');
+
+        if (data.title && gameTitle) {
+            gameTitle.textContent = data.title;
+            document.title = data.title;
+        }
+        if (instructionBanner) instructionBanner.textContent = data.label || DEFAULT_LABEL;
+
+        return list;
+    }
+
+    async function initGame() {
+        try {
+            rounds = await loadRounds();
+        } catch (err) {
+            console.error('Could not load rounds:', err);
+            showLoadError();
+            document.body.classList.add('loaded');
+            return;
+        }
+
+        results = [];
+        loadRound(0);
+        document.body.classList.add('loaded');
+    }
+
+    initGame();
+});
+    </script>
+
+</body>
+</html>

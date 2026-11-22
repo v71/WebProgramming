@@ -1,0 +1,11 @@
+{
+  "title": "Completa la parola",
+  "label": "Scegli il pulsante giusto per completare la parola",
+  "rounds": [
+    { "before": "Ga",  "after": "iano",  "options": ["b", "bb"],   "answer": "bb" },
+    { "before": "Pe",  "after": "a",     "options": ["n", "nn"],   "answer": "nn" },
+    { "before": "Ca",  "after": "ello",  "options": ["p", "pp"],   "answer": "pp" },
+    { "before": "Pa",  "after": "ola",   "options": ["r", "rr"],   "answer": "r"  },
+    { "before": "Tu",  "after": "o",     "options": ["t", "tt"],   "answer": "tt" }
+  ]
+}

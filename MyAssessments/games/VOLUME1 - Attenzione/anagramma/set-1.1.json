@@ -1,0 +1,16 @@
+{
+  "title": "Da Stamapto a minuscolo",
+  "label": "Clicca su un carattere nella prima lista per ricomporre la frase nella seconda lista.",
+  "words": [
+    { "word": "MATITA"     , "hint": "Serve per scrivere e si tempera" },
+    { "word": "FORMICA"    , "hint": "E' un animale molto piccolo" },
+    { "word": "MASCHERINA" , "hint": "La indossiamo per coprirci naso e bocca" },
+    { "word": "REGALI"     , "hint": "Li riceviamo a Natale e al compleanno" },
+    { "word": "COLAZIONE"  , "hint": "Al mattino quando ci alziamo facciamo..." },
+    { "word": "VACANZE"    , "hint": "Arrivano quando finisce la scuola" },
+    { "word": "CARAMELLA"  , "hint": "E' una cosa dolce che piace tanto ai bambini" },
+    { "word": "FORNELLO"   , "hint": "Ci appoggi la pentola per cucinare" },
+    { "word": "SCIARPA"    , "hint": "La usi per tenere caldo il collo" },
+    { "word": "ASTUCCIO"   , "hint": "Contiene penne, matite e gomma" }
+  ]
+}
