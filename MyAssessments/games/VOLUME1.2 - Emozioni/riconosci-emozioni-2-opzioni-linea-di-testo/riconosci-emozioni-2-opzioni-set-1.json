@@ -12,7 +12,7 @@
         {
             "label":"Calma",
             "sentence": "Una giornata tranquilla mi fa provare {blank}!",
-            "img": "../../images/emozioni/emozioni/emozioni-set-1/calm.png",
+            "img": "../../images/emozioni/emozioni-set-1/calm.png",
             "options": ["Calma", "Tristezza"],
             "correctIndex": 0
         },

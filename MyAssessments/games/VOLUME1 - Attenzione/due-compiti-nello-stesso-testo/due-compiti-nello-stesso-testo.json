@@ -9,7 +9,7 @@
       },
       {
         "text": "Marco si era dato appuntamento con Davide in centro, alle ore quindici. Prima di uscire di casa ha controllato i documenti. Lungo il tragitto ha dovuto fermarsi in cartoleria a comprare una risma di carta, ma era momentaneamente sprovvista. Ha provato in edicola, ma la fila alla cassa era interminabile. Alla fine è arrivato al punto d'incontro con un quarto d'ora di ritardo.",
-        "instruction":"Leggi il testo e fai due cose: clicca sugli avverbi di tempo ogni volta che compaiono e su tutti i nomi dei personaggi.",
+        "instruction":"Leggi il testo e fai due cose: clicca sulle parole che indicano il tempo ogni volta che compaiono e su tutti i nomi dei personaggi.",
         "connectors":["Prima", "momentaneamente"],
         "solutions" :["Marco","Davide"]
       }

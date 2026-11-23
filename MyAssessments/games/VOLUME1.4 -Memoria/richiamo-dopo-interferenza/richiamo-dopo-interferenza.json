@@ -1,0 +1,34 @@
+[
+  {
+    "id": "001",
+    "title": "Cucina",
+    "listA": ["caffè", "canzone", "seme", "sentiero", "nuvola"],
+    "task": {
+      "instruction": "Segna con una crocetta gli oggetti che si usano in cucina.",
+      "items": [
+        { "text": "tazza", "correct": true },
+        { "text": "pentola", "correct": true },
+        { "text": "martello", "correct": false },
+        { "text": "cucchiaio", "correct": true },
+        { "text": "pennello", "correct": false },
+        { "text": "ombrello", "correct": false }
+      ]
+    }
+  },
+  {
+    "id": "002",
+    "title": "Giardino",
+    "listA": ["finestra", "ruota", "lago", "mela", "orologio"],
+    "task": {
+      "instruction": "Segna con una crocetta gli oggetti che si usano in giardino.",
+      "items": [
+        { "text": "rastrello", "correct": true },
+        { "text": "annaffiatoio", "correct": true },
+        { "text": "pettine", "correct": false },
+        { "text": "pala", "correct": true },
+        { "text": "cuscino", "correct": false },
+        { "text": "forbici da potatura", "correct": true }
+      ]
+    }
+  }
+]

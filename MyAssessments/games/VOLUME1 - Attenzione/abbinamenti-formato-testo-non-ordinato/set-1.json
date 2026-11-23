@@ -17,7 +17,7 @@
                { "label": "Orso",  "column": 2 }
              ]
            },
-            {
+           {
              "instruction": "Metti ogni automobile nella colonna giusta.",
              "headers": ["Utilitarie", "Fuoriserie"],
              "items": [

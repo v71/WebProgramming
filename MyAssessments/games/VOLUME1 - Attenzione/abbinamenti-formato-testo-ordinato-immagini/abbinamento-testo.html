@@ -249,6 +249,7 @@
         .drop-cell.help-preview .cell-label-placeholder,
         .drop-cell.filled .cell-label-placeholder {
             color: #ffffff !important;
+            font-size:1.25rem;
             text-shadow:
                 -1px -1px 0 #000,
                  1px -1px 0 #000,
@@ -283,6 +284,19 @@
             color: #333;
             flex-grow: 1;
             word-break: break-word;
+        }
+
+        .drop-cell img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .drop-cell .cell-label {
+            flex: 1;
+            margin-left: 16px;
+            text-align: left;
         }
 
         /* ---------- STATI D'ERRORE ED EFFETTI ---------- */
@@ -676,7 +690,12 @@
 
             clickedCell.classList.add('filled');
             const placeholder = clickedCell.querySelector('.cell-label-placeholder');
-            if (placeholder) placeholder.textContent = selectedItem.label;
+            if (placeholder) {
+                if ( selectedItem.hint)
+                    placeholder.textContent = selectedItem.hint;
+                else
+                    placeholder.textContent = selectedItem.label;
+            }
 
             selectedItem.placed = true;
             selectedItem.button.classList.remove('is-selected');
@@ -743,11 +762,16 @@
                 button.textContent = data.label.trim();
                 button.setAttribute('aria-pressed', 'false');
 
+                const hint = typeof data.hint === 'string' && data.hint.trim().length > 0
+                    ? data.hint.trim()
+                    : null; // oppure '' se preferisci una stringa vuota
+               
                 const itemObj = {
                     label: data.label.trim(),
                     column: data.column,
                     position: data.position,
                     image: data.image,
+                    hint, // sempre presente in itemObj
                     button,
                     placed: false
                 };
