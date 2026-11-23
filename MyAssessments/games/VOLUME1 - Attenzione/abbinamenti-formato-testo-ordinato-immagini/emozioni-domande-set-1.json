@@ -1,0 +1,19 @@
+ {
+         "title": "Scegli l'immagine giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni emozione nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Quando ricevi un regalo che hai atteso da tanto"        , "column": 1 ,"position": 1 , "image": "../../images/emozioni/emozioni-set-1/euforia.png","hint":"Euforia"},
+               { "label": "Stai per salire sul palco per la recita di fine anno"   , "column": 1 ,"position": 2 , "image": "../../images/emozioni/emozioni-set-3/anxiety.png","hint":"Ansia"},
+               { "label": "La tua migliore amica si trasferisce in un'altra città" , "column": 1 ,"position": 3 , "image": "../../images/emozioni/emozioni-set-2/sadness.png","hint":"Tristezza"},
+
+               { "label": "Quando il mago fa apparire un coniglio dal cilindro"    , "column": 2 ,"position": 1 ,"image": "../../images/emozioni/emozioni-set-1/surprise.png","hint":"Sorpresa"},
+               { "label": "Quando assaggi un cibo che non ti piace"                , "column": 2 ,"position": 2 ,"image": "../../images/emozioni/emozioni-set-3/disgust.png","hint":"Disgusto"},
+               { "label": "Sei in camera tua e di notte c'e' un temporale"         , "column": 2 ,"position": 3 ,"image": "../../images/emozioni/emozioni-set-2/fear.png","hint":"Paura" }
+              ]
+           }
+
+         ]
+}

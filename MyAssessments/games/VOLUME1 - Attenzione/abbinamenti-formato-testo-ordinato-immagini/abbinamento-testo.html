@@ -873,7 +873,12 @@
 
                 if (matchingItem) {
                     const placeholder = cell.querySelector('.cell-label-placeholder');
-                    if (placeholder) placeholder.textContent = matchingItem.label;
+                    if (placeholder) {
+                        if ( matchingItem.hint)
+                            placeholder.textContent = matchingItem.hint;
+                        else
+                            placeholder.textContent = matchingItem.label;
+                    }
 
                     cell.classList.add('help-preview');
                     helpPreviewElements.push(cell);
