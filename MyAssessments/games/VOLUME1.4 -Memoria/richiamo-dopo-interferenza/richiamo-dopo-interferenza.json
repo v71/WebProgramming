@@ -2,7 +2,7 @@
   {
     "id": "001",
     "title": "Cucina",
-    "listA": ["caffè", "canzone", "seme", "sentiero", "nuvola"],
+    "listA": ["caffè", "canzone", "seme", "sentiero", "nuvola","gatto"],
     "task": {
       "instruction": "Segna con una crocetta gli oggetti che si usano in cucina.",
       "items": [
@@ -11,14 +11,16 @@
         { "text": "martello", "correct": false },
         { "text": "cucchiaio", "correct": true },
         { "text": "pennello", "correct": false },
-        { "text": "ombrello", "correct": false }
+        { "text": "ombrello", "correct": false },
+        { "text": "coltello", "correct": true }
+        
       ]
     }
   },
   {
     "id": "002",
     "title": "Giardino",
-    "listA": ["finestra", "ruota", "lago", "mela", "orologio"],
+    "listA": ["finestra", "ruota", "lago", "mela", "orologio","cane"],
     "task": {
       "instruction": "Segna con una crocetta gli oggetti che si usano in giardino.",
       "items": [
@@ -27,7 +29,8 @@
         { "text": "pettine", "correct": false },
         { "text": "pala", "correct": true },
         { "text": "cuscino", "correct": false },
-        { "text": "forbici da potatura", "correct": true }
+        { "text": "forbici da potatura", "correct": true },
+        { "text": "cellulare", "correct": false }
       ]
     }
   }

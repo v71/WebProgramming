@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scena mentale</title>
+
+    <!-- File esterni condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+
+    <!-- Main CSS File -->
+    <link href="../stylesheet.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+
+        :root {
+            --help: #4f46e5;
+            --ok: #22c55e;
+            --ko: #ef4444;
+            --gap: clamp(6px, 1.7vh, 16px);
+            --maxw: 1100px;
+            --fs-word: clamp(.8rem, 2.2vh, 1.25rem);
+            --fs-ui: clamp(.75rem, 1.85vh, 1.05rem);
+        }
+
+        h1 {
+            margin: 0 0 16px;
+            font-size: clamp(1.25rem, 4vh, 2.3rem);
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            text-align: center;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        /* L'area di gioco ha SEMPRE le stesse dimensioni, in tutte le fasi */
+        #game-area {
+            flex: 1 1 0;
+            min-height: 0;
+            max-height: 450px;
+            width: 100%;
+            max-width: var(--maxw);
+            margin: 16px 0 10px 0;
+            padding: clamp(8px, 2.2vh, 22px);
+            border-radius: 20px;
+            background: var(--game-area-background);
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        /* Scheletro unico: [ riga alta ] [ zona A ] [ zona B ] [ riga bassa ] */
+        .frame { width: 100%; height: 100%; min-height: 0; display: flex; flex-direction: column; gap: clamp(5px, 1.2vh, 12px); }
+        .toprow, .bottomrow { flex: 0 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .toprow { height: clamp(20px, 3.4vh, 32px); }
+        .bottomrow { height: clamp(30px, 4.8vh, 46px); }
+        .main { flex: 1 1 0; min-height: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--gap); text-align: center; }
+        .main:has(> p + p) { gap: 2px; }
+
+        .slotA, .slotB { box-sizing: border-box; }
+        .slotA { flex: 0 0 33%; }
+        .slotB { flex: 1 1 0; }
+
+        .big-msg {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin: 0;
+            line-height: 1.4;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        /* timer (riga alta, fase di studio) */
+        .timer {
+            font-size: var(--fs-word);
+            line-height: 1;
+            font-weight: 400;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+            min-width: 3.2ch;
+            text-align: right;
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        .timer-bar { flex: 1; max-width: 500px; height: clamp(8px, 1.3vh, 12px); background: var(--body-background); border-radius: 99px; overflow: hidden; border: 2px solid var(--border); }
+        .timer-bar > div { height: 100%; width: 100%; background: var(--accent); }
+
+        /* zone */
+        .zone {
+            background: var(--summary-background);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: clamp(6px, 1.2vh, 12px);
+            display: flex; flex-direction: column;
+            gap: clamp(4px, .9vh, 8px);
+            overflow: hidden;
+            min-height: 0;
+            transition: border-color .15s, background .15s;
+        }
+
+        .zone-label {
+            margin: 0;
+            font-size: var(--fs-ui);
+            font-weight: 400;
+            color: var(--accent);
+            text-align: center;
+            line-height: 1.25;
+            flex: 0 0 auto;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        .zone.panel { align-items: center; justify-content: center; text-align: center; }
+
+        .score { font-size: clamp(1.4rem, 4.6vh, 2.6rem); line-height: 1; font-weight: 800; color: var(--accent); text-shadow: 0 2px 4px rgba(0,0,0,.5); }
+
+        /* =====================================================
+           SCENA MENTALE
+           ===================================================== */
+
+        /* griglia di parole (studio, elenco, aiuto, risultato) */
+        .wgrid {
+            display: grid;
+            gap: clamp(4px, 1vh, 10px);
+            width: 100%;
+            min-height: 0;
+            align-content: center;
+            box-sizing: border-box;
+            padding-inline: 8px;
+        }
+
+        /* parola */
+        .wbtn {
+            font: inherit;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: #fff;
+            min-height: 32px;
+            min-width: 0;
+            padding: 2px 8px;
+            background: var(--default-btn);
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            text-align: center;
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+            transition: background .3s ease, border-color .3s ease, transform .3s ease;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        .wbtn.static { cursor: default; }
+
+        /* risultato: verde = giusta, rosso = sbagliata */
+        .wbtn.ok { background: var(--grid-btn-selected-hovered); border-color: var(--text); }
+        .wbtn.ko { background: var(--grid-btn-wrong); color: var(--text); border-color: var(--grid-btn-wrong-border-color); }
+
+        /* studio: elementi in riga (zona A) + scena mentale (zona B) */
+        .words-zone { flex: 0 0 auto; }
+        .words-zone .wgrid { grid-template-columns: repeat(auto-fit, minmax(clamp(96px, 15vh, 150px), 1fr)); grid-auto-rows: minmax(34px, 64px); }
+        .scene-zone { flex: 1 1 0; }
+        .scene-input {
+            flex: 1 1 0; min-height: 0; width: 100%;
+            font: inherit; font-size: 1.1rem;
+            padding: 8px 14px;
+            resize: none;
+            color: var(--text);
+            background: var(--body-background);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+        }
+        .scene-input::placeholder { color: var(--text-dim); }
+        .scene-input:focus { border-color: var(--accent); }
+
+        /* richiamo: casella di scrittura + elenco */
+        .input-zone { flex: 0 0 auto; }
+        .recall-row { display: flex; gap: 12px; width: 100%; align-items: center; }
+        .recall-input {
+            flex: 1 1 0; min-width: 0;
+            font: inherit; font-size: 1.2rem;
+            padding: 8px 14px;
+            color: var(--text);
+            background: var(--body-background);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            outline: none;
+        }
+        .recall-input::placeholder { color: var(--text-dim); }
+        .recall-input:focus { border-color: var(--accent); }
+        .recall-input:disabled { opacity: .5; cursor: not-allowed; }
+        .shake { animation: buttonErrorShake .45s ease; }
+
+        .list-zone { flex: 1 1 0; }
+        .list-zone .wgrid {
+            flex: 1 1 0;
+            grid-template-columns: repeat(auto-fill, minmax(clamp(96px, 15vh, 140px), 1fr));
+            align-content: start;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) transparent;
+        }
+        .list-zone .wgrid::-webkit-scrollbar { width: 6px; }
+        .list-zone .wgrid::-webkit-scrollbar-track { background: transparent; }
+        .list-zone .wgrid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+        .empty-note { margin: auto; }
+
+        /* risultato: punteggio e messaggio sulla stessa riga */
+        .result-panel { flex: 0 0 auto; flex-direction: row; gap: 24px; }
+        .result-panel .big-msg { font-size: clamp(1.05rem, 2.4vw, 1.8rem); }
+
+        /* pulsanti di gioco */
+        button.cool-btn:disabled, button.cool-btn[disabled] {
+            opacity: .5 !important;
+            cursor: not-allowed !important;
+            transform: none !important;
+            box-shadow: none !important;
+            pointer-events: none !important;
+        }
+
+        /* pulsante Aiuto / Prossimo round / Fatto */
+        .cool-btn-2 {
+            display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+            padding: 12px 28px; font-size: 1.5rem; font-weight: 400;
+            color: var(--text); background-color: #4f46e5;
+            border: 2px solid var(--border); border-radius: 99px; cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all .35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        #reveal-btn { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; margin-bottom: 0 !important; }
+        #reveal-btn:disabled { opacity: .4; cursor: not-allowed; }
+        #reveal-btn.held {
+            background: var(--grid-btn-selected) !important;
+            color: var(--grid-btn-selected-color) !important;
+            border-color: var(--grid-btn-selected-border-color) !important;
+            transform: none !important;
+            box-shadow: var(--shadow-sm) !important;
+            opacity: 1 !important;
+            cursor: default !important;
+        }
+        #reveal-btn .fa {
+            font-size: 25px; line-height: 1; color: #fff; --w: 1px;
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000, 0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000, calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000, calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000, var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+        }
+        /* l'icona resta ferma in hover, focus e pressione */
+        #reveal-btn .fa, #reveal-btn:hover .fa, #reveal-btn:focus .fa, #reveal-btn:active .fa, #reveal-btn:hover i {
+            transform: none !important; animation: none !important; transition: none !important;
+        }
+        #action-controls { margin-bottom: 0 !important; padding-bottom: 0 !important; }
+
+        /* posizioni specifiche per schermata */
+        .frame:has(#btn-start) .toprow,
+        .frame:has(#btn-start) .bottomrow { display: none; }
+        .intro-start { margin-top: 24px; }
+
+        /* transizione tra le schermate */
+        .frame.fade-out { animation: frameOut .25s ease forwards; pointer-events: none; }
+        .frame.fade-in { animation: frameIn .35s ease both; }
+        @keyframes frameOut { to { opacity: 0; transform: translateY(6px); } }
+        @keyframes frameIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+        @media (prefers-reduced-motion: reduce) { .frame.fade-out, .frame.fade-in { animation: none; } }
+
+        @media (max-width: 980px) {
+            #instruction-banner { height: calc(var(--fs-ui) * 3.9 + 12px); padding: 0 16px; border-radius: 18px; }
+        }
+
+        @media (max-width: 700px) {
+            :root { --fs-ui: .78rem; --fs-word: .82rem; }
+            body { padding: 8px 10px; }
+            h1, #progress-title { font-size: min(clamp(1.1rem, 4vh, 2.3rem), 6vw); }
+            #game-area { padding: 8px; border-radius: 16px; }
+            .zone { padding: 5px; gap: 3px; }
+            .wbtn { padding: 2px 3px; border-radius: 6px; font-size: 1rem; }
+            .words-zone .wgrid { grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); }
+            .list-zone .wgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .recall-row { gap: 6px; }
+            .result-panel { flex-direction: column; gap: 6px; }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <h1 id="game-title">Scena mentale</h1>
+
+    <div id="game-stats">
+        <span>Round: <strong id="round-value">-</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Mosse: <strong id="moves-value">0</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <div id="instruction-banner" aria-live="polite">
+        Crea mentalmente un'unica scena assurda che contenga tutti gli elementi. Poi copri la lista e scrivi gli elementi ricordati.
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn-2" disabled>
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Tieni premuto per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <div id="game-area"></div>
+
+    <h2 id="progress-title">Progresso</h2>
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="summary-screen">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Round</th>
+                    <th>Tempo</th>
+                    <th>Mosse</th>
+                    <th>Aiuti</th>
+                    <th>Metric</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+    <script>
+
+    /* I round sono nel file esterno JSON: vengono mescolati e giocati uno dopo l'altro, senza ripetizioni.
+       Formato: [ { "id": "001", "title": "Scena 1", "words": ["molletta", "pettine", "telefono", "zaino", "cucchiaio"] }, ... ]
+       "title" è facoltativo; "words" contiene gli elementi da ricordare (di solito 5). */
+
+    const DATA_URL = 'scena-mentale.json';
+    const STUDY_SECONDS = 45;
+
+    let rounds = [];               // tutti i round, in ordine casuale
+    let roundIndex = 0;            // round corrente
+    let results = [];              // risultati di ogni round
+    let R = null;                  // round corrente
+    let moves = 0;
+    let helps = 0;
+    let seconds = 0;
+    let clock = null;
+    let studyTimer = null;
+    let helpEnabled = false;
+    let isGameReady = false;       // true solo quando i dati sono caricati
+    let currentButtonMode = 'help';
+    let entries = [];              // parole scritte dall'utente nel round corrente
+
+    const $ = id => document.getElementById(id);
+    const area = $('game-area');
+    const revealBtn = $('reveal-btn');
+    const btnIcon = $('btn-icon');
+
+    const gameTitle = document.getElementById('game-title');
+    const gameStats = document.getElementById('game-stats');
+    const gameArea = document.getElementById('game-area');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const actionControls = document.getElementById('action-controls');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = document.getElementById('progress-title');
+
+    /* =========================================================
+       PULSANTE: ICONA E TESTO (help / next / done)
+       ========================================================= */
+    const BUTTON_ICONS = ['fa-lightbulb-o', 'fa-arrow-right', 'fa-check'];
+
+    function setButtonIcon(iconClass) {
+        if (!btnIcon) return;
+        btnIcon.classList.remove(...BUTTON_ICONS);
+        btnIcon.classList.add(iconClass);
+    }
+
+    function setButtonState(mode) {
+        currentButtonMode = mode;
+        const states = {
+            help: { icon: 'fa-lightbulb-o', text: 'Tieni premuto per avere un aiuto!' },
+            next: { icon: 'fa-arrow-right', text: 'Prossimo round' },
+            done: { icon: 'fa-check',       text: 'Fatto' }
+        };
+        setButtonIcon(states[mode].icon);
+        const textEl = revealBtn.querySelector('.btn-text');
+        if (textEl) textEl.textContent = states[mode].text;
+    }
+
+    /* Dissolvenza: esce la schermata attuale, poi appare la successiva */
+    function transitionTo(next) {
+        const old = area.querySelector('.frame');
+        if (!old) { next(); return; }
+        old.classList.add('fade-out');
+        setTimeout(() => {
+            next();
+            const fresh = area.querySelector('.frame');
+            if (fresh) fresh.classList.add('fade-in');
+        }, 250);
+    }
+
+    /* =========================================================
+       UTILITÀ
+       ========================================================= */
+    // confronto parole: ignora maiuscole, accenti e spazi doppi
+    function norm(s) {
+        return s.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, ' ');
+    }
+
+    // true se la scena contiene la parola come parola intera (ignora maiuscole, accenti, punteggiatura e apostrofi)
+    function sceneHas(text, word) {
+        const pad = s => ' ' + norm(s).replace(/[^a-z0-9]+/g, ' ').trim() + ' ';
+        return pad(text).includes(pad(word));
+    }
+
+    // testo dell'utente / del JSON dentro le stringhe HTML
+    function esc(s) {
+        return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    }
+
+    function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function startClock() {
+        if (clock) return;
+        clock = setInterval(() => { seconds++; $('time-value').textContent = seconds + 's'; }, 1000);
+    }
+
+    function stopClock() {
+        clearInterval(clock);
+        clock = null;
+    }
+
+    function updateStats() {
+        $('moves-value').textContent = moves;
+        $('reveals-value').textContent = helps;
+    }
+
+    function resetRoundStats() {
+        moves = 0; helps = 0; seconds = 0;
+        entries = [];
+        $('time-value').textContent = '0s';
+        updateStats();
+    }
+
+    function setProgress(pct) { $('progress-bar-fill').style.width = pct + '%'; }
+    function banner(txt) { $('instruction-banner').textContent = txt; }
+
+    function enableHelp(on) {
+        helpEnabled = on;
+        revealBtn.disabled = !on;
+    }
+
+    /* Scheletro unico: riga alta / zona A / zona B / riga bassa (oppure un solo blocco "main") */
+    function frame({ top = '', a = '', b = '', main = null, bottom = '' }) {
+        area.innerHTML = `<div class="frame">
+            <div class="toprow">${top}</div>
+            ${main !== null ? `<div class="main">${main}</div>` : a + b}
+            <div class="bottomrow">${bottom}</div>
+        </div>`;
+    }
+
+    /* ---------- FASE 0: intro ---------- */
+    function showIntro() {
+        setButtonState('help');
+        enableHelp(false);
+        $('round-value').textContent = `${roundIndex + 1}/${rounds.length}`;
+        banner(`Round ${roundIndex + 1} di ${rounds.length}. Premi Inizia: vedrai ${R.words.length} elementi per ${STUDY_SECONDS} secondi.`);
+        frame({
+            main: `<p class="big-msg">Vedrai ${R.words.length} elementi per ${STUDY_SECONDS} secondi.</p>
+                <p class="big-msg">Scrivi un'unica scena assurda che li contenga tutti.</p>
+                <p class="big-msg">Poi li scriverai a memoria. Il tempo parte quando premi il pulsante.</p>
+                <button id="btn-start" class="cool-btn intro-start">Inizia</button>`
+        });
+        $('btn-start').onclick = () => { startClock(); transitionTo(startStudy); };
+    }
+
+    /* ---------- FASE 1: studio (elementi + scena mentale) ---------- */
+    function startStudy() {
+        let left = STUDY_SECONDS;
+        enableHelp(false);
+        banner('Scrivi un\'unica scena assurda che contenga tutti gli elementi: diventano verdi man mano che li usi.');
+        frame({
+            top: `<span class="timer" id="study-left">${left}s</span><div class="timer-bar"><div id="study-bar"></div></div>`,
+            a: `<div class="zone panel words-zone">
+                    <p class="zone-label" id="words-label">Elementi nella scena: 0 / ${R.words.length}</p>
+                    <div class="wgrid">${R.words.map(w => `<span class="wbtn static">${esc(w)}</span>`).join('')}</div>
+                </div>`,
+            b: `<div class="zone scene-zone slotB">
+                    <p class="zone-label">La mia scena mentale</p>
+                    <textarea id="scene-input" class="scene-input" maxlength="400"
+                              placeholder="Scrivi la tua scena assurda usando tutti gli elementi…" spellcheck="false"></textarea>
+                </div>`,
+            bottom: '<button id="btn-done" class="cool-btn" disabled>Ho finito di studiare</button>'
+        });
+        const stop = () => {
+            clearInterval(studyTimer);
+            transitionTo(startPlay);
+        };
+        $('btn-done').onclick = stop;
+        const scene = $('scene-input');
+        const chips = [...area.querySelectorAll('.words-zone .wbtn')];
+        const checkScene = () => {
+            let found = 0;
+            chips.forEach((c, i) => {
+                const ok = sceneHas(scene.value, R.words[i]);
+                c.classList.toggle('ok', ok);
+                if (ok) found++;
+            });
+            $('words-label').textContent = `Elementi nella scena: ${found} / ${R.words.length}`;
+            $('btn-done').disabled = found < R.words.length;
+        };
+        scene.addEventListener('input', checkScene);
+        scene.focus({ preventScroll: true });
+        const bar = $('study-bar');
+        bar.style.width = '100%';
+        bar.getBoundingClientRect();
+        bar.style.transition = `width ${STUDY_SECONDS}s linear`;
+        requestAnimationFrame(() => requestAnimationFrame(() => { bar.style.width = '0%'; }));
+        studyTimer = setInterval(() => {
+            left--;
+            const el = $('study-left'); if (el) el.textContent = left + 's';
+            if (left <= 0) stop();
+        }, 1000);
+    }
+
+    /* ---------- FASE 2: richiamo (lista coperta: scrivi quello che ricordi) ---------- */
+    function startPlay() {
+        entries = [];
+        banner('Dopo aver coperto la lista, scrivi gli elementi che ricordi e premi Invio. Tieni premuto il pulsante Aiuto per rivederli.');
+        renderPlay();
+        enableHelp(true);
+    }
+
+    function renderPlay() {
+        frame({
+            top: `<span class="big-msg" id="recall-top"></span>`,
+            a: `<div class="zone panel input-zone">
+                    <div class="recall-row">
+                        <input id="word-input" class="recall-input" type="text" maxlength="30"
+                               placeholder="Scrivi un elemento…" autocomplete="off" autocapitalize="off" spellcheck="false">
+                        <button id="btn-add" class="cool-btn">Aggiungi</button>
+                    </div>
+                </div>`,
+            b: `<div class="zone list-zone" id="recall-zone"></div>`,
+            bottom: `<button id="btn-check" class="cool-btn" disabled>Verifica</button>`
+        });
+        renderList();
+
+        const input = $('word-input');
+        input.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); addWord(); } });
+        $('btn-add').onclick = addWord;
+        $('btn-check').onclick = () => transitionTo(showResult);
+
+        input.focus({ preventScroll: true });
+    }
+
+    function listHtml() {
+        return (entries.length
+            ? `<div class="wgrid">${entries.map(w =>
+                `<span class="wbtn static">${esc(w)}</span>`).join('')}</div>`
+            : `<p class="big-msg empty-note">Nessun elemento</p>`);
+    }
+
+    function renderList() {
+        const z = $('recall-zone');
+        if (!z) return;
+        z.innerHTML = listHtml();
+        const total = R.words.length;
+        const top = $('recall-top');
+        if (top) top.textContent = entries.length === 0 ? `Scrivi i ${total} elementi che ricordi`
+            : `Hai scritto ${entries.length} su ${total}`;
+        const chk = $('btn-check');
+        if (chk) chk.disabled = entries.length === 0;
+        // si possono scrivere al massimo tanti elementi quanti ne erano stati mostrati
+        const full = entries.length >= total;
+        const input = $('word-input'), add = $('btn-add');
+        if (input) input.disabled = full;
+        if (add) add.disabled = full;
+    }
+
+    function addWord() {
+        const input = $('word-input');
+        if (!input || entries.length >= R.words.length) return;
+        const raw = input.value.trim().replace(/\s+/g, ' ');
+        if (!raw) return;
+        if (entries.some(e => norm(e) === norm(raw))) {       // parola già scritta: nessuna mossa
+            input.classList.remove('shake');
+            void input.offsetWidth;
+            input.classList.add('shake');
+            input.select();
+            return;
+        }
+        entries.push(raw);
+        moves++; updateStats();
+        input.value = '';
+        renderList();
+        if (!input.disabled) input.focus({ preventScroll: true });
+    }
+
+    /* Pulsante: in modalità "help" si tiene premuto per rivedere gli elementi;
+       in modalità "next" / "done" funziona come un normale click. */
+    (function setupHelp() {
+        const btn = revealBtn;
+        let held = false;
+        const isHelp = () => currentButtonMode === 'help';
+
+        const show = () => {
+            if (held || !helpEnabled || !isHelp()) return;
+            held = true; helps++; updateStats();
+            btn.classList.add('held');
+            const z = $('recall-zone');
+            if (z) z.innerHTML = `<div class="wgrid">${R.words.map(w => `<span class="wbtn static">${esc(w)}</span>`).join('')}</div>`;
+        };
+        const hide = () => {
+            if (!held) return;
+            held = false;
+            btn.classList.remove('held');
+            renderList();
+        };
+
+        btn.addEventListener('pointerdown', e => {
+            if (!isHelp()) return;
+            e.preventDefault();
+            try { btn.setPointerCapture(e.pointerId); } catch (_) {}
+            show();
+        });
+        ['pointerup', 'pointercancel', 'lostpointercapture', 'pointerleave', 'blur'].forEach(ev => btn.addEventListener(ev, hide));
+        btn.addEventListener('keydown', e => {
+            if (!isHelp()) return;
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) { e.preventDefault(); show(); }
+        });
+        btn.addEventListener('keyup', e => { if (isHelp() && (e.key === ' ' || e.key === 'Enter')) hide(); });
+        btn.addEventListener('contextmenu', e => e.preventDefault());
+
+        btn.addEventListener('click', () => {
+            if (currentButtonMode === 'next') {
+                btn.disabled = true;
+                transitionTo(nextRound);
+            } else if (currentButtonMode === 'done') {
+                btn.disabled = true;
+                transitionTo(showSummary);
+            }
+        });
+    })();
+
+    /* ---------- FASE 3: risultato ---------- */
+    function showResult() {
+        stopClock();
+
+        // le parole dell'utente sono verdi (giuste) o rosse (non erano nell'elenco): le risposte non vengono mai mostrate
+        const answers = new Set(R.words.map(norm));
+        const rows = entries.map(w => ({ w, ok: answers.has(norm(w)) }));
+        const score = rows.filter(r => r.ok).length;
+        const total = R.words.length;
+        const missed = total - score;
+
+        // salva i valori del round e fai avanzare la barra
+        results.push({
+            label: R.title || R.id || 'Round',
+            score, total, seconds, moves, helps,
+            metric: total ? score / total * 100 : 0
+        });
+        setProgress(results.length / rounds.length * 100);
+
+        // il pulsante diventa "Prossimo round", oppure "Fatto" all'ultimo round
+        const isLast = roundIndex >= rounds.length - 1;
+        setButtonState(isLast ? 'done' : 'next');
+        helpEnabled = false;
+        revealBtn.disabled = false;
+
+        banner('Ecco il risultato: verde = elemento giusto, rosso = elemento che non c\'era.');
+
+        const missedTxt = missed === 1 ? 'ti manca 1 elemento' : `ti mancano ${missed} elementi`;
+        const msg = score === total
+            ? 'Perfetto! Li hai ricordati tutti.'
+            : score >= total * 0.6
+                ? `Bel lavoro, ma ${missedTxt}.`
+                : `Buon tentativo, ma ${missedTxt}.`;
+
+        frame({
+            top: `<span class="big-msg">Risultato</span>`,
+            a: `<div class="zone panel result-panel" style="border-style:solid;border-color:var(--border)">
+                    <div class="score">${score} / ${total}</div>
+                    <p class="big-msg">${msg}</p>
+                </div>`,
+            b: `<div class="zone list-zone">
+                    ${rows.length
+                        ? `<div class="wgrid">${rows.map(r => `<span class="wbtn static ${r.ok ? 'ok' : 'ko'}">${esc(r.w)}</span>`).join('')}</div>`
+                        : `<p class="big-msg empty-note">Non hai scritto nessun elemento.</p>`}
+                </div>`
+        });
+    }
+
+    /* ---------- Prossimo round ---------- */
+    function nextRound() {
+        roundIndex++;
+        R = rounds[roundIndex];
+        resetRoundStats();
+        showIntro();                // showIntro rimette il pulsante in modalità aiuto
+    }
+
+    function showSummary() {
+        enableHelp(false);
+        stopClock();
+
+        // nascondo tutto il gioco, compresa l'area di gioco
+        [gameTitle, gameStats, instructionBanner, actionControls,
+        progressBarTitle, progressBar, gameArea].forEach(el => el.style.display = 'none');
+
+        const tbody = $('summary-tbody');
+        tbody.innerHTML = '';
+        results.forEach((res, idx) => {
+            const row = document.createElement('tr');
+            const values = [`${idx + 1} · ${res.label}`, res.seconds + 's', res.moves, res.helps, res.metric.toFixed(2)];
+            values.forEach((value, i) => {
+                const td = document.createElement('td');
+                td.textContent = value;              // textContent: niente HTML iniettato dal JSON
+                if (i === 4) td.style.fontWeight = '700';
+                row.appendChild(td);
+            });
+            tbody.appendChild(row);
+        });
+
+        const sum = k => results.reduce((a, r) => a + r[k], 0);
+        const totalTime = sum('seconds');
+        const totalMoves = sum('moves');
+        const totalHelps = sum('helps');
+        const averageMetric = results.length ? sum('metric') / results.length : 0;
+        const normalizedScore = Math.min(Math.max(averageMetric, 0), 100);
+
+        $('summary-totals').innerHTML = `
+            <div>Tempo Totale: <strong>${totalTime}s</strong> | Mosse Totali: <strong>${totalMoves}</strong> | Aiuti Totali: <strong>${totalHelps}</strong></div>
+            <div>Media: <strong>${averageMetric.toFixed(2)}</strong></div>
+            <div>Punteggio: <strong>${normalizedScore.toFixed(1)} / 100</strong></div>`;
+
+        const screen = $('summary-screen');
+        screen.style.display = 'block';
+        screen.classList.add('show');
+    }
+
+    /* ---------- Caricamento JSON + mescolamento dei round ---------- */
+    async function loadRound() {
+        isGameReady = false;
+        enableHelp(false);
+        frame({ main: '<p class="big-msg">Caricamento…</p>' });
+
+        try {
+            const res = await fetch(DATA_URL, { cache: 'no-store' });
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+            const all = await res.json();
+            const valid = Array.isArray(all) ? all.filter(r => r && Array.isArray(r.words) && r.words.length) : [];
+            if (!valid.length) throw new Error('JSON vuoto o non valido');
+            rounds = shuffle(valid.slice());    // tutti i round, in ordine casuale, senza ripetizioni
+            roundIndex = 0;
+            results = [];
+            R = rounds[0];
+            resetRoundStats();
+            setProgress(0);
+            isGameReady = true;
+            showIntro();
+        } catch (err) {
+            frame({ main: `<p class="big-msg">Impossibile caricare gli esercizi.</p>
+                <p class="big-msg">Controlla che il file <strong>${DATA_URL}</strong> sia nella stessa cartella e che la pagina sia aperta da un server (non da file://).</p>` });
+        }
+    }
+
+    /* =========================================================
+       AVVIO
+       ========================================================= */
+    async function initGame() {
+        await loadRound();
+        document.body.classList.add('loaded');
+    }
+
+    initGame();
+    </script>
+</body>
+</html>

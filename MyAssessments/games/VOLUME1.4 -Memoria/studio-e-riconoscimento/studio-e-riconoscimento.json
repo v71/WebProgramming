@@ -1,0 +1,25 @@
+{
+    "title": "Studio e riconoscimento",
+    "categories": [
+        {
+            "label": "Elenco 1",
+            "words": ["mela", "cavallo", "chitarra", "martello", "rosa", "treno", "giacca", "tazza"],
+            "distractors": ["tulipano", "cappotto", "violino", "cacciavite", "mucca", "autobus", "pera", "bicchiere"]
+        },
+        {
+            "label": "Elenco 2",
+            "words": ["gatto", "pantalone", "chiave", "luna", "pane", "camion", "sedia", "limone"],
+            "distractors": ["cane", "gonna", "lucchetto", "sole", "pasta", "furgone", "tavolo", "arancia"]
+        },
+        {
+            "label": "Elenco 3",
+            "words": ["orologio", "pecora", "penna", "aereo", "cappello", "fiume", "cucchiaio", "ciliegia"],
+            "distractors": ["sveglia", "capra", "matita", "elicottero", "sciarpa", "lago", "forchetta", "fragola"]
+        },
+        {
+            "label": "Elenco 4",
+            "words": ["ombrello", "delfino", "pianoforte", "bicicletta", "pennello", "scarpa", "zucchero", "margherita"],
+            "distractors": ["impermeabile", "balena", "tromba", "motocicletta", "rullo", "stivale", "sale", "girasole"]
+        }
+    ]
+}

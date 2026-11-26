@@ -16,6 +16,7 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+
     <style>
 
          :root {
@@ -538,6 +539,7 @@
         async function playFinalConfetti() {
             if (typeof Confetti === 'undefined') return;
             try {
+                playSound('wow');
                 await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
                 await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
                 await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
@@ -564,6 +566,14 @@
                 span.setAttribute('aria-pressed', String(span.classList.contains('selected')));
 
                 if (isNewSelection) {
+
+                    if ( foundCorrectCount!=totalCorrectItems-1){
+                        playSound('correct');
+                    }
+                    else{
+                        playSound('next_round');
+                    }
+
                     span.classList.add('help-correct');
                     playCheckmark(span); // il segno di spunta compare solo su questa parola
                 } else {
@@ -579,6 +589,7 @@
                 void span.offsetWidth; // reflow per riavviare l'animazione
                 span.classList.add('error-word');
 
+                playSound('error');
                 // Toglie lo stato di errore a fine animazione (0.4s, come lo shake)
                 clearTimeout(span._errorTimeout);
                 span._errorTimeout = setTimeout(() => {
@@ -758,6 +769,8 @@
             // isHoldingHelp evita di contare più aiuti con più dita / tasti contemporanei
             if (isHoldingHelp || isGameCompleted || isGameLoading) return;
             isHoldingHelp = true;
+
+            playSound('help');
 
             revealCount++;
             updateRevealDisplay();

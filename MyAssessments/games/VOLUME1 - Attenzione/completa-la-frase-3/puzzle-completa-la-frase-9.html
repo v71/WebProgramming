@@ -855,6 +855,7 @@ document.addEventListener('DOMContentLoaded', () => {
     async function playFinalConfetti() {
         if (typeof Confetti === 'undefined') return;
         try {
+            playSound('wow');
             await Confetti.burst({ origin: { x: 0.15, y: 0.5 }, angle: 60, spread: 60, count: 90 });
             await Confetti.burst({ origin: { x: 0.85, y: 0.5 }, angle: 120, spread: 60, count: 90 });
             await Confetti.burst({ origin: { x: 0.5, y: 0.5 }, angle: 90, spread: 60, count: 90 });
@@ -906,7 +907,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Prima lo stato (timer, completamento, pulsante), poi l'animazione
         registerMove();
-        if (isWordCorrect) playCheckmark(slot);
+
+         if (isWordCorrect) {
+            const allSlotsFilled = slotsMeta.every(m => m.element.querySelector('.card'));
+            const isCorrect = slotsMeta.every( m => m.element.querySelector('.card')?.dataset.word === m.expected );
+            if (!allSlotsFilled) playSound('correct');
+            if (!allSlotsFilled){            
+                playSound('correct');}
+            else{
+                if (isCorrect){
+                    playSound('next_round');
+                }
+            }
+            playCheckmark(slot);
+        } 
+        else {
+            playSound('error');
+        }
     }
 
     function checkSentenceAutomatic() {
@@ -1073,6 +1090,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function showReveal() {
         if (buttonMode !== 'help' || isRevealing || roundCompleted) return;
         isRevealing = true;
+
+        playSound('help'); 
 
         revealCount++;
         updateRevealsDisplay();

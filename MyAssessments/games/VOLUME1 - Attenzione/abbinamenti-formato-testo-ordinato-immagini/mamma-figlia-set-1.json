@@ -1,0 +1,18 @@
+ {
+         "title": "Scegli l'immagine giusta",
+         "categories": [
+           {
+             "instruction": "Metti ogni azione nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Allacciare le scarpe" , "column": 1 ,"position": 1 , "image": "../../images/mamma-e-figlia/allacciare.png"},
+               { "label": "Alzarsi dal letto"   , "column": 1 ,"position": 2 , "image": "../../images/mamma-e-figlia/alzare.png"},
+               { "label": "Andare a coricarsi"   , "column": 1 ,"position": 3 , "image": "../../images/mamma-e-figlia/buonanotte.png"},
+
+               { "label": "Lavare le mani" , "column": 2 ,"position": 1 ,"image": "../../images/mamma-e-figlia/lavare.png"},
+               { "label": "Pettinare i capelli"   , "column": 2 ,"position": 2 ,"image": "../../images/mamma-e-figlia/pettinare.png"},
+               { "label": "Svegliarsi la mattina" , "column": 2 ,"position": 3 ,"image": "../../images/mamma-e-figlia/svegliare.png" }
+              ]
+           }
+         ]
+}
