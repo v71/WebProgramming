@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analogie verbali</title>
+
+    <!-- Script condivisi -->
+    <script src="../../js/checkmark.js"></script>
+    <script src="../../js/celebrazion.js"></script>
+    <!-- SOUNDS -->
+    <script src="../../js/sound.js"></script>
+
+    <link href="../stylesheet.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <style>
+        .cool-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--text);
+            background-color: #4f46e5;
+            border: 2px solid var(--border);
+            border-radius: 99px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            text-decoration: none;
+        }
+
+        /* Icona dei pulsanti Aiuto / Verifica: contorno sottile, ferma in hover/focus/active */
+        :is(#reveal-btn, #verify-btn) .fa,
+        :is(#reveal-btn, #verify-btn):hover .fa,
+        :is(#reveal-btn, #verify-btn):focus .fa,
+        :is(#reveal-btn, #verify-btn):active .fa {
+            font-size: 25px;
+            line-height: 1;
+            color: #ffffff;
+            --w: 1px;
+            text-shadow:
+                calc(var(--w) * -1) calc(var(--w) * -1) 0 #000,
+                0 calc(var(--w) * -1) 0 #000,
+                var(--w) calc(var(--w) * -1) 0 #000,
+                calc(var(--w) * -1) 0 0 #000,
+                var(--w) 0 0 #000,
+                calc(var(--w) * -1) var(--w) 0 #000,
+                0 var(--w) 0 #000,
+                var(--w) var(--w) 0 #000 !important;
+            -webkit-text-stroke: 0 !important;
+            filter: none !important;
+            transform: none !important;
+            animation: none !important;
+            transition: none !important;
+        }
+
+        /* Area di gioco: altezza massima fissa */
+        #game-area {
+            max-height: 450px;
+            overflow-y: auto;
+        }
+
+        /* Frame / zone */
+        .frame {
+            width: 100%;
+            opacity: 1;
+        }
+        .frame.fade-out { opacity: 0; transition: opacity 0.25s ease; }
+        .frame.fade-in  { opacity: 1; transition: opacity 0.35s ease; }
+
+        .main {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+/*
+        .zone-label {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            text-align: left;
+        }
+        */
+  
+        .zone-label {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--accent);
+            text-align: center;
+            line-height: 1.25;
+            flex: 0 0 auto;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        .panel {
+            background: var(--summary-background);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 18px 20px;
+            text-align: center;
+        }
+
+        /*
+        .big-msg {
+            margin: 0;
+            font-size: 1.9rem;
+            font-weight: 700;
+            line-height: 1.3;
+            color: var(--text);
+        }
+        */
+
+        .big-msg {
+            font-size: 1.8rem;
+            font-weight: 400;
+            margin: 0;
+            line-height: 1.4;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 12px 18px;
+            font-size: 1.5rem;
+            font-family: inherit;
+            color: var(--text);
+            background: var(--summary-background);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            outline: none;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000, 0 4px 8px rgba(0,0,0,.5);
+        }
+     
+        .answer-input::placeholder { color: var(--text-dim); }
+        .answer-input:focus { border-color: var(--accent); }
+        .answer-input.input-error { border-color: var(--wrong); animation: buttonErrorShake 0.45s ease; }
+
+        .help-word {
+            padding: 0 10px;
+            border-radius: 10px;
+            background: var(--grid-btn-help);
+            color: var(--grid-btn-help-text);
+        }
+
+        /* Riepilogo finale: più largo per ospitare la tabella */
+        #summary-screen { max-width: 960px; }
+        #summary-screen .summary-table { font-size: 0.95rem; }
+
+        @media (max-width: 700px) {
+            .big-msg { font-size: 1.4rem; }
+            .answer-input { font-size: 1.2rem; }
+            .cool-btn { font-size: 1.1rem; padding: 10px 20px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TITLE -->
+    <h1 id="game-title">Analogie verbali</h1>
+
+    <!-- COUNTERS -->
+    <div id="game-stats" aria-live="polite">
+        <span>Round: <strong id="round-value">1 / 1</strong></span>
+        <span>Tempo: <strong id="time-value">0s</strong></span>
+        <span>Aiuti: <strong id="reveals-value">0</strong></span>
+    </div>
+
+    <!-- INSTRUCTION BOX -->
+    <div id="instruction-banner" aria-live="polite">
+        Caricamento...
+    </div>
+
+    <div class="controls" id="action-controls">
+        <button id="reveal-btn" class="cool-btn">
+            <i id="btn-icon" class="fa fa-lightbulb-o"></i>
+            <span class="btn-text">Clicca qui per avere un aiuto!</span>
+        </button>
+    </div>
+
+    <!-- GAME AREA (contenuto disegnato da frame()) -->
+    <div id="game-area"></div>
+
+    <!-- VERIFICA (sotto l'area di gioco) -->
+    <div class="controls" id="verify-controls">
+        <button id="verify-btn" class="cool-btn">
+            <i class="fa fa-check"></i>
+            <span class="btn-text">Verifica</span>
+        </button>
+    </div>
+
+    <!-- PROGRESS -->
+    <h1 id="progress-title">Progresso</h1>
+
+    <div class="progress-bar-container">
+        <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%;"></div>
+    </div>
+
+    <div id="summary-screen" style="display: none;">
+        <h2>Hai completato tutto! 🎉</h2>
+        <p>Ecco il riepilogo delle tue prestazioni:</p>
+        <table class="summary-table">
+            <thead>
+                <tr>
+                    <th>Analogia</th>
+                    <th>Parola corretta</th>
+                    <th>Tempo</th>
+                    <th>Aiuti</th>
+                    <th>%</th>
+                </tr>
+            </thead>
+            <tbody id="summary-tbody"></tbody>
+        </table>
+        <div class="summary-totals" id="summary-totals"></div>
+    </div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const DATA_URL = 'analogie-verbali.json';
+    const SHUFFLE_ROUNDS = true;   // false = round nell'ordine del file
+
+    // Parametri del punteggio
+    const SCORING = {
+        helpPenalty: 10,      // punti % persi per ogni aiuto
+        minSimilarity: 0.5    // sotto questa somiglianza la risposta vale 0%
+    };
+
+    const INSTRUCTION_TEXT = 'Prima cerca che relazione c\'è nella prima coppia di parole, poi applicala alla seconda.';
+
+    // --- Stato ---
+    let rounds = [];
+    let roundIndex = 0;
+    let results = [];
+    let startTime = 0;
+    let elapsedSeconds = 0;
+    let elapsedTimerInterval = null;
+    let revealCount = 0;
+    let isGameLoading = true;
+    let roundActive = false;
+
+    // --- Elementi ---
+    const gameTitle = document.getElementById('game-title');
+    const gameArea = document.getElementById('game-area');
+    const actionControls = document.getElementById('action-controls');
+    const verifyControls = document.getElementById('verify-controls');
+    const revealBtn = document.getElementById('reveal-btn');
+    const verifyBtn = document.getElementById('verify-btn');
+    const revealsValueEl = document.getElementById('reveals-value');
+    const roundValueEl = document.getElementById('round-value');
+    const progressBarFill = document.getElementById('progress-bar-fill');
+    const instructionBanner = document.getElementById('instruction-banner');
+    const timeValueEl = document.getElementById('time-value');
+    const summaryScreen = document.getElementById('summary-screen');
+    const summaryTbody = document.getElementById('summary-tbody');
+    const summaryTotals = document.getElementById('summary-totals');
+    const gameStats = document.getElementById('game-stats');
+    const progressBar = document.querySelector('.progress-bar-container');
+    const progressBarTitle = document.getElementById('progress-title');
+
+    const gameElements = [
+        gameArea, gameStats, instructionBanner, progressBar,
+        progressBarTitle, gameTitle, actionControls, verifyControls
+    ];
+
+    // Elementi creati da buildFrame()
+    let frameEl, analogyTextEl, answerInput;
+
+    function setGameVisible(visible) {
+        gameElements.forEach(el => {
+            if (el) el.style.display = visible ? '' : 'none';
+        });
+        if (summaryScreen) summaryScreen.style.display = visible ? 'none' : 'block';
+    }
+
+    // --- Costruzione interfaccia ---
+    function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined) node.textContent = text;
+        return node;
+    }
+
+    // Disegna un blocco centrale "main" nell'area di gioco
+    function frame({ main }) {
+        gameArea.replaceChildren();
+        const f = el('div', 'frame');
+        const m = el('div', 'main');
+        main.forEach(node => m.appendChild(node));
+        f.appendChild(m);
+        gameArea.appendChild(f);
+        return f;
+    }
+
+    function buildFrame() {
+        const panel = el('div', 'panel');
+        analogyTextEl = el('p', 'big-msg', '');
+        panel.appendChild(analogyTextEl);
+
+        const analogyLabel = el('div', 'zone-label', 'Frase da completare');
+        const answerLabel = el('label', 'zone-label', 'Parola che completa la frase');
+        answerLabel.setAttribute('for', 'answer-input');
+
+        answerInput = el('input', 'answer-input');
+        answerInput.id = 'answer-input';
+        answerInput.type = 'text';
+        answerInput.placeholder = 'Scrivi qui la parola...';
+        answerInput.autocomplete = 'off';
+        answerInput.autocapitalize = 'off';
+        answerInput.spellcheck = false;
+        answerInput.maxLength = 30;
+        answerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') verify();
+        });
+        answerInput.addEventListener('input', () => answerInput.classList.remove('input-error'));
+
+/*        frameEl = frame({ main: [panel, answerLabel, answerInput] });*/
+        frameEl = frame({ main: [analogyLabel, panel, answerLabel, answerInput] });
+    }
+
+    // Dissolvenza: 250 ms fuori, cambio contenuto, 350 ms dentro
+    function transitionTo(fn) {
+        return new Promise(resolve => {
+            frameEl.classList.remove('fade-in');
+            frameEl.classList.add('fade-out');
+            setTimeout(() => {
+                fn();
+                frameEl.classList.remove('fade-out');
+                frameEl.classList.add('fade-in');
+                setTimeout(resolve, 350);
+            }, 250);
+        });
+    }
+
+    // --- Timer (basato su Date.now: preciso anche con tab in background) ---
+    function syncElapsed() {
+        elapsedSeconds = Math.floor((Date.now() - startTime) / 1000);
+        if (timeValueEl) timeValueEl.textContent = elapsedSeconds + 's';
+    }
+
+    function stopElapsedTimer() {
+        if (elapsedTimerInterval) {
+            clearInterval(elapsedTimerInterval);
+            elapsedTimerInterval = null;
+        }
+    }
+
+    function startElapsedTimer() {
+        stopElapsedTimer();
+        startTime = Date.now();
+        syncElapsed();
+        elapsedTimerInterval = setInterval(syncElapsed, 500);
+    }
+
+    // --- Punteggio ---
+    function normalize(str) {
+        return str
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase()
+            .replace(/[^a-z0-9]/g, '');
+    }
+
+    function levenshtein(a, b) {
+        let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+        for (let i = 1; i <= a.length; i++) {
+            const curr = [i];
+            for (let j = 1; j <= b.length; j++) {
+                const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+                curr[j] = Math.min(prev[j] + 1, curr[j - 1] + 1, prev[j - 1] + cost);
+            }
+            prev = curr;
+        }
+        return prev[b.length];
+    }
+
+    function similarity(typed, answer) {
+        const a = normalize(typed);
+        const b = normalize(answer);
+        if (!a || !b) return 0;
+        const sim = 1 - levenshtein(a, b) / Math.max(a.length, b.length);
+        return sim >= SCORING.minSimilarity ? sim : 0;
+    }
+
+    function computePercent(typed, answer, helps) {
+        const base = Math.round(similarity(typed, answer) * 100);
+        const value = base - helps * SCORING.helpPenalty;
+        return Math.min(100, Math.max(0, value));
+    }
+
+    // --- Riepilogo ---
+    function addCell(row, text, opts = {}) {
+        const td = document.createElement('td');
+        if (opts.bold) {
+            const strong = document.createElement('strong');
+            strong.textContent = text;
+            td.appendChild(strong);
+        } else {
+            td.textContent = text;
+        }
+        if (opts.color) td.style.color = opts.color;
+        row.appendChild(td);
+    }
+
+    function showSummaryScreen() {
+        stopElapsedTimer();
+        setGameVisible(false);
+
+        summaryTbody.innerHTML = '';
+        results.forEach(r => {
+            const row = document.createElement('tr');
+            addCell(row, r.prompt);
+            addCell(row, r.answer, {
+                bold: true,
+                color: r.correct ? 'var(--accent-3)' : 'var(--wrong)'
+            });
+            addCell(row, `${r.seconds}s`);
+            addCell(row, String(r.helps));
+            addCell(row, `${r.percent}%`, { bold: true });
+            summaryTbody.appendChild(row);
+        });
+
+        const sum = key => results.reduce((t, r) => t + r[key], 0);
+        const average = results.length
+            ? Math.min(100, Math.max(0, Math.round(sum('percent') / results.length)))
+            : 0;
+        summaryTotals.innerHTML = `
+            <div>Tempo Totale: <strong>${sum('seconds')}s</strong></div>
+            <div>Aiuti Totali: <strong>${sum('helps')}</strong></div>
+            <div>Media: <strong>${average}%</strong></div>
+        `;
+    }
+
+    // --- Aggiornamento interfaccia ---
+    function updateCounters() {
+        if (revealsValueEl) revealsValueEl.textContent = revealCount;
+        if (roundValueEl) roundValueEl.textContent = `${roundIndex + 1} / ${rounds.length}`;
+    }
+
+    function setOverallProgress(done) {
+        const total = rounds.length;
+        if (progressBarFill) progressBarFill.style.width = (total > 0 ? (done / total) * 100 : 0) + '%';
+    }
+
+    function showLoadError(message) {
+        isGameLoading = false;
+        document.body.classList.add('loaded');
+        if (instructionBanner) instructionBanner.textContent = message;
+    }
+
+    // --- Round ---
+    function loadRound(index) {
+        roundIndex = index;
+        const round = rounds[roundIndex];
+
+        revealCount = 0;
+        renderPrompt();
+        answerInput.value = '';
+        answerInput.classList.remove('input-error');
+
+        updateCounters();
+        setOverallProgress(roundIndex);
+        startElapsedTimer();
+        roundActive = true;
+        answerInput.focus({ preventScroll: true });
+    }
+
+    // Mostra la frase del round; con helpWord riempie lo spazio vuoto in linea
+    function renderPrompt(helpWord) {
+        const round = rounds[roundIndex];
+        if (!round || !analogyTextEl) return;
+
+        const prompt = round.prompt;
+        const match = prompt.match(/_+/);
+        analogyTextEl.replaceChildren();
+
+        if (!match) {
+            analogyTextEl.append(prompt);
+            if (helpWord) analogyTextEl.append(' ', el('span', 'help-word', helpWord));
+            return;
+        }
+
+        analogyTextEl.append(prompt.slice(0, match.index));
+        if (helpWord) analogyTextEl.append(el('span', 'help-word', helpWord));
+        else analogyTextEl.append(match[0]);
+        analogyTextEl.append(prompt.slice(match.index + match[0].length));
+    }
+
+    function verify() {
+        if (!roundActive || isGameLoading) return;
+
+        const typed = answerInput.value.trim();
+        if (!typed) {
+            answerInput.classList.remove('input-error');
+            void answerInput.offsetWidth;
+            answerInput.classList.add('input-error');
+            answerInput.focus({ preventScroll: true });
+            return;
+        }
+
+        roundActive = false;
+        stopElapsedTimer();
+        syncElapsed();   // tempo finale esatto
+
+        const round = rounds[roundIndex];
+        results.push({
+            prompt: round.prompt,
+            answer: round.answer,
+            seconds: elapsedSeconds,
+            helps: revealCount,
+            correct: normalize(typed) === normalize(round.answer),
+            percent: computePercent(typed, round.answer, revealCount)
+        });
+
+        setOverallProgress(roundIndex + 1);
+
+        if (roundIndex >= rounds.length - 1) {
+            showSummaryScreen();
+        } else {
+            transitionTo(() => loadRound(roundIndex + 1));
+        }
+    }
+
+    async function initGame() {
+        try {
+            isGameLoading = true;
+            stopElapsedTimer();
+
+            const response = await fetch(DATA_URL);
+            if (!response.ok) throw new Error(`HTTP Error! Status: ${response.status}`);
+            const data = await response.json();
+
+            if (!Array.isArray(data.rounds) || data.rounds.length === 0) {
+                showLoadError('Nessun round disponibile.');
+                return;
+            }
+
+            const isValidRound = r =>
+                r &&
+                typeof r.prompt === 'string' && r.prompt.trim() !== '' &&
+                typeof r.answer === 'string' && r.answer.trim() !== '';
+
+            rounds = data.rounds.filter(isValidRound);
+            if (rounds.length < data.rounds.length) {
+                console.warn(`${data.rounds.length - rounds.length} round scartati perché non validi.`);
+            }
+            if (rounds.length === 0) {
+                showLoadError('Nessun round valido.');
+                return;
+            }
+
+            if (SHUFFLE_ROUNDS) {
+                for (let i = rounds.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [rounds[i], rounds[j]] = [rounds[j], rounds[i]];
+                }
+            }
+
+            results = [];
+            if (gameTitle && data.title) gameTitle.textContent = data.title;
+            instructionBanner.textContent = INSTRUCTION_TEXT;
+
+            buildFrame();
+            loadRound(0);
+
+            document.body.classList.add('loaded');
+            isGameLoading = false;
+        } catch (err) {
+            console.error(`Could not load ${DATA_URL}:`, err);
+            showLoadError('Errore nel caricamento del gioco.');
+        }
+    }
+
+    // --- Aiuto (tieni premuto per vedere la lettera iniziale) ---
+    if (revealBtn) {
+        const showHelp = (e) => {
+            if (!roundActive || isGameLoading) return;
+
+            if (e && e.pointerId !== undefined) {
+                try { revealBtn.setPointerCapture(e.pointerId); } catch (_) {}
+            }
+
+            revealCount++;
+            updateCounters();
+            renderPrompt(rounds[roundIndex].answer.trim());
+        };
+
+        const hideHelp = (e) => {
+            if (e && e.pointerId !== undefined) {
+                try { revealBtn.releasePointerCapture(e.pointerId); } catch (_) {}
+            }
+            if (analogyTextEl && analogyTextEl.querySelector('.help-word')) renderPrompt();
+        };
+
+        let helpActive = false;
+        const startHelp = (e) => {
+            // Solo tasto sinistro del mouse (ignora destro e centrale)
+            if (e && e.pointerType === 'mouse' && e.button !== 0) return;
+            if (helpActive) return;
+            helpActive = true;
+            showHelp(e);
+        };
+        const endHelp = (e) => {
+            helpActive = false;
+            hideHelp(e);
+        };
+
+        revealBtn.addEventListener('pointerdown', startHelp);
+        revealBtn.addEventListener('pointerup', endHelp);
+        revealBtn.addEventListener('pointerleave', endHelp);
+        revealBtn.addEventListener('pointercancel', endHelp);
+        revealBtn.addEventListener('contextmenu', e => e.preventDefault());
+
+        revealBtn.addEventListener('keydown', (e) => {
+            if ((e.key === ' ' || e.key === 'Enter') && !e.repeat) startHelp(e);
+        });
+        revealBtn.addEventListener('keyup', (e) => {
+            if (e.key === ' ' || e.key === 'Enter') endHelp(e);
+        });
+        revealBtn.addEventListener('blur', endHelp);
+    }
+
+    if (verifyBtn) verifyBtn.addEventListener('click', verify);
+
+    initGame();
+});
+</script>
+
+</body>
+</html>

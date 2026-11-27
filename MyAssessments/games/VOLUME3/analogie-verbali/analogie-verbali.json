@@ -1,0 +1,19 @@
+{
+  "title": "Analogie verbali",
+  "rounds": [
+    { "prompt": "Il pesce sta all'acqua come l'uccello sta all'______.", "answer": "aria" },
+    { "prompt": "La penna sta alla scrittura come il pennello sta alla ______.", "answer": "pittura" },
+    { "prompt": "Il caldo sta all'estate come il freddo sta all'______.", "answer": "inverno" },
+    { "prompt": "L'occhio sta alla vista come l'orecchio sta all'______.", "answer": "udito" },
+    { "prompt": "Il medico sta all'ospedale come il professore sta alla ______.", "answer": "scuola" },
+    { "prompt": "Il giorno sta alla luce come la notte sta al ______.", "answer": "buio" },
+    { "prompt": "Il panettiere sta al pane come il pescatore sta al ______.", "answer": "pesce" },
+    { "prompt": "La zampa sta al cane come l'ala sta all'______.", "answer": "uccello" },
+    { "prompt": "Il libro sta alla biblioteca come il quadro sta al ______.", "answer": "museo" },
+    { "prompt": "La sete sta all'acqua come la fame sta al ______.", "answer": "cibo" },
+    { "prompt": "La chiave sta alla serratura come il tappo sta alla ______.", "answer": "bottiglia" },
+    { "prompt": "Il pittore sta al quadro come lo scrittore sta al ______.", "answer": "libro" },
+    { "prompt": "L'autista sta all'auto come il pilota sta all'______.", "answer": "aereo" },
+    { "prompt": "Il becco sta all'uccello come la proboscide sta all'______.", "answer": "elefante" }
+  ]
+}

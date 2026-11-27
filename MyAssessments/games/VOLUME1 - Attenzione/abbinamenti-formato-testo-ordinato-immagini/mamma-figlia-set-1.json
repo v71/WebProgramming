@@ -6,12 +6,25 @@
              "headers": [],
              "items": [
                { "label": "Allacciare le scarpe" , "column": 1 ,"position": 1 , "image": "../../images/mamma-e-figlia/allacciare.png"},
-               { "label": "Alzarsi dal letto"   , "column": 1 ,"position": 2 , "image": "../../images/mamma-e-figlia/alzare.png"},
+               { "label": "Alzarsi dal letto"    , "column": 1 ,"position": 2 , "image": "../../images/mamma-e-figlia/alzare.png"},
                { "label": "Andare a coricarsi"   , "column": 1 ,"position": 3 , "image": "../../images/mamma-e-figlia/buonanotte.png"},
 
-               { "label": "Lavare le mani" , "column": 2 ,"position": 1 ,"image": "../../images/mamma-e-figlia/lavare.png"},
-               { "label": "Pettinare i capelli"   , "column": 2 ,"position": 2 ,"image": "../../images/mamma-e-figlia/pettinare.png"},
-               { "label": "Svegliarsi la mattina" , "column": 2 ,"position": 3 ,"image": "../../images/mamma-e-figlia/svegliare.png" }
+               { "label": "Cucinare un dolce"    , "column": 2 ,"position": 1 ,"image": "../../images/mamma-e-figlia/cucinare-dolce.png"},
+               { "label": "Disegnare assieme"    , "column": 2 ,"position": 2 ,"image": "../../images/mamma-e-figlia/disegnare.png"},
+               { "label": "Lavare le mani"       , "column": 2 ,"position": 3 ,"image": "../../images/mamma-e-figlia/lavare.png" }
+              ]
+           },
+            {
+             "instruction": "Metti ogni azione nella colonna giusta.",
+             "headers": [],
+             "items": [
+               { "label": "Costruire una casetta" , "column": 1 ,"position": 1 , "image": "../../images/mamma-e-figlia/dipingere.png"},
+               { "label": "Leggere una favola"    , "column": 1 ,"position": 2 , "image": "../../images/mamma-e-figlia/lettura-della-buonanotte.png"},
+               { "label": "Pettinare i capelli"   , "column": 1 ,"position": 3 , "image": "../../images/mamma-e-figlia/pettinare.png"},
+
+               { "label": "Piegare i panni"       , "column": 2 ,"position": 1 ,"image": "../../images/mamma-e-figlia/piegare.png"},
+               { "label": "Cucinare assieme"      , "column": 2 ,"position": 2 ,"image": "../../images/mamma-e-figlia/cucinare-dolce-2.png"},
+               { "label": "Lavare le mani"        , "column": 2 ,"position": 3 ,"image": "../../images/mamma-e-figlia/lavare.png" }
               ]
            }
          ]
